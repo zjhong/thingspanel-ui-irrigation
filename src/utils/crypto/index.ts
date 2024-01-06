@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 
-const CryptoSecret = '__CryptoJS_Secret__'
+const CryptoSecret = 'ThingsPanel5183'
 
 /**
  * 加密数据

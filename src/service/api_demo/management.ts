@@ -1,5 +1,5 @@
 import { adapter } from '@/utils'
-import { mockRequest } from '../request'
+import { mockRequest } from '../request_demo'
 import { adapterOfFetchUserList } from './management.adapter'
 
 /** 获取用户列表 */

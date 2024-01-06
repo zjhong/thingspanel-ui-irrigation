@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store'
 import { localStg } from '@/utils'
-import { fetchUpdateToken } from '../api'
+import { fetchUpdateToken } from '../api_demo'
 
 /**
  * 刷新token

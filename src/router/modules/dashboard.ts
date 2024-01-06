@@ -24,14 +24,15 @@ const dashboard: AuthRoute.Route = {
         icon: 'icon-park-outline:workbench',
         i18nTitle: 'routes.dashboard.workbench'
       }
+    },
+    {
+      name: 'dashboard_panel',
+      path: '/dashboard/panel',
+      component: 'self',
+      meta: { title: 'dashboard_panel', icon: 'mdi:menu' }
     }
   ],
-  meta: {
-    title: '仪表盘',
-    icon: 'mdi:monitor-dashboard',
-    order: 1,
-    i18nTitle: 'routes.dashboard._value'
-  }
+  meta: { title: '仪表盘', icon: 'mdi:monitor-dashboard', order: 1, i18nTitle: 'routes.dashboard._value' }
 }
 
 export default dashboard

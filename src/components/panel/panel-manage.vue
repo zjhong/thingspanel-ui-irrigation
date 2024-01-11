@@ -1,121 +1,145 @@
 <template>
-  <div ref="box" class="w-full py-10 px-10">
-    <div v-for="(item, i) in data.panels" :key="i" class="mb-16 relative" :style="{ height: item.height + 'px' }">
-      <n-grid cols="24" x-gap="12" class="h-full">
-        <n-grid-item v-for="p in item.panels" :key="p.id" :span="p.span" class="h-full duration-200">
-          <div
-            :class="{ ['panel-select']: data.selectItem === p, panel: data.selectItem !== p }"
-            class="h-full relative duration-200 w-full"
-            @click="data.selectItem = p"
-          >
-            <n-card content-style="padding: 10px" class="h-full">123</n-card>
-            <div class="handle cursor-col-resize" @mousedown="dragItem($event, p, i)" />
-          </div>
-        </n-grid-item>
-      </n-grid>
-      <div
-        class="flex items-center w-full absolute -bottom-9 h-2 hover:cursor-row-resize group"
-        @mousedown="dragLine($event, i)"
-      >
-        <div
-          class="duration-200 border-t border-dashed border-gray-400 h-0 flex-1 dark:border-gray-400 dark:group-hover:border-gray-200"
-        ></div>
+  <div ref="box" class="w-full py-5 px-5">
+    <div class="flex items-center justify-between px-10px border-b dark:border-gray-200/10 border-gray-200 pb-3">
+      <div>
+        <n-button>
+          <svg-icon icon="ep:back" class="text-lg mr-0.5" />
+          返回
+        </n-button>
       </div>
+      <n-space align="center">
+        <n-button @click="state.openAddPanel = true">
+          <svg-icon icon="material-symbols:add" class="text-lg mr-0.5" />
+          添加组件
+        </n-button>
+        <n-button>
+          <svg-icon icon="material-symbols:settings-outline" class="text-lg mr-0.5" />
+        </n-button>
+        <n-divider vertical />
+        <n-button>取消</n-button>
+        <n-button>保存</n-button>
+      </n-space>
     </div>
+    <div v-if="!layout.length" class="text-center dark:text-gray-400 text-gray-500 mt-20">
+      <n-empty description="暂未添加组件"></n-empty>
+    </div>
+    <grid-layout
+      v-model:layout="layout"
+      :col-num="12"
+      :row-height="30"
+      :auto-size="true"
+      :margin="[10, 10]"
+      style="width: 100%"
+    >
+      <template #default="{ gridItemProps }">
+        <grid-item
+          v-for="item in layout"
+          :key="item.i"
+          v-bind="gridItemProps"
+          :min-h="2"
+          :x="item.x"
+          :y="item.y"
+          :w="item.w"
+          :h="item.h"
+          :i="item.i"
+        >
+          <n-card class="h-full w-full relative" content-style="padding: 0px">
+            <n-icon class="cursor-pointer right-8 top-1 absolute cursor-pointer">
+              <svg-icon icon="uil:setting" class="text-base" />
+            </n-icon>
+            <n-popconfirm
+              :show-icon="false"
+              :negative-button-props="{ size: 'tiny' }"
+              :positive-button-props="{ size: 'tiny' }"
+              :on-positive-click="() => removeLayout(item.i)"
+            >
+              <template #trigger>
+                <n-icon class="cursor-pointer right-2 top-1 absolute cursor-pointer">
+                  <svg-icon icon="material-symbols:delete-outline" class="text-base" />
+                </n-icon>
+              </template>
+              <span>确认删除看板。</span>
+            </n-popconfirm>
+
+            <div class="p-4">
+              <component :is="findCardComponent(item.data?.cardId || '')" :card="item.data" />
+            </div>
+          </n-card>
+        </grid-item>
+      </template>
+    </grid-layout>
+    <add-card v-model:show="state.openAddPanel" @add-card="insertCard" />
   </div>
 </template>
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { reactive, ref } from 'vue'
-const box = ref<HTMLDivElement>()
-
-interface PanelItem {
-  span: number
-  id: number
-}
-
-interface Line {
-  height: number
-  panels: PanelItem[]
-}
-
-const data = reactive({
-  selectItem: null as null | PanelItem,
-  panels: [
-    {
-      height: 200,
-      panels: [
-        {
-          span: 4,
-          id: 1
-        },
-        {
-          span: 6,
-          id: 2
-        }
-      ]
-    },
-    {
-      height: 200,
-      panels: [
-        {
-          span: 4,
-          id: 3
-        }
-      ]
-    }
-  ] as Line[]
+import { GridItem, GridLayout } from 'vue3-drr-grid-layout'
+import './gird.css'
+import { usePanelStore } from '@/store'
+import type { ICardDefine, ICardView } from '@/components/panel/card'
+const layout = ref<ICardView[]>([
+  // { x: 0, y: 0, w: 2, h: 2, i: 0 },
+  // { x: 2, y: 0, w: 2, h: 2, i: 1 },
+  // { x: 4, y: 0, w: 4, h: 2, i: 2 },
+  // { x: 0, y: 1, w: 6, h: 2, i: 3 }
+])
+const store = usePanelStore()
+const state = reactive({
+  openAddPanel: false
 })
-
-const dragLine = (e: MouseEvent, line: number) => {
-  e.stopPropagation()
-  const startY = e.clientY
-  const startHeight = data.panels[line].height
-  const move = (em: MouseEvent) => {
-    const moveY = em.clientY - startY
-    const height = startHeight + moveY
-    data.panels[line].height = height < 50 ? 50 : height
-  }
-  window.addEventListener('mousemove', move)
-  window.addEventListener(
-    'mouseup',
-    () => {
-      window.removeEventListener('mousemove', move)
-    },
-    { once: true }
-  )
+const findCardComponent = (id: string) => {
+  return store.$state.builtinPanelsMap.get(id)?.component || null
 }
-
-const dragItem = (e: MouseEvent, item: PanelItem, line: number) => {
-  e.stopPropagation()
-  e.preventDefault()
-  const startX = e.clientX
-  const startSpan = item.span
-  const spanWidth = (box.value!.clientWidth - 80) / 24
-  const maxSpan = 24 - data.panels[line].panels.filter(p => p !== item).reduce((a, b) => a + b.span, 0)
-  const move = (em: MouseEvent) => {
-    let moveSpan = Math.round((em.clientX - startX) / spanWidth) + startSpan
-    if (moveSpan < 1) moveSpan = 1
-    if (moveSpan > maxSpan) moveSpan = maxSpan
-    item.span = moveSpan
+const countSpace = (data: ICardView[], y: number) => {
+  const cols = data.filter(d => d.y === y).sort((a, b) => (a.x > b.x ? 1 : -1))
+  let start = 0
+  for (const c of cols) {
+    if (c.x - start > 0) {
+      start += c.x - start
+    }
+    start += c.w
   }
-  window.addEventListener('mousemove', move)
-  window.addEventListener(
-    'mouseup',
-    () => {
-      window.removeEventListener('mousemove', move)
-    },
-    { once: true }
-  )
+  return start
+}
+const insertCard = (card: ICardDefine) => {
+  const yList: number[] = []
+  const layoutData = layout.value.sort((a, b) => {
+    return a.y > b.y ? 1 : -1
+  })
+  layoutData.forEach(item => {
+    if (!yList.includes(item.y)) yList.push(item.y)
+  })
+  let y = yList.shift() || 0
+  let x = 0
+  const max = yList[yList.length - 1] || 0
+  while (y <= max) {
+    const space = countSpace(layoutData, y)
+    if (space <= 8) {
+      x = space
+      break
+    } else {
+      y = yList.shift() || y + 1
+    }
+  }
+  layout.value.push({
+    x,
+    y,
+    w: 4,
+    h: 4,
+    i: layoutData.length,
+    data: {
+      title: card.title,
+      type: card.type,
+      cardId: card.id,
+      config: {}
+    }
+  })
+}
+const removeLayout = (i: number) => {
+  layout.value = layout.value.filter(item => item.i !== i)
 }
 </script>
 <style lang="scss" scoped>
-.panel-select {
-  @apply border border-blue-500 rounded;
-  .handle {
-    @apply w-2 h-2 rounded-full bg-white absolute -right-1 top-1/2 -mt-1;
-  }
-}
-
 .panel {
   @apply border border-transparent;
 }

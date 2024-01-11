@@ -1,3 +1,3 @@
 <template>
-  <manage></manage>
+  <panel-manage></panel-manage>
 </template>

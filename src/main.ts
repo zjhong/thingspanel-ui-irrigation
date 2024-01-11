@@ -17,7 +17,6 @@ async function setupApp() {
   appLoading.mount('#appLoading')
 
   const app = createApp(App)
-
   // store plugin: pinia
   setupStore(app)
 

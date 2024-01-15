@@ -88,7 +88,7 @@ const state = reactive({
   openAddPanel: false
 })
 const findCardComponent = (id: string) => {
-  return store.$state.builtinPanelsMap.get(id)?.component || null
+  return store.$state.cardMap.get(id)?.component || null
 }
 const countSpace = (data: ICardView[], y: number) => {
   const cols = data.filter(d => d.y === y).sort((a, b) => (a.x > b.x ? 1 : -1))

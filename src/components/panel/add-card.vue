@@ -6,7 +6,7 @@
           <n-grid x-gap="10" y-gap="10" :cols="2">
             <n-grid-item>
               <div
-                v-for="[, item] in store.$state.builtinPanelsMap"
+                v-for="[, item] in store.$state.cardMap"
                 :key="item.id"
                 class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
                 @mousedown.prevent=""

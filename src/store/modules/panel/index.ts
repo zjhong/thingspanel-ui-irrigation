@@ -1,22 +1,24 @@
 import { markRaw } from 'vue'
 import { defineStore } from 'pinia'
 import { useMessage } from 'naive-ui'
+import { objectEntries } from '@vueuse/core'
 import type { ICardDefine } from '@/components/panel/card'
-import { BuiltinPanels } from '@/components/panel/builtin-card'
+import { BuiltinCard } from '@/components/panel/builtin-card'
 
 export const usePanelStore = defineStore('panel-store', {
   state: () => {
-    const builtinPanelsMap = new Map<string, ICardDefine>()
+    const cardMap = new Map<string, ICardDefine>()
     const message = useMessage()
-    for (const item of BuiltinPanels) {
-      if (builtinPanelsMap.get(item.id)) {
-        message.warning(`重复的看板id: ${item.id}`)
+    objectEntries(BuiltinCard).forEach(item => {
+      for (const card of item[1]) {
+        if (cardMap.get(card.id)) {
+          message.warning(`重复的看板卡片，id: ${card.id}`)
+        }
+        cardMap.set(card.id, markRaw(card))
       }
-      item.component = markRaw(item.component)
-      builtinPanelsMap.set(item.id, item)
-    }
+    })
     return {
-      builtinPanelsMap
+      cardMap
     }
   },
   actions: {}

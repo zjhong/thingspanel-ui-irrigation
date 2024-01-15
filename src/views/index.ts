@@ -15,6 +15,7 @@ export const views: Record<
   component_table: () => import('./component/table/index.vue'),
   'constant-page': () => import('./_builtin/constant-page/index.vue'),
   dashboard_analysis: () => import('./dashboard/analysis/index.vue'),
+  'dashboard_mobile-panel': () => import('./dashboard/mobile-panel/index.vue'),
   dashboard_panel: () => import('./dashboard/panel/index.vue'),
   dashboard_workbench: () => import('./dashboard/workbench/index.vue'),
   device_manage: () => import('./device/manage/index.vue'),

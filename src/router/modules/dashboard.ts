@@ -30,6 +30,12 @@ const dashboard: AuthRoute.Route = {
       path: '/dashboard/panel',
       component: 'self',
       meta: { title: 'dashboard_panel', icon: 'mdi:menu' }
+    },
+    {
+      name: 'dashboard_mobile-panel',
+      path: '/dashboard/mobile-panel',
+      component: 'self',
+      meta: { title: 'dashboard_mobile-panel', icon: 'mdi:menu' }
     }
   ],
   meta: { title: '仪表盘', icon: 'mdi:monitor-dashboard', order: 1, i18nTitle: 'routes.dashboard._value' }

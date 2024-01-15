@@ -4,10 +4,8 @@
       <n-tabs type="line" animated>
         <n-tab-pane name="builtin" tab="系统">
           <n-grid x-gap="10" y-gap="10" :cols="2">
-            <n-grid-item>
+            <n-grid-item v-for="item in PanelCards.builtin" :key="item.id">
               <div
-                v-for="[, item] in store.$state.cardMap"
-                :key="item.id"
                 class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
                 @mousedown.prevent=""
                 @click="addCard(item)"
@@ -29,8 +27,8 @@
 </template>
 
 <script lang="ts" setup>
-import { usePanelStore } from '@/store'
 import type { ICardDefine } from '@/components/panel/card'
+import { PanelCards } from './index'
 
 defineProps<{
   show: boolean
@@ -40,8 +38,6 @@ const emit = defineEmits<{
   (e: 'update:show', show: boolean): void
   (e: 'add-card', value: ICardDefine): void
 }>()
-
-const store = usePanelStore()
 
 const addCard = (item: ICardDefine) => {
   emit('add-card', item)

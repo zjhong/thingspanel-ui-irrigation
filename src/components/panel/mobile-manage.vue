@@ -31,10 +31,10 @@
 import { reactive, ref } from 'vue'
 import type { ICardDefine, ICardRender, ICardView } from '@/components/panel/card'
 const layout = ref<ICardView[]>([])
+const cr = ref<ICardRender>()
 const state = reactive({
   openAddPanel: false
 })
-const cr = ref<ICardRender>()
 const insertCard = (card: ICardDefine) => {
   cr.value?.addCard(card, {})
 }

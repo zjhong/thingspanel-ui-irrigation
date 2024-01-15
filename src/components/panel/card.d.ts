@@ -23,3 +23,7 @@ export interface ICardDefine {
   initFrom?: any
   configForm?: any
 }
+
+export interface ICardRender {
+  addCard(data: ICardDefine, config: Record<string, any>): void
+}

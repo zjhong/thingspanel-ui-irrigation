@@ -22,7 +22,6 @@ export interface ICardDefine {
   type: 'builtin' | 'device' | 'dependence'
   // 不存在就是all
   scene?: 'mobile' | 'pc' | 'all'
-  initFrom?: any
   configForm?: any
 }
 

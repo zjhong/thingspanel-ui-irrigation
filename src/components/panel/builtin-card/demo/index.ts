@@ -6,5 +6,6 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'demo'
+  title: 'demo',
+  configForm: defineAsyncComponent(() => import('./car-config.vue'))
 } as ICardDefine

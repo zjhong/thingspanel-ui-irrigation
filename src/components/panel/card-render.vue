@@ -2,7 +2,7 @@
   <grid-layout
     :layout="layout"
     :col-num="colNum"
-    :row-height="30"
+    :row-height="rowHeight"
     :auto-size="true"
     :margin="[10, 10]"
     style="width: 100%"
@@ -21,7 +21,7 @@
         :i="item.i"
       >
         <n-card class="h-full w-full relative" content-style="padding: 0px">
-          <n-icon class="cursor-pointer right-8 top-1 absolute cursor-pointer">
+          <n-icon class="cursor-pointer right-8 top-1 absolute cursor-pointer" @click="emit('edit', item)">
             <svg-icon icon="uil:setting" class="text-base" />
           </n-icon>
           <n-popconfirm
@@ -54,6 +54,8 @@ import './gird.css'
 const props = defineProps<{
   layout: ICardView[]
   colNum: number
+  defaultCardCol: number
+  rowHeight: number
 }>()
 
 const countSpace = (data: ICardView[], y: number) => {
@@ -70,6 +72,7 @@ const countSpace = (data: ICardView[], y: number) => {
 
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void
+  (e: 'edit', view: ICardView): void
 }>()
 
 defineExpose({
@@ -99,7 +102,7 @@ defineExpose({
       {
         x,
         y,
-        w: 4,
+        w: props.defaultCardCol,
         h: 4,
         i: layoutData.length,
         data: {

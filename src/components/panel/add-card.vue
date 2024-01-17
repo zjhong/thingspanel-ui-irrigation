@@ -29,18 +29,15 @@
 <script lang="ts" setup>
 import type { ICardDefine } from '@/components/panel/card'
 import { PanelCards } from './index'
-
 defineProps<{
   show: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:show', show: boolean): void
-  (e: 'add-card', value: ICardDefine): void
+  (e: 'add-card', value: ICardDefine, config?: Record<string, any>): void
 }>()
-
 const addCard = (item: ICardDefine) => {
   emit('add-card', item)
-  emit('update:show', false)
 }
 </script>

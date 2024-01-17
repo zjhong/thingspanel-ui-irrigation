@@ -21,7 +21,10 @@
         :i="item.i"
       >
         <n-card class="h-full w-full relative" content-style="padding: 0px">
-          <n-icon class="cursor-pointer right-8 top-1 absolute cursor-pointer" @click="emit('edit', item)">
+          <n-icon
+            class="cursor-pointer right-8 top-1 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100"
+            @click="emit('edit', item)"
+          >
             <svg-icon icon="uil:setting" class="text-base" />
           </n-icon>
           <n-popconfirm
@@ -31,7 +34,9 @@
             :on-positive-click="() => removeLayout(item.i)"
           >
             <template #trigger>
-              <n-icon class="cursor-pointer right-2 top-1 absolute cursor-pointer">
+              <n-icon
+                class="cursor-pointer right-2 top-1 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100"
+              >
                 <svg-icon icon="material-symbols:delete-outline" class="text-base" />
               </n-icon>
             </template>
@@ -73,6 +78,7 @@ const countSpace = (data: ICardView[], y: number) => {
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void
   (e: 'edit', view: ICardView): void
+  (e: 'remove', view: ICardView): void
 }>()
 
 defineExpose({

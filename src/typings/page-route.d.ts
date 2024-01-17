@@ -29,6 +29,7 @@ declare namespace PageRoute {
     | 'component_table'
     | 'constant-page'
     | 'dashboard'
+    | 'dashboard'
     | 'dashboard_analysis'
     | 'dashboard_mobile-panel'
     | 'dashboard_panel'

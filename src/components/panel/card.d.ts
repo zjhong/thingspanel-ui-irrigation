@@ -20,6 +20,8 @@ export interface ICardDefine {
   title: string
   poster: string // 示例图
   type: 'builtin' | 'device' | 'dependence'
+  // 不存在就是all
+  scene?: 'mobile' | 'pc' | 'all'
   initFrom?: any
   configForm?: any
 }

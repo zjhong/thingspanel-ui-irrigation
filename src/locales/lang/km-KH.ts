@@ -87,7 +87,9 @@ const locale: I18nType.Schema = {
       route: 'ផ្លូវប្រព័ន្ធ',
       user: 'អ្នកប្រើប្រាស់'
     },
-    about: 'អំពីប្រព័ន្ធ'
+    about: 'អំពីប្រព័ន្ធ',
+    'rule-engine': 'ម៉ាស៊ីន Rules',
+    'data-service': 'សេវាទិន្នន័យ'
   },
   layout: {
     settingDrawer: {

@@ -11,3 +11,16 @@ export function adapterOfFetchUserList(data: ApiUserManagement.User[] | null): U
     return user
   })
 }
+
+export function adapterOfAddIndex(data: any) {
+  if (!data) return []
+
+  return data.map((item: any, index: number) => {
+    const rule: RuleEngine.Rule = {
+      index: index + 1,
+      ...item
+    }
+
+    return rule
+  })
+}

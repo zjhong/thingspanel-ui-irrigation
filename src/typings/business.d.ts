@@ -43,3 +43,55 @@ declare namespace UserManagement {
    */
   type UserStatusKey = NonNullable<User['userStatus']>
 }
+
+/**
+ * 规则引擎模块
+ */
+declare namespace RuleEngine {
+  interface Rule extends ApiRuleEngine.Rule {
+    /** 序号 */
+    index: number
+  }
+
+  /**
+   * 规则引擎状态
+   * - 1: 已启用
+   * - 2: 已暂停
+   */
+  type StatusKey = NonNullable<Rule['status']>
+}
+
+/**
+ * 数据服务模块
+ */
+declare namespace DataService {
+  interface Data extends ApiDataService.Data {
+    /** 序号 */
+    index: number
+    /** SQL */
+    SQL: string | null
+    /** SQL编写辅助 */
+    SQLWritingAid: string | null
+  }
+
+  /**
+   * 签名方式
+   * - 1: MD5
+   * - 2: HAS256
+   */
+  type SignModeKey = NonNullable<Data['signMode']>
+
+  /**
+   * 接口支持标志
+   * - 1: http接口
+   * - 2: http和ws接口
+   */
+  type FlagKey = NonNullable<Data['flag']>
+
+  /**
+   * 规则引擎状态
+   * - 1: 已启用
+   * - 2: 已停止
+   */
+  type StatusKey = NonNullable<Data['status']>
+}

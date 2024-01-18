@@ -396,6 +396,8 @@ declare namespace I18nType {
         user: string
       }
       about: string
+      'rule-engine': string
+      'data-service': string
     }
     layout: {
       settingDrawer: {

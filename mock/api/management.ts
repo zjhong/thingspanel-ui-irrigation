@@ -27,6 +27,55 @@ const apis: MockMethod[] = [
         data: data.list
       }
     }
+  },
+  {
+    url: '/mock/getRuleEngineList',
+    method: 'get',
+    response: (): Service.MockServiceResult<ApiRuleEngine.Rule[]> => {
+      const data = mock({
+        'list|200': [
+          {
+            id: '@id',
+            name: '@cname',
+            'status|1': ['1', '2', null]
+          }
+        ]
+      })
+
+      return {
+        code: 200,
+        message: 'ok',
+        data: data.list
+      }
+    }
+  },
+  {
+    url: '/mock/getDataServiceList',
+    method: 'get',
+    response: (): Service.MockServiceResult<ApiRuleEngine.Rule[]> => {
+      const data = mock({
+        'list|200': [
+          {
+            id: '@id',
+            name: '@cname',
+            appKey: '@key',
+            'signMode|1': ['1', '2', null],
+            ip: '@ip',
+            'flag|1': ['1', '2', null],
+            dataInterval: '@number',
+            desc: '@string',
+            createTime: '@createTime',
+            'status|1': ['1', '2', null]
+          }
+        ]
+      })
+
+      return {
+        code: 200,
+        message: 'ok',
+        data: data.list
+      }
+    }
   }
 ]
 

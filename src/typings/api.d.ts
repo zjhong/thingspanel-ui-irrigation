@@ -50,3 +50,47 @@ declare namespace ApiUserManagement {
     userStatus: '1' | '2' | '3' | '4' | null
   }
 }
+
+declare namespace ApiRuleEngine {
+  interface Rule {
+    /** id */
+    id: string
+    /** 规则名 */
+    name: string | null
+    /**
+     * 规则状态
+     * - 1: 已启动
+     * - 2: 已暂停
+     */
+    status: '1' | '2' | null
+  }
+}
+
+declare namespace ApiDataService {
+  interface Data {
+    /** id */
+    id: string
+    /** 规则名 */
+    name: string | null
+    /** app_key */
+    appKey: string | null
+    /** 签名方式 */
+    signMode: string | null
+    /** IP白名单 */
+    ip: string | null
+    /** 接口支持标志 */
+    flag: string | null
+    /** 推送数据间隔 */
+    dataInterval: string | null
+    /** 描述 */
+    desc: string | null
+    /** 创建时间 */
+    createTime: string | null
+    /**
+     * 规则状态
+     * - 1: 已启动
+     * - 2: 已停止
+     */
+    status: '1' | '2' | null
+  }
+}

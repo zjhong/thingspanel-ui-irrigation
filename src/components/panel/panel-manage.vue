@@ -27,7 +27,9 @@
     <add-card v-model:show="state.openAddPanel" @add-card="insertCard" />
     <n-modal v-model:show="state.openConfig" preset="dialog" title="配置" size="huge" :style="{ width: '600px' }">
       <div class="mt-4">
-        <component :is="selectCard?.configForm" ref="configForm" v-model:config="state.cardConfig" />
+        <config-ctx ref="ctxRef" :config="state.cardConfig">
+          <component :is="selectCard?.configForm" />
+        </config-ctx>
       </div>
       <template #action>
         <n-button @click="state.openConfig = false">取消</n-button>
@@ -40,6 +42,7 @@
 import { reactive, ref, shallowRef } from 'vue'
 import { usePanelStore } from '@/store'
 import type { ICardDefine, ICardRender, ICardView } from '@/components/panel/card'
+import ConfigCtx from '@/components/panel/ui/config-ctx.vue'
 const layout = ref<ICardView[]>([])
 const state = reactive({
   openAddPanel: false,
@@ -51,7 +54,10 @@ const selectCard = shallowRef<ICardDefine | null>()
 const editView = ref<ICardView | null>()
 const cr = ref<ICardRender>()
 const store = usePanelStore()
-const configForm = ref<{ validate: () => Promise<any> }>()
+const ctxRef = ref<{
+  validate?: () => Promise<any>
+  getModel: () => Record<string, any>
+}>()
 
 const insertCard = (card: ICardDefine) => {
   editView.value = null
@@ -74,11 +80,11 @@ const edit = (view: ICardView) => {
 }
 const submit = async () => {
   if (editView.value) {
-    if (configForm.value?.validate) await configForm.value?.validate()
-    editView.value!.data!.config = state.cardConfig
+    if (ctxRef.value?.validate) await ctxRef.value?.validate()
+    editView.value!.data!.config = ctxRef.value?.getModel() || {}
   } else if (selectCard.value) {
-    if (configForm.value?.validate) await configForm.value?.validate()
-    cr.value?.addCard(selectCard.value!, state.cardConfig)
+    if (ctxRef.value?.validate) await ctxRef.value?.validate()
+    cr.value?.addCard(selectCard.value!, ctxRef.value?.getModel() || {})
     state.openAddPanel = false
   }
   state.openConfig = false

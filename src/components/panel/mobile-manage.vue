@@ -67,13 +67,17 @@
       </n-form-item>
       <template v-if="editView">
         <n-divider style="margin: 0">卡片配置</n-divider>
-        <component :is="selectCard?.configForm" ref="configForm" v-model:config="state.cardConfig" />
+        <config-ctx ref="ctxRef" :config="state.cardConfig">
+          <component :is="selectCard?.configForm" />
+        </config-ctx>
         <n-button block type="primary" @click="submit">保存</n-button>
       </template>
     </n-card>
     <n-modal v-model:show="state.openConfig" preset="dialog" title="配置" size="huge" :style="{ width: '600px' }">
       <div class="mt-4">
-        <component :is="selectCard?.configForm" ref="configForm" v-model:config="state.cardConfig" />
+        <config-ctx ref="ctxRef" :config="state.cardConfig">
+          <component :is="selectCard?.configForm" />
+        </config-ctx>
       </div>
       <template #action>
         <n-button @click="state.openConfig = false">取消</n-button>
@@ -88,6 +92,7 @@ import dayjs from 'dayjs'
 import { usePanelStore } from '@/store'
 import type { ICardDefine, ICardRender, ICardView } from '@/components/panel/card'
 import { PanelCards } from '@/components/panel/index'
+import ConfigCtx from '@/components/panel/ui/config-ctx.vue'
 
 const selectCard = shallowRef<ICardDefine | null>()
 const editView = ref<ICardView | null>()
@@ -108,12 +113,12 @@ onUnmounted(() => clearInterval(timer))
 
 const layout = ref<ICardView[]>([])
 const cr = ref<ICardRender>()
-// const insertCard = (card: ICardDefine) => {
-//   cr.value?.addCard(card, {})
-// }
-
 const store = usePanelStore()
-const configForm = ref<{ validate: () => Promise<any> }>()
+
+const ctxRef = ref<{
+  validate?: () => Promise<any>
+  getModel: () => Record<string, any>
+}>()
 
 const insertCard = (card: ICardDefine) => {
   editView.value = null
@@ -134,11 +139,11 @@ const edit = (view: ICardView) => {
 }
 const submit = async () => {
   if (editView.value) {
-    if (configForm.value?.validate) await configForm.value?.validate()
-    editView.value!.data!.config = state.cardConfig
+    if (ctxRef.value?.validate) await ctxRef.value?.validate()
+    editView.value!.data!.config = ctxRef.value?.getModel() || {}
   } else if (selectCard.value) {
-    if (configForm.value?.validate) await configForm.value?.validate()
-    cr.value?.addCard(selectCard.value!, state.cardConfig)
+    if (ctxRef.value?.validate) await ctxRef.value?.validate()
+    cr.value?.addCard(selectCard.value!, ctxRef.value?.getModel() || {})
   }
   state.openConfig = false
 }

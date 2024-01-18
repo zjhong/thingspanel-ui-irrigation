@@ -7,5 +7,5 @@ export default {
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
   title: 'demo',
-  configForm: defineAsyncComponent(() => import('./car-config.vue'))
+  configForm: defineAsyncComponent(() => import('./card-config.vue'))
 } as ICardDefine

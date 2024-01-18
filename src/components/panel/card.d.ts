@@ -1,3 +1,6 @@
+import type { Ref } from 'vue'
+import type { FormInst } from 'naive-ui/es/form/src/interface'
+
 export interface ICardData {
   type: ICardDefine['type']
   cardId: string
@@ -23,6 +26,11 @@ export interface ICardDefine {
   // 不存在就是all
   scene?: 'mobile' | 'pc' | 'all'
   configForm?: any
+}
+
+export interface IConfigCtx {
+  formRef: Ref<FormInst | number>
+  model: Record<string, any>
 }
 
 export interface ICardRender {

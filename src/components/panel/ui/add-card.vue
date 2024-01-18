@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import type { ICardDefine } from '@/components/panel/card'
-import { PanelCards } from './index'
+import { PanelCards } from '../index'
 defineProps<{
   show: boolean
 }>()

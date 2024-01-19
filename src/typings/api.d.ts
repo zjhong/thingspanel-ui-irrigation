@@ -94,3 +94,62 @@ declare namespace ApiDataService {
     status: '1' | '2' | null
   }
 }
+
+declare namespace ApiApplyManagement {
+  interface Service {
+    /** id */
+    id: string
+    /** 服务名称 */
+    name: string | null
+    /** 服务类别 */
+    serviceType: string | null
+    /** 介绍 */
+    desc: string | null
+    /** 作者 */
+    author: string | null
+    /** 版本 */
+    version: string | null
+    /**
+     * 规则状态
+     * - 1: 已启动
+     * - 2: 已停止
+     */
+    status: '1' | '2' | null
+  }
+}
+
+/**
+ * 常规设置
+ */
+declare namespace ApiGeneralSetting {
+  /** 主题设置 */
+  interface ThemeSetting {
+    /** id */
+    id: string
+    /** 系统标题 */
+    system_name: string | null
+    /** 首页和后台 logo */
+    logo_one: string | undefined
+    /** 加载页面 logo */
+    logo_two: string | undefined
+    /** 站标 logo */
+    logo_three: string | undefined
+    /** 背景图片 */
+    home_background: string | undefined
+  }
+  /** 数据清理设置 */
+  interface DataClearSetting {
+    /** id */
+    id: string
+    /** 清理类型 */
+    cleanup_type: string
+    /** 保留天数 */
+    retention_days: number
+    /** 上次清理时间 */
+    last_cleanup_time: string | null
+    /** 上次清理数据时间节点 */
+    last_cleanup_data_time: string | null
+    /** 备注 */
+    remark: string | null
+  }
+}

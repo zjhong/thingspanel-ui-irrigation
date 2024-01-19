@@ -394,10 +394,15 @@ declare namespace I18nType {
         role: string
         route: string
         user: string
+        setting: string
       }
       about: string
       'rule-engine': string
       'data-service': string
+      apply: {
+        _value: string
+        service: string
+      }
     }
     layout: {
       settingDrawer: {

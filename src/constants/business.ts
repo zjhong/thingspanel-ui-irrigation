@@ -60,3 +60,24 @@ export const dataServiceStatusLabels: Record<DataService.StatusKey, string> = {
   2: '已停止'
 }
 export const dataServiceStatusOptions = transformObjectToOption(dataServiceStatusLabels)
+
+/** 应用管理 - 服务管理 - 服务管理类别 */
+export const serviceManagementTypeLabels: Record<ServiceManagement.ServiceTypeKey, string> = {
+  1: '接入协议',
+  2: '通知服务',
+  3: '接入服务'
+}
+export const serviceManagementTypeOptions = transformObjectToOption(serviceManagementTypeLabels)
+
+/** 应用管理 - 服务管理 - 服务管理类别 */
+export const serviceManagementStatusLabels: Record<ServiceManagement.StatusKey, string> = {
+  1: '运行中',
+  2: '已停止'
+}
+export const serviceManagementStatusOptions = transformObjectToOption(serviceManagementStatusLabels)
+
+/** 系统管理 - 常规设置 - 数据清理 清理类型 */
+export const dataClearSettingCleanupTypeLabels: Record<GeneralSetting.CleanupTypeKey, string> = {
+  1: '设备数据',
+  2: '操作日志'
+}

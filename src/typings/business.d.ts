@@ -95,3 +95,41 @@ declare namespace DataService {
    */
   type StatusKey = NonNullable<Data['status']>
 }
+
+/**
+ * 应用管理-服务管理模块
+ */
+declare namespace ServiceManagement {
+  interface Service extends ApiApplyManagement.Service {
+    /** 序号 */
+    index: number
+  }
+  /**
+   * 服务类别
+   * - 1: 接入协议
+   * - 2: 通知服务
+   * - 3: 接入服务
+   */
+  type ServiceTypeKey = NonNullable<Service['serviceType']>
+  /**
+   * 服务状态
+   * - 1: 运行中
+   * - 2: 已停止
+   */
+  type StatusKey = NonNullable<Service['status']>
+}
+
+/**
+ * 常规设置
+ */
+declare namespace GeneralSetting {
+  interface ThemeSetting extends ApiGeneralSetting.ThemeSetting {}
+  interface DataClearSetting extends ApiGeneralSetting.DataClearSetting {}
+
+  /**
+   * 清理类型
+   * - 1: 操作日志
+   * - 2: 设备数据
+   */
+  type CleanupTypeKey = NonNullable<DataClearSetting['cleanup_type']>
+}

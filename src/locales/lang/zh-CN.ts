@@ -85,11 +85,16 @@ const locale: I18nType.Schema = {
       auth: '权限管理',
       role: '角色管理',
       route: '路由管理',
-      user: '用户管理'
+      user: '用户管理',
+      setting: '常规设置'
     },
     about: '关于',
     'rule-engine': '规则引擎',
-    'data-service': '数据服务'
+    'data-service': '数据服务',
+    apply: {
+      _value: '应用管理',
+      service: '服务管理'
+    }
   },
   layout: {
     settingDrawer: {

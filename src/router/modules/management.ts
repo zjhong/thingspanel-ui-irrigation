@@ -50,6 +50,18 @@ const management: AuthRoute.Route = {
         keepAlive: true,
         icon: 'material-symbols:route'
       }
+    },
+    {
+      name: 'management_setting',
+      path: '/management/setting',
+      component: 'self',
+      meta: {
+        title: '常规设置',
+        i18nTitle: 'routes.management.setting',
+        requiresAuth: true,
+        keepAlive: true,
+        icon: 'ic:baseline-brightness-5'
+      }
     }
   ],
   meta: {

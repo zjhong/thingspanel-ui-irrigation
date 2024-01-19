@@ -2,7 +2,7 @@
   <div class="overflow-hidden">
     <n-card title="规则引擎" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
-        <n-button @click="handleAddTable">新增</n-button>
+        <n-button type="primary" @click="handleAddTable">新增</n-button>
         <!-- <n-button type="error">
           <icon-ic-round-delete class="mr-4px text-20px" />
           删除
@@ -12,8 +12,23 @@
           导出Excel
         </n-button> -->
       </template>
-
       <div class="flex-col h-full">
+        <n-form ref="queryFormRef" inline label-placement="left" :model="queryParams">
+          <n-form-item label="规则名称" path="name">
+            <n-input v-model:value="queryParams.name" />
+          </n-form-item>
+          <n-form-item label="签名方式" path="status">
+            <n-select
+              v-model:value="queryParams.status"
+              clearable
+              class="w-200px"
+              :options="dataServiceStatusOptions"
+            />
+          </n-form-item>
+          <n-form-item>
+            <n-button class="w-72px" type="primary" @click="handleQuery">搜索</n-button>
+          </n-form-item>
+        </n-form>
         <n-data-table
           :columns="columns"
           :data="tableData"
@@ -31,11 +46,6 @@
       </div>
     </n-card>
     <secret-key-modal v-model:visible="secretKeyVisible" :secret-key="secretKey"></secret-key-modal>
-    <!-- <n-modal v-model:show="secretKeyVisible" preset="card" title="查看密钥" class="w-700px">
-      <n-space vertical>
-        <n-input v-model:value="secretKey" type="text" readonly />
-      </n-space>
-    </n-modal> -->
   </div>
 </template>
 
@@ -44,7 +54,12 @@ import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui'
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
-import { dataServiceStatusLabels, dataServiceFlagLabels, dataServiceSignModeLabels } from '@/constants'
+import {
+  dataServiceStatusLabels,
+  dataServiceFlagLabels,
+  dataServiceSignModeLabels,
+  dataServiceStatusOptions
+} from '@/constants'
 import { useBoolean, useLoading } from '@/hooks'
 import { fetchDataServiceList } from '@/service/demo'
 import type { ModalType } from './components/table-action-modal.vue'
@@ -54,6 +69,11 @@ import SecretKeyModal from './components/secret-key-modal.vue'
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal } = useBoolean()
 const { bool: secretKeyVisible, setTrue: openSecretKeyModal } = useBoolean()
+
+const queryParams = reactive({
+  name: '',
+  status: null
+})
 
 const tableData = ref<DataService.Data[]>([])
 function setTableData(data: DataService.Data[]) {
@@ -222,6 +242,10 @@ const secretKey = ref<string>('')
 function handleViewKey(rowId: string) {
   secretKey.value = rowId
   openSecretKeyModal()
+}
+
+function handleQuery() {
+  init()
 }
 
 function init() {

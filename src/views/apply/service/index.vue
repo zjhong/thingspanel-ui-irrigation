@@ -1,17 +1,8 @@
 <template>
   <div class="overflow-hidden">
-    <n-card title="规则引擎" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <n-card title="服务管理" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
-        <n-button @click="handleAddTable">创建接入规则</n-button>
-        <n-button class="ml-10px">发布</n-button>
-        <!-- <n-button type="error">
-          <icon-ic-round-delete class="mr-4px text-20px" />
-          删除
-        </n-button>
-        <n-button type="success">
-          <icon-uil:export class="mr-4px text-20px" />
-          导出Excel
-        </n-button> -->
+        <n-button type="primary" @click="handleAddTable">新增</n-button>
       </template>
       <div class="flex-col h-full">
         <n-data-table
@@ -38,23 +29,23 @@ import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui'
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
-import { ruleEngineStatusLabels } from '@/constants'
+import { serviceManagementStatusLabels, serviceManagementTypeLabels } from '@/constants'
 import { useBoolean, useLoading } from '@/hooks'
-import { fetchRuleEngineList } from '@/service/demo'
+import { fetchServiceManagementList } from '@/service/demo'
 import type { ModalType } from './components/table-action-modal.vue'
 import TableActionModal from './components/table-action-modal.vue'
 
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal } = useBoolean()
 
-const tableData = ref<RuleEngine.Rule[]>([])
-function setTableData(data: RuleEngine.Rule[]) {
+const tableData = ref<ServiceManagement.Service[]>([])
+function setTableData(data: ServiceManagement.Service[]) {
   tableData.value = data
 }
 
 async function getTableData() {
   startLoading()
-  const { data } = await fetchRuleEngineList()
+  const { data } = await fetchServiceManagementList()
   if (data) {
     setTimeout(() => {
       setTableData(data)
@@ -63,29 +54,55 @@ async function getTableData() {
   }
 }
 
-const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
+const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'index',
     title: '序号',
     align: 'center',
-    width: '120px'
+    width: '100px'
   },
   {
     key: 'name',
-    title: '规则名称',
+    title: '服务名称',
+    align: 'left'
+  },
+  {
+    key: 'serviceType',
+    title: '服务类别',
+    align: 'left',
+    render: row => {
+      if (row.serviceType) {
+        return <span>{serviceManagementTypeLabels[row.serviceType]}</span>
+      }
+      return <span></span>
+    }
+  },
+  {
+    key: 'desc',
+    title: '介绍',
+    align: 'left'
+  },
+  {
+    key: 'author',
+    title: '作者',
+    align: 'left'
+  },
+  {
+    key: 'version',
+    title: '版本',
     align: 'left'
   },
   {
     key: 'status',
-    title: '接口状态',
+    title: '状态',
     align: 'left',
     render: row => {
       if (row.status) {
-        const tagTypes: Record<RuleEngine.StatusKey, NaiveUI.ThemeColor> = {
+        const tagTypes: Record<ServiceManagement.StatusKey, NaiveUI.ThemeColor> = {
           '1': 'success',
           '2': 'warning'
         }
-        return <NTag type={tagTypes[row.status]}>{ruleEngineStatusLabels[row.status]}</NTag>
+        return <NTag type={tagTypes[row.status]}>{serviceManagementStatusLabels[row.status]}</NTag>
       }
       return <span></span>
     }
@@ -98,15 +115,15 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton size={'small'} ghost type="primary" onClick={() => handleActivate(row.id)}>
-            启动
+          <NButton size={'small'} type="primary" onClick={() => handleUseConfig(row.id)}>
+            使用配置
           </NButton>
-          <NButton size={'small'} type="warning" onClick={() => handlePause(row.id)}>
-            暂停
+          <NButton size={'small'} type="primary" onClick={() => handleRegisterConfig(row.id)}>
+            注册配置
           </NButton>
-          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
+          {/* <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
             编辑
-          </NButton>
+          </NButton> */}
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
               default: () => '确认删除',
@@ -121,7 +138,7 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
       )
     }
   }
-]) as Ref<DataTableColumns<RuleEngine.Rule>>
+]) as Ref<DataTableColumns<ServiceManagement.Service>>
 
 const modalType = ref<ModalType>('add')
 
@@ -129,33 +146,25 @@ function setModalType(type: ModalType) {
   modalType.value = type
 }
 
-const editData = ref<RuleEngine.Rule | null>(null)
+const editData = ref<ServiceManagement.Service | null>(null)
 
-function setEditData(data: RuleEngine.Rule | null) {
-  editData.value = data
-}
+// function setEditData(data: ServiceManagement.Service | null) {
+//   editData.value = data
+// }
 
 function handleAddTable() {
   openModal()
   setModalType('add')
 }
 
-function handleActivate(rowId: string) {
-  console.log(rowId)
-}
-
-function handlePause(rowId: string) {
-  console.log(rowId)
-}
-
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId)
-  if (findItem) {
-    setEditData(findItem)
-  }
-  setModalType('edit')
-  openModal()
-}
+// function handleEditTable(rowId: string) {
+//   const findItem = tableData.value.find(item => item.id === rowId)
+//   if (findItem) {
+//     setEditData(findItem)
+//   }
+//   setModalType('edit')
+//   openModal()
+// }
 
 function handleDeleteTable(rowId: string) {
   window.$message?.info(`点击了删除，rowId为${rowId}`)
@@ -174,6 +183,14 @@ const pagination: PaginationProps = reactive({
     pagination.page = 1
   }
 })
+
+function handleUseConfig(id: string) {
+  console.log(id)
+}
+
+function handleRegisterConfig(id: string) {
+  console.log(id)
+}
 
 function init() {
   getTableData()

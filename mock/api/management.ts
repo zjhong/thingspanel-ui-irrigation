@@ -76,6 +76,73 @@ const apis: MockMethod[] = [
         data: data.list
       }
     }
+  },
+  {
+    url: '/mock/getServiceManagementList',
+    method: 'get',
+    response: (): Service.MockServiceResult<ApiApplyManagement.Service[]> => {
+      const data = mock({
+        'list|200': [
+          {
+            id: '@id',
+            name: '@cname',
+            'serviceType|1': ['1', '2', '3', null],
+            desc: '@sentence',
+            author: '@cname',
+            version: '@float',
+            'status|1': ['1', '2', null]
+          }
+        ]
+      })
+
+      return {
+        code: 200,
+        message: 'ok',
+        data: data.list
+      }
+    }
+  },
+  {
+    url: '/mock/getThemeSetting',
+    method: 'get',
+    response: (): Service.MockServiceResult<ApiApplyManagement.Service> => {
+      const data = mock({
+        id: '@id',
+        system_name: '@cname',
+        logo_one: '@image',
+        logo_two: '@image',
+        logo_three: '@image',
+        home_background: '@image'
+      })
+      return {
+        code: 200,
+        message: 'ok',
+        data
+      }
+    }
+  },
+  {
+    url: '/mock/getDataClearList',
+    method: 'get',
+    response: (): Service.MockServiceResult<ApiGeneralSetting.DataClearSetting[]> => {
+      const data = mock({
+        'list|2': [
+          {
+            id: '@id',
+            'cleanup_type|1': ['1', '2'],
+            retention_days: '@integer',
+            last_cleanup_time: '@datetime',
+            last_cleanup_data_time: '@datetime',
+            desc: '@sentence'
+          }
+        ]
+      })
+      return {
+        code: 200,
+        message: 'ok',
+        data: data.list
+      }
+    }
   }
 ]
 

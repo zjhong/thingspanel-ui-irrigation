@@ -85,11 +85,16 @@ const locale: I18nType.Schema = {
       auth: 'Auth',
       role: 'សិទ្ធី',
       route: 'ផ្លូវប្រព័ន្ធ',
-      user: 'អ្នកប្រើប្រាស់'
+      user: 'អ្នកប្រើប្រាស់',
+      setting: 'រៀបចំ'
     },
     about: 'អំពីប្រព័ន្ធ',
     'rule-engine': 'ម៉ាស៊ីន Rules',
-    'data-service': 'សេវាទិន្នន័យ'
+    'data-service': 'សេវាទិន្នន័យ',
+    apply: {
+      _value: 'ការគ្រប់គ្រងកម្មវិធី',
+      service: 'ការគ្រប់គ្រងសេវាកម្ម'
+    }
   },
   layout: {
     settingDrawer: {

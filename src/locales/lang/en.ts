@@ -85,11 +85,16 @@ const locale: I18nType.Schema = {
       auth: 'Auth',
       role: 'Role',
       route: 'Route',
-      user: 'User'
+      user: 'User',
+      setting: 'Setting'
     },
     about: 'About',
     'rule-engine': 'Rule Engine',
-    'data-service': 'Data Service'
+    'data-service': 'Data Service',
+    apply: {
+      _value: 'Application Management',
+      service: 'Service Management'
+    }
   },
   layout: {
     settingDrawer: {

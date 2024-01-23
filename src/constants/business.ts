@@ -81,3 +81,29 @@ export const dataClearSettingCleanupTypeLabels: Record<GeneralSetting.CleanupTyp
   1: '设备数据',
   2: '操作日志'
 }
+
+/** 路由管理 - 组件类型 */
+export const routeComponentTypeLabels: Record<AuthRoute.RouteComponentType, string> = {
+  basic: 'basic',
+  blank: 'blank',
+  multi: 'multi',
+  self: 'self'
+}
+export const routeComponentTypeOptions = transformObjectToOption(routeComponentTypeLabels)
+
+/** 路由管理 - 路由类型 */
+export const routerTypeLabels: Record<CustomRoute.routerTypeKey, string> = {
+  1: '目录',
+  2: '菜单',
+  3: '路由',
+  4: '按钮'
+}
+export const routeTypeOptions = transformObjectToOption(routerTypeLabels)
+
+/** 路由管理 - 访问标识 */
+export const routerSysFlagLabels: Record<CustomRoute.routerSysFlagKey, string> = {
+  1: '租户',
+  2: '系统管理员',
+  3: '共有'
+}
+export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels)

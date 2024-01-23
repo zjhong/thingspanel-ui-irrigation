@@ -133,3 +133,27 @@ declare namespace GeneralSetting {
    */
   type CleanupTypeKey = NonNullable<DataClearSetting['cleanup_type']>
 }
+
+/**
+ * 自定义路由类型 用于权限管理模块
+ */
+declare namespace CustomRoute {
+  interface Route extends ApiCustomRoute.Route {}
+
+  /**
+   * 清理类型
+   * - 1: 目录
+   * - 2: 菜单
+   * - 3: 路由
+   * - 4: 按钮
+   */
+  type routerTypeKey = NonNullable<Route['type']>
+
+  /**
+   * 清理类型
+   * - 1: 租户
+   * - 2: 系统管理员
+   * - 3: 共有
+   */
+  type routerSysFlagKey = NonNullable<Route['sys_flag']>
+}

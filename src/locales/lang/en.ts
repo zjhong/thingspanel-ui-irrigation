@@ -1,4 +1,5 @@
 const locale: I18nType.Schema = {
+  default: '',
   system: {
     title: 'SoybeanAdmin'
   },

@@ -3,8 +3,8 @@ import { mockRequest } from '../request_demo'
 import { adapterOfFetchUserList, adapterOfAddIndex } from './management.adapter'
 
 /** 获取用户列表 */
-export const fetchUserList = async () => {
-  const data = await mockRequest.post<ApiUserManagement.User[] | null>('/getAllUserList')
+export const fetchUserList = async (params: any) => {
+  const data = await mockRequest.post<ApiUserManagement.User[] | null>('/getAllUserList', params)
   return adapter(adapterOfFetchUserList, data)
 }
 
@@ -36,4 +36,12 @@ export const fetchThemeSetting = async () => {
 export const fetchDataClearList = async () => {
   const data = await mockRequest.get<ApiGeneralSetting.DataClearSetting[] | null>('/getDataClearList')
   return data
+}
+
+/**
+ * 获取所有路由数据
+ * @description 权限管理模块
+ */
+export function fetchAllRoutes() {
+  return mockRequest.post<ApiCustomRoute.Route[]>('/getAllRoutes')
 }

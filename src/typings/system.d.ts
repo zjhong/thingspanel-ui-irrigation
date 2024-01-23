@@ -307,6 +307,7 @@ declare namespace I18nType {
   type LangType = 'en' | 'zh-CN' | 'km-KH'
 
   type Schema = {
+    default: ''
     system: {
       title: string
     }

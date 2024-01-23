@@ -26,20 +26,12 @@ declare namespace ApiUserManagement {
   interface User {
     /** 用户id */
     id: string
-    /** 用户名 */
-    userName: string | null
-    /** 用户年龄 */
-    age: number | null
-    /**
-     * 用户性别
-     * - 0: 女
-     * - 1: 男
-     */
-    gender: '0' | '1' | null
-    /** 用户手机号码 */
-    phone: string
     /** 用户邮箱 */
     email: string | null
+    /** 用户名 */
+    userName: string | null
+    /** 用户手机号码 */
+    phone: string
     /**
      * 用户状态
      * - 1: 启用
@@ -48,9 +40,21 @@ declare namespace ApiUserManagement {
      * - 4: 软删除
      */
     userStatus: '1' | '2' | '3' | '4' | null
+    /**
+     * 用户性别
+     * - 0: 女
+     * - 1: 男
+     */
+    gender: '0' | '1' | null
+
+    /** 备注 */
+    remark: string | null
+    /** 创建时间 */
+    createTime: string | null
   }
 }
 
+/** 规则引擎 */
 declare namespace ApiRuleEngine {
   interface Rule {
     /** id */
@@ -151,5 +155,39 @@ declare namespace ApiGeneralSetting {
     last_cleanup_data_time: string | null
     /** 备注 */
     remark: string | null
+  }
+}
+
+/**
+ * 系统设置-路由管理
+ */
+declare namespace ApiCustomRoute {
+  interface Route {
+    /** id */
+    id: string
+    /** 父节点ID */
+    parentId: string
+    /** 名称 */
+    name: string
+    /** 名称 */
+    path: string
+    /** 组件类型 */
+    component: AuthRoute.RouteComponentType
+    /** 节点描述 */
+    meta: {
+      i18nTitle: I18nType.I18nKey
+      /** 图标 */
+      icon: string
+      /** 排序 */
+      order: number
+      /** 标题 */
+      title: string
+    }
+    /** 类型 */
+    type: '1' | '2' | '3' | '4'
+    /** 访问标识 */
+    sys_flag: '1' | '2' | '3'
+    /** 描述 */
+    describe: string
   }
 }

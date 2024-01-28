@@ -84,10 +84,10 @@ onMounted(() => {
     //   myecharts.resize();
     // };
     // 监听图表点击事件
-    myecharts.on('click', params => {
-      console.log(params.name) // 打印被点击的数据名称
-      // 这里可以执行更多监听逻辑
-    })
+    // myecharts.on('click', params => {
+    //   console.log(params.name) // 打印被点击的数据名称
+    //   // 这里可以执行更多监听逻辑
+    // })
   }
   return {
     equipment

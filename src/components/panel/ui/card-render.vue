@@ -20,9 +20,9 @@
         :h="item.h"
         :i="item.i"
       >
-        <n-card class="h-full w-full relative" content-style="padding: 0px">
+        <div class="h-full w-full relative">
           <n-icon
-            class="cursor-pointer right-8 top-1 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100"
+            class="cursor-pointer right-8 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
             @click="emit('edit', item)"
           >
             <svg-icon icon="uil:setting" class="text-base" />
@@ -35,27 +35,24 @@
           >
             <template #trigger>
               <n-icon
-                class="cursor-pointer right-2 top-1 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100"
+                class="cursor-pointer right-2 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
               >
                 <svg-icon icon="material-symbols:delete-outline" class="text-base" />
               </n-icon>
             </template>
             <span>确认删除看板。</span>
           </n-popconfirm>
-
-          <div class="p-4">
-            <component :is="findCardComponent(item.data?.cardId || '')" :card="item.data" />
-          </div>
-        </n-card>
+          <card-item :data="item.data!" />
+        </div>
       </grid-item>
     </template>
   </grid-layout>
 </template>
 <script setup lang="ts">
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout'
-import { usePanelStore } from '@/store'
-import type { ICardDefine, ICardView } from '@/components/panel/card'
+import type { ICardData, ICardView } from '@/components/panel/card'
 import './gird.css'
+
 const props = defineProps<{
   layout: ICardView[]
   colNum: number
@@ -82,7 +79,7 @@ const emit = defineEmits<{
 }>()
 
 defineExpose({
-  addCard: (data: ICardDefine, config: Record<string, any>) => {
+  addCard: (data: ICardData) => {
     const yList: number[] = []
     const layout = props.layout
     const layoutData = layout.sort((a, b) => {
@@ -111,21 +108,11 @@ defineExpose({
         w: props.defaultCardCol,
         h: 4,
         i: layoutData.length,
-        data: {
-          title: data.title,
-          type: data.type,
-          cardId: data.id,
-          config
-        }
+        data
       }
     ])
   }
 })
-
-const store = usePanelStore()
-const findCardComponent = (id: string) => {
-  return store.$state.cardMap.get(id)?.component || null
-}
 
 const removeLayout = (i: number) => {
   emit(

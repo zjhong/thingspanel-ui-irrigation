@@ -4,12 +4,30 @@
       <n-card class="operation-panel" content-style="padding:5px 15px">
         <n-tabs type="line" animated>
           <n-tab-pane name="builtin" tab="系统">
-            <n-grid x-gap="10" y-gap="10" :cols="2" class="operation-tab">
+            <n-grid x-gap="10" y-gap="10" :cols="2">
               <n-grid-item v-for="item in PanelCards.builtin" :key="item.id">
                 <div
                   class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
                   @mousedown.prevent=""
-                  @click="insertCard(item)"
+                  @click="openConfig(item)"
+                >
+                  <div class="leading-8 font-medium text-center dark:bg-zinc-900">{{ item.title }}</div>
+                  <div>
+                    <img :src="item.poster" alt="" class="w-full object-cover" />
+                  </div>
+                </div>
+              </n-grid-item>
+            </n-grid>
+          </n-tab-pane>
+          <n-tab-pane name="device" tab="设备"></n-tab-pane>
+          <n-tab-pane name="plugin" tab="插件"></n-tab-pane>
+          <n-tab-pane name="chart" tab="图表">
+            <n-grid x-gap="10" y-gap="10" :cols="2" class="operation-tab">
+              <n-grid-item v-for="item in PanelCards.chart" :key="item.id">
+                <div
+                  class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
+                  @mousedown.prevent=""
+                  @click="openConfig(item)"
                 >
                   <div class="h-8 items-center font-medium text-center dark:bg-zinc-900 flex justify-center px-2">
                     <div class="text-sm flex-1 truncate">
@@ -23,9 +41,6 @@
               </n-grid-item>
             </n-grid>
           </n-tab-pane>
-          <n-tab-pane name="device" tab="设备"></n-tab-pane>
-          <n-tab-pane name="plugin" tab="插件"></n-tab-pane>
-          <n-tab-pane name="chart" tab="图表"></n-tab-pane>
         </n-tabs>
       </n-card>
     </div>
@@ -62,46 +77,30 @@
       </div>
     </div>
     <n-card class="operation-panel" content-style="15px">
-      <n-form-item label="页面标题">
-        <n-input v-model:value="state.title"></n-input>
-      </n-form-item>
-      <template v-if="editView">
-        <n-divider style="margin: 0">卡片配置</n-divider>
-        <config-ctx ref="ctxRef" :config="state.cardConfig">
-          <component :is="selectCard?.configForm" />
-        </config-ctx>
-        <n-button block type="primary" @click="submit">保存</n-button>
-      </template>
-    </n-card>
-    <n-modal v-model:show="state.openConfig" preset="dialog" title="配置" size="huge" :style="{ width: '600px' }">
-      <div class="mt-4">
-        <config-ctx ref="ctxRef" :config="state.cardConfig">
-          <component :is="selectCard?.configForm" />
-        </config-ctx>
+      <div :class="`${editView ? '' : 'hidden'}`">
+        <card-form ref="formRef" mobile @update="update" />
       </div>
-      <template #action>
-        <n-button @click="state.openConfig = false">取消</n-button>
-        <n-button type="primary" @click="submit">添加卡片</n-button>
-      </template>
-    </n-modal>
+      <div v-if="!editView" class="mt-20">
+        <n-empty description="选择卡片"></n-empty>
+      </div>
+    </n-card>
+    <add-card v-model:open="state.openConfig" :data="state.initialData" @save="insertCard" />
   </div>
 </template>
 <script lang="tsx" setup>
-import { onMounted, onUnmounted, reactive, ref, shallowRef } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import dayjs from 'dayjs'
-import { usePanelStore } from '@/store'
-import type { ICardDefine, ICardRender, ICardView } from '@/components/panel/card'
+import type { ICardData, ICardDefine, ICardFormIns, ICardRender, ICardView } from '@/components/panel/card'
 import { PanelCards } from '@/components/panel/index'
-import ConfigCtx from '@/components/panel/ui/config-ctx.vue'
-
-const selectCard = shallowRef<ICardDefine | null>()
+const formRef = ref<ICardFormIns>()
 const editView = ref<ICardView | null>()
-
 const state = reactive({
   time: dayjs().format('HH:mm'),
   openConfig: false,
   cardConfig: {} as Record<string, any>,
-  title: '设备看板'
+  title: '设备看板',
+  initialData: null as any,
+  selectedView: null as null | ICardView
 })
 let timer = 0
 onMounted(() => {
@@ -110,42 +109,34 @@ onMounted(() => {
   }, 1000)
 })
 onUnmounted(() => clearInterval(timer))
-
+const openConfig = (item: ICardDefine) => {
+  state.initialData = {
+    title: item.title,
+    cardId: item.id,
+    type: item.type,
+    config: item.preset?.config || {},
+    basicSettings: item.preset?.basicSettings || {},
+    dataSource: item.preset?.dataSource || {}
+  }
+  state.openConfig = true
+  editView.value = null
+}
 const layout = ref<ICardView[]>([])
 const cr = ref<ICardRender>()
-const store = usePanelStore()
 
-const ctxRef = ref<{
-  validate?: () => Promise<any>
-  getModel: () => Record<string, any>
-}>()
-
-const insertCard = (card: ICardDefine) => {
-  editView.value = null
-  if (card.configForm) {
-    selectCard.value = card
-    state.cardConfig = {}
-    state.openConfig = true
-  } else {
-    cr.value?.addCard(card, {})
-  }
+const insertCard = (data: ICardData) => {
+  cr.value?.addCard(data)
 }
 
 const edit = (view: ICardView) => {
-  const id = view.data?.cardId || ''
-  selectCard.value = store.cardMap.get(id)
   editView.value = view
-  state.cardConfig = view.data?.config || {}
+  state.initialData = view.data
+  formRef.value?.setCard(state.initialData)
 }
-const submit = async () => {
+const update = (data: ICardData) => {
   if (editView.value) {
-    if (ctxRef.value?.validate) await ctxRef.value?.validate()
-    editView.value!.data!.config = ctxRef.value?.getModel() || {}
-  } else if (selectCard.value) {
-    if (ctxRef.value?.validate) await ctxRef.value?.validate()
-    cr.value?.addCard(selectCard.value!, ctxRef.value?.getModel() || {})
+    editView.value.data = data
   }
-  state.openConfig = false
 }
 </script>
 <style lang="scss" scoped>

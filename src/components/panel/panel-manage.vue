@@ -8,7 +8,7 @@
         </n-button>
       </div>
       <n-space align="center">
-        <n-button @click="state.openAddPanel = true">
+        <n-button @click="add">
           <svg-icon icon="material-symbols:add" class="text-lg mr-0.5" />
           添加组件
         </n-button>
@@ -24,70 +24,41 @@
       <n-empty description="暂未添加组件"></n-empty>
     </div>
     <card-render ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="30" @edit="edit" />
-    <add-card v-model:show="state.openAddPanel" @add-card="insertCard" />
-    <n-modal v-model:show="state.openConfig" preset="dialog" title="配置" size="huge" :style="{ width: '600px' }">
-      <div class="mt-4">
-        <config-ctx ref="ctxRef" :config="state.cardConfig">
-          <component :is="selectCard?.configForm" />
-        </config-ctx>
-      </div>
-      <template #action>
-        <n-button @click="state.openConfig = false">取消</n-button>
-        <n-button type="primary" @click="submit">添加卡片</n-button>
-      </template>
-    </n-modal>
+    <add-card v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>
 <script lang="tsx" setup>
-import { reactive, ref, shallowRef } from 'vue'
-import { usePanelStore } from '@/store'
-import type { ICardDefine, ICardRender, ICardView } from '@/components/panel/card'
-import ConfigCtx from '@/components/panel/ui/config-ctx.vue'
+import { reactive, ref } from 'vue'
+import type { ICardData, ICardRender, ICardView } from '@/components/panel/card'
+
 const layout = ref<ICardView[]>([])
 const state = reactive({
   openAddPanel: false,
-  openConfig: false,
-  cardConfig: {} as Record<string, any>
+  cardData: null as null | ICardData
 })
 
-const selectCard = shallowRef<ICardDefine | null>()
 const editView = ref<ICardView | null>()
 const cr = ref<ICardRender>()
-const store = usePanelStore()
-const ctxRef = ref<{
-  validate?: () => Promise<any>
-  getModel: () => Record<string, any>
-}>()
 
-const insertCard = (card: ICardDefine) => {
-  editView.value = null
-  if (card.configForm) {
-    selectCard.value = card
-    state.cardConfig = {}
-    state.openConfig = true
-  } else {
-    cr.value?.addCard(card, {})
-    state.openAddPanel = false
-  }
-}
-
-const edit = (view: ICardView) => {
-  const id = view.data?.cardId || ''
-  selectCard.value = store.cardMap.get(id)
-  editView.value = view
-  state.cardConfig = view.data?.config || {}
-  state.openConfig = true
-}
-const submit = async () => {
+const insertCard = (card: ICardData) => {
   if (editView.value) {
-    if (ctxRef.value?.validate) await ctxRef.value?.validate()
-    editView.value!.data!.config = ctxRef.value?.getModel() || {}
-  } else if (selectCard.value) {
-    if (ctxRef.value?.validate) await ctxRef.value?.validate()
-    cr.value?.addCard(selectCard.value!, ctxRef.value?.getModel() || {})
-    state.openAddPanel = false
+    editView.value.data = card
+  } else {
+    cr.value?.addCard(card)
   }
-  state.openConfig = false
+  editView.value = null
+  state.openAddPanel = false
+}
+
+const add = () => {
+  editView.value = null
+  state.cardData = null
+  state.openAddPanel = true
+}
+const edit = (view: ICardView) => {
+  editView.value = view
+  state.cardData = view.data || null
+  state.openAddPanel = true
 }
 </script>
 <style lang="scss" scoped>

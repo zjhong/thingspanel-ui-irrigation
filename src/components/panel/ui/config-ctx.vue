@@ -4,14 +4,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, provide, reactive, ref, toRaw } from 'vue'
-import type { FormInst } from 'naive-ui'
+import { onMounted, provide, reactive, toRaw, watch } from 'vue'
 import { cloneDeep } from 'lodash'
-const formRef = ref<FormInst | null>(null)
+import type { IConfigCtx } from '@/components/panel/card'
 
-const props = defineProps<{
-  config: Record<string, any>
-}>()
+const props = defineProps<IConfigCtx>()
 const model = reactive<Record<string, any>>({})
 
 onMounted(() => {
@@ -23,24 +20,23 @@ onMounted(() => {
 })
 
 provide('config-ctx', {
-  model,
-  formRef
+  config: model,
+  view: props.view
 })
 
 defineExpose({
-  validate: () => (formRef.value ? formRef.value.validate() : null),
   getModel: () => cloneDeep(toRaw(model))
 })
 
-// const emit = defineEmits<{
-// 	(e: 'update:config', value: Record<string, any>): void
-// }>()
-//
-// watch(
-// 	model,
-// 	v => {
-// 		emit('update:config', v)
-// 	},
-// 	{ deep: true }
-// )
+const emit = defineEmits<{
+  (e: 'update:config', value: Record<string, any>): void
+}>()
+
+watch(
+  model,
+  v => {
+    emit('update:config', v)
+  },
+  { deep: true }
+)
 </script>

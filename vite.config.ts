@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from 'vite'
+import svgLoader from 'vite-svg-loader'
 import { createViteProxy, getRootPath, getSrcPath, setupVitePlugins, viteDefine } from './build'
 import { getServiceEnvConfig } from './.env-config'
-
 export default defineConfig(configEnv => {
   const viteEnv = loadEnv(configEnv.mode, process.cwd()) as unknown as ImportMetaEnv
 
@@ -20,7 +20,7 @@ export default defineConfig(configEnv => {
       }
     },
     define: viteDefine,
-    plugins: setupVitePlugins(viteEnv),
+    plugins: [...setupVitePlugins(viteEnv), svgLoader()],
     css: {
       preprocessorOptions: {
         scss: {

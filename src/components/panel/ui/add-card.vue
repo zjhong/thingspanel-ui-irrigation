@@ -24,7 +24,7 @@
           </div>
           <div class="pt-5">
             <div class="h-[calc(100vh_-_450px)]">
-              <card-form ref="formRef" @update="data => (state.curCardData = data)" />
+              <card-form ref="formRef" @update="(data: any) => (state.curCardData = data)" />
             </div>
             <div
               class="border-t border-t dark:border-gray-200/10 border-gray-200 justify-center pt-3 flex justify-center space-x-5"

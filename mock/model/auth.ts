@@ -14,6 +14,14 @@ export const userModel: UserModel[] = [
     password: 'soybean123'
   },
   {
+    token: '__TOKEN_SOYBEAN__',
+    refreshToken: '__REFRESH_TOKEN_SOYBEAN__',
+    userId: '100',
+    userName: 'super@super.cn',
+    userRole: 'super',
+    password: '123456'
+  },
+  {
     token: '__TOKEN_SUPER__',
     refreshToken: '__REFRESH_TOKEN_SUPER__',
     userId: '1',

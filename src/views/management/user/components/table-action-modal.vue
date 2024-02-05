@@ -153,7 +153,7 @@ async function handleSubmit() {
     data = await editUser(formModel)
   }
   if (!data.error) {
-    window.$message?.success(data.message)
+    window.$message?.success(data.msg)
     emit('success')
   }
   closeModal()

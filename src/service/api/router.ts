@@ -1,4 +1,4 @@
-import { request } from '../request_demo'
+import { request } from '../request'
 import { adapterOfFetchRouterList } from './management.adapter'
 
 /** 获取路由列表 */
@@ -6,6 +6,14 @@ export const fetchElementList = async (params: any = {}) => {
   const data = await request.get<ApiCustomRoute.Data>('/ui_elements', {
     params
   })
+  // eslint-disable-next-line no-unused-expressions
+  data.data && (data.data.list = adapterOfFetchRouterList(data.data))
+  return data
+}
+
+/** 根据用户获取路由列表 */
+export const fetchElementListByUser = async () => {
+  const data = await request.get<ApiCustomRoute.Data>('/ui_elements/menu')
   // eslint-disable-next-line no-unused-expressions
   data.data && (data.data.list = adapterOfFetchRouterList(data.data))
   return data

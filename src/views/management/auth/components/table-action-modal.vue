@@ -6,34 +6,36 @@
           <n-tree-select
             v-model:value="formModel.parent_id"
             :options="parentOptions"
-            label-field="title"
-            key-field="path"
+            label-field="description"
+            key-field="id"
           />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="标题" path="title">
-          <n-input v-model:value="formModel.title" />
+        <n-form-item-grid-item :span="12" label="标题" path="description">
+          <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="标题（国际化）" path="i18nTitle">
+        <!-- <n-form-item-grid-item :span="12" label="标题（国际化）" path="i18nTitle">
           <n-input v-model:value="formModel.i18nTitle" />
+        </n-form-item-grid-item> -->
+        <n-form-item-grid-item :span="12" label="名称" path="element_code">
+          <n-input v-model:value="formModel.element_code" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="名称" path="name">
-          <n-input v-model:value="formModel.name" />
+        <n-form-item-grid-item :span="12" label="path" path="param1">
+          <n-input v-model:value="formModel.param1" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="path" path="path">
-          <n-input v-model:value="formModel.path" />
+        <n-form-item-grid-item :span="12" label="组件类型" path="param3">
+          <n-select v-model:value="formModel.param3" :options="routeComponentTypeOptions" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="组件类型" path="component">
-          <n-select v-model:value="formModel.component" :options="routeComponentTypeOptions" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="图标" path="icon">
-          <icon-select v-model:value="formModel.icon" :icons="icons" />
+        <n-form-item-grid-item :span="12" label="图标" path="param2">
+          <icon-select v-model:value="formModel.param2" :icons="icons" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="排序" path="orders">
           <n-input-number v-model:value="formModel.orders" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="类型" path="element_type">
           <n-radio-group v-model:value="formModel.element_type">
-            <n-radio v-for="item in routeTypeOptions" :key="item.value" :value="item.value">{{ item.label }}</n-radio>
+            <n-radio v-for="item in routeTypeOptions" :key="item.value" :value="Number(item.value)">
+              {{ item.label }}
+            </n-radio>
           </n-radio-group>
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="权限" path="authority">
@@ -45,8 +47,8 @@
             </n-space>
           </n-checkbox-group>
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="描述">
-          <n-input v-model:value="formModel.description" type="textarea" />
+        <n-form-item-grid-item :span="24" label="备注">
+          <n-input v-model:value="formModel.remark" type="textarea" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -126,39 +128,39 @@ const formRef = ref<HTMLElement & FormInst>()
 type FormModel = Pick<
   CustomRoute.Route,
   | 'parent_id'
-  | 'name'
-  | 'path'
-  | 'component'
+  | 'element_code'
+  | 'param1'
+  | 'param3'
   | 'element_type'
   | 'authority'
-  | 'description'
+  | 'remark'
   | 'i18nTitle'
-  | 'icon'
+  | 'param2'
   | 'orders'
-  | 'title'
+  | 'description'
 >
 
 const formModel = reactive<FormModel>(createDefaultFormModel())
 
 const rules = {
-  title: createRequiredFormRule('请输入标题'),
-  name: createRequiredFormRule('请输入名称'),
+  description: createRequiredFormRule('请输入标题'),
+  element_code: createRequiredFormRule('请输入名称'),
   authority: createRequiredFormRule('请选择')
 }
 
 function createDefaultFormModel(): FormModel {
   return {
-    parent_id: '',
-    name: '',
-    path: '',
-    component: 'basic',
+    parent_id: '0',
+    element_code: '',
+    param1: '',
+    param3: 'basic',
     i18nTitle: 'default',
-    icon: '',
+    param2: '',
     orders: 1,
-    title: '',
-    element_type: '1',
+    description: '',
+    element_type: 1,
     authority: [],
-    description: ''
+    remark: ''
   }
 }
 
@@ -185,6 +187,7 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate()
   const formData = deepClone(formModel)
+  formData.parent_id = formData.parent_id || '0'
   formData.authority = JSON.stringify(formData.authority)
   let data: any
   if (props.type === 'add') {
@@ -193,7 +196,7 @@ async function handleSubmit() {
     data = await editElement(formData)
   }
   if (!data.error) {
-    window.$message?.success(data.message)
+    window.$message?.success(data.msg)
     emit('success')
   }
   closeModal()

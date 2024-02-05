@@ -1,4 +1,4 @@
-import { request } from '../request_demo'
+import { request } from '../request'
 
 /**
  * 登录

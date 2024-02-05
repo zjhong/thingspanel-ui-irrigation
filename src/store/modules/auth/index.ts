@@ -96,6 +96,7 @@ export const useAuthStore = defineStore('auth-store', {
 
       // 获取用户信息
       const { data } = await fetchUserInfo()
+      console.log(data)
       if (data) {
         // 成功后把用户信息存储到缓存中
         localStg.set('userInfo', data)

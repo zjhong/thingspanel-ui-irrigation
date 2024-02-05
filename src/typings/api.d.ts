@@ -154,11 +154,11 @@ declare namespace ApiGeneralSetting {
     /** 系统标题 */
     system_name: string | null
     /** 首页和后台 logo */
-    logo_one: string | undefined
+    logo_background: string | undefined
     /** 加载页面 logo */
-    logo_two: string | undefined
+    logo_loading: string | undefined
     /** 站标 logo */
-    logo_three: string | undefined
+    logo_cache: string | undefined
     /** 背景图片 */
     home_background: string | undefined
   }
@@ -167,7 +167,9 @@ declare namespace ApiGeneralSetting {
     /** id */
     id: string
     /** 清理类型 */
-    cleanup_type: string
+    data_type: string
+    /** 是否启用 */
+    enabled: string
     /** 保留天数 */
     retention_days: number
     /** 上次清理时间 */
@@ -176,6 +178,16 @@ declare namespace ApiGeneralSetting {
     last_cleanup_data_time: string | null
     /** 备注 */
     remark: string | null
+  }
+
+  interface DataClear {
+    list: DataClearSetting[]
+    total: number
+  }
+
+  interface Theme {
+    list: ThemeSetting[]
+    total: number
   }
 }
 
@@ -193,21 +205,23 @@ declare namespace ApiCustomRoute {
     /** 国际化 */
     i18nTitle: I18nType.I18nKey
     /** 图标 */
-    icon: string
+    param2: string
     /** 组件名称 */
-    name: string
+    element_code: string
     /** 组件路径 */
-    path: string
+    param1: string
     /** 组件类型 */
-    component: AuthRoute.RouteComponentType
+    param3: AuthRoute.RouteComponentType
     /** 排序 */
     orders: number
     /** 类型 */
-    element_type: '1' | '2' | '3' | '4'
+    element_type: 1 | 2 | 3 | 4
     /** 访问标识 */
     authority: any
     /** 描述 */
     description: string
+    /** 描述 */
+    remark: string
     /** 子节点 */
     children: []
   }

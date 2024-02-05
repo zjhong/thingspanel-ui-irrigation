@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ROOT_ROUTE, constantRoutes, router, routes as staticRoutes } from '@/router'
+// import { fetchElementListByUser } from '@/service'
 import {
   localStg,
   filterAuthRoutesByUserPermission,
@@ -110,14 +111,15 @@ export const useRouteStore = defineStore('route-store', {
       const { resetAuthStore } = useAuthStore()
       const { initHomeTab } = useTabStore()
 
-      const { userId } = localStg.get('userInfo') || {}
+      const { id } = localStg.get('userInfo') || {}
 
-      if (!userId) {
+      if (!id) {
         throw new Error('userId 不能为空!')
       }
 
-      const { error, data } = await fetchUserRoutes(userId)
-
+      // const { error, data } = await fetchElementListByUser()
+      const { error, data } = await fetchUserRoutes(id)
+      console.log(data)
       if (!error) {
         this.handleAuthRoute(sortRoutes(data.routes))
         // home相关处理需要在最后，否则会出现找不到主页404的情况

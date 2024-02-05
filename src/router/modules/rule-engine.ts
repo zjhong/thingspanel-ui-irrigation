@@ -8,7 +8,6 @@ const ruleEngine: AuthRoute.Route = {
     requiresAuth: true,
     keepAlive: true,
     singleLayout: 'basic',
-    permissions: ['super', 'admin', 'user'],
     icon: 'icon-park-outline:rectangular-vertebra',
     order: 11
   }

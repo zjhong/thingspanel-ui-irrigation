@@ -11,7 +11,7 @@ declare namespace Auth {
   /** 用户信息 */
   interface UserInfo {
     /** 用户id */
-    userId: string
+    id: string
     /** 用户名 */
     userName: string
     /** 用户角色类型 */
@@ -124,7 +124,13 @@ declare namespace GeneralSetting {
    * - 1: 操作日志
    * - 2: 设备数据
    */
-  type CleanupTypeKey = NonNullable<DataClearSetting['cleanup_type']>
+  type CleanupTypeKey = NonNullable<DataClearSetting['data_type']>
+  /**
+   * 是否启用
+   * - 1: 启用
+   * - 2: 停用
+   */
+  type EnabledTypeKey = NonNullable<DataClearSetting['enabled']>
 }
 
 /**
@@ -143,7 +149,7 @@ declare namespace CustomRoute {
   type routerTypeKey = NonNullable<Route['element_type']>
 
   /**
-   * 清理类型
+   * 类型
    * - 1: 租户
    * - 2: 系统管理员
    */

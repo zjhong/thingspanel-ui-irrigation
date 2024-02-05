@@ -36,7 +36,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui'
 import { routerSysFlagLabels, routerTypeLabels } from '@/constants'
 import { fetchElementList, delElement } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
-import { $t } from '@/locales'
+import { deepClone } from '@/utils'
 import TableActionModal from './components/table-action-modal.vue'
 import type { ModalType } from './components/table-action-modal.vue'
 
@@ -70,40 +70,40 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   {
-    key: 'meta.i18nTitle',
+    key: 'description',
     title: '标题',
     align: 'left',
     render: row => {
-      if (row.i18nTitle && row.i18nTitle !== 'default') {
-        return <span>{$t(row.i18nTitle)}</span>
-      }
-      return <span>{row.title}</span>
+      // if (row.i18nTitle && row.i18nTitle !== 'default') {
+      //   return <span>{$t(row.i18nTitle)}</span>
+      // }
+      return <span>{row.description}</span>
     }
   },
   {
-    key: 'name',
+    key: 'element_code',
     title: '名称',
     align: 'left'
   },
   {
-    key: 'icon',
+    key: 'param2',
     title: '图标',
     align: 'left',
     render: row => {
-      if (row.icon) {
-        return <svg-icon icon={row.icon} />
+      if (row.param2) {
+        return <svg-icon icon={row.param2} />
       }
       return <span></span>
     }
   },
   {
-    key: 'path',
+    key: 'param1',
     title: 'url',
     align: 'left'
   },
   {
-    key: 'component',
-    title: '组件',
+    key: 'param3',
+    title: '组件类型',
     align: 'left'
   },
   {
@@ -146,8 +146,8 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     }
   },
   {
-    key: 'description',
-    title: '描述',
+    key: 'remark',
+    title: '备注',
     align: 'left'
   },
   {
@@ -157,7 +157,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     render: row => {
       return (
         <NSpace>
-          <NButton type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
+          <NButton type="primary" size={'small'} onClick={() => handleEditTable(row)}>
             编辑
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
@@ -184,20 +184,13 @@ function setModalType(type: ModalType) {
 
 const editData = ref<CustomRoute.Route | null>(null)
 
-function setEditData(data: CustomRoute.Route | null) {
-  editData.value = data
-}
-
 function handleAddTable() {
   openModal()
   setModalType('add')
 }
 
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId)
-  if (findItem) {
-    setEditData(findItem)
-  }
+function handleEditTable(row: any) {
+  editData.value = deepClone(row)
   setModalType('edit')
   openModal()
 }

@@ -1,4 +1,4 @@
-import { mockRequest } from '../request_demo'
+import { mockRequest } from '../request'
 
 /**
  * 获取验证码

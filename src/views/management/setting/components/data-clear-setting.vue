@@ -7,6 +7,13 @@
           <n-form-item-grid-item :span="24" label="保留天数">
             <n-input-number v-model:value="editData.retention_days" class="flex-1" />
           </n-form-item-grid-item>
+          <n-form-item-grid-item :span="24" label="是否启用" path="enabled">
+            <n-radio-group v-model:value="editData.enabled">
+              <n-radio v-for="item in dataClearSettingEnabledTypeOptions" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </n-radio>
+            </n-radio-group>
+          </n-form-item-grid-item>
           <n-form-item-grid-item :span="24" label="备注">
             <n-input v-model:value="editData.remark" type="textarea" placeholder="" />
           </n-form-item-grid-item>
@@ -22,27 +29,38 @@
 import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { NButton, NSpace, NTag } from 'naive-ui'
-import type { DataTableColumns } from 'naive-ui'
-import { dataClearSettingCleanupTypeLabels } from '@/constants'
+import type { DataTableColumns, FormInst } from 'naive-ui'
+import dayjs from 'dayjs'
+import { dataClearSettingCleanupTypeLabels, dataClearSettingEnabledTypeOptions } from '@/constants'
+import { fetchDataClearList, editDataClear } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
-import { fetchDataClearList } from '@/service/demo'
+import { deepClone } from '@/utils'
 
 const { loading, startLoading, endLoading } = useLoading(false)
-const { bool: visible, setTrue: openModal } = useBoolean()
+const { bool: visible, setTrue: openModal, setFalse: closeModal } = useBoolean()
 
 const tableData = ref<GeneralSetting.DataClearSetting[]>([])
 function setTableData(data: GeneralSetting.DataClearSetting[]) {
   tableData.value = data
 }
 
+type QueryFormModel = {
+  page: number
+  page_size: number
+}
+
+const queryParams = reactive<QueryFormModel>({
+  page: 1,
+  page_size: 10
+})
+
 async function getTableData() {
   startLoading()
-  const { data } = await fetchDataClearList()
+  const { data } = await fetchDataClearList(queryParams)
   if (data) {
-    setTimeout(() => {
-      setTableData(data)
-      endLoading()
-    }, 1000)
+    const list: ApiGeneralSetting.DataClearSetting[] = data.list
+    setTableData(list)
+    endLoading()
   }
 }
 
@@ -54,16 +72,16 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
     width: '100px'
   },
   {
-    key: 'cleanup_type',
+    key: 'data_type',
     title: '清理类型',
     align: 'left',
     render: row => {
-      if (row.cleanup_type) {
+      if (row.data_type) {
         const tagTypes: Record<GeneralSetting.CleanupTypeKey, NaiveUI.ThemeColor> = {
           '1': 'success',
           '2': 'warning'
         }
-        return <NTag type={tagTypes[row.cleanup_type]}>{dataClearSettingCleanupTypeLabels[row.cleanup_type]}</NTag>
+        return <NTag type={tagTypes[row.data_type]}>{dataClearSettingCleanupTypeLabels[row.data_type]}</NTag>
       }
       return <span></span>
     }
@@ -76,12 +94,18 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   {
     key: 'last_cleanup_time',
     title: '上次清理时间',
-    align: 'left'
+    align: 'left',
+    render: row => {
+      return <span>{dayjs(row.last_cleanup_time).format('YYYY-MM-DD HH:mm:ss')}</span>
+    }
   },
   {
     key: 'last_cleanup_data_time',
     title: '上次清理数据时间节点',
-    align: 'left'
+    align: 'left',
+    render: row => {
+      return <span>{dayjs(row.last_cleanup_data_time).format('YYYY-MM-DD HH:mm:ss')}</span>
+    }
   },
   {
     key: 'remark',
@@ -96,7 +120,7 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
+          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
             编辑
           </NButton>
         </NSpace>
@@ -105,13 +129,16 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   }
 ]) as Ref<DataTableColumns<GeneralSetting.DataClearSetting>>
 
-type FormModel = Pick<GeneralSetting.DataClearSetting, 'retention_days' | 'remark'>
+const formRef = ref<HTMLElement & FormInst>()
+
+type FormModel = Pick<GeneralSetting.DataClearSetting, 'retention_days' | 'enabled' | 'remark'>
 
 const editData = reactive<FormModel>(createDefaultFormModel())
 
 function createDefaultFormModel(): FormModel {
   return {
     retention_days: 0,
+    enabled: '1',
     remark: null
   }
 }
@@ -120,16 +147,20 @@ function setEditData(data: GeneralSetting.DataClearSetting | null) {
   Object.assign(editData, data)
 }
 
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId)
-  if (findItem) {
-    setEditData(findItem)
-  }
+function handleEditTable(row: any) {
+  setEditData(row)
   openModal()
 }
 
-function handleSubmit() {
-  console.log('提交')
+async function handleSubmit() {
+  await formRef.value?.validate()
+  const formData = deepClone(editData)
+  const data: any = await editDataClear(formData)
+  if (!data.error) {
+    window.$message?.success(data.msg)
+    getTableData()
+  }
+  closeModal()
 }
 
 function init() {

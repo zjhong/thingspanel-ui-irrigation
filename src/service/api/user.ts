@@ -1,4 +1,4 @@
-import { request } from '../request_demo'
+import { request } from '../request'
 
 /** 获取用户列表 */
 export const fetchUserList = async (params: any) => {

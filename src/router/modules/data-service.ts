@@ -8,7 +8,6 @@ const dataService: AuthRoute.Route = {
     requiresAuth: true,
     keepAlive: true,
     singleLayout: 'basic',
-    permissions: ['super', 'admin', 'user'],
     icon: 'icon-park-outline:data-server',
     order: 12
   }

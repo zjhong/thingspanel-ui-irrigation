@@ -1,6 +1,12 @@
 <template>
   <n-upload
-    action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f"
+    :action="url + '/file/up'"
+    :headers="{
+      'x-token': localStg.get('token') || ''
+    }"
+    :data="{
+      type: 'image'
+    }"
     accept="image/png, image/jpeg, image/jpg, image/jif"
     :show-file-list="false"
     @before-upload="beforeUpload"
@@ -12,8 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import type { UploadFileInfo } from 'naive-ui'
+import { ref } from 'vue'
+// eslint-disable-next-line import/order
+import { getServiceEnvConfig } from '~/.env-config'
+const url = ref(getServiceEnvConfig(import.meta.env).url)
 defineOptions({ name: 'UploadFile' })
+// eslint-disable-next-line import/order
+import type { UploadFileInfo } from 'naive-ui'
+import { localStg } from '@/utils'
 
 export interface Props {
   /** 按钮文字 */
@@ -57,11 +69,9 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
 }
 
 function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) {
-  window.$message?.success((event?.target as XMLHttpRequest).response)
-  const ext = file.name.split('.')[1]
-  file.name = `更名.${ext}`
-  file.url = '__HTTPS__://www.mocky.io/v2/5e4bafc63100007100d8b70f'
-  emit('update:value', file.url)
+  const response = JSON.parse((event?.target as XMLHttpRequest).response)
+  window.$message?.success(response.message)
+  emit('update:value', response.data.path)
   emit('success', file)
 }
 

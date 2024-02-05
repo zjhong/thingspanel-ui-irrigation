@@ -80,6 +80,13 @@ export const dataClearSettingCleanupTypeLabels: Record<GeneralSetting.CleanupTyp
   2: '操作日志'
 }
 
+/** 系统管理 - 常规设置 - 数据清理 清理类型 */
+export const dataClearSettingEnabledTypeLabels: Record<GeneralSetting.EnabledTypeKey, string> = {
+  1: '启用',
+  2: '停用'
+}
+export const dataClearSettingEnabledTypeOptions = transformObjectToOption(dataClearSettingEnabledTypeLabels)
+
 /** 路由管理 - 组件类型 */
 export const routeComponentTypeLabels: Record<AuthRoute.RouteComponentType, string> = {
   basic: 'basic',

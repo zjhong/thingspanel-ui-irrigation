@@ -8,7 +8,7 @@ export function getToken() {
 /** 获取用户信息 */
 export function getUserInfo() {
   const emptyInfo: Auth.UserInfo = {
-    userId: '',
+    id: '',
     userName: '',
     userRole: 'user'
   }

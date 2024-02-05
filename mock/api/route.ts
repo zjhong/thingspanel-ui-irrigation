@@ -10,7 +10,7 @@ const apis: MockMethod[] = [
 
       const routeHomeName: AuthRoute.LastDegreeRouteKey = 'dashboard_analysis'
 
-      const role = userModel.find(item => item.userId === userId)?.userRole || 'user'
+      const role = userModel.find(item => item.id === userId)?.userRole || 'user'
 
       const filterRoutes = routeModel[role]
 
@@ -29,7 +29,7 @@ const apis: MockMethod[] = [
     method: 'post',
     response: (options: Service.MockOption): Service.MockServiceResult => {
       const { userId = undefined } = options.body
-      const role = userModel.find(item => item.userId === userId)?.userRole || 'user'
+      const role = userModel.find(item => item.id === userId)?.userRole || 'user'
       const filterRoutes = routeModel[role]
       return {
         code: 200,

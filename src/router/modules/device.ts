@@ -12,9 +12,19 @@ const device: AuthRoute.Route = {
         icon: 'material-symbols:device-hub',
         requiresAuth: true
       }
+    },
+    {
+      name: 'device_grouping',
+      path: '/device/grouping',
+      component: 'self',
+      meta: {
+        title: '分组管理',
+        icon: 'material-symbols:grid-on-outline-sharp',
+        requiresAuth: true
+      }
     }
   ],
-  meta: { title: '设备', icon: 'tabler:device-tv', order: 3 }
+  meta: { title: '设备接入', icon: 'tabler:device-tv', order: 3 }
 }
 
 export default device

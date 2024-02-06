@@ -22,6 +22,7 @@ export const views: Record<
   dashboard_panel: () => import('./dashboard/panel/index.vue'),
   dashboard_workbench: () => import('./dashboard/workbench/index.vue'),
   'data-service': () => import('./data-service/index.vue'),
+  device_grouping: () => import('./device/grouping/index.vue'),
   device_manage: () => import('./device/manage/index.vue'),
   exception_403: () => import('./exception/403/index.vue'),
   exception_404: () => import('./exception/404/index.vue'),

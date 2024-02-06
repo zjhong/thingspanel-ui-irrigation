@@ -50,8 +50,8 @@ dependencies:
     specifier: 4.17.21
     version: 4.17.21
   naive-ui:
-    specifier: 2.35.0
-    version: 2.35.0(vue@3.3.4)
+    specifier: 2.37.3
+    version: 2.37.3(vue@3.3.4)
   nanoid:
     specifier: ^5.0.4
     version: 5.0.4
@@ -138,6 +138,12 @@ devDependencies:
   '@unocss/vite':
     specifier: 0.56.5
     version: 0.56.5(rollup@2.79.1)(vite@4.4.11)
+  '@vicons/ionicons4':
+    specifier: ^0.12.0
+    version: 0.12.0
+  '@vicons/ionicons5':
+    specifier: ^0.12.0
+    version: 0.12.0
   '@vitejs/plugin-vue':
     specifier: 4.4.0
     version: 4.4.0(vite@4.4.11)(vue@3.3.4)
@@ -3095,8 +3101,16 @@ packages:
       - rollup
     dev: true
 
+  /@vicons/ionicons4@0.12.0:
+    resolution: { integrity: sha512-i+7YwlpCrqD6m9esbZLy1bpVQlh4CKugtS3OzgfNw6BLTQQK6HT7drktaJgcESj/BTr4avdNbAtMQXx56wSVMg== }
+    dev: true
+
+  /@vicons/ionicons5@0.12.0:
+    resolution: { integrity: sha512-Iy1EUVRpX0WWxeu1VIReR1zsZLMc4fqpt223czR+Rpnrwu7pt46nbnC2ycO7ItI/uqDLJxnbcMC7FujKs9IfFA== }
+    dev: true
+
   /@vite-plugin-vue-devtools/core@1.0.0-rc.5(vite@4.4.11):
-    resolution: {integrity: sha512-S3zPV6QVRYz07D1ZEMShwbl8MTT/wvT27dPZicnnI2zXH7kCrOgm1aRw09j+1/35Z682Liqw+gzfnDDY+tIG2w==}
+    resolution: { integrity: sha512-S3zPV6QVRYz07D1ZEMShwbl8MTT/wvT27dPZicnnI2zXH7kCrOgm1aRw09j+1/35Z682Liqw+gzfnDDY+tIG2w== }
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0-0
     dependencies:
@@ -7852,18 +7866,18 @@ packages:
     dev: true
 
   /ms@2.1.2:
-    resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
+    resolution: { integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w== }
 
   /ms@2.1.3:
-    resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+    resolution: { integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA== }
     dev: true
 
   /muggle-string@0.3.1:
-    resolution: {integrity: sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg==}
+    resolution: { integrity: sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg== }
     dev: true
 
-  /naive-ui@2.35.0(vue@3.3.4):
-    resolution: {integrity: sha512-PdnLpOip1LQaKs5+rXLZoPDPQkTq26TnHWeABvUA2eOQjtHxE4+TQvj0Jq/W8clM2On/7jptoGmenLt48G3Bhg==}
+  /naive-ui@2.37.3(vue@3.3.4):
+    resolution: { integrity: sha512-aUkHFXVIluSi8Me+npbcsdv1NYhVMj5t9YaruoCESlqmfqspj+R2QHEVXkTtUI1kQwVrABMCtAGq/wountqjZA== }
     peerDependencies:
       vue: ^3.0.0
     dependencies:
@@ -7874,6 +7888,7 @@ packages:
       '@types/lodash-es': 4.17.12
       async-validator: 4.2.5
       css-render: 0.15.12
+      csstype: 3.1.3
       date-fns: 2.30.0
       date-fns-tz: 2.0.0(date-fns@2.30.0)
       evtd: 0.2.4

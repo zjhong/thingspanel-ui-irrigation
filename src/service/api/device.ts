@@ -26,6 +26,12 @@ export const deviceGroupTree = async (params: any) => {
 }
 /** 新增设备分组 */
 export const deviceGroup = async (params: { id: string; parent_id: string; name: string; description: string }) => {
-  const data = await request.post<ApiDeviceManagement.TreeStructure | null>('/device/group', params)
+  const data = await request.post<BaseApi.Data>('/device/group', params)
+  return data
+}
+
+/** 删除设备分组 */
+export const deleteDeviceGroup = async (params: { id: string }) => {
+  const data = await request.delete<BaseApi.Data>(`/device/group/${params.id}`)
   return data
 }

@@ -1,6 +1,6 @@
 <template>
   <!-- Modal component to display a form with tree selection, input field, and textarea -->
-  <n-modal v-model:show="showModal">
+  <n-modal v-model:show="showModal" @after-enter="getOptions">
     <n-card :bordered="false" :title="props.isEdit ? '新增分组' : '编辑分组'" size="huge" style="width: 600px">
       <n-form ref="formRef" :model="formItem" :rules="rules" label-placement="left" label-width="auto">
         <!-- Parent group selection using tree select component -->
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import type { FormInst, FormRules } from 'naive-ui'
 import { useMessage } from 'naive-ui'
 import { deviceGroup, deviceGroupTree } from '@/service/api/device'
@@ -51,15 +51,17 @@ interface Group {
 
 interface TreeNode {
   group: Group
-  children?: TreeNode[] // TreeNode类型的可选数组，用于描述子节点
+  children?: TreeNode[] | undefined // TreeNode类型的可选数组，用于描述子节点
 }
 const showModal = ref<boolean>(false)
 defineExpose({ showModal })
 // Props received from parent component
-const props = defineProps({
-  isEdit: Boolean
-  // editData: { type: Object, required: false, default: null }
-})
+interface Props {
+  isEdit?: boolean
+  editData?: { id: string; parent_id: string; name: string; description: string }
+  refreshData: () => Promise<void>
+}
+const props = defineProps<Props>()
 const message = useMessage()
 const formRef = ref<HTMLElement & FormInst>()
 const formItem = ref({
@@ -95,7 +97,7 @@ const extractIdAndName = (data: TreeNode[]): opNode[] => {
   const res = data?.map(node => ({
     id: node.group.id,
     name: node.group.name,
-    children: node.children ? extractIdAndName(node.children) : []
+    children: node.children ? extractIdAndName(node.children) : undefined
   }))
   return res
 }
@@ -109,7 +111,7 @@ const getOptions = async () => {
       children: data?.map(item => ({
         id: item.group.id,
         name: item.group.name,
-        children: item.children ? extractIdAndName(item.children) : []
+        children: item.children ? extractIdAndName(item.children) : undefined
       }))
     }
   ]
@@ -120,6 +122,7 @@ const handleSubmit = async () => {
   await formRef?.value?.validate()
   await deviceGroup(formItem.value)
   await getOptions()
+  await props.refreshData()
   showModal.value = false
   // eslint-disable-next-line require-atomic-updates
   if (formItem?.value) {
@@ -146,7 +149,7 @@ const handleClose = () => {
   }
 }
 
-onMounted(getOptions)
+// onMounted(getOptions)
 
 // Watch for editData changes to handle edit mode data echo back
 // watch(

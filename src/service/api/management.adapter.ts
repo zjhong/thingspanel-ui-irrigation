@@ -42,6 +42,7 @@ function replaceKeys(data: AuthRoute.Route[]): AuthRoute.Route[] {
         title: item.description,
         requiresAuth: true,
         permissions: JSON.parse(item.authority),
+        singleLayout: ['data-service', 'rule-engine'].includes(item.element_code) ? 'basic' : '',
         icon: item.param2,
         order: item.orders
       },

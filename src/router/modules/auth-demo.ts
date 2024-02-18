@@ -22,7 +22,7 @@ const authDemo: AuthRoute.Route = {
         title: '超级管理员可见',
         i18nTitle: 'routes.auth-demo.super',
         requiresAuth: true,
-        permissions: ['super'],
+        permissions: ['SYS_ADMIN'],
         icon: 'ic:round-supervisor-account'
       }
     }

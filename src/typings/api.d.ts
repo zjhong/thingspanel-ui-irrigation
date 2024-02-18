@@ -7,17 +7,6 @@ declare namespace BaseApi {
   }
 }
 
-/** 后端返回的路由相关类型 */
-declare namespace ApiRoute {
-  /** 后端返回的路由数据类型 */
-  interface Route {
-    /** 动态路由 */
-    routes: AuthRoute.Route[]
-    /** 路由首页对应的key */
-    home: AuthRoute.AllRouteKey
-  }
-}
-
 /** 后端返回的用户权益相关类型 */
 declare namespace ApiAuth {
   /** 返回的token和刷新token */
@@ -223,11 +212,17 @@ declare namespace ApiCustomRoute {
     /** 描述 */
     remark: string
     /** 子节点 */
-    children: []
+    children: Route[]
   }
 
   interface Data {
     list: Route[]
+    total: number
+  }
+
+  interface UserRouter {
+    list: AuthRoute.Route[]
+    home: string
     total: number
   }
 }

@@ -72,13 +72,13 @@ const apis: MockMethod[] = [
       const userInfo: Auth.UserInfo = {
         id: '',
         userName: '',
-        userRole: 'user'
+        authority: 'TENANT_USER'
       }
       const isInUser = userModel.some(item => {
         const flag = item.token === authorization
         if (flag) {
-          const { id: itemUserId, userName, userRole } = item
-          Object.assign(userInfo, { userId: itemUserId, userName, userRole })
+          const { id: itemUserId, userName, authority } = item
+          Object.assign(userInfo, { userId: itemUserId, userName, authority })
         }
         return flag
       })

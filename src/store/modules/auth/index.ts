@@ -96,7 +96,6 @@ export const useAuthStore = defineStore('auth-store', {
 
       // 获取用户信息
       const { data } = await fetchUserInfo()
-      console.log(data)
       if (data) {
         // 成功后把用户信息存储到缓存中
         localStg.set('userInfo', data)
@@ -125,26 +124,26 @@ export const useAuthStore = defineStore('auth-store', {
     },
     /**
      * 更换用户权限(切换账号)
-     * @param userRole
+     * @param authority
      */
-    async updateUserRole(userRole: Auth.RoleType) {
+    async updateUserRole(authority: Auth.RoleType) {
       const { resetRouteStore, initAuthRoute } = useRouteStore()
 
       const accounts: Record<Auth.RoleType, { userName: string; password: string }> = {
-        super: {
+        SYS_ADMIN: {
           userName: 'Super',
           password: 'super123'
         },
-        admin: {
+        TENANT_ADMIN: {
           userName: 'Admin',
           password: 'admin123'
         },
-        user: {
+        TENANT_USER: {
           userName: 'User01',
           password: 'user01123'
         }
       }
-      const { userName, password } = accounts[userRole]
+      const { userName, password } = accounts[authority]
       const { data } = await fetchLogin(userName, password)
       if (data) {
         await this.loginByToken(data)

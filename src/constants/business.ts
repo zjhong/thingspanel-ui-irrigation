@@ -10,9 +10,9 @@ export const loginModuleLabels: Record<UnionKey.LoginModule, string> = {
 }
 
 export const userRoleLabels: Record<Auth.RoleType, string> = {
-  super: $t('page.login.pwdLogin.superAdmin'),
-  admin: $t('page.login.pwdLogin.admin'),
-  user: $t('page.login.pwdLogin.user')
+  SYS_ADMIN: $t('page.login.pwdLogin.superAdmin'),
+  TENANT_ADMIN: $t('page.login.pwdLogin.admin'),
+  TENANT_USER: $t('page.login.pwdLogin.user')
 }
 export const userRoleOptions = transformObjectToOption(userRoleLabels)
 
@@ -107,7 +107,8 @@ export const routeTypeOptions = transformObjectToOption(routerTypeLabels)
 
 /** 路由管理 - 访问标识 */
 export const routerSysFlagLabels: Record<CustomRoute.routerSysFlagKey, string> = {
-  1: '系统管理员',
-  2: '租户'
+  SYS_ADMIN: '系统管理员',
+  TENANT_USER: '租户用户',
+  TENANT_ADMIN: '租户管理员'
 }
 export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels)

@@ -1,5 +1,5 @@
 export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
-  super: [
+  SYS_ADMIN: [
     {
       name: 'dashboard',
       path: '/dashboard',
@@ -489,7 +489,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       }
     }
   ],
-  admin: [
+  TENANT_ADMIN: [
     {
       name: 'dashboard',
       path: '/dashboard',
@@ -979,7 +979,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       }
     }
   ],
-  user: [
+  TENANT_USER: [
     {
       name: 'dashboard',
       path: '/dashboard',

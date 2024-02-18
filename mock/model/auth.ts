@@ -10,7 +10,7 @@ export const userModel: UserModel[] = [
     refreshToken: '__REFRESH_TOKEN_SOYBEAN__',
     id: '0',
     userName: 'Soybean',
-    userRole: 'super',
+    authority: 'SYS_ADMIN',
     password: 'soybean123'
   },
   {
@@ -18,7 +18,7 @@ export const userModel: UserModel[] = [
     refreshToken: '__REFRESH_TOKEN_SOYBEAN__',
     id: '100',
     userName: 'super@super.cn',
-    userRole: 'super',
+    authority: 'SYS_ADMIN',
     password: '123456'
   },
   {
@@ -26,7 +26,7 @@ export const userModel: UserModel[] = [
     refreshToken: '__REFRESH_TOKEN_SUPER__',
     id: '1',
     userName: 'Super',
-    userRole: 'super',
+    authority: 'SYS_ADMIN',
     password: 'super123'
   },
   {
@@ -34,7 +34,7 @@ export const userModel: UserModel[] = [
     refreshToken: '__REFRESH_TOKEN_ADMIN__',
     id: '2',
     userName: 'Admin',
-    userRole: 'admin',
+    authority: 'TENANT_ADMIN',
     password: 'admin123'
   },
   {
@@ -42,7 +42,7 @@ export const userModel: UserModel[] = [
     refreshToken: '__REFRESH_TOKEN_USER01__',
     id: '3',
     userName: 'User01',
-    userRole: 'user',
+    authority: 'TENANT_USER',
     password: 'user01123'
   }
 ]

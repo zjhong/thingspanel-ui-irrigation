@@ -2,10 +2,10 @@
   <div class="h-full">
     <n-card title="权限切换" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="pb-12px">
-        <n-gradient-text type="primary" :size="20">当前用户的权限：{{ auth.userInfo.userRole }}</n-gradient-text>
+        <n-gradient-text type="primary" :size="20">当前用户的权限：{{ auth.userInfo.authority }}</n-gradient-text>
       </div>
       <n-select
-        :value="auth.userInfo.userRole"
+        :value="auth.userInfo.authority"
         class="w-120px"
         size="small"
         :options="options"
@@ -15,7 +15,7 @@
         <n-gradient-text type="primary" :size="20">权限指令 v-permission</n-gradient-text>
       </div>
       <div>
-        <n-button v-permission="'super'" class="mr-12px">super可见</n-button>
+        <n-button v-permission="'SYS_ADMIN'" class="mr-12px">super可见</n-button>
         <n-button v-permission="'admin'" class="mr-12px">admin可见</n-button>
         <n-button v-permission="['admin', 'user']">admin和test可见</n-button>
       </div>
@@ -23,9 +23,9 @@
         <n-gradient-text type="primary" :size="20">权限函数 hasPermission</n-gradient-text>
       </div>
       <n-space>
-        <n-button v-if="hasPermission('super')">super可见</n-button>
-        <n-button v-if="hasPermission('admin')">admin可见</n-button>
-        <n-button v-if="hasPermission(['admin', 'user'])">admin和user可见</n-button>
+        <n-button v-if="hasPermission('SYS_ADMIN')">super可见</n-button>
+        <n-button v-if="hasPermission('TENANT_ADMIN')">admin可见</n-button>
+        <n-button v-if="hasPermission(['TENANT_ADMIN', 'TENANT_USER'])">admin和user可见</n-button>
       </n-space>
     </n-card>
   </div>
@@ -45,7 +45,7 @@ const { hasPermission } = usePermission()
 const options: SelectOption[] = userRoleOptions
 
 watch(
-  () => auth.userInfo.userRole,
+  () => auth.userInfo.authority,
   async () => {
     app.reloadPage()
   }

@@ -9,6 +9,7 @@
       </template>
       <div class="flex-col h-full">
         <n-data-table
+          :row-key="rowKey"
           :columns="columns"
           :data="tableData"
           :loading="loading"
@@ -68,11 +69,16 @@ async function getTableData() {
   }
 }
 
+const rowKey = (row: CustomRoute.Route) => {
+  return row.id
+}
+
 const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   {
     key: 'description',
     title: '标题',
     align: 'left',
+    width: '200px',
     render: row => {
       // if (row.i18nTitle && row.i18nTitle !== 'default') {
       //   return <span>{$t(row.i18nTitle)}</span>

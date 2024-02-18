@@ -60,7 +60,7 @@ import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui'
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
-import { genderLabels, userStatusLabels, userStatusOptions } from '@/constants'
+import { userStatusLabels, userStatusOptions } from '@/constants'
 import { fetchUserList, delUser } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
 import TableActionModal from './components/table-action-modal.vue'
@@ -131,22 +131,22 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
       return <span></span>
     }
   },
-  {
-    key: 'gender',
-    title: '性别',
-    align: 'center',
-    render: row => {
-      if (row.gender) {
-        const tagTypes: Record<UserManagement.GenderKey, NaiveUI.ThemeColor> = {
-          '0': 'success',
-          '1': 'warning'
-        }
-        return <NTag type={tagTypes[row.gender]}>{genderLabels[row.gender]}</NTag>
-      }
+  // {
+  //   key: 'gender',
+  //   title: '性别',
+  //   align: 'center',
+  //   render: row => {
+  //     if (row.gender) {
+  //       const tagTypes: Record<UserManagement.GenderKey, NaiveUI.ThemeColor> = {
+  //         '0': 'success',
+  //         '1': 'warning'
+  //       }
+  //       return <NTag type={tagTypes[row.gender]}>{genderLabels[row.gender]}</NTag>
+  //     }
 
-      return <span></span>
-    }
-  },
+  //     return <span></span>
+  //   }
+  // },
   {
     key: 'remark',
     title: '备注',

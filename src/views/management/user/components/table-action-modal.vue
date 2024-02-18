@@ -11,11 +11,11 @@
         <n-form-item-grid-item :span="12" label="手机号" path="phone_number">
           <n-input v-model:value="formModel.phone_number" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="性别">
+        <!-- <n-form-item-grid-item :span="12" label="性别">
           <n-radio-group v-model:value="formModel.gender">
             <n-radio v-for="item in genderOptions" :key="item.value" :value="item.value">{{ item.label }}</n-radio>
           </n-radio-group>
-        </n-form-item-grid-item>
+        </n-form-item-grid-item> -->
         <template v-if="type === 'add'">
           <n-form-item-grid-item :span="12" label="密码" path="password">
             <n-input v-model:value="formModel.password" type="password" />
@@ -24,7 +24,7 @@
             <n-input v-model:value="formModel.confirmPwd" type="password" />
           </n-form-item-grid-item>
         </template>
-        <n-form-item-grid-item :span="12" label="备注">
+        <n-form-item-grid-item :span="24" label="备注">
           <n-input v-model:value="formModel.remark" type="textarea" />
         </n-form-item-grid-item>
       </n-grid>
@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch, toRefs } from 'vue'
 import type { FormInst, FormItemRule } from 'naive-ui'
-import { genderOptions } from '@/constants'
+// import { genderOptions } from '@/constants'
 import { addUser, editUser } from '@/service'
 import { formRules, createRequiredFormRule, getConfirmPwdRule } from '@/utils'
 

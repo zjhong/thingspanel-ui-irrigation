@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ROOT_ROUTE, constantRoutes, router, routes as staticRoutes } from '@/router'
-// import { fetchElementListByUser } from '@/service'
+import { fetchElementListByUser } from '@/service'
 import {
   localStg,
   filterAuthRoutesByUserPermission,
@@ -14,7 +14,7 @@ import {
   transformRoutePathToRouteName,
   sortRoutes
 } from '@/utils'
-import { fetchUserRoutes } from '@/service/demo'
+// import { fetchUserRoutes } from '@/service/demo'
 import { useAppStore } from '../app'
 import { useAuthStore } from '../auth'
 import { useTabStore } from '../tab'
@@ -117,16 +117,22 @@ export const useRouteStore = defineStore('route-store', {
         throw new Error('userId 不能为空!')
       }
 
-      // const { error, data } = await fetchElementListByUser()
-      const { error, data } = await fetchUserRoutes(id)
-      console.log(data)
-      if (!error) {
-        this.handleAuthRoute(sortRoutes(data.routes))
+      const { error, data } = await fetchElementListByUser()
+      // const { error, data } = await fetchUserRoutes(id)
+      if (!error && data) {
+        const routes: AuthRoute.Route[] = data.list
+        this.handleAuthRoute(sortRoutes(routes))
         // home相关处理需要在最后，否则会出现找不到主页404的情况
-        this.routeHomeName = data.home
-        this.handleUpdateRootRedirect(data.home)
+        const routeHomeName: AuthRoute.LastDegreeRouteKey = 'dashboard_analysis'
+        this.routeHomeName = routeHomeName
+        this.handleUpdateRootRedirect(routeHomeName)
+        initHomeTab(routeHomeName, router)
 
-        initHomeTab(data.home, router)
+        // this.handleAuthRoute(sortRoutes(data.routes))
+        // // home相关处理需要在最后，否则会出现找不到主页404的情况
+        // this.routeHomeName = data.home
+        // this.handleUpdateRootRedirect(data.home)
+        // initHomeTab(data.home, router)
 
         this.isInitAuthRoute = true
       } else {
@@ -138,7 +144,7 @@ export const useRouteStore = defineStore('route-store', {
       const { initHomeTab } = useTabStore()
       const auth = useAuthStore()
 
-      const routes = filterAuthRoutesByUserPermission(staticRoutes, auth.userInfo.userRole)
+      const routes = filterAuthRoutesByUserPermission(staticRoutes, auth.userInfo.authority)
       this.handleAuthRoute(routes)
       initHomeTab(this.routeHomeName, router)
 

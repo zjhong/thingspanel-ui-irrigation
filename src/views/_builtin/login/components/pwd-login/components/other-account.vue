@@ -33,20 +33,20 @@ interface Account {
 
 const accounts: Account[] = [
   {
-    key: 'super',
-    label: userRoleLabels.super,
-    userName: 'Super',
-    password: 'super123'
+    key: 'SYS_ADMIN',
+    label: userRoleLabels.SYS_ADMIN,
+    userName: 'super@super.cn',
+    password: '123456'
   },
   {
-    key: 'admin',
-    label: userRoleLabels.admin,
-    userName: 'Admin',
-    password: 'admin123'
+    key: 'TENANT_ADMIN',
+    label: userRoleLabels.TENANT_ADMIN,
+    userName: 'hezhuo@hezhuo.cn',
+    password: '123456'
   },
   {
-    key: 'user',
-    label: userRoleLabels.user,
+    key: 'TENANT_USER',
+    label: userRoleLabels.TENANT_USER,
     userName: 'User01',
     password: 'user01123'
   }

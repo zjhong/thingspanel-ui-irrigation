@@ -13,9 +13,9 @@
         <n-form-item-grid-item :span="12" label="标题" path="description">
           <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
-        <!-- <n-form-item-grid-item :span="12" label="标题（国际化）" path="i18nTitle">
-          <n-input v-model:value="formModel.i18nTitle" />
-        </n-form-item-grid-item> -->
+        <n-form-item-grid-item :span="12" label="标题（国际化）" path="multilingual">
+          <n-input v-model:value="formModel.multilingual" />
+        </n-form-item-grid-item>
         <n-form-item-grid-item :span="12" label="名称" path="element_code">
           <n-input v-model:value="formModel.element_code" />
         </n-form-item-grid-item>
@@ -111,8 +111,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加路由',
-    edit: '编辑路由'
+    add: '添加菜单',
+    edit: '编辑菜单'
   }
   return titles[props.type]
 })
@@ -134,7 +134,7 @@ type FormModel = Pick<
   | 'element_type'
   | 'authority'
   | 'remark'
-  | 'i18nTitle'
+  | 'multilingual'
   | 'param2'
   | 'orders'
   | 'description'
@@ -154,7 +154,7 @@ function createDefaultFormModel(): FormModel {
     element_code: '',
     param1: '',
     param3: 'basic',
-    i18nTitle: 'default',
+    multilingual: 'default',
     param2: '',
     orders: 1,
     description: '',

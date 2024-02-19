@@ -40,6 +40,7 @@ function replaceKeys(data: AuthRoute.Route[]): AuthRoute.Route[] {
       // remark: item.remark,
       meta: {
         title: item.description,
+        i18nTitle: item.multilingual,
         requiresAuth: true,
         permissions: JSON.parse(item.authority),
         singleLayout: ['data-service', 'rule-engine'].includes(item.element_code) ? 'basic' : '',

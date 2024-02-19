@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden">
-    <n-card title="权限管理" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <n-card :title="$t('routes.management.auth')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
         <n-button type="primary" @click="handleAddTable">
           <icon-ic-round-plus class="mr-4px text-20px" />
@@ -38,6 +38,7 @@ import { routerSysFlagLabels, routerTypeLabels } from '@/constants'
 import { fetchElementList, delElement } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
 import { deepClone } from '@/utils'
+import { $t } from '@/locales'
 import TableActionModal from './components/table-action-modal.vue'
 import type { ModalType } from './components/table-action-modal.vue'
 
@@ -80,17 +81,13 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     align: 'left',
     width: '200px',
     render: row => {
-      // if (row.i18nTitle && row.i18nTitle !== 'default') {
-      //   return <span>{$t(row.i18nTitle)}</span>
-      // }
+      if (row.multilingual && row.multilingual !== 'default') {
+        return <span>{$t(row.multilingual)}</span>
+      }
       return <span>{row.description}</span>
     }
   },
-  {
-    key: 'element_code',
-    title: '名称',
-    align: 'left'
-  },
+
   {
     key: 'param2',
     title: '图标',
@@ -101,6 +98,11 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
       }
       return <span></span>
     }
+  },
+  {
+    key: 'element_code',
+    title: '名称',
+    align: 'left'
   },
   {
     key: 'param1',

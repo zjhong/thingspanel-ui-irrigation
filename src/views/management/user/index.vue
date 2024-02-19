@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-hidden">
-    <n-card title="用户管理" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <n-card :title="$t('routes.management.user')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
         <n-form ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <n-form-item label="邮箱" path="email">

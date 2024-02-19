@@ -192,7 +192,7 @@ declare namespace ApiCustomRoute {
     /** 标题 */
     title: string
     /** 国际化 */
-    i18nTitle: I18nType.I18nKey
+    multilingual: I18nType.I18nKey
     /** 图标 */
     param2: string
     /** 组件名称 */

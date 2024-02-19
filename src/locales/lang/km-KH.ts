@@ -83,7 +83,7 @@ const locale: I18nType.Schema = {
     },
     management: {
       _value: 'ការគ្រប់គ្រងប្រព័ន្ធ',
-      auth: 'Auth',
+      auth: 'ម៉ឺនុយ',
       role: 'សិទ្ធី',
       route: 'ផ្លូវប្រព័ន្ធ',
       user: 'អ្នកប្រើប្រាស់',

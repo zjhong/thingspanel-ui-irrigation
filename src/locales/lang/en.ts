@@ -83,7 +83,7 @@ const locale: I18nType.Schema = {
     },
     management: {
       _value: 'System Management',
-      auth: 'Auth',
+      auth: 'Menu',
       role: 'Role',
       route: 'Route',
       user: 'User',

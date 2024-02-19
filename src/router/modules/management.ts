@@ -32,7 +32,7 @@ const management: AuthRoute.Route = {
       path: '/management/user',
       component: 'self',
       meta: {
-        title: '用户管理',
+        title: '租户管理',
         i18nTitle: 'routes.management.user',
         requiresAuth: true,
         keepAlive: true,

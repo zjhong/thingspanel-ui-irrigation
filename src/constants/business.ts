@@ -108,7 +108,6 @@ export const routeTypeOptions = transformObjectToOption(routerTypeLabels)
 /** 路由管理 - 访问标识 */
 export const routerSysFlagLabels: Record<CustomRoute.routerSysFlagKey, string> = {
   SYS_ADMIN: '系统管理员',
-  TENANT_USER: '租户用户',
   TENANT_ADMIN: '租户管理员'
 }
 export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels)

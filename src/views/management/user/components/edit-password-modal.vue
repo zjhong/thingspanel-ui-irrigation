@@ -5,8 +5,8 @@
         <n-form-item-grid-item :span="24" label="邮箱" path="email">
           <n-input v-model:value="formModel.email" readonly />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="密码" path="pwd">
-          <n-input v-model:value="formModel.pwd" type="password" />
+        <n-form-item-grid-item :span="24" label="密码" path="password">
+          <n-input v-model:value="formModel.password" type="password" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" label="确认密码" path="confirmPwd">
           <n-input v-model:value="formModel.confirmPwd" type="password" />
@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch, toRefs } from 'vue'
 import type { FormInst, FormItemRule } from 'naive-ui'
+import { editUser } from '@/service'
 import { formRules, getConfirmPwdRule } from '@/utils'
 
 export interface Props {
@@ -40,6 +41,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void
+  /** 点击协议 */
+  (e: 'success'): void
 }
 
 const emit = defineEmits<Emits>()
@@ -59,7 +62,7 @@ const closeModal = () => {
 const formRef = ref<HTMLElement & FormInst>()
 
 type FormModel = Pick<UserManagement.User, 'email'> & {
-  pwd: string
+  password: string
   confirmPwd: string
 }
 
@@ -67,14 +70,14 @@ const formModel = reactive<FormModel>(createDefaultFormModel())
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   email: formRules.email,
-  pwd: formRules.pwd,
-  confirmPwd: getConfirmPwdRule(toRefs(formModel).pwd)
+  password: formRules.pwd,
+  confirmPwd: getConfirmPwdRule(toRefs(formModel).password)
 }
 
 function createDefaultFormModel(): FormModel {
   return {
     email: '',
-    pwd: '',
+    password: '',
     confirmPwd: ''
   }
 }
@@ -91,8 +94,13 @@ function handleUpdateFormModelByModalType() {
 
 async function handleSubmit() {
   await formRef.value?.validate()
-  window.$message?.success('修改成功!')
-  closeModal()
+  const data: any = await editUser(formModel)
+  if (!data.error) {
+    window.$message?.success(data.msg)
+    emit('success')
+    handleUpdateFormModel(createDefaultFormModel())
+    closeModal()
+  }
 }
 
 watch(

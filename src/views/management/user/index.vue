@@ -49,7 +49,11 @@
           class="flex-1-hidden"
         />
         <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <edit-password-modal v-model:visible="editPwdVisible" :edit-data="editData"></edit-password-modal>
+        <edit-password-modal
+          v-model:visible="editPwdVisible"
+          :edit-data="editData"
+          @success="getTableData"
+        ></edit-password-modal>
       </div>
     </n-card>
   </div>

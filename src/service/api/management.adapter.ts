@@ -36,7 +36,6 @@ function replaceKeys(data: AuthRoute.Route[]): AuthRoute.Route[] {
       // elementType: item.element_type,
       path: item.param1,
       component: item.param3,
-      // authority: JSON.parse(item.authority),
       // remark: item.remark,
       meta: {
         title: item.description,

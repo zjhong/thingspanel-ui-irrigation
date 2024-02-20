@@ -10,9 +10,15 @@
           <n-space class="text-center">
             <div>
               <div>首页和后台 logo</div>
-              <n-image width="140" class="h-140px mt-20px" object-fit="contain" :src="formModel.logo_background" />
+              <n-image
+                width="140"
+                class="h-140px mt-20px"
+                object-fit="contain"
+                :src="url.origin + formModel.logo_background?.slice(1)"
+              />
               <upload-image
                 v-model:value="formModel.logo_background"
+                accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
                 text="更换 logo"
                 :file-type="['jpg', 'png', 'jpeg']"
@@ -20,19 +26,31 @@
             </div>
             <div class="ml-20px">
               <div>加载页面 logo</div>
-              <n-image width="140" class="h-140px mt-20px" object-fit="contain" :src="formModel.logo_loading" />
+              <n-image
+                width="140"
+                class="h-140px mt-20px"
+                object-fit="contain"
+                :src="url.origin + formModel.logo_loading?.slice(1)"
+              />
               <upload-image
                 v-model:value="formModel.logo_loading"
+                accept="image/png, image/jpeg, image/jpg, image/gif"
                 class="mt-10px"
                 text="更换 logo"
-                :file-type="['jpg', 'png', 'jpeg', 'jif']"
+                :file-type="['jpg', 'png', 'jpeg', 'gif']"
               ></upload-image>
             </div>
             <div class="ml-20px">
               <div>站标 logo</div>
-              <n-image width="140" class="h-140px mt-20px" object-fit="contain" :src="formModel.logo_cache" />
+              <n-image
+                width="140"
+                class="h-140px mt-20px"
+                object-fit="contain"
+                :src="url.origin + formModel.logo_cache?.slice(1)"
+              />
               <upload-image
                 v-model:value="formModel.logo_cache"
+                accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
                 text="更换 logo"
                 :file-type="['jpg', 'png', 'jpeg']"
@@ -40,9 +58,15 @@
             </div>
             <div class="ml-20px">
               <div>背景图片</div>
-              <n-image width="140" class="h-140px mt-20px" object-fit="contain" :src="formModel.home_background" />
+              <n-image
+                width="140"
+                class="h-140px mt-20px"
+                object-fit="contain"
+                :src="url.origin + formModel.home_background?.slice(1)"
+              />
               <upload-image
                 v-model:value="formModel.home_background"
+                accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
                 text="更换"
                 :file-type="['jpg', 'png', 'jpeg']"
@@ -60,11 +84,15 @@
   </n-spin>
 </template>
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { fetchThemeSetting, editThemeSetting } from '@/service'
 import { useLoading } from '@/hooks'
 import { deepClone } from '@/utils'
 import UploadImage from './upload-image.vue'
+// eslint-disable-next-line import/order
+import { getServiceEnvConfig } from '~/.env-config'
+const url = ref(new URL(getServiceEnvConfig(import.meta.env).url))
+
 const { loading, startLoading, endLoading } = useLoading(false)
 
 const formModel = reactive<GeneralSetting.ThemeSetting>(createDefaultFormModel())

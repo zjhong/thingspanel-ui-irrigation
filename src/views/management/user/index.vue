@@ -3,25 +3,25 @@
     <n-card :title="$t('routes.management.user')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
         <n-form ref="queryFormRef" inline label-placement="left" :model="queryParams">
-          <n-form-item label="邮箱" path="email">
+          <n-form-item :label="$t('page.user.form.email')" path="email">
             <n-input v-model:value="queryParams.email" />
           </n-form-item>
-          <n-form-item label="姓名" path="name">
+          <n-form-item :label="$t('page.user.form.name')" path="name">
             <n-input v-model:value="queryParams.name" />
           </n-form-item>
-          <n-form-item label="账户状态" path="status">
+          <n-form-item :label="$t('page.user.form.status')" path="status">
             <n-select v-model:value="queryParams.status" clearable class="w-200px" :options="userStatusOptions" />
           </n-form-item>
           <n-form-item>
-            <n-button class="w-72px" type="primary" @click="handleQuery">搜索</n-button>
-            <n-button class="w-72px ml-20px" type="primary" @click="handleReset">重置</n-button>
+            <n-button class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</n-button>
+            <n-button class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t('common.reset') }}</n-button>
           </n-form-item>
         </n-form>
         <n-space class="pb-12px" justify="space-between">
           <n-space>
             <n-button type="primary" @click="handleAddTable">
               <icon-ic-round-plus class="mr-4px text-20px" />
-              新增
+              {{ $t('common.add') }}
             </n-button>
             <!-- <n-button type="error">
               <icon-ic-round-delete class="mr-4px text-20px" />
@@ -32,13 +32,13 @@
               导出Excel
             </n-button> -->
           </n-space>
-          <n-space align="center" :size="18">
+          <!-- <n-space align="center" :size="18">
             <n-button size="small" type="primary" @click="getTableData">
               <icon-mdi-refresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
               刷新表格
             </n-button>
             <column-setting v-model:columns="columns" />
-          </n-space>
+          </n-space> -->
         </n-space>
         <n-data-table
           :columns="columns"
@@ -67,10 +67,11 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui'
 import { userStatusLabels, userStatusOptions } from '@/constants'
 import { fetchUserList, delUser } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
+import { $t } from '~/src/locales'
 import TableActionModal from './components/table-action-modal.vue'
 import EditPasswordModal from './components/edit-password-modal.vue'
 import type { ModalType } from './components/table-action-modal.vue'
-import ColumnSetting from './components/column-setting.vue'
+// import ColumnSetting from './components/column-setting.vue'
 
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal } = useBoolean()
@@ -107,22 +108,22 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'email',
-    title: '邮箱',
+    title: () => $t('page.user.form.email'),
     align: 'center'
   },
   {
     key: 'name',
-    title: '用户名',
+    title: () => $t('page.user.form.name'),
     align: 'center'
   },
   {
     key: 'phone_number',
-    title: '手机号码',
+    title: () => $t('page.user.form.phone'),
     align: 'center'
   },
   {
     key: 'status',
-    title: '账户状态',
+    title: () => $t('page.user.form.status'),
     align: 'center',
     render: row => {
       if (row.status) {
@@ -153,28 +154,34 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   // },
   {
     key: 'remark',
-    title: '备注',
+    title: () => $t('common.remark'),
     align: 'center'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: () => $t('common.action'),
     align: 'center',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton type="warning" size={'small'} onClick={() => handleEditPwd(row.id)}>
-            修改密码
+            {$t('page.login.resetPwd.title')}
           </NButton>
           <NButton type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
+          <NPopconfirm
+            negative-text={$t('common.cancel')}
+            positive-text={$t('common.confirm')}
+            onPositiveClick={() => handleDeleteTable(row.id)}
+          >
             {{
-              default: () => '确认删除',
+              default: () => {
+                return $t('common.confirm')
+              },
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -222,7 +229,7 @@ function handleEditTable(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await delUser(rowId)
   if (!data.error) {
-    window.$message?.success('删除成功')
+    window.$message?.success($t('common.deleteSuccess'))
     getTableData()
   }
 }

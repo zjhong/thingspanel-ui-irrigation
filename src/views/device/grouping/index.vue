@@ -35,7 +35,7 @@
 
 <script lang="tsx" setup>
 import { onMounted, ref } from 'vue'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 // Import UI components from Naive UI
 import { NButton, NDataTable, NFlex, NPagination, NPopconfirm } from 'naive-ui'
 import dayjs from 'dayjs'
@@ -87,11 +87,12 @@ const getDevice = async () => {
 
   loading.value = false
 }
-// const router = useRouter()
+const router = useRouter()
 
 // Function to view device group details
-const viewDetails = async (id: string) => {
+const viewDetails = (id: string) => {
   console.log('2', id)
+  router.push(`/device/grouping/details?id=${id}`)
 }
 // Function to delete a device group
 const deleteItem = async (id: string) => {

@@ -1,20 +1,20 @@
 <template>
-  <n-modal v-model:show="modalVisible" preset="card" title="修改密码" class="w-700px">
+  <n-modal v-model:show="modalVisible" preset="card" :title="$t('page.login.resetPwd.title')" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="24" label="邮箱" path="email">
+        <n-form-item-grid-item :span="24" :label="$t('page.user.form.email')" path="email">
           <n-input v-model:value="formModel.email" readonly />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="密码" path="password">
+        <n-form-item-grid-item :span="24" :label="$t('page.user.form.password')" path="password">
           <n-input v-model:value="formModel.password" type="password" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="确认密码" path="confirmPwd">
+        <n-form-item-grid-item :span="24" :label="$t('page.user.form.confirmPwd')" path="confirmPwd">
           <n-input v-model:value="formModel.confirmPwd" type="password" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
-        <n-button class="w-72px" @click="closeModal">取消</n-button>
-        <n-button class="w-72px" type="primary" @click="handleSubmit">确定</n-button>
+        <n-button class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</n-button>
+        <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</n-button>
       </n-space>
     </n-form>
   </n-modal>

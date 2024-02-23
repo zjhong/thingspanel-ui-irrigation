@@ -18,7 +18,11 @@ const locale: I18nType.Schema = {
     cancel: '取消',
     pleaseCheckValue: '请检查输入的值是否合法',
     action: '操作',
-    refreshTable: '刷新表格'
+    refreshTable: '刷新表格',
+    remark: '备注',
+    search: '搜索',
+    reset: '重置',
+    save: '保存'
   },
   routes: {
     dashboard: {
@@ -230,6 +234,41 @@ const locale: I18nType.Schema = {
       },
       bindWeChat: {
         title: '绑定微信'
+      }
+    },
+    user: {
+      form: {
+        name: '用户名',
+        email: '邮箱',
+        phone: '手机号',
+        status: '账户状态',
+        password: '密码',
+        confirmPwd: '确认密码'
+      }
+    },
+    management: {
+      setting: {
+        themeSetting: {
+          title: '主题设置',
+          form: {
+            systemTitle: '系统标题',
+            homeAndBackendLogo: '首页和后台 logo',
+            loadingPageLogo: '加载页面 logo',
+            websiteLogo: '站标 logo',
+            background: '背景图片'
+          },
+          changeLogo: '更换 logo'
+        },
+        dataClearSetting: {
+          title: '数据清理设置',
+          form: {
+            cleanupType: '清理类型',
+            retentionDays: '保留天数',
+            lastCleanupTime: '上次清理时间',
+            lastCleanupDataTime: '上次清理数据时间节点',
+            enabled: '是否启用'
+          }
+        }
       }
     }
   }

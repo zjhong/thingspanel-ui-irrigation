@@ -7,7 +7,7 @@
     :data="{
       type: 'image'
     }"
-    accept="image/png, image/jpeg, image/jpg, image/jif"
+    :accept="accept"
     :show-file-list="false"
     @before-upload="beforeUpload"
     @finish="handleFinish"
@@ -30,13 +30,18 @@ import { localStg } from '@/utils'
 export interface Props {
   /** 按钮文字 */
   text: string
+  /**
+   * 选取文件的类型
+   */
+  accept: string
   /** 上传的文件类型 */
   fileType: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
   text: '',
-  fileType: () => ['png', 'jpeg', 'jpg', 'jif']
+  accept: 'image/png, image/jpeg, image/jpg, image/gif',
+  fileType: () => ['png', 'jpeg', 'jpg', 'gif']
 })
 
 interface Emits {

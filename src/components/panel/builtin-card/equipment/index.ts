@@ -7,6 +7,6 @@ export default {
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
   title: 'equipment',
-  color:'#444'
+  color: '#444'
   // configForm: defineAsyncComponent(() => import('./card-config.vue'))
 } as ICardDefine

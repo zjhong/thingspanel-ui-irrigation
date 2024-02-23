@@ -256,7 +256,9 @@ declare namespace App {
     hasChildren: boolean
     icon?: import('vue').Component
     i18nTitle?: I18nType.I18nKey
-    options?: (import('naive-ui/es/dropdown/src/interface').DropdownMixedOption & { i18nTitle?: I18nType.I18nKey })[]
+    options?: (import('naive-ui/es/dropdown/src/interface').DropdownMixedOption & {
+      i18nTitle?: I18nType.I18nKey
+    })[]
   }
 
   /** 多页签Tab的路由 */
@@ -318,11 +320,13 @@ declare namespace I18nType {
       editSuccess: string
       delete: string
       deleteSuccess: string
+      deleteConfirm: string
       batchDelete: string
       confirm: string
       cancel: string
       pleaseCheckValue: string
       action: string
+      refreshTable: string
     }
     routes: {
       dashboard: {
@@ -403,6 +407,12 @@ declare namespace I18nType {
       apply: {
         _value: string
         service: string
+      }
+      product: {
+        _value: string
+        list: string
+        'update-package': string
+        'update-ota': string
       }
     }
     layout: {
@@ -529,6 +539,7 @@ declare namespace I18nType {
           title: string
         }
       }
+      product: ProductLocal
     }
   }
 

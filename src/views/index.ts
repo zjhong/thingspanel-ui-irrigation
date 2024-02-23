@@ -48,5 +48,8 @@ export const views: Record<
   plugin_print: () => import('./plugin/print/index.vue'),
   plugin_swiper: () => import('./plugin/swiper/index.vue'),
   plugin_video: () => import('./plugin/video/index.vue'),
+  product_list: () => import('./product/list/index.vue'),
+  'product_update-ota': () => import('./product/update-ota/index.vue'),
+  'product_update-package': () => import('./product/update-package/index.vue'),
   'rule-engine': () => import('./rule-engine/index.vue')
 }

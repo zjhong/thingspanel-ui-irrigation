@@ -1,3 +1,5 @@
+import { productLocaleEn } from '~/src/views/product/locales/en'
+
 const locale: I18nType.Schema = {
   default: '',
   system: {
@@ -11,10 +13,12 @@ const locale: I18nType.Schema = {
     delete: 'Delete',
     deleteSuccess: 'Delete Success',
     batchDelete: 'Batch Delete',
+    deleteConfirm: '确定删除吗？',
     confirm: 'Confirm',
     cancel: 'Cancel',
     pleaseCheckValue: 'Please check the value is valid',
-    action: 'Action'
+    action: 'Action',
+    refreshTable: '刷新表格'
   },
   routes: {
     dashboard: {
@@ -95,6 +99,12 @@ const locale: I18nType.Schema = {
     apply: {
       _value: 'Application Management',
       service: 'Service Management'
+    },
+    product: {
+      _value: '产品管理',
+      list: '产品列表',
+      'update-package': '升级包管理',
+      'update-ota': 'OTA升级'
     }
   },
   layout: {
@@ -178,6 +188,7 @@ const locale: I18nType.Schema = {
     }
   },
   page: {
+    product: productLocaleEn,
     login: {
       common: {
         userNamePlaceholder: 'Please enter user name',

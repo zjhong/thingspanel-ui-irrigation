@@ -74,6 +74,10 @@ declare namespace PageRoute {
     | 'plugin_print'
     | 'plugin_swiper'
     | 'plugin_video'
+    | 'product'
+    | 'product_list'
+    | 'product_update-ota'
+    | 'product_update-package'
     | 'rule-engine'
 
   /**
@@ -126,6 +130,9 @@ declare namespace PageRoute {
     | 'plugin_print'
     | 'plugin_swiper'
     | 'plugin_video'
+    | 'product_list'
+    | 'product_update-ota'
+    | 'product_update-package'
     | 'rule-engine'
   >
 }

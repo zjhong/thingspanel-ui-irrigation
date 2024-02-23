@@ -1,3 +1,5 @@
+import { productLocaleKmKh } from '~/src/views/product/locales/km-KH'
+
 const locale: I18nType.Schema = {
   default: '',
   system: {
@@ -10,11 +12,13 @@ const locale: I18nType.Schema = {
     editSuccess: 'កែប្រែជោគជ័យ',
     delete: 'លុប',
     deleteSuccess: 'លុបជោគជ័យ',
+    deleteConfirm: '确定删除吗？',
     batchDelete: 'លុបច្រើន',
     confirm: 'យល់ព្រម',
     cancel: 'បោះបង់',
     pleaseCheckValue: 'សូមពិនិត្យមើលតម្លៃដែលបានបញ្ចូលដើម្បីបញ្ជាក់ថាត្រូវប្រើប្រាស់បាន',
-    action: 'សកម្មភាព'
+    action: 'សកម្មភាព',
+    refreshTable: '刷新表格'
   },
   routes: {
     dashboard: {
@@ -95,6 +99,12 @@ const locale: I18nType.Schema = {
     apply: {
       _value: 'ការគ្រប់គ្រងកម្មវិធី',
       service: 'ការគ្រប់គ្រងសេវាកម្ម'
+    },
+    product: {
+      _value: '产品管理',
+      list: '产品列表',
+      'update-package': '升级包管理',
+      'update-ota': 'OTA升级'
     }
   },
   layout: {
@@ -178,6 +188,7 @@ const locale: I18nType.Schema = {
     }
   },
   page: {
+    product: productLocaleKmKh,
     login: {
       common: {
         userNamePlaceholder: 'ឈ្មោះអ្នកប្រើប្រាស់',

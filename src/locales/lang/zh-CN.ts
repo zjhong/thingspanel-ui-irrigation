@@ -1,3 +1,5 @@
+import { productLocaleZhCn } from '~/src/views/product/locales/zh-CN'
+
 const locale: I18nType.Schema = {
   default: '',
   system: {
@@ -10,11 +12,13 @@ const locale: I18nType.Schema = {
     editSuccess: '修改成功',
     delete: '删除',
     deleteSuccess: '删除成功',
+    deleteConfirm: '确定删除吗？',
     batchDelete: '批量删除',
     confirm: '确认',
     cancel: '取消',
     pleaseCheckValue: '请检查输入的值是否合法',
-    action: '操作'
+    action: '操作',
+    refreshTable: '刷新表格'
   },
   routes: {
     dashboard: {
@@ -95,6 +99,12 @@ const locale: I18nType.Schema = {
     apply: {
       _value: '应用管理',
       service: '服务管理'
+    },
+    product: {
+      _value: '产品管理',
+      list: '产品列表',
+      'update-package': '升级包管理',
+      'update-ota': 'OTA升级'
     }
   },
   layout: {
@@ -178,6 +188,7 @@ const locale: I18nType.Schema = {
     }
   },
   page: {
+    product: productLocaleZhCn,
     login: {
       common: {
         userNamePlaceholder: '请输入用户名',

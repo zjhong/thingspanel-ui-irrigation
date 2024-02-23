@@ -6,6 +6,7 @@ import { setupRouter } from './router'
 import { setupAssets } from './plugins'
 import { setupStore } from './store'
 import { setupI18n } from './locales'
+import 'uno.css'
 
 async function setupApp() {
   // import assets: js、css

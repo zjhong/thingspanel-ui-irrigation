@@ -4,7 +4,8 @@ type ServiceEnv = Record<ServiceEnvType, ServiceEnvConfig>
 /** 不同请求服务的环境配置 */
 const serviceEnv: ServiceEnv = {
   dev: {
-    url: 'http://23.94.59.38:9999/api/v1'
+    // url: 'http://23.94.59.38:9999/api/v1'
+    url: 'http://192.168.1.6:9999/api/v1'
   },
   test: {
     url: 'http://23.94.59.38:9999/api/v1'

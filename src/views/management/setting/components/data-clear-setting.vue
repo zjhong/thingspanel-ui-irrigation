@@ -1,25 +1,29 @@
 <template>
   <div class="flex-col h-full">
     <n-data-table :columns="columns" :data="tableData" :loading="loading" flex-height min-height="150px" />
-    <n-modal v-model:show="visible" preset="card" title="编辑" class="w-700px">
+    <n-modal v-model:show="visible" preset="card" :title="$t('common.edit')" class="w-700px">
       <n-form ref="formRef" label-placement="left" :label-width="120" :model="editData">
         <n-grid :cols="24" :x-gap="18">
-          <n-form-item-grid-item :span="24" label="保留天数">
+          <n-form-item-grid-item :span="24" :label="$t('page.management.setting.dataClearSetting.form.retentionDays')">
             <n-input-number v-model:value="editData.retention_days" class="flex-1" />
           </n-form-item-grid-item>
-          <n-form-item-grid-item :span="24" label="是否启用" path="enabled">
+          <n-form-item-grid-item
+            :span="24"
+            :label="$t('page.management.setting.dataClearSetting.form.enabled')"
+            path="enabled"
+          >
             <n-radio-group v-model:value="editData.enabled">
               <n-radio v-for="item in dataClearSettingEnabledTypeOptions" :key="item.value" :value="item.value">
                 {{ item.label }}
               </n-radio>
             </n-radio-group>
           </n-form-item-grid-item>
-          <n-form-item-grid-item :span="24" label="备注">
+          <n-form-item-grid-item :span="24" :label="$t('common.remark')">
             <n-input v-model:value="editData.remark" type="textarea" placeholder="" />
           </n-form-item-grid-item>
         </n-grid>
         <n-space class="w-full pt-16px" :size="24" justify="center">
-          <n-button class="w-72px" type="primary" @click="handleSubmit">编辑</n-button>
+          <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.edit') }}</n-button>
         </n-space>
       </n-form>
     </n-modal>
@@ -35,6 +39,7 @@ import { dataClearSettingCleanupTypeLabels, dataClearSettingEnabledTypeOptions }
 import { fetchDataClearList, editDataClear } from '@/service'
 import { useBoolean, useLoading } from '@/hooks'
 import { deepClone } from '@/utils'
+import { $t } from '~/src/locales'
 
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal, setFalse: closeModal } = useBoolean()
@@ -73,7 +78,7 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   },
   {
     key: 'data_type',
-    title: '清理类型',
+    title: () => $t('page.management.setting.dataClearSetting.form.cleanupType'),
     align: 'left',
     render: row => {
       if (row.data_type) {
@@ -88,12 +93,12 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   },
   {
     key: 'retention_days',
-    title: '保留天数',
+    title: () => $t('page.management.setting.dataClearSetting.form.retentionDays'),
     align: 'left'
   },
   {
     key: 'last_cleanup_time',
-    title: '上次清理时间',
+    title: () => $t('page.management.setting.dataClearSetting.form.lastCleanupTime'),
     align: 'left',
     render: row => {
       return <span>{dayjs(row.last_cleanup_time).format('YYYY-MM-DD HH:mm:ss')}</span>
@@ -101,7 +106,7 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   },
   {
     key: 'last_cleanup_data_time',
-    title: '上次清理数据时间节点',
+    title: () => $t('page.management.setting.dataClearSetting.form.lastCleanupDataTime'),
     align: 'left',
     render: row => {
       return <span>{dayjs(row.last_cleanup_data_time).format('YYYY-MM-DD HH:mm:ss')}</span>
@@ -109,19 +114,19 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
   },
   {
     key: 'remark',
-    title: '备注',
+    title: () => $t('common.remark'),
     align: 'left'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: () => $t('common.action'),
     align: 'center',
     width: '100px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
         </NSpace>
       )

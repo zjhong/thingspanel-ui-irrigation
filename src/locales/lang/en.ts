@@ -14,7 +14,11 @@ const locale: I18nType.Schema = {
     confirm: 'Confirm',
     cancel: 'Cancel',
     pleaseCheckValue: 'Please check the value is valid',
-    action: 'Action'
+    action: 'Action',
+    remark: 'Remark',
+    search: 'Search',
+    reset: 'Reset',
+    save: 'Save'
   },
   routes: {
     dashboard: {
@@ -219,6 +223,41 @@ const locale: I18nType.Schema = {
       },
       bindWeChat: {
         title: 'Bind WeChat'
+      }
+    },
+    user: {
+      form: {
+        name: 'Name',
+        email: 'Email',
+        phone: 'Phone',
+        status: 'Status',
+        password: 'Password',
+        confirmPwd: 'Confirm Password'
+      }
+    },
+    management: {
+      setting: {
+        themeSetting: {
+          title: 'General Settings',
+          form: {
+            systemTitle: 'System title',
+            homeAndBackendLogo: 'Home and backend logo',
+            loadingPageLogo: 'Loading page logo',
+            websiteLogo: 'Website logo',
+            background: 'Background'
+          },
+          changeLogo: 'change logo'
+        },
+        dataClearSetting: {
+          title: 'Data Cleanup Settings',
+          form: {
+            cleanupType: 'Cleanup Type',
+            retentionDays: 'Retention Days',
+            lastCleanupTime: 'Last Cleanup Time',
+            lastCleanupDataTime: 'Last Cleanup Data Time',
+            enabled: 'Enabled'
+          }
+        }
       }
     }
   }

@@ -14,7 +14,11 @@ const locale: I18nType.Schema = {
     confirm: 'យល់ព្រម',
     cancel: 'បោះបង់',
     pleaseCheckValue: 'សូមពិនិត្យមើលតម្លៃដែលបានបញ្ចូលដើម្បីបញ្ជាក់ថាត្រូវប្រើប្រាស់បាន',
-    action: 'សកម្មភាព'
+    action: 'សកម្មភាព',
+    remark: 'Remark',
+    search: 'Search',
+    reset: 'Reset',
+    save: 'Save'
   },
   routes: {
     dashboard: {
@@ -219,6 +223,41 @@ const locale: I18nType.Schema = {
       },
       bindWeChat: {
         title: 'ភ្ជាប់គណនីរបស់អ្នកជាមួយគណនីរបស់អ្នក'
+      }
+    },
+    user: {
+      form: {
+        name: 'Name',
+        email: 'Email',
+        phone: 'Phone',
+        status: 'Status',
+        password: 'Password',
+        confirmPwd: 'Confirm Password'
+      }
+    },
+    management: {
+      setting: {
+        themeSetting: {
+          title: 'General Settings',
+          form: {
+            systemTitle: 'System title',
+            homeAndBackendLogo: 'Home and backend logo',
+            loadingPageLogo: 'Loading page logo',
+            websiteLogo: 'Website logo',
+            background: 'Background'
+          },
+          changeLogo: 'change logo'
+        },
+        dataClearSetting: {
+          title: 'Data Cleanup Settings',
+          form: {
+            cleanupType: 'Cleanup Type',
+            retentionDays: 'Retention Days',
+            lastCleanupTime: 'Last Cleanup Time',
+            lastCleanupDataTime: 'Last Cleanup Data Time',
+            enabled: 'Enabled'
+          }
+        }
       }
     }
   }

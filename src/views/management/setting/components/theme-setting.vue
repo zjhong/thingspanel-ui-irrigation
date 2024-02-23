@@ -2,14 +2,18 @@
   <n-spin :show="loading">
     <n-form ref="formRef" label-placement="left" :label-width="120" :model="formModel">
       <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="24" label="系统标题" path="system_name">
+        <n-form-item-grid-item
+          :span="24"
+          :label="$t('page.management.setting.themeSetting.form.systemTitle')"
+          path="system_name"
+        >
           <n-input v-model:value="formModel.system_name" />
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24">
           <div class="w-120px"></div>
           <n-space class="text-center">
             <div>
-              <div>首页和后台 logo</div>
+              <div>{{ $t('page.management.setting.themeSetting.form.homeAndBackendLogo') }}</div>
               <n-image
                 width="140"
                 class="h-140px mt-20px"
@@ -20,12 +24,12 @@
                 v-model:value="formModel.logo_background"
                 accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
-                text="更换 logo"
+                :text="$t('page.management.setting.themeSetting.changeLogo')"
                 :file-type="['jpg', 'png', 'jpeg']"
               ></upload-image>
             </div>
             <div class="ml-20px">
-              <div>加载页面 logo</div>
+              <div>{{ $t('page.management.setting.themeSetting.form.loadingPageLogo') }}</div>
               <n-image
                 width="140"
                 class="h-140px mt-20px"
@@ -36,12 +40,12 @@
                 v-model:value="formModel.logo_loading"
                 accept="image/png, image/jpeg, image/jpg, image/gif"
                 class="mt-10px"
-                text="更换 logo"
+                :text="$t('page.management.setting.themeSetting.changeLogo')"
                 :file-type="['jpg', 'png', 'jpeg', 'gif']"
               ></upload-image>
             </div>
             <div class="ml-20px">
-              <div>站标 logo</div>
+              <div>{{ $t('page.management.setting.themeSetting.form.websiteLogo') }}</div>
               <n-image
                 width="140"
                 class="h-140px mt-20px"
@@ -52,12 +56,12 @@
                 v-model:value="formModel.logo_cache"
                 accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
-                text="更换 logo"
+                :text="$t('page.management.setting.themeSetting.changeLogo')"
                 :file-type="['jpg', 'png', 'jpeg']"
               ></upload-image>
             </div>
             <div class="ml-20px">
-              <div>背景图片</div>
+              <div>{{ $t('page.management.setting.themeSetting.form.background') }}</div>
               <n-image
                 width="140"
                 class="h-140px mt-20px"
@@ -68,7 +72,7 @@
                 v-model:value="formModel.home_background"
                 accept="image/png, image/jpeg, image/jpg"
                 class="mt-10px"
-                text="更换"
+                :text="$t('page.management.setting.themeSetting.changeLogo')"
                 :file-type="['jpg', 'png', 'jpeg']"
               ></upload-image>
             </div>
@@ -76,7 +80,7 @@
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" class="mt-60px">
           <div class="w-120px"></div>
-          <n-button class="w-72px" type="primary" @click="handleSubmit">保存</n-button>
+          <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.save') }}</n-button>
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="start"></n-space>

@@ -304,7 +304,8 @@ declare namespace App {
 }
 
 declare namespace I18nType {
-  type LangType = 'en' | 'zh-CN' | 'km-KH'
+  // type LangType = 'en' | 'zh-CN' | 'km-KH'
+  type LangType = 'en' | 'zh-CN'
 
   type Schema = {
     default: ''
@@ -323,6 +324,10 @@ declare namespace I18nType {
       cancel: string
       pleaseCheckValue: string
       action: string
+      remark: string
+      search: string
+      reset: string
+      save: string
     }
     routes: {
       dashboard: {
@@ -527,6 +532,41 @@ declare namespace I18nType {
         }
         bindWeChat: {
           title: string
+        }
+      }
+      user: {
+        form: {
+          name: string
+          email: string
+          phone: string
+          status: string
+          password: string
+          confirmPwd: string
+        }
+      }
+      management: {
+        setting: {
+          themeSetting: {
+            title: string
+            form: {
+              systemTitle: string
+              homeAndBackendLogo: string
+              loadingPageLogo: string
+              websiteLogo: string
+              background: string
+            }
+            changeLogo: string
+          }
+          dataClearSetting: {
+            title: string
+            form: {
+              cleanupType: string
+              retentionDays: string
+              lastCleanupTime: string
+              lastCleanupDataTime: string
+              enabled: string
+            }
+          }
         }
       }
     }

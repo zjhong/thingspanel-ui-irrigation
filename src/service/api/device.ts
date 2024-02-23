@@ -35,3 +35,9 @@ export const deleteDeviceGroup = async (params: { id: string }) => {
   const data = await request.delete<BaseApi.Data>(`/device/group/${params.id}`)
   return data
 }
+
+/** 获取设备分详情 */
+export const deviceGroupDetail = async (params: any) => {
+  const data = await request.get<ApiDeviceManagement.TreeStructure | null>(`/device/group/detail/${params.id}`)
+  return data
+}

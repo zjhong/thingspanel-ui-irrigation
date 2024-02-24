@@ -580,6 +580,20 @@ declare namespace I18nType {
             }
           }
         }
+        auth: {
+          form: {
+            parent: string
+            title: string
+            multilingual: string
+            name: string
+            path: string
+            componentType: string
+            icon: string
+            order: string
+            type: string
+            authority: string
+          }
+        }
       }
     }
   }

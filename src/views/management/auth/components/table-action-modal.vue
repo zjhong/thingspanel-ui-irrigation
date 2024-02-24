@@ -2,7 +2,7 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
     <n-form ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="12" label="父级菜单" path="parent_id">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.parent')" path="parent_id">
           <n-tree-select
             v-model:value="formModel.parent_id"
             :options="parentOptions"
@@ -10,35 +10,35 @@
             key-field="id"
           />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="标题" path="description">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.title')" path="description">
           <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="标题（国际化）" path="multilingual">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.multilingual')" path="multilingual">
           <n-input v-model:value="formModel.multilingual" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="名称" path="element_code">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.name')" path="element_code">
           <n-input v-model:value="formModel.element_code" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="path" path="param1">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.path')" path="param1">
           <n-input v-model:value="formModel.param1" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="组件类型" path="param3">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.componentType')" path="param3">
           <n-select v-model:value="formModel.param3" :options="routeComponentTypeOptions" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="图标" path="param2">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.icon')" path="param2">
           <icon-select v-model:value="formModel.param2" :icons="icons" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="排序" path="orders">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.order')" path="orders">
           <n-input-number v-model:value="formModel.orders" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="类型" path="element_type">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.type')" path="element_type">
           <n-radio-group v-model:value="formModel.element_type">
             <n-radio v-for="item in routeTypeOptions" :key="item.value" :value="Number(item.value)">
               {{ item.label }}
             </n-radio>
           </n-radio-group>
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="权限" path="authority">
+        <n-form-item-grid-item :span="12" :label="$t('page.management.auth.form.authority')" path="authority">
           <n-checkbox-group v-model:value="formModel.authority">
             <n-space item-style="display: flex;">
               <n-checkbox v-for="item in routeSysFlagOptions" :key="item.value" :value="item.value" :label="item.label">
@@ -47,13 +47,13 @@
             </n-space>
           </n-checkbox-group>
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="备注">
+        <n-form-item-grid-item :span="24" :label="$t('common.remark')">
           <n-input v-model:value="formModel.remark" type="textarea" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
-        <n-button class="w-72px" @click="closeModal">取消</n-button>
-        <n-button class="w-72px" type="primary" @click="handleSubmit">确定</n-button>
+        <n-button class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</n-button>
+        <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</n-button>
       </n-space>
     </n-form>
   </n-modal>
@@ -65,6 +65,7 @@ import type { FormInst } from 'naive-ui'
 import { routeComponentTypeOptions, routeTypeOptions, routeSysFlagOptions } from '@/constants'
 import { addElement, editElement } from '@/service'
 import { createRequiredFormRule, deepClone } from '@/utils'
+import { $t } from '~/src/locales'
 import { icons } from '../../../plugin/icon/icons'
 
 export interface Props {
@@ -111,8 +112,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加菜单',
-    edit: '编辑菜单'
+    add: $t('common.add'),
+    edit: $t('common.edit')
   }
   return titles[props.type]
 })
@@ -143,9 +144,9 @@ type FormModel = Pick<
 const formModel = reactive<FormModel>(createDefaultFormModel())
 
 const rules = {
-  description: createRequiredFormRule('请输入标题'),
-  element_code: createRequiredFormRule('请输入名称'),
-  authority: createRequiredFormRule('请选择')
+  description: createRequiredFormRule($t('common.pleaseCheckValue')),
+  element_code: createRequiredFormRule($t('common.pleaseCheckValue')),
+  authority: createRequiredFormRule($t('common.pleaseCheckValue'))
 }
 
 function createDefaultFormModel(): FormModel {

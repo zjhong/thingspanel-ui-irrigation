@@ -270,6 +270,20 @@ const locale: I18nType.Schema = {
             enabled: 'Enabled'
           }
         }
+      },
+      auth: {
+        form: {
+          parent: 'Parent menu',
+          title: 'Title',
+          multilingual: 'Title(multilingual)',
+          name: 'Name',
+          path: 'path',
+          componentType: 'Component Type',
+          icon: 'Icon',
+          order: 'Sort',
+          type: 'type',
+          authority: 'Authority'
+        }
       }
     }
   }

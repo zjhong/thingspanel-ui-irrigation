@@ -4,7 +4,7 @@
       <template #header-extra>
         <n-button type="primary" @click="handleAddTable">
           <icon-ic-round-plus class="mr-4px text-20px" />
-          添加权限
+          {{ $t('common.add') }}
         </n-button>
       </template>
       <div class="flex-col h-full">
@@ -77,7 +77,7 @@ const rowKey = (row: CustomRoute.Route) => {
 const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   {
     key: 'description',
-    title: '标题',
+    title: () => $t('page.management.auth.form.title'),
     align: 'left',
     width: '200px',
     render: row => {
@@ -90,7 +90,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
 
   {
     key: 'param2',
-    title: '图标',
+    title: () => $t('page.management.auth.form.icon'),
     align: 'left',
     render: row => {
       if (row.param2) {
@@ -101,22 +101,22 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'element_code',
-    title: '名称',
+    title: () => $t('page.management.auth.form.name'),
     align: 'left'
   },
   {
     key: 'param1',
-    title: 'url',
+    title: () => $t('page.management.auth.form.path'),
     align: 'left'
   },
   {
     key: 'param3',
-    title: '组件类型',
+    title: () => $t('page.management.auth.form.componentType'),
     align: 'left'
   },
   {
     key: 'element_type',
-    title: '类型',
+    title: () => $t('page.management.auth.form.type'),
     align: 'left',
     render: row => {
       if (row.element_type) {
@@ -133,7 +133,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'authority',
-    title: '访问标识',
+    title: () => $t('page.management.auth.form.authority'),
     align: 'left',
     render: row => {
       if (row.authority && row.authority.length) {
@@ -155,25 +155,29 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'remark',
-    title: '备注',
+    title: () => $t('common.remark'),
     align: 'left'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: () => $t('common.action'),
     align: 'left',
     render: row => {
       return (
         <NSpace>
           <NButton type="primary" size={'small'} onClick={() => handleEditTable(row)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
+          <NPopconfirm
+            negative-text={$t('common.cancel')}
+            positive-text={$t('common.confirm')}
+            onPositiveClick={() => handleDeleteTable(row.id)}
+          >
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirm'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -206,7 +210,7 @@ function handleEditTable(row: any) {
 async function handleDeleteTable(rowId: string) {
   const data = await delElement(rowId)
   if (!data.error) {
-    window.$message?.success('删除成功')
+    window.$message?.success($t('common.deleteSuccess'))
     getTableData()
   }
 }

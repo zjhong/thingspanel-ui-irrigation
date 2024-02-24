@@ -42,7 +42,6 @@ function replaceKeys(data: AuthRoute.Route[]): AuthRoute.Route[] {
         i18nTitle: item.multilingual,
         requiresAuth: true,
         permissions: JSON.parse(item.authority),
-        singleLayout: ['data-service', 'rule-engine'].includes(item.element_code) ? 'basic' : '',
         icon: item.param2,
         order: item.orders
       },
@@ -53,5 +52,10 @@ function replaceKeys(data: AuthRoute.Route[]): AuthRoute.Route[] {
 
 export function adapterOfFetchUserRouterList(data: AuthRoute.Route[]) {
   if (!data.length) return []
-  return replaceKeys(data)
+  return replaceKeys(data).map((item: AuthRoute.Route) => {
+    if (!item.children || !item.children.length) {
+      item.meta.singleLayout = 'basic'
+    }
+    return item
+  })
 }

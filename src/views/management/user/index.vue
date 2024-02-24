@@ -176,9 +176,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
             onPositiveClick={() => handleDeleteTable(row.id)}
           >
             {{
-              default: () => {
-                return $t('common.confirm')
-              },
+              default: () => $t('common.confirm'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
                   {$t('common.delete')}

@@ -269,6 +269,20 @@ const locale: I18nType.Schema = {
             enabled: '是否启用'
           }
         }
+      },
+      auth: {
+        form: {
+          parent: '父级菜单',
+          title: '标题',
+          multilingual: '标题（多语言）',
+          name: '名称',
+          path: 'path',
+          componentType: '组件类型',
+          icon: '图标',
+          order: '排序',
+          type: '类型',
+          authority: '权限'
+        }
       }
     }
   }

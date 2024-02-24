@@ -11,13 +11,13 @@
         ></div>
       </div>
     </div>
-    <h2 class="text-28px font-500 text-#646464">{{ $t('system.title') }}</h2>
+    <!-- <h2 class="text-28px font-500 text-#646464">{{ $t('system.title') }}</h2> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { sessionStg, getRgbOfColor } from '@/utils'
-import { $t } from '@/locales'
+// import { $t } from '@/locales'
 import themeSettings from '@/settings/theme.json'
 
 const loadingClasses = [

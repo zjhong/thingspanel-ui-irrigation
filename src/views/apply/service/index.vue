@@ -32,6 +32,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui'
 import { serviceManagementStatusLabels, serviceManagementTypeLabels } from '@/constants'
 import { useBoolean, useLoading } from '@/hooks'
 import { fetchServiceManagementList } from '@/service/demo'
+import { $t } from '~/src/locales'
 import type { ModalType } from './components/table-action-modal.vue'
 import TableActionModal from './components/table-action-modal.vue'
 
@@ -126,10 +127,10 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
           </NButton> */}
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.deleteConfirm'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}

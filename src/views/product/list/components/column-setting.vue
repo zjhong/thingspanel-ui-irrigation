@@ -26,7 +26,7 @@ import { ref, watch } from 'vue'
 import type { DataTableColumn } from 'naive-ui'
 import VueDraggable from 'vuedraggable'
 
-type Column = DataTableColumn<UserManagement.User>
+type Column = DataTableColumn<productRecord>
 
 interface Props {
   columns: Column[]

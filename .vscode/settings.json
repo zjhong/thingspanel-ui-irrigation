@@ -14,7 +14,7 @@
   "eslint.format.enable": true,
   "editor.codeActionsOnSave": {},
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "Vue.volar"
   },
   "[postcss]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"

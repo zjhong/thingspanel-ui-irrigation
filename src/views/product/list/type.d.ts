@@ -19,3 +19,17 @@ type QueryFormModel = Pick<productRecord, 'name'> & {
   page: number
   page_size: number
 }
+
+type productDeviceRecord = {
+  deviceNumber: string
+  batchNumber: string
+  firmwareVersion: string
+  onlineDate: string
+  activeStatus: string
+  activeDate: string
+  id: number
+}
+type productDeviceQueryParams = {
+  deviceNumber: string
+  batchNumber: string
+}

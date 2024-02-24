@@ -20,6 +20,13 @@ type ProductLocal = {
     deviceConfigPlaceholder: string
     productKey: string
     productImage: string
+    preRegister: string
+    deviceNumber: string
+    batchNumber: string
+    firmwareVersion: string
+    onlineDate: string
+    activeStatus: string
+    activeDate: string
   }
   'update-package': Record<string, string>
   'update-ota': Record<string, string>

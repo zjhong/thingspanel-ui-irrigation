@@ -1,7 +1,19 @@
 <template>
-  <div class="overflow-hidden">
+  <div class="overflow-hidden h-full bg-blue">
     <n-card :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
+        <n-form ref="queryFormRef" inline label-placement="left" :model="queryParams">
+          <n-form-item :label="$t('page.product.list.batchNumber')" path="email">
+            <n-input v-model:value="queryParams.batchNumber" />
+          </n-form-item>
+          <n-form-item :label="$t('page.product.list.deviceNumber')" path="name">
+            <n-input v-model:value="queryParams.deviceNumber" />
+          </n-form-item>
+          <n-form-item>
+            <n-button class="w-72px" type="primary" @click="handleQuery">搜索</n-button>
+            <n-button class="w-72px ml-20px" type="primary" @click="handleReset">重置</n-button>
+          </n-form-item>
+        </n-form>
         <n-space class="pb-12px" justify="space-between">
           <n-space>
             <n-button type="primary" @click="handleAddTable">
@@ -26,12 +38,7 @@
           flex-height
           class="flex-1-hidden"
         />
-        <table-action-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <n-drawer v-model:show="editPwdVisible" width="80%" placement="right">
-          <n-drawer-content :title="drawerTitle">
-            <device-register />
-          </n-drawer-content>
-        </n-drawer>
+        <table-device-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>
     </n-card>
   </div>
@@ -42,26 +49,24 @@ import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
 import { NButton, NPopconfirm, NSpace } from 'naive-ui'
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
-import moment from 'moment'
 import { useBoolean, useLoading } from '@/hooks'
 import { $t } from '@/locales'
 import { deleteProduct, getProductList } from '@/service/product/list'
-import TableActionModal from './components/table-action-modal.vue'
-import type { ModalType } from './components/table-action-modal.vue'
-import ColumnSetting from './components/column-setting.vue'
-import DeviceRegister from './components/device-register.vue'
+import TableDeviceModal from './table-device-modal.vue'
+import type { ModalType } from './table-action-modal.vue'
+import ColumnSetting from './column-setting.vue'
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal } = useBoolean()
-const { bool: editPwdVisible, setTrue: openConfig } = useBoolean()
 
-const queryParams = reactive<QueryFormModel>({
-  name: '',
+const queryParams = reactive({
+  deviceNumber: '',
+  batchNumber: '',
   page: 1,
   page_size: 10
 })
 
-const tableData = ref<productRecord[]>([])
-function setTableData(data: productRecord[]) {
+const tableData = ref<productDeviceRecord[]>([])
+function setTableData(data: productDeviceRecord[]) {
   tableData.value = data
 }
 
@@ -83,49 +88,56 @@ const pagination: PaginationProps = reactive({
     getTableData()
   }
 })
-
+function handleQuery() {
+  init()
+}
+function handleReset() {
+  Object.assign(queryParams, {
+    deviceNumber: '',
+    batchNumber: '',
+    page: 1
+  })
+  handleQuery()
+}
 async function getTableData() {
   startLoading()
   const { data } = await getProductList(queryParams)
   if (data) {
-    const list: productRecord[] = data.list
+    const list: productDeviceRecord[] = data.list
     setTableData(list)
     pagination.pageCount = Math.ceil(data.total / queryParams.page_size)
     endLoading()
   }
 }
-const drawerTitle: Ref<string> = ref('')
-async function handleRegisterConfig(record: productRecord) {
-  openConfig()
-  drawerTitle.value = `${record.name}-${$t('page.product.list.preRegister')}`
-}
-const columns: Ref<DataTableColumns<productRecord>> = ref([
+
+const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   {
     key: 'name',
-    title: $t('page.product.list.productName')
+    title: $t('page.product.list.deviceNumber')
   },
   {
     key: 'device_type',
-    title: $t('page.product.list.deviceType')
+    title: $t('page.product.list.batchNumber')
   },
   {
     key: 'product_model',
-    title: $t('page.product.list.productNumber')
+    title: $t('page.product.list.firmwareVersion')
   },
   {
     key: 'device_config_id',
-    title: $t('page.product.list.deviceConfig')
+    title: $t('page.product.list.firmwareVersion')
   },
   {
     key: 'description',
-    title: $t('page.product.list.productDesc')
+    title: $t('page.product.list.onlineDate')
   },
   {
     key: 'created_at',
-    title: $t('page.product.list.createTime'),
-    render: row => {
-      return moment(row.created_at).format('YYYY-MM-DD hh:mm:ss')
-    }
+    title: $t('page.product.list.activeStatus')
+  },
+  {
+    key: 'updated_at',
+    title: $t('page.product.list.activeDate')
   },
   {
     key: 'actions',
@@ -137,9 +149,6 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
             {$t('common.edit')}
-          </NButton>
-          <NButton size={'small'} type="primary" onClick={() => handleRegisterConfig(row)}>
-            {$t('page.product.list.register')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
@@ -155,7 +164,7 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
       )
     }
   }
-]) as Ref<DataTableColumns<productRecord>>
+]) as Ref<DataTableColumns<productDeviceRecord>>
 
 const modalType = ref<ModalType>('add')
 
@@ -163,9 +172,9 @@ function setModalType(type: ModalType) {
   modalType.value = type
 }
 
-const editData = ref<productRecord | null>(null)
+const editData = ref<productDeviceRecord | null>(null)
 
-function setEditData(data: productRecord | null) {
+function setEditData(data: productDeviceRecord | null) {
   editData.value = data
 }
 

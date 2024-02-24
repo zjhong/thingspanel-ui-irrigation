@@ -1,32 +1,9 @@
 <template>
-  <n-modal v-model:show="modalVisible" preset="card" :on-after-enter="getList" :title="title" class="w-700px">
+  <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <n-grid :cols="24" :x-gap="18">
         <n-form-item-grid-item :span="12" :label="$t('page.product.list.productName')" path="name">
-          <n-input v-model:value="formModel.name" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" :label="$t('page.product.list.deviceType')" path="device_type">
-          <n-input v-model:value="formModel.device_type" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" :label="$t('page.product.list.productNumber')" path="product_model">
-          <n-input v-model:value="formModel.product_model" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <n-select v-model:value="formModel.device_config_id" :options="deviceOptions" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" :label="$t('page.product.list.productKey')" path="product_key">
-          <n-input v-model:value="formModel.product_key" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('page.product.list.productImage')" path="image_url">
-          <upload-card
-            v-model:value="formModel.image_url"
-            accept="image/png, image/jpeg, image/jpg"
-            class="mt-10px"
-            :file-type="['jpg', 'png', 'jpeg']"
-          ></upload-card>
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('page.product.list.productDesc')" path="description">
-          <n-input v-model:value="formModel.description" />
+          <n-input v-model:value="formModel.deviceNumber" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -42,8 +19,7 @@ import { ref, computed, reactive, watch } from 'vue'
 import type { FormInst, FormItemRule } from 'naive-ui'
 import { createRequiredFormRule } from '@/utils'
 import { $t } from '~/src/locales'
-import { addProduct, editProduct, getDeviceList } from '~/src/service/product/list'
-import UploadCard from './upload-card.vue'
+import { addProduct, editProduct } from '~/src/service/product/list'
 
 export interface Props {
   /** 弹窗可见性 */
@@ -55,7 +31,7 @@ export interface Props {
    */
   type?: 'add' | 'edit'
   /** 编辑的表格行数据 */
-  editData?: productRecord | null
+  editData?: productDeviceRecord | null
 }
 
 export type ModalType = NonNullable<Props['type']>
@@ -96,18 +72,8 @@ const title = computed(() => {
 })
 
 const formRef = ref<HTMLElement & FormInst>()
-const deviceOptions = ref()
 
-const getList = () => {
-  getDeviceList({
-    page: 1,
-    page_size: 99
-  }).then(({ data }) => {
-    const list = data.list || []
-    deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || []
-  })
-}
-const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd)
+const formModel = reactive<productDeviceRecord>(createDefaultFormModel() as productDeviceRecord)
 
 const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
@@ -115,21 +81,10 @@ const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
 }
 
 function createDefaultFormModel() {
-  return {
-    name: '',
-    device_type: undefined,
-    additional_info: undefined,
-    description: undefined,
-    image_url: undefined,
-    product_model: undefined,
-    product_type: undefined,
-    remark: undefined,
-    device_config_id: undefined,
-    product_key: undefined
-  }
+  return {}
 }
 
-function handleUpdateFormModel(model: Partial<productRecord>) {
+function handleUpdateFormModel(model: Partial<productDeviceRecord>) {
   Object.assign(formModel, model)
 }
 
@@ -141,7 +96,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       if (props.editData) {
-        handleUpdateFormModel(props.editData as productAdd)
+        handleUpdateFormModel(props.editData as productDeviceRecord)
       }
     }
   }
@@ -153,7 +108,7 @@ async function handleSubmit() {
   await formRef.value?.validate()
   let data: any
   if (props.type === 'add') {
-    data = await addProduct({ ...formModel, device_type: Number(formModel.device_type as string) })
+    data = await addProduct(formModel)
   } else if (props.type === 'edit') {
     data = await editProduct(formModel)
   }

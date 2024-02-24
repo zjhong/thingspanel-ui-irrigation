@@ -27,7 +27,7 @@ import type { DataTableColumn } from 'naive-ui'
 import VueDraggable from 'vuedraggable'
 import { $t } from '~/src/locales'
 
-type Column = DataTableColumn<productRecord>
+type Column = DataTableColumn<any>
 
 interface Props {
   columns: Column[]

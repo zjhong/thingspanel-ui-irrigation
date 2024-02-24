@@ -19,7 +19,14 @@ export const productLocaleEn: ProductLocal = {
     productDescPlaceholder: '请输入产品描述',
     deviceConfigPlaceholder: '请输入设备配置',
     productKey: 'ProductKey',
-    productImage: '图片'
+    productImage: '图片',
+    preRegister: '预注册管理',
+    deviceNumber: '设备编号',
+    batchNumber: '批次编号',
+    firmwareVersion: '固件版本',
+    onlineDate: '上线日期',
+    activeStatus: '激活状态',
+    activeDate: '激活日期'
   },
   'update-package': {},
   'update-ota': {}

@@ -22,7 +22,8 @@ const locale: I18nType.Schema = {
     remark: '备注',
     search: '搜索',
     reset: '重置',
-    save: '保存'
+    save: '保存',
+    changeTableColumns: '表格列设置'
   },
   routes: {
     dashboard: {

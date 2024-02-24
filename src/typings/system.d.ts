@@ -332,6 +332,7 @@ declare namespace I18nType {
       search: string
       reset: string
       save: string
+      changeTableColumns: string
     }
     routes: {
       dashboard: {

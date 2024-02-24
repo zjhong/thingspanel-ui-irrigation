@@ -2,30 +2,31 @@
   <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="12" label="用户名" path="name">
+        <n-form-item-grid-item :span="12" :label="$t('page.product.list.productName')" path="name">
           <n-input v-model:value="formModel.name" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="邮箱" path="email">
-          <n-input v-model:value="formModel.email" />
+        <n-form-item-grid-item :span="12" :label="$t('page.product.list.deviceType')" path="device_type">
+          <n-input v-model:value="formModel.device_type" />
         </n-form-item-grid-item>
-        <n-form-item-grid-item :span="12" label="手机号" path="phone_number">
-          <n-input v-model:value="formModel.phone_number" />
+        <n-form-item-grid-item :span="12" :label="$t('page.product.list.productNumber')" path="product_model">
+          <n-input v-model:value="formModel.product_model" />
         </n-form-item-grid-item>
-        <!-- <n-form-item-grid-item :span="12" label="性别">
-          <n-radio-group v-model:value="formModel.gender">
-            <n-radio v-for="item in genderOptions" :key="item.value" :value="item.value">{{ item.label }}</n-radio>
-          </n-radio-group>
-        </n-form-item-grid-item> -->
-        <template v-if="type === 'add'">
-          <n-form-item-grid-item :span="12" label="密码" path="password">
-            <n-input v-model:value="formModel.password" type="password" />
-          </n-form-item-grid-item>
-          <n-form-item-grid-item :span="12" label="确认密码" path="confirmPwd">
-            <n-input v-model:value="formModel.confirmPwd" type="password" />
-          </n-form-item-grid-item>
-        </template>
-        <n-form-item-grid-item :span="24" label="备注">
-          <n-input v-model:value="formModel.remark" type="textarea" />
+        <n-form-item-grid-item :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
+          <n-select v-model:value="formModel.device_config_id" :options="deviceOptions" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="12" :label="$t('page.product.list.productKey')" path="product_key">
+          <n-input v-model:value="formModel.product_key" />
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" :label="$t('page.product.list.productImage')" path="image_url">
+          <upload-card
+            v-model:value="formModel.image_url"
+            accept="image/png, image/jpeg, image/jpg"
+            class="mt-10px"
+            :file-type="['jpg', 'png', 'jpeg']"
+          ></upload-card>
+        </n-form-item-grid-item>
+        <n-form-item-grid-item :span="24" :label="$t('page.product.list.productDesc')" path="description">
+          <n-input v-model:value="formModel.description" />
         </n-form-item-grid-item>
       </n-grid>
       <n-space class="w-full pt-16px" :size="24" justify="end">
@@ -37,11 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, watch, toRefs } from 'vue'
+import { ref, computed, reactive, watch, onMounted } from 'vue'
 import type { FormInst, FormItemRule } from 'naive-ui'
-// import { genderOptions } from '@/constants'
-import { addUser, editUser } from '@/service'
-import { formRules, createRequiredFormRule, getConfirmPwdRule } from '@/utils'
+import { createRequiredFormRule } from '@/utils'
+import { $t } from '~/src/locales'
+import { addProduct, editProduct, getDeviceList } from '~/src/service/product/list'
+import UploadCard from './upload-card.vue'
 
 export interface Props {
   /** 弹窗可见性 */
@@ -53,7 +55,7 @@ export interface Props {
    */
   type?: 'add' | 'edit'
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null
+  editData?: productRecord | null
 }
 
 export type ModalType = NonNullable<Props['type']>
@@ -87,44 +89,47 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加用户',
-    edit: '编辑用户'
+    add: $t('page.product.list.addProduct'),
+    edit: $t('page.product.list.editProduct')
   }
   return titles[props.type]
 })
 
 const formRef = ref<HTMLElement & FormInst>()
+const deviceOptions = ref()
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
-  password: string
-  confirmPwd: string
+onMounted(() => {
+  getDeviceList({
+    page: 1,
+    page_size: 99
+  }).then(({ data }) => {
+    const list = data.list || []
+    deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || []
+  })
+})
+const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd)
+
+const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
+  name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
+  device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
 }
 
-const formModel = reactive<FormModel>(createDefaultFormModel())
-
-const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入用户名'),
-  gender: createRequiredFormRule('请选择性别'),
-  phone_number: formRules.phone,
-  email: formRules.email,
-  password: formRules.pwd,
-  confirmPwd: getConfirmPwdRule(toRefs(formModel).password),
-  remark: createRequiredFormRule('请输入备注')
-}
-
-function createDefaultFormModel(): FormModel {
+function createDefaultFormModel() {
   return {
     name: '',
-    gender: null,
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmPwd: '',
-    remark: ''
+    device_type: undefined,
+    additional_info: undefined,
+    description: undefined,
+    image_url: undefined,
+    product_model: undefined,
+    product_type: undefined,
+    remark: undefined,
+    device_config_id: undefined,
+    product_key: undefined
   }
 }
 
-function handleUpdateFormModel(model: Partial<FormModel>) {
+function handleUpdateFormModel(model: Partial<productRecord>) {
   Object.assign(formModel, model)
 }
 
@@ -136,7 +141,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       if (props.editData) {
-        handleUpdateFormModel(props.editData)
+        handleUpdateFormModel(props.editData as productAdd)
       }
     }
   }
@@ -148,9 +153,9 @@ async function handleSubmit() {
   await formRef.value?.validate()
   let data: any
   if (props.type === 'add') {
-    data = await addUser(formModel)
+    data = await addProduct({ ...formModel, device_type: Number(formModel.device_type as string) })
   } else if (props.type === 'edit') {
-    data = await editUser(formModel)
+    data = await editProduct(formModel)
   }
   if (!data.error) {
     window.$message?.success(data.msg)

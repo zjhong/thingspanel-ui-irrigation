@@ -116,7 +116,6 @@ export const useRouteStore = defineStore('route-store', {
       if (!id) {
         throw new Error('userId 不能为空!')
       }
-
       const { error, data } = await fetchElementListByUser()
       // const { error, data } = await fetchUserRoutes(id)
       if (!error && data) {

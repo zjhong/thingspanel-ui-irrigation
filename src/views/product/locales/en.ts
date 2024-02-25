@@ -54,5 +54,15 @@ export const productLocaleEn: ProductLocal = {
     signModePlaceholder: '请选择签名算法',
     packagePlaceholder: '请选择升级包'
   },
-  'update-ota': {}
+  'update-ota': {
+    lookTask: '查看任务',
+    otaTitle: 'OTA升级列表',
+    packageName: '升级包名称',
+    version: '待升级版本号',
+    versionCode: '升级包版本号',
+    type: '升级包类型',
+    moduleName: '模块名称',
+    createTime: '添加日期',
+    desc: '描述'
+  }
 }

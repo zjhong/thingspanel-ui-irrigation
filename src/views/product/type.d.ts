@@ -54,5 +54,15 @@ type ProductLocal = {
     packagePlaceholder: string
     customInfo: string
   }
-  'update-ota': Record<string, string>
+  'update-ota': {
+    lookTask: string
+    otaTitle: string
+    packageName: string
+    version: string
+    versionCode: string
+    type: string
+    moduleName: string
+    createTime: string
+    desc: string
+  }
 }

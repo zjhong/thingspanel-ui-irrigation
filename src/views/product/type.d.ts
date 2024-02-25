@@ -28,6 +28,31 @@ type ProductLocal = {
     activeStatus: string
     activeDate: string
   }
-  'update-package': Record<string, string>
+  'update-package': {
+    packageList: string
+    packageName: string
+    packageNamePlaceholder: string
+    version: string
+    versionPlaceholder: string
+    versionCode: string
+    versionCodePlaceholder: string
+    deviceConfig: string
+    type: string
+    typePlaceholder: string
+    moduleName: string
+    createTime: string
+    desc: string
+    packageAdd: string
+    packageEdit: string
+    diff: string
+    full: string
+    product: string
+    productPlaceholder: string
+    signMode: string
+    signModePlaceholder: string
+    package: string
+    packagePlaceholder: string
+    customInfo: string
+  }
   'update-ota': Record<string, string>
 }

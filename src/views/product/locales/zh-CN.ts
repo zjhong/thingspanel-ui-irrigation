@@ -28,6 +28,31 @@ export const productLocaleZhCn: ProductLocal = {
     activeStatus: '激活状态',
     activeDate: '激活日期'
   },
-  'update-package': {},
+  'update-package': {
+    packageList: '升级包列表',
+    packageName: '升级包名称',
+    version: '待升级版本号',
+    versionCode: '升级包版本号',
+    deviceConfig: '设备配置',
+    type: '升级包类型',
+    moduleName: '模块名称',
+    createTime: '添加日期',
+    desc: '描述',
+    packageAdd: '添加升级包',
+    packageEdit: '编辑升级包',
+    diff: '差分',
+    full: '整包',
+    product: '所属产品',
+    signMode: '签名算法',
+    package: '选择升级包',
+    customInfo: '推送的自定义信息',
+    packageNamePlaceholder: '请填写升级包名称',
+    versionPlaceholder: '请填写待升级版本号',
+    versionCodePlaceholder: '请填写升级包版本号',
+    typePlaceholder: '请选择升级包类型',
+    productPlaceholder: '请选择所属产品',
+    signModePlaceholder: '请选择签名算法',
+    packagePlaceholder: '请选择升级包'
+  },
   'update-ota': {}
 }

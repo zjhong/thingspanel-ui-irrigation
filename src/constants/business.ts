@@ -43,6 +43,16 @@ export const dataServiceSignModeLabels: Record<DataService.SignModeKey, string> 
   2: 'HAS256'
 }
 
+export const signModeOptions = [
+  {
+    label: 'MD5',
+    value: '1'
+  },
+  {
+    label: 'HAS256',
+    value: '2'
+  }
+]
 export const dataServiceSignModeOptions = transformObjectToOption(dataServiceSignModeLabels)
 
 /** 数据服务-接口支持标志 */
@@ -96,6 +106,10 @@ export const routeComponentTypeLabels: Record<AuthRoute.RouteComponentType, stri
 }
 export const routeComponentTypeOptions = transformObjectToOption(routeComponentTypeLabels)
 
+export const packageOptions = [
+  { label: $t('page.product.update-package.diff'), value: 1 },
+  { label: $t('page.product.update-package.full'), value: 2 }
+]
 /** 路由管理 - 路由类型 */
 export const routerTypeLabels: Record<CustomRoute.routerTypeKey, string> = {
   1: '菜单',

@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-hidden h-full bg-blue">
+  <div class="overflow-hidden h-full">
     <n-card
       :title="$t('page.product.update-package.packageList')"
       :bordered="false"

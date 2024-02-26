@@ -46,10 +46,8 @@ export function generateUUID(): string {
 	let d = new Date().getTime();
 	const uuidFormat: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
 	return uuidFormat.replace(/[xy]/g, (c) => {
-		// @ts-ignore
 		const r = (d + Math.random() * 16) % 16 | 0;
 		d = Math.floor(d / 16);
-		// @ts-ignore
 		return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
 	});
 }

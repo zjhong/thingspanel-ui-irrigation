@@ -141,7 +141,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
 		key: 'actions',
 		title: $t('common.action'),
 		align: 'center',
-		width: '300px',
+		width: '200px',
 		render: row => {
 			return (
 				<NSpace justify={'center'}>

@@ -56,13 +56,12 @@ export const productLocaleZhCn: ProductLocal = {
   },
   'update-ota': {
     lookTask: '查看任务',
-    packageName: '升级包名称',
     otaTitle: 'OTA升级列表',
-    version: '待升级版本号',
-    versionCode: '升级包版本号',
-    type: '升级包类型',
-    moduleName: '模块名称',
-    createTime: '添加日期',
-    desc: '描述'
+    taskName: '任务名称',
+    deviceNum: '设备数量',
+    desc: '描述',
+    createTime: '创建日期',
+    updateTask: '添加升级任务', //
+    taskDetail: '任务详情'
   }
 }

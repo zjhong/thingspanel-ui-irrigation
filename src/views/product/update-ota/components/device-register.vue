@@ -1,24 +1,16 @@
 <template>
   <div class="overflow-hidden h-full">
-    <n-card :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <n-card class="h-full">
       <div class="flex-col h-full">
-        <n-form ref="queryFormRef" inline label-placement="left" :model="queryParams">
-          <n-form-item :label="$t('page.product.list.batchNumber')" path="email">
-            <n-input v-model:value="queryParams.batchNumber" />
-          </n-form-item>
-          <n-form-item :label="$t('page.product.list.deviceNumber')" path="name">
-            <n-input v-model:value="queryParams.deviceNumber" />
-          </n-form-item>
-          <n-form-item>
-            <n-button class="w-72px" type="primary" @click="handleQuery">{{ $t('common.se') }}</n-button>
-            <n-button class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t('common.reset') }}</n-button>
-          </n-form-item>
-        </n-form>
-        <n-space class="pb-12px" justify="space-between">
+        <n-tabs v-model:value="activeTab" type="line" animated>
+          <n-tab-pane name="mission" tab="任务列表"></n-tab-pane>
+          <n-tab-pane name="info" tab="升级包信息"></n-tab-pane>
+        </n-tabs>
+        <n-space v-if="activeTab === 'mission'" class="pb-12px" justify="space-between">
           <n-space>
             <n-button type="primary" @click="handleAddTable">
               <icon-ic-round-plus class="mr-4px text-20px" />
-              {{ $t('common.add') }}
+              {{ $t('page.product.update-ota.updateTask') }}
             </n-button>
           </n-space>
           <n-space align="center" :size="18">
@@ -30,6 +22,7 @@
           </n-space>
         </n-space>
         <n-data-table
+          v-if="activeTab === 'mission'"
           remote
           :columns="columns"
           :data="tableData"
@@ -38,6 +31,7 @@
           flex-height
           class="flex-1-hidden"
         />
+        <div v-if="activeTab === 'info'">info</div>
         <table-device-modal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>
     </n-card>
@@ -47,24 +41,29 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue'
 import type { Ref } from 'vue'
-import { NButton, NPopconfirm, NSpace } from 'naive-ui'
+import { NButton, NSpace } from 'naive-ui'
 import type { DataTableColumns, PaginationProps } from 'naive-ui'
 import { useBoolean, useLoading } from '@/hooks'
 import { $t } from '@/locales'
-import { deleteProduct, getProductList } from '@/service/product/list'
+import { getOtaTaskList } from '~/src/service/product/update-ota'
 import TableDeviceModal from './table-device-modal.vue'
 import type { ModalType } from './table-action-modal.vue'
 import ColumnSetting from './column-setting.vue'
 const { loading, startLoading, endLoading } = useLoading(false)
 const { bool: visible, setTrue: openModal } = useBoolean()
-
+const props = defineProps({
+  mid: {
+    type: Number,
+    required: true
+  }
+})
 const queryParams = reactive({
   deviceNumber: '',
   batchNumber: '',
   page: 1,
   page_size: 10
 })
-
+const activeTab = ref('mission')
 const tableData = ref<productDeviceRecord[]>([])
 function setTableData(data: productDeviceRecord[]) {
   tableData.value = data
@@ -88,20 +87,10 @@ const pagination: PaginationProps = reactive({
     getTableData()
   }
 })
-function handleQuery() {
-  init()
-}
-function handleReset() {
-  Object.assign(queryParams, {
-    deviceNumber: '',
-    batchNumber: '',
-    page: 1
-  })
-  handleQuery()
-}
+
 async function getTableData() {
   startLoading()
-  const { data } = await getProductList(queryParams)
+  const { data } = await getOtaTaskList({ ...queryParams, ota_upgrade_package_id: props.mid })
   if (data) {
     const list: productDeviceRecord[] = data.list
     setTableData(list)
@@ -109,57 +98,37 @@ async function getTableData() {
     endLoading()
   }
 }
-
 const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
+  // 任务名称
   {
     key: 'name',
-    title: $t('page.product.list.deviceNumber')
+    title: $t('page.product.update-ota.taskName')
   },
+  // 设备数量
   {
     key: 'device_type',
-    title: $t('page.product.list.batchNumber')
+    title: $t('page.product.update-ota.deviceNum')
   },
+  // 描述
   {
     key: 'product_model',
-    title: $t('page.product.list.firmwareVersion')
+    title: $t('page.product.update-ota.desc')
   },
+  // 创建日期
   {
     key: 'device_config_id',
-    title: $t('page.product.list.firmwareVersion')
-  },
-  {
-    key: 'description',
-    title: $t('page.product.list.onlineDate')
-  },
-  {
-    key: 'created_at',
-    title: $t('page.product.list.activeStatus')
-  },
-  {
-    key: 'updated_at',
-    title: $t('page.product.list.activeDate')
+    title: $t('page.product.update-ota.createTime')
   },
   {
     key: 'actions',
-    title: $t('page.product.list.operate'),
+    title: $t('common.action'),
     align: 'center',
-    width: '300px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            {$t('common.edit')}
+            {$t('page.product.update-ota.taskDetail')}
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
-            {{
-              default: () => $t('common.deleteConfirm'),
-              trigger: () => (
-                <NButton type="error" size={'small'}>
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
         </NSpace>
       )
     }
@@ -198,14 +167,6 @@ function handleEditTable(rowId: number) {
   }
   setModalType('edit')
   openModal()
-}
-
-async function handleDeleteTable(rowId: number) {
-  const data = await deleteProduct(rowId)
-  if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'))
-    getTableData()
-  }
 }
 
 function init() {

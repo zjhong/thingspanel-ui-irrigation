@@ -57,12 +57,12 @@ type ProductLocal = {
   'update-ota': {
     lookTask: string
     otaTitle: string
-    packageName: string
-    version: string
-    versionCode: string
-    type: string
-    moduleName: string
-    createTime: string
+    taskName: string
+    deviceNum: string
     desc: string
+    createTime: string
+    updateTask: string
+    // 任务详情
+    taskDetail: string
   }
 }

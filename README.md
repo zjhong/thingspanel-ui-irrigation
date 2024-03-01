@@ -1,3 +1,0 @@
-# ThingsPanel
-
-> In development

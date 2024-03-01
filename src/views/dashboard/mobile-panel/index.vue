@@ -1,3 +1,0 @@
-<template>
-  <mobile-manage />
-</template>

@@ -194,7 +194,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           flex-height
-          class="flex-1-hidden"
+          class="sm:h-full"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">

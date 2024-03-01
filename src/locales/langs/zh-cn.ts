@@ -34,6 +34,8 @@ const local: App.I18n.Schema = {
     search: '搜索',
     tip: '提示',
     update: '更新',
+    refreshTable: '刷新表格',
+    changeTableColumns: '表格列设置',
     updateSuccess: '更新成功',
     userCenter: '个人中心',
     yesOrNo: {

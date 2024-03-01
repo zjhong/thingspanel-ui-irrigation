@@ -90,8 +90,6 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     return false;
   }
 
-  console.log(userInfo, '0000');
-  console.log(userInfo.roles, '0000');
   return {
     token,
     userInfo,

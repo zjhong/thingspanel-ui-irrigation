@@ -279,6 +279,8 @@ declare namespace App {
         tip: string;
         update: string;
         updateSuccess: string;
+        refreshTable: string;
+        changeTableColumns: string;
         userCenter: string;
         yesOrNo: {
           yes: string;

@@ -1,6 +1,5 @@
 import type { App } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { createPinia } from 'pinia';
 import { localStg } from '@/utils/storage';
 import messages from './locale';
 
@@ -17,7 +16,6 @@ export const i18n = createI18n({
  * @param app
  */
 export function setupI18n(app: App) {
-  app.use(createPinia());
   app.use(i18n);
 }
 

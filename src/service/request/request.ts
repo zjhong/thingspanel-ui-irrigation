@@ -1,4 +1,5 @@
-import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
+import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
+
 import { localStg } from '@/utils/storage';
 import { createProxyPattern, createServiceConfig } from '~/env.config';
 
@@ -9,7 +10,6 @@ const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
 export const request = createFlatRequest<App.Service.DEVResponse>(
   {
     baseURL: isHttpProxy ? createProxyPattern() : otherBaseURL.demo,
-
     headers: {
       apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
     }
@@ -52,7 +52,7 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
   }
 );
 
-export const mockRequest = createRequest<App.Service.DEVResponse>(
+export const mockRequest = createFlatRequest<App.Service.DEVResponse>(
   {
     baseURL: otherBaseURL.mock
   },

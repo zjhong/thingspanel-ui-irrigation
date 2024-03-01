@@ -127,7 +127,7 @@ init();
 
 <template>
   <div class="overflow-hidden h-full">
-    <NCard :title="$t('page.product.update-ata.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
@@ -158,7 +158,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           flex-height
-          class="flex-1-hidden"
+          class="sm:h-full"
         />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
           <NDrawerContent :title="$t('page.product.update-ota.lookTask')">

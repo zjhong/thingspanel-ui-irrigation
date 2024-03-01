@@ -35,6 +35,8 @@ const local: App.I18n.Schema = {
     tip: 'Tip',
     update: 'Update',
     updateSuccess: 'Update Success',
+    changeTableColumns: 'Table Column Settings',
+    refreshTable: 'Refresh Table',
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',

@@ -166,6 +166,9 @@ export function createRequest<ResponseData = any>(
 
 export { BACKEND_ERROR_CODE, REQUEST_ID_KEY };
 export type * from './type';
+export type * from './options';
+export type * from './constant';
+export type * from './shared';
 export function createFlatRequest<ResponseData = any>(
   axiosConfig?: CreateAxiosDefaults,
   options?: Partial<RequestOption<ResponseData>>

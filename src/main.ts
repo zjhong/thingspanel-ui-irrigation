@@ -1,12 +1,10 @@
 import { createApp, watch } from 'vue';
 import './plugins/assets';
-// import { createPinia } from 'pinia';
 import { useSysSettingStore } from '@/store/modules/sys-setting';
 import { setupDayjs, setupIconifyOffline, setupLoading, setupNProgress } from './plugins';
 import { setupStore } from './store';
 import { setupRouter } from './router';
 import { i18n, setupI18n } from './locales';
-
 import App from './App.vue';
 
 async function setupApp() {
@@ -19,10 +17,9 @@ async function setupApp() {
   setupDayjs();
 
   const app = createApp(App);
-
+  console.log(1);
   setupStore(app);
-  // const pinia = createPinia();
-  // app.use(pinia);
+  console.log(2);
   setupI18n(app);
   const sysSettingStore = useSysSettingStore();
   // 确保系统设置在应用启动时加载
@@ -47,4 +44,4 @@ async function setupApp() {
   app.mount('#app');
 }
 
-setupApp();
+await setupApp();

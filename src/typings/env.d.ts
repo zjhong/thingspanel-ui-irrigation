@@ -63,5 +63,6 @@ declare namespace Env {
      * @link https://docs.iconify.design/api/providers.html
      */
     readonly VITE_ICONIFY_URL?: string;
+    readonly globEager: <T = any>(globPattern: string) => Record<string, T>;
   }
 }

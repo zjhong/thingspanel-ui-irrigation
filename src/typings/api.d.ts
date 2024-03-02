@@ -11,7 +11,6 @@ declare namespace Api {
       message: string;
     }
   }
-
   namespace Common {
     /** common params of paginating */
     interface PaginatingCommonParams {
@@ -84,7 +83,6 @@ declare namespace Api {
       authority: string;
     }
   }
-
   /**
    * namespace Route
    *
@@ -92,7 +90,6 @@ declare namespace Api {
    */
   namespace Route {
     type ElegantConstRoute = import('@elegant-router/types').ElegantConstRoute;
-
     interface MenuRoute extends ElegantConstRoute {
       id: string;
       /** 父节点ID */
@@ -122,18 +119,15 @@ declare namespace Api {
       /** 子节点 */
       children: MenuRoute[];
     }
-
     interface Data {
       list: MenuRoute[];
       total: number;
     }
-
     interface UserRoute {
       list: ElegantConstRoute[];
       home: import('@elegant-router/types').LastLevelRouteKey;
     }
   }
-
   /**
    * namespace SystemManage
    *
@@ -273,9 +267,7 @@ declare namespace Api {
       children?: Menu[];
     }>;
   }
-
   /** 系统设置-路由管理 */
-
   namespace ApiApplyManagement {
     interface Service {
       /** id */
@@ -299,7 +291,6 @@ declare namespace Api {
       status: '1' | '2' | null;
     }
   }
-
   /** 常规设置 */
   namespace GeneralSetting {
     /** 主题设置 */
@@ -346,7 +337,6 @@ declare namespace Api {
       total: number;
     }
   }
-
   namespace UserManagement {
     interface User {
       /** 用户id */
@@ -383,7 +373,6 @@ declare namespace Api {
       total: number;
     }
   }
-
   /** 规则引擎 */
   namespace RuleEngine {
     interface Rule {
@@ -400,7 +389,6 @@ declare namespace Api {
       status: '1' | '2' | null;
     }
   }
-
   namespace DataService {
     interface Data {
       /** id */
@@ -430,7 +418,6 @@ declare namespace Api {
       status: '1' | '2' | null;
     }
   }
-
   namespace ApplyManagement {
     interface Service {
       /** id */

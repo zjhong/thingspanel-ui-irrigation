@@ -6,6 +6,7 @@ name: ssh deploy
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,7 +19,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16.16.0
-        cache: 'npm'    
+        cache: 'npm'
     - run: npm install -g pnpm
     - run: pnpm install
     - run: pnpm build
@@ -32,7 +33,7 @@ jobs:
         user: ${{ secrets.DC_USER }}
         pass: ${{ secrets.DC_PASS }}
         scp: |
-          ./dist/* => /home/nginx/www/dist/
+          ./dist/* => /home/thingspanel/nginx/www/dist/
         # last_ssh: |
         #   echo $LASTSSH 
         #   nginx -t

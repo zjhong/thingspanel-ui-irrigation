@@ -34,7 +34,6 @@ export function createPermissionGuard(router: Router) {
       !routeRoles.length ||
       authStore.userInfo?.roles?.includes(SUPER_ADMIN) ||
       authStore.userInfo?.roles?.some(role => routeRoles.includes(role));
-    console.log(hasPermission, '9999');
     const strategicPatterns: CommonType.StrategicPattern[] = [
       // 1. if it is login route when logged in, change to the root page
       {

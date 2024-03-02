@@ -34,7 +34,6 @@ async function getTableData() {
   const { data } = await fetchElementList(queryParams);
   if (data) {
     const list: Api.Route.MenuRoute[] = data.list;
-    console.log(list, '78958586');
     setTableData(list);
     endLoading();
   }

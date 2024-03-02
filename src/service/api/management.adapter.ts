@@ -29,8 +29,6 @@ export function adapterOfFetchRouterList(data: Api.Route.Data): Api.Route.MenuRo
 /** 递归处理数据 */
 function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
   return data.map((item: any): ElegantRoute => {
-    console.log(item.parent_id, '9452343');
-    console.log(item.element_code, item.parent_id, '9452343');
     let componentStr: string = '';
     switch (item.param3) {
       case 'basic':

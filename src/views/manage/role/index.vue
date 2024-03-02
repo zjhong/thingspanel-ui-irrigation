@@ -124,7 +124,6 @@ const checkedRowKeys = ref<string[]>([]);
 
 async function handleBatchDelete() {
   // requestTs
-  console.log(checkedRowKeys.value);
   window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];

@@ -17,9 +17,9 @@ async function setupApp() {
   setupDayjs();
 
   const app = createApp(App);
-  console.log(1);
+
   setupStore(app);
-  console.log(2);
+
   setupI18n(app);
   const sysSettingStore = useSysSettingStore();
   // 确保系统设置在应用启动时加载

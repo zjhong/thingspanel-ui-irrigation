@@ -1,5 +1,5 @@
 import { productLocaleEn } from '~/src/views/product/locales/en';
-
+import { cen } from './你新增的路由相关的国际化';
 const local: App.I18n.Schema = {
   default: '',
   system: {
@@ -127,38 +127,12 @@ const local: App.I18n.Schema = {
   },
   route: {
     login: 'Login',
-    apply: 'Application Management',
-    apply_service: 'Service Management',
-    'rule-engine': 'Rule Engine',
-    'data-service': 'Data Service',
     403: 'No Permission',
     404: 'Page Not Found',
     500: 'Server Error',
     home: 'Home',
-    product: 'Product Manage',
-    product_list: 'Product List',
-    'product_update-ota': 'UPs Manage',
-    'product_update-package': 'OTA UP',
-    plugin: 'plugin',
-    plugin_charts: 'Chart',
-    plugin_charts_antv: 'AntV',
-    plugin_charts_echarts: 'ECharts',
-    plugin_copy: 'Copy',
-    plugin_editor: 'Editor',
-    plugin_editor_markdown: 'Markdown',
-    plugin_editor_quill: 'Quill',
-    plugin_icon: 'Icon',
-    plugin_map: 'Map',
-    plugin_print: 'Print',
-    plugin_swiper: 'Swiper',
-    plugin_video: 'Video',
     'user-center': 'User Center',
     about: 'About',
-    dashboard: 'dashboard',
-    dashboard_analysis: 'analysis',
-    'dashboard_mobile-panel': 'mobile-panel',
-    dashboard_panel: 'panel',
-    dashboard_workbench: 'workbench',
     function: 'System Function',
     function_tab: 'Tab',
     'function_multi-tab': 'Multi Tab',
@@ -171,12 +145,6 @@ const local: App.I18n.Schema = {
     'manage_user-detail': 'User Detail',
     manage_role: 'Role Manage2',
     manage_menu: 'Menu Manage2',
-    management: 'System Manage',
-    management_auth: 'Menu Manage',
-    management_role: 'Role Manage',
-    management_user: 'User Manage',
-    management_route: 'Route Manage',
-    management_setting: 'Setting',
     'multi-menu': 'Multi Menu',
     'multi-menu_first': 'Menu One',
     'multi-menu_first_child': 'Menu One Child',
@@ -190,7 +158,8 @@ const local: App.I18n.Schema = {
     component: 'Component',
     component_button: 'Button',
     component_card: 'Card',
-    component_table: 'Table'
+    component_table: 'Table',
+    ...cen
   },
   page: {
     product: productLocaleEn,

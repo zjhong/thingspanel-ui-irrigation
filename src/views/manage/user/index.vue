@@ -166,6 +166,7 @@ async function handleBatchDelete() {
 const editingData = ref<Api.SystemManage.User | null>(null);
 
 function handleEdit(id: number) {
+  console.log('id: ', id);
   operateType.value = 'edit';
   editingData.value = data.value.find(item => item.id === id) || null;
   openDrawer();

@@ -31,7 +31,8 @@ function setTableData(data: DataService.Data[]) {
 
 async function getTableData() {
   startLoading();
-  const data = (await fetchDataServiceList()) as any;
+  const { data } = (await fetchDataServiceList()) as any;
+  console.log(data);
   if (data) {
     setTimeout(() => {
       setTableData(data);
@@ -216,7 +217,7 @@ init();
         <n-button type="success">
           <icon-uil:export class="mr-4px text-20px" />
           导出Excel
-        </n-button> 
+        </n-button>
 -->
       </template>
       <div class="flex-col h-full">

@@ -162,6 +162,44 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'device',
+    path: '/device',
+    component: 'layout.base',
+    meta: {
+      title: 'device',
+      i18nKey: 'route.device'
+    },
+    children: [
+      {
+        name: 'device_grouping',
+        path: '/device/grouping',
+        component: 'view.device_grouping',
+        meta: {
+          title: 'device_grouping',
+          i18nKey: 'route.device_grouping'
+        }
+      },
+      {
+        name: 'device_grouping-details',
+        path: '/device/grouping-details',
+        component: 'view.device_grouping-details',
+        meta: {
+          title: 'device_grouping-details',
+          i18nKey: 'route.device_grouping-details'
+        }
+      },
+      {
+        name: 'device_manage',
+        path: '/device/manage',
+        component: 'view.device_manage',
+        meta: {
+          title: 'device_manage',
+          i18nKey: 'route.device_manage'
+        }
+      }
+    ]
+  },
+  {
     name: 'function',
     path: '/function',
     component: 'layout.base',

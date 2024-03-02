@@ -19,7 +19,7 @@ function setTableData(data: RuleEngine.Rule[]) {
 
 async function getTableData() {
   startLoading();
-  const data = (await fetchRuleEngineList()) as any;
+  const { data } = (await fetchRuleEngineList()) as any;
   if (data) {
     setTimeout(() => {
       setTableData(data);

@@ -37,6 +37,10 @@ declare module "@elegant-router/types" {
     "dashboard_panel": "/dashboard/panel";
     "dashboard_workbench": "/dashboard/workbench";
     "data-service": "/data-service";
+    "device": "/device";
+    "device_grouping": "/device/grouping";
+    "device_grouping-details": "/device/grouping-details";
+    "device_manage": "/device/manage";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -125,6 +129,7 @@ declare module "@elegant-router/types" {
     | "component"
     | "dashboard"
     | "data-service"
+    | "device"
     | "function"
     | "home"
     | "login"
@@ -166,6 +171,9 @@ declare module "@elegant-router/types" {
     | "dashboard_panel"
     | "dashboard_workbench"
     | "data-service"
+    | "device_grouping-details"
+    | "device_grouping"
+    | "device_manage"
     | "function_hide-child_one"
     | "function_hide-child_three"
     | "function_hide-child_two"

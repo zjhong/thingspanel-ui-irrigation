@@ -441,4 +441,6 @@ declare namespace Api {
       status: '1' | '2' | null;
     }
   }
+
+  /** 设备管理 */
 }

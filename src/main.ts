@@ -44,4 +44,3 @@ async function setupApp() {
   app.mount('#app');
 }
 
-await setupApp();

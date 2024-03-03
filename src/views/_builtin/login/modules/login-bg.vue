@@ -34,9 +34,19 @@ const bgColor = computed(() => {
       <div class="absolute -left-200px -bottom-400px <sm:(-left-100px -bottom-760px)">
         <corner-bottom :start-color="darkColor" :end-color="lightColor" />
       </div>
-    </template> 
+    </template>
 -->
-    <NImage object-fit="cover" preview-disabled :src="url.origin + bgColor?.slice(1)" />
+    <NImage
+      object-fit="cover"
+      style="min-width: 100%"
+      preview-disabled
+      :src="url.origin + bgColor?.slice(1)"
+      :img-props="{
+        style: {
+          minWidth: '100%'
+        }
+      }"
+    />
   </div>
 </template>
 

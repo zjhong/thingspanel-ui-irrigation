@@ -30,3 +30,4 @@ package-lock.json
 yarn.lock
 .VSCodeCounter
 env.config.ts
+settings.json

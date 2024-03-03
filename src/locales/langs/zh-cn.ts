@@ -1,5 +1,4 @@
 import { productLocaleZhCn } from '@/views/product/locales/zh-CN';
-
 import { czh_cn } from './你新增的路由相关的国际化';
 const local: App.I18n.Schema = {
   default: '',

@@ -13,18 +13,28 @@ import { createServiceConfig } from '~/env.config';
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 defineOptions({ name: 'UploadFile' });
-
+enum SourceType {
+  image = 'image',
+  upgradePackage = 'upgradePackage',
+  importBatch = 'importBatch',
+  plugin = 'plugin',
+  other = 'other'
+}
 export interface Props {
   /** 选取文件的类型 */
   accept: string;
+  text?: string;
   /** 上传的文件类型 */
   fileType: string[];
   value: string | null | undefined;
+  sourceType?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   accept: 'file',
-  fileType: () => ['exe', 'apk', 'zip', 'ipa', 'jpeg', 'jpg', 'png', 'gif']
+  text: $t('page.product.update-package.package'),
+  fileType: () => ['exe', 'apk', 'zip', 'ipa', 'jpeg', 'jpg', 'png', 'gif'],
+  sourceType: SourceType.image
 });
 const dataList = computed((): UploadFileInfo[] => {
   if (!props.value) {
@@ -82,19 +92,10 @@ function handleError({ event }: { event?: ProgressEvent }) {
 </script>
 
 <template>
-  <NUpload
-    :action="url + '/file/up'"
-    :headers="{
-      'x-token': localStg.get('token') || ''
-    }"
-    :data="{ type: 'image' }"
-    :default-file-list="dataList"
-    :accept="accept"
-    :max="1"
-    @before-upload="beforeUpload"
-    @finish="handleFinish"
-    @error="handleError"
-  >
-    <NButton>{{ $t('page.product.update-package.package') }}</NButton>
+  <NUpload :action="url + '/file/up'" :headers="{
+    'x-token': localStg.get('token') || ''
+  }" :data="{ type: props.sourceType }" :default-file-list="dataList" :accept="accept" :max="1"
+    @before-upload="beforeUpload" @finish="handleFinish" @error="handleError">
+    <NButton>{{ props.text }}</NButton>
   </NUpload>
 </template>

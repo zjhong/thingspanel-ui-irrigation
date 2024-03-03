@@ -14,6 +14,7 @@ import DeviceRegister from './components/device-register.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible, setTrue: openConfig } = useBoolean();
+const editData = ref<productRecord | null>(null);
 
 const queryParams = reactive<QueryFormModel>({
   name: '',
@@ -55,11 +56,14 @@ async function getTableData() {
     endLoading();
   }
 }
+
 const drawerTitle: Ref<string> = ref('');
 async function handleRegisterConfig(record: productRecord) {
   openConfig();
+  editData.value = record;
   drawerTitle.value = `${record.name}-${$t('page.product.list.preRegister')}`;
 }
+
 const columns: Ref<DataTableColumns<productRecord>> = ref([
   {
     key: 'name',
@@ -124,7 +128,6 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<productRecord | null>(null);
 
 function setEditData(data: productRecord | null) {
   editData.value = data;
@@ -143,7 +146,7 @@ function handleAddTable() {
 // 	openEditPwdModal();
 // }
 
-function handleEditTable(rowId: number) {
+function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
     setEditData(findItem);
@@ -152,7 +155,7 @@ function handleEditTable(rowId: number) {
   openModal();
 }
 
-async function handleDeleteTable(rowId: number) {
+async function handleDeleteTable(rowId: string) {
   const data = await deleteProduct(rowId);
   if (!data.error) {
     window.$message?.success($t('common.deleteSuccess'));
@@ -187,19 +190,12 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
+        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
+          class="flex-1-hidden" />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
           <NDrawerContent :title="drawerTitle">
-            <DeviceRegister />
+            <DeviceRegister :pid="(editData?.id as unknown as string)" />
           </NDrawerContent>
         </NDrawer>
       </div>

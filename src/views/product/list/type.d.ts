@@ -13,9 +13,9 @@ type productAdd = {
 };
 interface productRecord extends productAdd {
   created_at: string;
-  id: number;
+  id: string;
 }
-type QueryFormModel = Pick<productRecord, 'name'> & {
+type QueryFormModel = Pick<productRecord, "name"> & {
   page: number;
   page_size: number;
 };
@@ -27,9 +27,22 @@ type productDeviceRecord = {
   onlineDate: string;
   activeStatus: string;
   activeDate: string;
-  id: number;
+  id: string;
 };
 type productDeviceQueryParams = {
   deviceNumber: string;
   batchNumber: string;
+};
+
+type deviceAddType = {
+  batch_file: string;
+  batch_number: string;
+  create_type: string;
+  current_version: string;
+  device_count?: any;
+  product_id?: string;
+};
+
+type DeviceRegisterProps = {
+  pid: string | number;
 };

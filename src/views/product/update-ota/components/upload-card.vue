@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<Props>(), {
 // 		url: item.replace('.', STATIC_BASE_URL)
 // 	})) || []
 // ) as Ref<UploadFileInfo[]>
-// console.log(dataList.value)
 interface Emits {
   (e: 'update:value', val: string): void;
   (e: 'success', file: UploadFileInfo): void;
@@ -85,18 +84,8 @@ function handleError({ event }: { event?: ProgressEvent }) {
 
 <template>
   {{ dataList }}
-  <NUpload
-    :action="url + '/file/up'"
-    :headers="{
-      'x-token': localStg.get('token') || ''
-    }"
-    :data="{ type: 'image' }"
-    :default-file-list="dataList"
-    list-type="image-card"
-    :accept="accept"
-    :max="1"
-    @before-upload="beforeUpload"
-    @finish="handleFinish"
-    @error="handleError"
-  ></NUpload>
+  <NUpload :action="url + '/file/up'" :headers="{
+    'x-token': localStg.get('token') || ''
+  }" :data="{ type: 'image' }" :default-file-list="dataList" list-type="image-card" :accept="accept" :max="1"
+    @before-upload="beforeUpload" @finish="handleFinish" @error="handleError"></NUpload>
 </template>

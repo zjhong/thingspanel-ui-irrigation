@@ -3,15 +3,16 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { $t } from '~/src/locales';
-import { addProduct, editProduct } from '~/src/service/product/list';
-
+import { addDevice, editProduct } from '~/src/service/product/list';
+import UploadCard from '../../update-package/components/upload-card.vue';
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
   /** 弹窗类型 add: 新增 edit: 编辑 */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: productDeviceRecord | null;
+  editData?: deviceAddType | null;
+  pid: number | string;
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -53,18 +54,35 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-const formModel = reactive<productDeviceRecord>(createDefaultFormModel() as productDeviceRecord);
+const formModel = reactive<deviceAddType>(createDefaultFormModel());
+// batch_file: string;
+// batch_number: string;
+// create_type: string;
+// current_version: string;
+// device_count ?: number;
+// product_id ?: string;
+type RuleKey = Extract<keyof deviceAddType, 'batch_file' | 'batch_number' | 'create_type' | 'device_count'>;
+const rules = computed(() => {
+  const rulesData: Record<RuleKey, FormItemRule | FormItemRule[]> = {
+    batch_file: formModel.create_type === 'F' ? createRequiredFormRule('请选择文件') : [],
+    batch_number: createRequiredFormRule('请填写批次编号'),
+    create_type: createRequiredFormRule('请选择设备类型'),
+    device_count: formModel.create_type === 'A' ? createRequiredFormRule('请输入设备数量') : []
+  };
+  return rulesData;
+});
 
-const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
-  device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
-};
-
-function createDefaultFormModel() {
-  return {};
+function createDefaultFormModel(): deviceAddType {
+  const data: deviceAddType = {
+    batch_file: '',
+    batch_number: '',
+    create_type: 'A',
+    current_version: '',
+  };
+  return data;
 }
 
-function handleUpdateFormModel(model: Partial<productDeviceRecord>) {
+function handleUpdateFormModel(model: Partial<deviceAddType>) {
   Object.assign(formModel, model);
 }
 
@@ -76,7 +94,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       if (props.editData) {
-        handleUpdateFormModel(props.editData as productDeviceRecord);
+        handleUpdateFormModel(props.editData as deviceAddType);
       }
     }
   };
@@ -88,7 +106,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct(formModel);
+    data = await addDevice({ ...formModel, product_id: props.pid });
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -110,11 +128,28 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
-    <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
+    <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.productName')" path="name">
-          <NInput v-model:value="formModel.deviceNumber" />
+        <NFormItemGridItem :span="24" label="批次编号" path="batch_number">
+          <NInput v-model:value="formModel.batch_number" />
+        </NFormItemGridItem>
+        <NFormItemGridItem :span="24" label="固件版本号" path="current_version">
+          <NInput v-model:value="formModel.current_version" />
+        </NFormItemGridItem>
+        <NFormItemGridItem :span="24" label="添加方式" path="create_type">
+          <NRadioGroup v-model:value="formModel.create_type">
+            <NRadio value="A" label="自动生成" />
+            <NRadio value="F" label="批量上传" />
+          </NRadioGroup>
+        </NFormItemGridItem>
+        <NFormItemGridItem v-if="formModel.create_type === 'F'" :span="24" label="选择文件" path="batch_file">
+          <NButton quaternary type="primary">下载模板</NButton>
+          <UploadCard v-model:value="formModel.batch_file" text="选择文件" accept="file" source-type="importBatch"
+            class="mt-10px" :file-type="['csv']"></UploadCard>
+        </NFormItemGridItem>
+        <NFormItemGridItem v-else :span="24" label="设备数量" path="device_count">
+          <NInput v-model:value="formModel.device_count" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">

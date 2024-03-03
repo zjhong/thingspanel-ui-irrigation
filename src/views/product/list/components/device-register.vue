@@ -1,28 +1,45 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { deleteProduct, getProductList } from '@/service/product/list';
+import { deleteProduct, exportDevice, getDeviceList } from '@/service/product/list';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
+const props: DeviceRegisterProps = defineProps({
+  pid: {
+    type: String,
+    required: true
+  }
+});
 const queryParams = reactive({
   deviceNumber: '',
   batchNumber: '',
+  product_id: props.pid,
   page: 1,
   page_size: 10
 });
-
+watch(
+  props,
+  () => {
+    queryParams.product_id = props.pid;
+    getTableData();
+  },
+  { deep: true }
+);
 const tableData = ref<productDeviceRecord[]>([]);
 function setTableData(data: productDeviceRecord[]) {
   tableData.value = data;
 }
+const exportFile = () => {
+  exportDevice({ ...queryParams, page: undefined, page_size: undefined });
+};
 
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -55,7 +72,7 @@ function handleReset() {
 }
 async function getTableData() {
   startLoading();
-  const { data } = await getProductList(queryParams);
+  const { data } = await getDeviceList(queryParams);
   if (data) {
     const list: productDeviceRecord[] = data.list;
     setTableData(list);
@@ -63,7 +80,6 @@ async function getTableData() {
     endLoading();
   }
 }
-
 const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   {
     key: 'name',
@@ -145,7 +161,7 @@ function handleAddTable() {
 // 	openEditPwdModal();
 // }
 
-function handleEditTable(rowId: number) {
+function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
     setEditData(findItem);
@@ -154,7 +170,7 @@ function handleEditTable(rowId: number) {
   openModal();
 }
 
-async function handleDeleteTable(rowId: number) {
+async function handleDeleteTable(rowId: string) {
   const data = await deleteProduct(rowId);
   if (!data.error) {
     window.$message?.success($t('common.deleteSuccess'));
@@ -172,7 +188,7 @@ init();
 
 <template>
   <div class="overflow-hidden h-full">
-    <NCard :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.batchNumber')" path="email">
@@ -189,8 +205,18 @@ init();
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>
             <NButton type="primary" @click="handleAddTable">
-              <IconIcRoundPlus class="mr-4px text-20px" />
-              {{ $t('common.add') }}
+              <template #icon>
+                <IconIcRoundPlus class="mr-4px text-20px" />
+              </template>
+
+              创建批次
+            </NButton>
+            <NButton type="primary" @click="exportFile">
+              <template #icon>
+                <IconAntDesignExportOutlined class="mr-4px text-20px" />
+              </template>
+
+              导出
             </NButton>
           </NSpace>
           <NSpace align="center" :size="18">
@@ -201,16 +227,10 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableDeviceModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
+          class="flex-1-hidden" />
+        <TableDeviceModal v-model:visible="visible" :pid="props.pid" :type="modalType"
+          :edit-data="(editData as unknown as deviceAddType)" @success="getTableData" />
       </div>
     </NCard>
   </div>

@@ -120,7 +120,7 @@ function handleAddTable() {
 // 	openEditPwdModal();
 // }
 
-function handleEditTable(rowId: number) {
+function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
     setEditData(findItem);
@@ -160,16 +160,8 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable
-          v-if="activeTab === 'mission'"
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
+        <NDataTable v-if="activeTab === 'mission'" remote :columns="columns" :data="tableData" :loading="loading"
+          :pagination="pagination" flex-height class="flex-1-hidden" />
         <div v-if="activeTab === 'info'">info</div>
         <TableDeviceModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>

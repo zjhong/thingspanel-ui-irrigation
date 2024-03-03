@@ -12,17 +12,26 @@ defineOptions({ name: 'UploadFile' });
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
+export const SourceType = {
+  image: 'image',
+  upgradePackage: 'upgradePackage',
+  importBatch: 'importBatch',
+  plugin: 'plugin',
+  other: 'other'
+}
 export interface Props {
   /** 选取文件的类型 */
   accept: string;
   /** 上传的文件类型 */
   fileType: string[];
+  sourceType?: string;
   value: string | null | undefined;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   accept: 'image/png, image/jpeg, image/jpg, image/gif',
-  fileType: () => ['png', 'jpeg', 'jpg', 'gif']
+  fileType: () => ['png', 'jpeg', 'jpg', 'gif'],
+  sourceType: SourceType.image // 类型(ota升级包:upgradePackage，批量导入:importBatch，插件:d plugin，其他:随便填)
 });
 const dataList: Ref<UploadFileInfo[]> = ref(
   props.value?.split(',').map(item => ({ url: item.replace('.', STATIC_BASE_URL) })) || []
@@ -51,7 +60,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
     isImg = true;
   }
   if (!isImg) {
-    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}图片格式文件!`);
+    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}格式文件!`);
     return false;
   }
   return true;
@@ -70,18 +79,8 @@ function handleError({ event }: { event?: ProgressEvent }) {
 </script>
 
 <template>
-  <NUpload
-    :action="url + '/file/up'"
-    :headers="{
-      'x-token': localStg.get('token') || ''
-    }"
-    :data="{ type: 'image' }"
-    :default-file-list="dataList"
-    list-type="image-card"
-    :accept="accept"
-    :max="1"
-    @before-upload="beforeUpload"
-    @finish="handleFinish"
-    @error="handleError"
-  ></NUpload>
+  <NUpload :action="url + '/file/up'" :headers="{
+    'x-token': localStg.get('token') || ''
+  }" :data="{ type: props.sourceType }" :default-file-list="dataList" list-type="image-card" :accept="accept" :max="1"
+    @before-upload="beforeUpload" @finish="handleFinish" @error="handleError"></NUpload>
 </template>

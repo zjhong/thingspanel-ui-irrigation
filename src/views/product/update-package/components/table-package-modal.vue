@@ -168,7 +168,10 @@ watch(
           <NSelect v-model:value="formModel.signature_type" :options="signModeOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.update-package.package')" path="package_url">
-          <UploadCard v-model:value="formModel.package_url" />
+          <UploadCard
+            v-model:value="formModel.package_url"
+            :source-type="formModel.package_type === 1 ? 'plugin' : 'upgradePackage'"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.update-package.desc')" path="description">
           <NInput v-model:value="formModel.description" type="textarea" />

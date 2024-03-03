@@ -158,7 +158,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           flex-height
-          class="sm:h-full"
+          class="flex-1-hidden"
         />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
           <NDrawerContent :title="$t('page.product.update-ota.lookTask')">

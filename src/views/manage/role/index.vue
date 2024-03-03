@@ -180,7 +180,7 @@ function getIndex(index: number) {
         :loading="loading"
         :pagination="pagination"
         :row-key="item => item.id"
-        class="sm:h-full"
+        class="flex-1-hidden"
       />
       <RoleOperateDrawer
         v-model:visible="drawerVisible"

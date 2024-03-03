@@ -229,7 +229,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           :flex-height="true"
-          class="sm:h-full"
+          class="flex-1-hidden"
         />
         <TableActionModal
           v-model:visible="visible"

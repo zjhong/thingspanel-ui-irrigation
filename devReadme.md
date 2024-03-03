@@ -102,7 +102,7 @@ const MAX_COUNT = 10;
 
 
 
----
+
 ---
 
 ---
@@ -137,7 +137,7 @@ const MAX_COUNT = 10;
 - [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) - Vue 的 TS 服务插件
 - [Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets) - vue2、vue3 写法提示
 
----
+
 ---
 
 ---
@@ -282,12 +282,12 @@ soybean-admin
 ```
 
 
----
+
 ---
 
 ---
 ### 页面开发：
-##### 在[src/views]()创建页面文件即可，如果不想生成路由或类型的文件，请使用 modules创建文件夹，而不是 components
+##### 在[src/views](src/views)创建页面文件即可，如果不想生成路由或类型的文件，请使用 modules创建文件夹，而不是 components
 ---
 
 ---
@@ -299,27 +299,26 @@ soybean-admin
 ---
 ### 类型概览：
 
-##### 01 国际化类型:[src/typings/app.d.ts]()   type（App.I18n.Schema）
-##### 02 接口类型:[src/typings/api.d.ts]()
-##### 03 路由类型:[src/typings/elegant-router.d.ts]()
-##### 04 RouteMeta类型:[src/typings/elegant-router.d.ts]()
-##### 05 全局类型:[src/typings/elegant-router.d.ts]()
-##### 06 缓存数据类型:[src/typings/storage.d.ts]() 缓存的数据类型需要预先在 src/typings/storage.d.ts 里面定义好
+##### 01 国际化类型:[src/typings/app.d.ts](src/typings/app.d.ts)   type（App.I18n.Schema）
+##### 02 接口类型:[src/typings/api.d.ts](src/typings/api.d.ts)
+##### 03 路由类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts)
+##### 04 RouteMeta类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts)
+##### 05 全局类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts])
+##### 06 缓存数据类型:[src/typings/storage.d.ts](src/typings/storage.d.ts) 缓存的数据类型需要预先在 src/typings/storage.d.ts 里面定义好
 ##### 99 其他应该是迁移而来，用到自行分析
 
 基本不用动 的类型
-##### 07 组件类型:[src/typings/components.d.ts]()  不要动，只要在views里 基本都是自己生成的
-##### 08 naive-ui类型:[src/typings/naive-ui.d.ts]()
+##### 07 组件类型:[src/typings/components.d.ts](src/typings/components.d.ts)  不要动，只要在views里 基本都是自己生成的
+##### 08 naive-ui类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)
 
 基本不会用的类型
-##### 09  package类型:[src/typings/naive-ui.d.ts]()  作者有个 package 二次封装了一些库的功能，跟这个有关，不明白就不动即可
-##### 10 环境类型:[src/typings/env.d.ts]()  尽量不动 ，估计业务层开发也用不上
-##### 11 联合密钥:[src/typings/union-key.d.ts]() 作者用的一些类型吧，应该用不上
+##### 09  package类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)  作者有个 package 二次封装了一些库的功能，跟这个有关，不明白就不动即可
+##### 10 环境类型:[src/typings/env.d.ts](src/typings/env.d.ts)  尽量不动 ，估计业务层开发也用不上
+##### 11 联合密钥:[src/typings/union-key.d.ts](src/typings/union-key.d.ts) 作者用的一些类型吧，应该用不上
 
 ---
 
----
----
+
 
 ---
 ### 系统路由说明
@@ -925,7 +924,7 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
     }
 }
 ```
----
+
 ---
 
 ---
@@ -1037,10 +1036,6 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
     ```
 ---
 
-
-
----
----
 
 ---
 ### 系统主题

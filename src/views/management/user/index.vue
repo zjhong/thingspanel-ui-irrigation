@@ -264,7 +264,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           :flex-height="true"
-          class="sm:h-520"
+          class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
         <EditPasswordModal

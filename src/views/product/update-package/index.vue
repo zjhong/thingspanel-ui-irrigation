@@ -209,7 +209,7 @@ init();
           :loading="loading"
           :pagination="pagination"
           flex-height
-          class="sm:h-full"
+          class="flex-1-hidden"
         />
         <TablePackageModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>

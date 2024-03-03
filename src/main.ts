@@ -43,4 +43,4 @@ async function setupApp() {
 
   app.mount('#app');
 }
-
+setupApp();

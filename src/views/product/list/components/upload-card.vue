@@ -12,12 +12,12 @@ defineOptions({ name: 'UploadFile' });
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
-export const SourceType = {
-  image: 'image',
-  upgradePackage: 'upgradePackage',
-  importBatch: 'importBatch',
-  plugin: 'plugin',
-  other: 'other'
+enum SourceType {
+  image = 'image',
+  upgradePackage = 'upgradePackage',
+  importBatch = 'importBatch',
+  plugin = 'plugin',
+  other = 'other'
 }
 export interface Props {
   /** 选取文件的类型 */
@@ -31,7 +31,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   accept: 'image/png, image/jpeg, image/jpg, image/gif',
   fileType: () => ['png', 'jpeg', 'jpg', 'gif'],
-  sourceType: SourceType.image // 类型(ota升级包:upgradePackage，批量导入:importBatch，插件:d plugin，其他:随便填)
+  sourceType: SourceType.image
 });
 const dataList: Ref<UploadFileInfo[]> = ref(
   props.value?.split(',').map(item => ({ url: item.replace('.', STATIC_BASE_URL) })) || []
@@ -79,8 +79,18 @@ function handleError({ event }: { event?: ProgressEvent }) {
 </script>
 
 <template>
-  <NUpload :action="url + '/file/up'" :headers="{
-    'x-token': localStg.get('token') || ''
-  }" :data="{ type: props.sourceType }" :default-file-list="dataList" list-type="image-card" :accept="accept" :max="1"
-    @before-upload="beforeUpload" @finish="handleFinish" @error="handleError"></NUpload>
+  <NUpload
+    :action="url + '/file/up'"
+    :headers="{
+      'x-token': localStg.get('token') || ''
+    }"
+    :data="{ type: props.sourceType }"
+    :default-file-list="dataList"
+    list-type="image-card"
+    :accept="accept"
+    :max="1"
+    @before-upload="beforeUpload"
+    @finish="handleFinish"
+    @error="handleError"
+  ></NUpload>
 </template>

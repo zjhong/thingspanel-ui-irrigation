@@ -33,8 +33,8 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   accept: 'file',
   text: $t('page.product.update-package.package'),
-  fileType: () => ['exe', 'apk', 'zip', 'ipa', 'jpeg', 'jpg', 'png', 'gif'],
-  sourceType: SourceType.image
+  sourceType: SourceType.image,
+  fileType: () => ['exe', 'apk', 'zip', 'ipa']
 });
 const dataList = computed((): UploadFileInfo[] => {
   if (!props.value) {

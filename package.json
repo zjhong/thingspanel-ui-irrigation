@@ -33,6 +33,7 @@
     "prepare": "simple-git-hooks",
     "preview": "vite preview",
     "release": "sa release",
+    "start": "cross-env VITE_SERVICE_ENV=dev vite",
     "tsx": "tsx",
     "typecheck": "vue-tsc --noEmit --skipLibCheck",
     "update-pkg": "sa update-pkg"

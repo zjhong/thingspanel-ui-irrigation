@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-import type { FormInst, FormRules } from 'naive-ui';
-import { useMessage } from 'naive-ui';
-import { deviceGroup, deviceGroupTree } from '@/service/api/device';
+import {onMounted, ref, watch} from 'vue';
+import type {FormInst, FormRules} from 'naive-ui';
+import {useMessage} from 'naive-ui';
+import {deviceGroup, deviceGroupTree} from '@/service/api/device';
 
 interface Group {
   id: string;
@@ -20,14 +20,17 @@ interface TreeNode {
   group: Group;
   children?: TreeNode[] | undefined; // TreeNode类型的可选数组，用于描述子节点
 }
+
 const showModal = ref<boolean>(false);
-defineExpose({ showModal });
+defineExpose({showModal});
+
 // Props received from parent component
 interface Props {
   isEdit?: boolean;
   editData?: { id: string; parent_id: string; name: string; description: string };
   refreshData: () => Promise<void>;
 }
+
 const props = defineProps<Props>();
 const message = useMessage();
 const formRef = ref<HTMLElement & FormInst>();
@@ -54,11 +57,13 @@ const rules: FormRules = {
     message: '请输入分组名称'
   }
 };
+
 interface opNode {
   id?: string;
   name?: string;
   children?: opNode[]; // TreeNode类型的可选数组，用于描述子节点
 }
+
 // Extract id and name for tree select options
 const extractIdAndName = (data: TreeNode[]): opNode[] => {
   const res = data?.map(node => ({
@@ -70,7 +75,7 @@ const extractIdAndName = (data: TreeNode[]): opNode[] => {
 };
 // Fetch options for tree select and handle edit mode data echo back
 const getOptions = async () => {
-  const { data } = await deviceGroupTree({});
+  const {data} = await deviceGroupTree({});
   options.value = [
     {
       id: '0', // Root node for tree select
@@ -116,18 +121,18 @@ const handleClose = () => {
   };
 };
 
-// onMounted(getOptions)
+onMounted(getOptions)
 
 // Watch for editData changes to handle edit mode data echo back
-// watch(
-//   () => props.editData,
-//   newVal => {
-//     if (props.isEdit && newVal) {
-//       formItem.value = { ...newVal }
-//     }
-//   },
-//   { deep: true, immediate: true }
-// )
+watch(
+  () => props.editData,
+  newVal => {
+    if (props.isEdit && newVal) {
+      formItem.value = {...newVal}
+    }
+  },
+  {deep: true, immediate: true}
+)
 
 // Expose showModal for parent component
 </script>
@@ -149,11 +154,11 @@ const handleClose = () => {
         </NFormItem>
         <!-- Group name input field -->
         <NFormItem :rules="[rules.name]" label="分组名称" path="name">
-          <NInput v-model:value="formItem.name" />
+          <NInput v-model:value="formItem.name"/>
         </NFormItem>
         <!-- Description textarea for optional input -->
         <NFormItem label="描述" path="description">
-          <NInput v-model:value="formItem.description" type="textarea" />
+          <NInput v-model:value="formItem.description" type="textarea"/>
         </NFormItem>
         <!-- Form action buttons -->
         <div style="display: flex; justify-content: flex-end; gap: 8px">

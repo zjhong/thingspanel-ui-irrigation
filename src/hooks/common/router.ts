@@ -1,7 +1,7 @@
-import { useRouter } from 'vue-router';
-import type { RouteLocationRaw } from 'vue-router';
-import type { RouteKey } from '@elegant-router/types';
-import { router as globalRouter } from '@/router';
+import {useRouter} from 'vue-router';
+import type {RouteLocationRaw} from 'vue-router';
+import {router as globalRouter} from '@/router';
+import {LastLevelRouteKey, RouteKey} from "@elegant-router/types";
 
 /**
  * Router push
@@ -23,9 +23,9 @@ export function useRouterPush(inSetup = true) {
     params?: Record<string, string>;
   }
 
-  async function routerPushByKey(key: RouteKey, options?: RouterPushOptions) {
-    const { query, params } = options || {};
-
+  async function routerPushByKey(key: LastLevelRouteKey | RouteKey, options?: RouterPushOptions) {
+    const {query, params} = options || {};
+    console.log(key)
     const routeLocation: RouteLocationRaw = {
       name: key
     };
@@ -42,7 +42,7 @@ export function useRouterPush(inSetup = true) {
   }
 
   async function toHome() {
-    return routerPushByKey('root');
+    return routerPushByKey('home');
   }
 
   /**
@@ -77,7 +77,7 @@ export function useRouterPush(inSetup = true) {
   async function toggleLoginModule(module: UnionKey.LoginModule) {
     const query = route.value.query as Record<string, string>;
 
-    return routerPushByKey('login', { query, params: { module } });
+    return routerPushByKey('login', {query, params: {module}});
   }
 
   /** Redirect from login */

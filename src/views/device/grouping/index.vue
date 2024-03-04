@@ -1,13 +1,18 @@
 <script lang="tsx" setup>
-import { onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import {onMounted, ref} from 'vue';
 // Import UI components from Naive UI
-import { NButton, NDataTable, NFlex, NPagination, NPopconfirm } from 'naive-ui';
-import dayjs from 'dayjs';
-import { IosSearch } from '@vicons/ionicons4';
-import { debounce } from 'lodash';
-import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
-import { AddOrEditDevices } from './components';
+import {NButton, NDataTable, NFlex, NPagination} from 'naive-ui';
+
+import {IosSearch} from '@vicons/ionicons4';
+import {debounce} from 'lodash';
+import {deleteDeviceGroup, getDeviceGroup} from '@/service/api/device';
+import {AddOrEditDevices} from './components';
+import {group_columns} from "@/views/device/all-columns";
+import {useRouterPush} from "@/hooks/common/router";
+
+
+const {routerPushByKey} = useRouterPush();
+
 
 const the_modal = ref();
 const searchValue = ref('');
@@ -18,7 +23,10 @@ const currentPage = ref(1);
 const totalPages = ref(0); // 假设总页数为 5，实际应从后端获取
 const getDevice = async () => {
   loading.value = true;
-  const res = await getDeviceGroup({ page: currentPage.value, page_size: 10 });
+  const res = await getDeviceGroup({
+    page: currentPage.value, page_size: 10,
+    parent_id: 0
+  });
   data.value = res.data.list;
   totalPages.value = Math.ceil(res.data.total / 10);
 
@@ -52,76 +60,20 @@ const handleInput = () => {
 };
 // Async function to fetch device groups from the backend
 
-const router = useRouter();
 
-// Function to view device group grouping-details
-const viewDetails = (id: string) => {
-  console.log('2', id);
-  router.push(`/device/grouping-details?id=${id}`);
-};
 // Function to delete a device group
 const deleteItem = async (id: string) => {
-  await deleteDeviceGroup({ id });
+  await deleteDeviceGroup({id});
   await getDevice();
 };
 
+const viewDetails = (id: string) => {
+  routerPushByKey('device_grouping-details', {query: {id: id}})
+}
+
+
 // Define columns for the data table
-const columns = [
-  {
-    title: '分组名称',
-    key: 'name',
-    ellipsis: {
-      tooltip: {
-        width: 320
-      }
-    }
-  },
-  {
-    title: '描述',
-    key: 'description',
-    ellipsis: {
-      tooltip: {
-        width: 320
-      }
-    }
-  },
-  {
-    title: '创建时间',
-    key: 'created_at',
-    render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
-      return dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss');
-    }
-  },
-  {
-    title: '操作',
-    key: 'actions',
-    width: 150,
-    render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
-      return (
-        <NFlex justify={'start'}>
-          <NButton
-            size={'small'}
-            onClick={() => {
-              viewDetails(row.id);
-            }}
-          >
-            查看
-          </NButton>
-          <NPopconfirm
-            onPositiveClick={() => {
-              deleteItem(row.id);
-            }}
-          >
-            {{
-              default: () => '确认删除',
-              trigger: () => <NButton size={'small'}>删除</NButton>
-            }}
-          </NPopconfirm>
-        </NFlex>
-      );
-    }
-  }
-];
+const columns = group_columns(viewDetails, deleteItem)
 // Function to show the modal for adding or editing device groups
 const showModal = () => {
   if (the_modal.value) {
@@ -135,7 +87,7 @@ onMounted(getDevice); // Fetch device groups on component mount
 <template>
   <div class="h-full overflow-auto">
     <!-- Add or edit device modal component with props for edit mode and data -->
-    <AddOrEditDevices ref="the_modal" :is-edit="false" :refresh-data="getDevice" />
+    <AddOrEditDevices ref="the_modal" :is-edit="false" :refresh-data="getDevice"/>
     <NCard>
       <NFlex justify="start">
         <!-- Button to trigger modal for creating a new device group -->
@@ -152,7 +104,7 @@ onMounted(getDevice); // Fetch device groups on component mount
         >
           <template #prefix>
             <NIcon>
-              <IosSearch />
+              <IosSearch/>
             </NIcon>
           </template>
         </NInput>
@@ -161,7 +113,7 @@ onMounted(getDevice); // Fetch device groups on component mount
         <!-- Data table to display device groups -->
         <NDataTable :columns="columns" :data="data" :loading="loading"></NDataTable>
         <!-- Pagination component -->
-        <NPagination v-model:page="currentPage" :page-count="totalPages" @update:page="getDevice" />
+        <NPagination v-model:page="currentPage" :page-count="totalPages" @update:page="getDevice"/>
       </div>
     </NCard>
   </div>

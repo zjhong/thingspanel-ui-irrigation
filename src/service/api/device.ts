@@ -1,5 +1,6 @@
-import type { AxiosInstance } from 'axios';
-import { request } from '../request';
+import type {AxiosInstance} from 'axios';
+import {request} from '../request';
+
 export default class Device {
   private readonly http: AxiosInstance;
 
@@ -15,7 +16,7 @@ export default class Device {
 
 /** 获取设备分组 */
 export const getDeviceGroup = async (params: any) => {
-  const data = await request.get<any>('/device/group', { params });
+  const data = await request.get<any>('/device/group', {params});
   return data;
 };
 
@@ -38,6 +39,6 @@ export const deleteDeviceGroup = async (params: { id: string }) => {
 
 /** 获取设备分详情 */
 export const deviceGroupDetail = async (params: any) => {
-  const data = await request.get<DeviceManagement.TreeStructure | null>(`/device/group/detail/${params.id}`);
+  const data = await request.get<DeviceManagement.DetailData>(`/device/group/detail/${params.id}`);
   return data;
 };

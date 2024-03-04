@@ -18,4 +18,24 @@ declare namespace DeviceManagement {
 
   // 用于描述包含根节点和可能的子节点的整个树结构
   type TreeStructure = TreeNode[];
+
+  interface DetailData {
+
+    detail: {
+      created_at: string;
+      description: string;
+      id: string;
+      name: string;
+      parent_id: string;
+      remark: string;
+      tenant_id: string;
+      tier: number;
+      updated_at: string;
+    }
+    tier: {
+      group_path: string;
+
+    }
+  }
+
 }

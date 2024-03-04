@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NPopconfirm, NSpace } from 'naive-ui';
+import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { deleteProduct, exportDevice, getDeviceList } from '@/service/product/list';
+import { exportDevice, getDeviceList } from '@/service/product/list';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
@@ -86,16 +86,12 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
     title: $t('page.product.list.deviceNumber')
   },
   {
-    key: 'device_type',
+    key: 'device_number',
     title: $t('page.product.list.batchNumber')
   },
   {
     key: 'product_model',
     title: $t('page.product.list.firmwareVersion')
-  },
-  {
-    key: 'description',
-    title: $t('page.product.list.onlineDate')
   },
   {
     key: 'created_at',
@@ -104,31 +100,6 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   {
     key: 'updated_at',
     title: $t('page.product.list.activeDate')
-  },
-  {
-    key: 'actions',
-    title: $t('page.product.list.operate'),
-    align: 'center',
-    width: '300px',
-    render: row => {
-      return (
-        <NSpace justify={'center'}>
-          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" size={'small'}>
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </NSpace>
-      );
-    }
   }
 ]) as Ref<DataTableColumns<productDeviceRecord>>;
 
@@ -139,10 +110,6 @@ function setModalType(type: ModalType) {
 }
 
 const editData = ref<productDeviceRecord | null>(null);
-
-function setEditData(data: productDeviceRecord | null) {
-  editData.value = data;
-}
 
 function handleAddTable() {
   openModal();
@@ -156,23 +123,6 @@ function handleAddTable() {
 // 	}
 // 	openEditPwdModal();
 // }
-
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId);
-  if (findItem) {
-    setEditData(findItem);
-  }
-  setModalType('edit');
-  openModal();
-}
-
-async function handleDeleteTable(rowId: string) {
-  const data = await deleteProduct(rowId);
-  if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'));
-    getTableData();
-  }
-}
 
 function init() {
   getTableData();

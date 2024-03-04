@@ -8,4 +8,6 @@ export const deleteProduct = (id: string): Promise<any> => request.delete(`/prod
 // /device/Reeegiprrst;
 export const addDevice = (data: any): Promise<any> => request.post('/device/preRegister', data);
 // /device/preRegister/export
-export const exportDevice = (data: any): Promise<any> => request.post('/device/preRegister/export', data);
+export const exportDevice = (params: any): Promise<any> => request.get('/device/preRegister/export', { params });
+// /device_config/{ id };
+export const delDeviceConfig = (id: string): Promise<any> => request.delete(`/device_config/${id}`);

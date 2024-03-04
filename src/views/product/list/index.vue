@@ -208,7 +208,7 @@ init();
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
-          <NDrawerContent :title="drawerTitle">
+          <NDrawerContent :title="drawerTitle" closable>
             <DeviceRegister :pid="(editData?.id as unknown as string)" />
           </NDrawerContent>
         </NDrawer>

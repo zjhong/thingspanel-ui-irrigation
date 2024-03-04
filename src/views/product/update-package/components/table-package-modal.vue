@@ -5,11 +5,11 @@ import { createRequiredFormRule } from '@/utils/form/rule';
 import { addOtaPackage, editOtaPackage } from '~/src/service/product/update-package';
 import { $t } from '~/src/locales';
 import { packageOptions, signModeOptions } from '~/src/constants/business';
-import { getProductList } from '~/src/service/product/list';
+import { getDeviceList } from '@/service/product/update-ota';
 import UploadCard from './upload-card.vue';
 const productOptions = ref();
 const getOptions = () => {
-  getProductList({ page: 1, page_size: 99 }).then(({ data }) => {
+  getDeviceList({ page: 1, page_size: 99 }).then(({ data }) => {
     if (data && data.list && data.list.length) {
       productOptions.value = data.list.map((item: productRecord) => {
         return {
@@ -74,7 +74,7 @@ type formModelRuleName =
   | 'version'
   | 'target_version'
   | 'package_type'
-  | 'product_id'
+  | 'device_configs_id'
   | 'signature_type'
   | 'package_url';
 const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
@@ -82,7 +82,7 @@ const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
   version: createRequiredFormRule($t('page.product.update-package.versionPlaceholder')),
   target_version: createRequiredFormRule($t('page.product.update-package.versionCodePlaceholder')),
   package_type: createRequiredFormRule($t('page.product.update-package.typePlaceholder')),
-  product_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
+  device_configs_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
   signature_type: createRequiredFormRule($t('page.product.update-package.signModePlaceholder')),
   package_url: createRequiredFormRule($t('page.product.update-package.packagePlaceholder'))
 };
@@ -147,18 +147,18 @@ watch(
           v-if="formModel.package_type === 1"
           :span="12"
           :label="$t('page.product.update-package.version')"
-          path="version"
+          path="target_version"
         >
-          <NInput v-model:value="formModel.version" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.versionCode')" path="target_version">
           <NInput v-model:value="formModel.target_version" />
+        </NFormItemGridItem>
+        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.versionCode')" path="version">
+          <NInput v-model:value="formModel.version" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.packageName')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.product')" path="product_id">
-          <NSelect v-model:value="formModel.product_id" :options="productOptions" />
+        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_configs_id">
+          <NSelect v-model:value="formModel.device_configs_id" :options="productOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.moduleName')" path="module">
           <NInput v-model:value="formModel.module" />
@@ -168,10 +168,7 @@ watch(
           <NSelect v-model:value="formModel.signature_type" :options="signModeOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.update-package.package')" path="package_url">
-          <UploadCard
-            v-model:value="formModel.package_url"
-            :source-type="formModel.package_type === 1 ? 'plugin' : 'upgradePackage'"
-          />
+          <UploadCard v-model:value="formModel.package_url" source-type="upgradePackage" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.update-package.desc')" path="description">
           <NInput v-model:value="formModel.description" type="textarea" />

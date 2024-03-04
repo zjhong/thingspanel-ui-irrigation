@@ -42,7 +42,6 @@ export const productLocaleZhCn: ProductLocal = {
     packageEdit: '编辑升级包',
     diff: '差分',
     full: '整包',
-    product: '所属产品',
     signMode: '签名算法',
     package: '选择升级包',
     customInfo: '推送的自定义信息',
@@ -50,7 +49,7 @@ export const productLocaleZhCn: ProductLocal = {
     versionPlaceholder: '请填写待升级版本号',
     versionCodePlaceholder: '请填写升级包版本号',
     typePlaceholder: '请选择升级包类型',
-    productPlaceholder: '请选择所属产品',
+    productPlaceholder: '请选择设备配置',
     signModePlaceholder: '请选择签名算法',
     packagePlaceholder: '请选择升级包'
   },

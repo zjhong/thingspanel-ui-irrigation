@@ -10,7 +10,7 @@ type productPackageEdit = {
   name: string;
   package_type: number;
   package_url: string;
-  product_id: string;
+  device_configs_id: string;
   remark: string;
   signature_type: string;
   target_version: string;

@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -18,7 +18,15 @@ const queryParams = reactive({
   page: 1,
   page_size: 10
 });
-
+watch(
+  visible,
+  () => {
+    if (!visible) {
+      getTableData();
+    }
+  },
+  { deep: true }
+);
 const tableData = ref<productPackageRecord[]>([]);
 function setTableData(data: productPackageRecord[]) {
   tableData.value = data;

@@ -94,10 +94,6 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
     title: $t('page.product.list.firmwareVersion')
   },
   {
-    key: 'device_config_id',
-    title: $t('page.product.list.firmwareVersion')
-  },
-  {
     key: 'description',
     title: $t('page.product.list.onlineDate')
   },
@@ -181,7 +177,15 @@ async function handleDeleteTable(rowId: string) {
 function init() {
   getTableData();
 }
-
+watch(
+  visible,
+  () => {
+    if (!visible.value) {
+      getTableData();
+    }
+  },
+  { deep: true }
+);
 // 初始化
 init();
 </script>

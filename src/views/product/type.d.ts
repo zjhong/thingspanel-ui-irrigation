@@ -46,7 +46,6 @@ type ProductLocal = {
     packageEdit: string;
     diff: string;
     full: string;
-    product: string;
     productPlaceholder: string;
     signMode: string;
     signModePlaceholder: string;

@@ -131,11 +131,11 @@ export const dataClearSettingCleanupTypeLabels: Record<GeneralSetting.CleanupTyp
 export const signModeOptions = [
   {
     label: 'MD5',
-    value: '1'
+    value: 'MD5'
   },
   {
     label: 'HAS256',
-    value: '2'
+    value: 'HAS256'
   }
 ];
 

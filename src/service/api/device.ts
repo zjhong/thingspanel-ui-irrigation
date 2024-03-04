@@ -47,3 +47,13 @@ export const deviceGroupDetail = async (params: any) => {
 export const deviceGroupList = async (params: any) => {
   return await request.get<DeviceManagement.GroupDeviceData>(`/device/group/relation/${params.id}`);
 };
+
+/** 获取设备列表 */
+export const deviceList = async (params: any) => {
+  return await request.get<DeviceManagement.DeviceDatas | null>(`/device`, { params });
+};
+
+/** 获取设备列表 */
+export const deviceGroupRelation = async (params: any) => {
+  return await request.post<Api.BaseApi.Data>(`/device/group/relation`, params);
+};

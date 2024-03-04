@@ -5,12 +5,10 @@ import { NButton, NDataTable, NFlex, NPagination } from 'naive-ui';
 
 import { IosSearch } from '@vicons/ionicons4';
 import { debounce } from 'lodash';
+import { useRouter } from 'vue-router';
 import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
 import { group_columns } from '@/views/device/modules/all-columns';
-import { useRouterPush } from '@/hooks/common/router';
 import { AddOrEditDevices } from './components';
-
-const { routerPushByKey } = useRouterPush();
 
 const the_modal = ref();
 const searchValue = ref('');
@@ -60,13 +58,13 @@ const handleInput = () => {
 // Async function to fetch device groups from the backend
 
 // Function to delete a device group
-const deleteItem = async (id: string) => {
-  await deleteDeviceGroup({ id });
+const deleteItem = async (rid: string) => {
+  await deleteDeviceGroup({ id: rid });
   await getDevice();
 };
-
-const viewDetails = (id: string) => {
-  routerPushByKey('device_grouping-details', { query: { id } });
+const router = useRouter();
+const viewDetails = (rid: string) => {
+  router.push(`/device/grouping-details?id=${rid}`);
 };
 
 // Define columns for the data table

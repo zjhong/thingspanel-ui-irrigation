@@ -32,7 +32,7 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
     },
     async onBackendFail(_response) {
       // when the backend response code is not "0000", it means the requestTs is fail
-      // for example: the token is expired, refetch token and retry requestTs
+      // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
       return response.data.data;
@@ -74,7 +74,7 @@ export const mockRequest = createFlatRequest<App.Service.DEVResponse>(
     },
     async onBackendFail(_response) {
       // when the backend response code is not "200", it means the requestTs is fail
-      // for example: the token is expired, refetch token and retry requestTs
+      // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
       return response.data.data;

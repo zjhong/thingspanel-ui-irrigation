@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from 'vue';
-import {useRoute} from 'vue-router';
-import {NButton, NDataTable, type PaginationProps, useMessage} from 'naive-ui';
-import {deleteDeviceGroup, deviceGroupDetail, getDeviceGroup} from '@/service/api/device';
-import {AddOrEditDevices} from '@/views/device/grouping/components';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { NButton, NDataTable, type PaginationProps, useMessage } from 'naive-ui';
+import { deleteDeviceGroup, deviceGroupDetail, deviceGroupList, getDeviceGroup } from '@/service/api/device';
+import { AddOrEditDevices } from '@/views/device/grouping/components';
 
-import {group_columns} from '@/views/device/modules/all-columns';
+import { group_columns } from '@/views/device/modules/all-columns';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
-import {useRouterPush} from '@/hooks/common/router';
+import { useRouterPush } from '@/hooks/common/router';
 
 const group_data = ref([]);
-const {loading, startLoading, endLoading, empty, setEmpty} = useLoadingEmpty(false);
+const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty(false);
 const route = useRoute();
 const id = route.query.id;
 
 const isEdit = ref(true);
 const the_modal1 = ref();
 const the_modal2 = ref();
-const editData = ref({id: '', parent_id: '', name: '', description: ''});
+const editData = ref({ id: '', parent_id: '', name: '', description: '' });
 
-const addChildData = ref({id: '', parent_id: id as string, name: '', description: ''});
+const addChildData = ref({ id: '', parent_id: id as string, name: '', description: '' });
 const details_data = ref({
   detail: {
     created_at: '',
@@ -38,8 +38,7 @@ const details_data = ref({
 });
 const message = useMessage();
 
-const {routerPushByKey} = useRouterPush();
-
+const { routerPushByKey } = useRouterPush();
 
 const queryParams = reactive<{ parent_id: string; page: number; page_size: number }>({
   parent_id: '',
@@ -47,14 +46,18 @@ const queryParams = reactive<{ parent_id: string; page: number; page_size: numbe
   page_size: 10
 });
 
+const getdeviceGroupList = async () => {
+  const res = await deviceGroupList({ id });
 
+  console.log(res);
+};
 const getDetails = async (tid: string) => {
   if (!id) {
     message.error('没有传人的分组id');
   } else {
     queryParams.parent_id = tid;
     startLoading();
-    const {data, error} = await deviceGroupDetail({id: tid});
+    const { data, error } = await deviceGroupDetail({ id: tid });
 
     if (!error && data) {
       details_data.value = data;
@@ -68,6 +71,7 @@ const getDetails = async (tid: string) => {
 
     group_data.value = res2.data.list;
     setEmpty(!res2.data.list.length);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     pagination.pageCount = Math.ceil(res2.data.total / 10);
 
     endLoading();
@@ -92,11 +96,11 @@ const pagination: PaginationProps = reactive({
   }
 });
 const viewDetails = (rid: string) => {
-  routerPushByKey('device_grouping-details', {query: {id: rid}});
+  routerPushByKey('device_grouping-details', { query: { id: rid } });
 };
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
-  await deleteDeviceGroup({id: rid});
+  await deleteDeviceGroup({ id: rid });
   await getDetails(id as string);
 };
 const group_column = group_columns(viewDetails, deleteItem);
@@ -114,6 +118,7 @@ const showModalChild = () => {
 
 onMounted(() => {
   getDetails(id as string);
+  getdeviceGroupList();
 });
 watch(
   () => route.query,

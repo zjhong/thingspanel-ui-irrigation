@@ -35,4 +35,8 @@ declare namespace DeviceManagement {
       group_path: string;
     };
   }
+
+  interface GroupDeviceData {
+    any;
+  }
 }

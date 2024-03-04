@@ -5,7 +5,6 @@ import { deviceGroupDetail, getDeviceGroup } from '@/service/api/device';
 
 const route = useRoute();
 const id = route.query.id;
-console.log(id);
 
 const geDetails = async () => {
   const res = await deviceGroupDetail({ id });
@@ -18,7 +17,6 @@ const geDetails = async () => {
   });
   console.log(res2);
 };
-console.log('范德萨范德萨发范德萨范德萨范德萨');
 
 onMounted(geDetails);
 </script>

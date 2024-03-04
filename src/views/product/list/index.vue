@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -165,7 +165,15 @@ async function handleDeleteTable(rowId: string) {
 function init() {
   getTableData();
 }
-
+watch(
+  visible,
+  () => {
+    if (!visible.value) {
+      getTableData();
+    }
+  },
+  { deep: true }
+);
 // 初始化
 init();
 </script>

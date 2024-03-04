@@ -64,10 +64,10 @@ const formModel = reactive<deviceAddType>(createDefaultFormModel());
 type RuleKey = Extract<keyof deviceAddType, 'batch_file' | 'batch_number' | 'create_type' | 'device_count'>;
 const rules = computed(() => {
   const rulesData: Record<RuleKey, FormItemRule | FormItemRule[]> = {
-    batch_file: formModel.create_type === 'F' ? createRequiredFormRule('请选择文件') : [],
+    batch_file: formModel.create_type === '2' ? createRequiredFormRule('请选择文件') : [],
     batch_number: createRequiredFormRule('请填写批次编号'),
     create_type: createRequiredFormRule('请选择设备类型'),
-    device_count: formModel.create_type === 'A' ? createRequiredFormRule('请输入设备数量') : []
+    device_count: formModel.create_type === '1' ? createRequiredFormRule('请输入设备数量') : []
   };
   return rulesData;
 });
@@ -76,7 +76,7 @@ function createDefaultFormModel(): deviceAddType {
   const data: deviceAddType = {
     batch_file: '',
     batch_number: '',
-    create_type: 'A',
+    create_type: '1',
     current_version: ''
   };
   return data;
@@ -106,7 +106,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addDevice({ ...formModel, product_id: props.pid });
+    data = await addDevice({ ...formModel, product_id: props.pid, device_count: Number(formModel.device_count) });
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -139,20 +139,21 @@ watch(
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" label="添加方式" path="create_type">
           <NRadioGroup v-model:value="formModel.create_type">
-            <NRadio value="A" label="自动生成" />
-            <NRadio value="F" label="批量上传" />
+            <NRadio value="1" label="自动生成" />
+            <NRadio value="2" label="批量上传" />
           </NRadioGroup>
         </NFormItemGridItem>
-        <NFormItemGridItem v-if="formModel.create_type === 'F'" :span="24" label="选择文件" path="batch_file">
-          <NButton quaternary type="primary">下载模板</NButton>
+        <NFormItemGridItem v-if="formModel.create_type === '2'" :span="24" label="选择文件" path="batch_file">
           <UploadCard
             v-model:value="formModel.batch_file"
             text="选择文件"
-            accept="file"
+            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+"
             source-type="importBatch"
             class="mt-10px"
-            :file-type="['csv']"
+            :file-type="['xls', 'xlsx']"
           ></UploadCard>
+          <NButton quaternary type="primary">下载模板</NButton>
         </NFormItemGridItem>
         <NFormItemGridItem v-else :span="24" label="设备数量" path="device_count">
           <NInput v-model:value="formModel.device_count" />

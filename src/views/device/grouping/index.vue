@@ -57,7 +57,7 @@ const router = useRouter();
 // Function to view device group grouping-details
 const viewDetails = (id: string) => {
   console.log('2', id);
-  router.push(`/device/grouping/details?id=${id}`);
+  router.push(`/device/grouping-details?id=${id}`);
 };
 // Function to delete a device group
 const deleteItem = async (id: string) => {

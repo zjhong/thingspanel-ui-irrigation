@@ -355,6 +355,7 @@ const local: App.I18n.Schema = {
           multilingual: 'Title(multilingual)',
           name: 'Name',
           path: 'path',
+          route_path: 'ComponentPath',
           componentType: 'Component Type',
           icon: 'Icon',
           order: 'Sort',

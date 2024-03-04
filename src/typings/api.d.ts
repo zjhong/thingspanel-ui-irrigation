@@ -116,6 +116,8 @@ declare namespace Api {
       description: string;
       /** 描述 */
       remark: string;
+      /** 组件地址 */
+      route_path: string;
       /** 子节点 */
       children: MenuRoute[];
     }

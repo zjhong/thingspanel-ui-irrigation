@@ -73,6 +73,7 @@ type FormModel = Pick<
   | 'param3'
   | 'element_type'
   | 'authority'
+  | 'route_path'
   | 'remark'
   | 'multilingual'
   | 'param2'
@@ -100,6 +101,7 @@ function createDefaultFormModel(): FormModel {
     description: '',
     element_type: 1,
     authority: [],
+    route_path: '',
     remark: ''
   };
 }
@@ -175,6 +177,9 @@ watch(
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.path')" path="param1">
           <NInput v-model:value="formModel.param1" />
+        </NFormItemGridItem>
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
+          <NInput v-model:value="formModel.route_path" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.componentType')" path="param3">
           <NSelect v-model:value="formModel.param3" :options="routeComponentTypeOptions" />

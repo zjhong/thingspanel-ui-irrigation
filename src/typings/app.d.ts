@@ -531,6 +531,7 @@ declare namespace App {
               multilingual: string;
               name: string;
               path: string;
+              route_path: string;
               componentType: string;
               type: string;
               authority: string;

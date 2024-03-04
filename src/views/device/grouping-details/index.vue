@@ -256,7 +256,7 @@ watch(
 
     <NModal v-model:show="showGroupDeviceModal">
       <NCard style="width: 800px" title="添加设备到分组" :bordered="false" size="huge" role="dialog" aria-modal="true">
-        <DeviceSelectList :group_id="id" @closed_modal="handleChildChange" @refresh_data="refresh_data" />
+        <DeviceSelectList :group_id="id as string" @closed_modal="handleChildChange" @refresh_data="refresh_data" />
       </NCard>
     </NModal>
   </div>

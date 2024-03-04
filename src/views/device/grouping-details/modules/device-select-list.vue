@@ -40,16 +40,7 @@ const pagination = reactive<PaginationProps>({
 });
 const rowKey = (row: DeviceManagement.DeviceData) => row.id;
 
-const viewDeviceDetails = rid => {
-  console.log(rid);
-};
-const deleteDeviceItem = rid => {
-  console.log(rid);
-};
-const deviceColumns: DataTableColumns<DeviceManagement.DeviceData> = createDeviceColumns(
-  viewDeviceDetails,
-  deleteDeviceItem
-);
+const deviceColumns: DataTableColumns<DeviceManagement.DeviceData> = createDeviceColumns();
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
   checkedRowKeysRef.value = rowKeys;

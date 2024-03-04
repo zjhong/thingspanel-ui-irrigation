@@ -7,7 +7,7 @@ import {IosSearch} from '@vicons/ionicons4';
 import {debounce} from 'lodash';
 import {deleteDeviceGroup, getDeviceGroup} from '@/service/api/device';
 import {AddOrEditDevices} from './components';
-import {group_columns} from "@/views/device/all-columns";
+import {group_columns} from "@/views/device/modules/all-columns";
 import {useRouterPush} from "@/hooks/common/router";
 
 

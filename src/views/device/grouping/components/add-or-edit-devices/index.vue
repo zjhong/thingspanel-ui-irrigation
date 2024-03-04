@@ -2,7 +2,7 @@
 import {onMounted, ref, watch} from 'vue';
 import type {FormInst, FormRules} from 'naive-ui';
 import {useMessage} from 'naive-ui';
-import {deviceGroup, deviceGroupTree} from '@/service/api/device';
+import {deviceGroup, deviceGroupTree, putDeviceGroup} from '@/service/api/device';
 
 interface Group {
   id: string;
@@ -26,9 +26,10 @@ defineExpose({showModal});
 
 // Props received from parent component
 interface Props {
+  isPidNoEdit?: boolean;
   isEdit?: boolean;
   editData?: { id: string; parent_id: string; name: string; description: string };
-  refreshData: () => Promise<void>;
+  refreshData: () => void;
 }
 
 const props = defineProps<Props>();
@@ -75,6 +76,10 @@ const extractIdAndName = (data: TreeNode[]): opNode[] => {
 };
 // Fetch options for tree select and handle edit mode data echo back
 const getOptions = async () => {
+  if (props.editData) {
+    formItem.value = {...props.editData}
+  }
+
   const {data} = await deviceGroupTree({});
   options.value = [
     {
@@ -87,14 +92,24 @@ const getOptions = async () => {
       }))
     }
   ];
+
 };
 
 // Submit form data
 const handleSubmit = async () => {
+
   await formRef?.value?.validate();
-  await deviceGroup(formItem.value);
+
+  if (props.isEdit) {
+    await putDeviceGroup(formItem.value)
+    message.success('修改成功');
+  } else {
+    await deviceGroup(formItem.value);
+    message.success('新增成功');
+  }
+
   await getOptions();
-  await props.refreshData();
+  props.refreshData();
   showModal.value = false;
   // eslint-disable-next-line require-atomic-updates
   if (formItem?.value) {
@@ -106,7 +121,7 @@ const handleSubmit = async () => {
     };
   }
 
-  message.success('新增成功');
+
   // Implement API call for form submission here
 };
 
@@ -145,6 +160,7 @@ watch(
         <!-- Parent group selection using tree select component -->
         <NFormItem :rules="[rules.parent_id]" label="父分组" path="parent_id">
           <NTreeSelect
+            :disabled="props.isPidNoEdit"
             v-model:value="formItem.parent_id"
             :options="options"
             default-expand-all

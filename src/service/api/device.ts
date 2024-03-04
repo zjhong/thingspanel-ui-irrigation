@@ -31,6 +31,14 @@ export const deviceGroup = async (params: { id: string; parent_id: string; name:
   return data;
 };
 
+
+/** 修改设备分组
+ */
+export const putDeviceGroup = async (params: { id: string; parent_id: string; name: string; description: string }) => {
+  const data = await request.put<Api.BaseApi.Data>('/device/group', params);
+  return data;
+};
+
 /** 删除设备分组 */
 export const deleteDeviceGroup = async (params: { id: string }) => {
   const data = await request.delete<Api.BaseApi.Data>(`/device/group/${params.id}`);

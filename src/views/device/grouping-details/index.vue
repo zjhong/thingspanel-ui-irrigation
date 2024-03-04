@@ -15,9 +15,12 @@ const {loading, startLoading, endLoading, empty, setEmpty} = useLoadingEmpty(fal
 const route = useRoute();
 const id = route.query.id;
 
-
-const the_modal = ref();
+const isEdit = ref(true);
+const the_modal1 = ref();
+const the_modal2 = ref();
 const editData = ref({id: '', parent_id: '', name: '', description: ''})
+
+const addChildData = ref({id: '', parent_id: id, name: '', description: ''})
 const details_data = ref({
   detail: {
     created_at: "",
@@ -104,10 +107,18 @@ const getDetails = async (tid) => {
   }
 };
 const showModal = () => {
-  if (the_modal.value) {
-    the_modal.value.showModal = true;
+  isEdit.value = true
+  if (the_modal2.value) {
+    the_modal2.value.showModal = true;
   }
 };
+const showModalChild = () => {
+
+  if (the_modal1.value) {
+    the_modal1.value.showModal = true;
+  }
+};
+
 onMounted(() => {
   getDetails(id)
 })
@@ -142,6 +153,12 @@ watch(() => route.query, newSystemName => {
             </n-descriptions-item>
             <n-descriptions-item>
               <template #label>
+                描述
+              </template>
+              {{ details_data.detail.description }}
+            </n-descriptions-item>
+            <n-descriptions-item>
+              <template #label>
                 创建时间
               </template>
               {{ details_data.detail.created_at }}
@@ -150,24 +167,31 @@ watch(() => route.query, newSystemName => {
           <n-divider title-placement="left">
             子分组
           </n-divider>
-          <LoadingEmptyWrapper class="h-200px" :loading="loading" :empty="empty">
-            <NDataTable :columns="group_column" :data="group_data" :loading="loading" :pagination="pagination"
-                        class="h-auto"></NDataTable>
-          </LoadingEmptyWrapper>
-
+          <n-space>
+            <NButton type="primary" @click="showModalChild"> 添加子分组</NButton>
+          </n-space>
+          <n-space class="mt4">
+            <LoadingEmptyWrapper class="h-200px" :loading="loading" :empty="empty">
+              <NDataTable :columns="group_column" :data="group_data" :loading="loading" :pagination="pagination"
+                          class="h-auto"></NDataTable>
+            </LoadingEmptyWrapper>
+          </n-space>
 
           <n-divider title-placement="left">
             设备
           </n-divider>
+          <AddOrEditDevices ref="the_modal1" :is-edit="false" :editData='addChildData' :isPidNoEdit="true"
+                            :refresh-data="()=>{getDetails(id)}"/>
         </NTabPane>
 
         <NTabPane name="编辑" tab="设置">
           <NButton type="primary" @click="showModal">编辑</NButton>
-          <AddOrEditDevices ref="the_modal" :is-edit="true" :editData='editData' :refresh-data="()=>{getDetails(id)}"/>
 
-
+          <AddOrEditDevices ref="the_modal2" :is-edit="true" :editData='editData' :refresh-data="()=>{getDetails(id)}"/>
         </NTabPane>
+
       </NTabs>
+
     </NCard>
   </NSpace>
 </template>

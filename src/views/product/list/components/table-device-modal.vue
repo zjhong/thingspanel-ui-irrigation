@@ -77,7 +77,7 @@ function createDefaultFormModel(): deviceAddType {
     batch_file: '',
     batch_number: '',
     create_type: 'A',
-    current_version: '',
+    current_version: ''
   };
   return data;
 }
@@ -145,8 +145,14 @@ watch(
         </NFormItemGridItem>
         <NFormItemGridItem v-if="formModel.create_type === 'F'" :span="24" label="选择文件" path="batch_file">
           <NButton quaternary type="primary">下载模板</NButton>
-          <UploadCard v-model:value="formModel.batch_file" text="选择文件" accept="file" source-type="importBatch"
-            class="mt-10px" :file-type="['csv']"></UploadCard>
+          <UploadCard
+            v-model:value="formModel.batch_file"
+            text="选择文件"
+            accept="file"
+            source-type="importBatch"
+            class="mt-10px"
+            :file-type="['csv']"
+          ></UploadCard>
         </NFormItemGridItem>
         <NFormItemGridItem v-else :span="24" label="设备数量" path="device_count">
           <NInput v-model:value="formModel.device_count" />

@@ -92,10 +92,19 @@ function handleError({ event }: { event?: ProgressEvent }) {
 </script>
 
 <template>
-  <NUpload :action="url + '/file/up'" :headers="{
-    'x-token': localStg.get('token') || ''
-  }" :data="{ type: props.sourceType }" :default-file-list="dataList" :accept="accept" :max="1"
-    @before-upload="beforeUpload" @finish="handleFinish" @error="handleError">
+  <NUpload
+    :action="url + '/file/up'"
+    :headers="{
+      'x-token': localStg.get('token') || ''
+    }"
+    :data="{ type: props.sourceType }"
+    :default-file-list="dataList"
+    :accept="accept"
+    :max="1"
+    @before-upload="beforeUpload"
+    @finish="handleFinish"
+    @error="handleError"
+  >
     <NButton>{{ props.text }}</NButton>
   </NUpload>
 </template>

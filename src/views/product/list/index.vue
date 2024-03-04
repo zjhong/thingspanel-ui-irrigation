@@ -128,7 +128,6 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-
 function setEditData(data: productRecord | null) {
   editData.value = data;
 }
@@ -190,8 +189,15 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
-          class="flex-1-hidden" />
+        <NDataTable
+          remote
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          flex-height
+          class="flex-1-hidden"
+        />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
           <NDrawerContent :title="drawerTitle">

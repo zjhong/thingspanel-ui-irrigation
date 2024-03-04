@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
-import {NButton, NFlex, NPopconfirm} from "naive-ui";
+import dayjs from 'dayjs';
+import { NButton, NFlex, NPopconfirm } from 'naive-ui';
 
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
   {
@@ -24,7 +24,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
     title: '创建时间',
     key: 'created_at',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
-      return dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+      return dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss');
     }
   },
   {
@@ -37,14 +37,14 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
           <NButton
             size={'small'}
             onClick={() => {
-              viewDetails(row.id)
+              viewDetails(row.id);
             }}
           >
             查看
           </NButton>
           <NPopconfirm
             onPositiveClick={() => {
-              deleteItem(row.id)
+              deleteItem(row.id);
             }}
           >
             {{
@@ -53,7 +53,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
             }}
           </NPopconfirm>
         </NFlex>
-      )
+      );
     }
   }
-]
+];

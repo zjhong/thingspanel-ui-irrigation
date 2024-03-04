@@ -227,10 +227,22 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
-          class="flex-1-hidden" />
-        <TableDeviceModal v-model:visible="visible" :pid="props.pid" :type="modalType"
-          :edit-data="(editData as unknown as deviceAddType)" @success="getTableData" />
+        <NDataTable
+          remote
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          flex-height
+          class="flex-1-hidden"
+        />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :pid="props.pid"
+          :type="modalType"
+          :edit-data="(editData as unknown as deviceAddType)"
+          @success="getTableData"
+        />
       </div>
     </NCard>
   </div>

@@ -177,11 +177,7 @@ init();
 
 <template>
   <div class="overflow-hidden h-full">
-    <NCard
-      :title="$t('page.product.update-package.packageList')"
-      :bordered="false"
-      class="h-full rounded-8px shadow-sm"
-    >
+    <NCard :title="$t('page.product.update-package.packageList')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="flex-col h-full">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
@@ -191,8 +187,8 @@ init();
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
           <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
-            <NButton class="w-72px ml-20px" type="primary" @click="handleReset">重置</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t("common.search") }}</NButton>
+            <NButton class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t("common.reset") }}</NButton>
           </NFormItem>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">
@@ -210,15 +206,8 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
+        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
+          class="flex-1-hidden" />
         <TablePackageModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>
     </NCard>

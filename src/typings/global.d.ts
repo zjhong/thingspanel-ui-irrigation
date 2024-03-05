@@ -1,14 +1,14 @@
 interface Window {
   /** NProgress instance */
-  NProgress?: import('nprogress').NProgress;
+  NProgress?: import("nprogress").NProgress;
   /** Loading bar instance */
-  $loadingBar?: import('naive-ui').LoadingBarProviderInst;
+  $loadingBar?: import("naive-ui").LoadingBarProviderInst;
   /** Dialog instance */
-  $dialog?: import('naive-ui').DialogProviderInst;
+  $dialog?: import("naive-ui").DialogProviderInst;
   /** Message instance */
-  $message?: import('naive-ui').MessageProviderInst;
+  $message?: import("naive-ui").MessageProviderInst;
   /** Notification instance */
-  $notification?: import('naive-ui').NotificationProviderInst;
+  $notification?: import("naive-ui").NotificationProviderInst;
 }
 
 interface ViewTransition {
@@ -16,7 +16,9 @@ interface ViewTransition {
 }
 
 interface Document {
-  startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition;
+  startViewTransition?: (
+    callback: () => Promise<void> | void,
+  ) => ViewTransition;
 }
 
 interface ImportMeta {
@@ -33,3 +35,7 @@ declare namespace Common2 {
 
 /** Build time of the project */
 declare const BUILD_TIME: string;
+
+declare interface Window {
+  NMessage: any;
+}

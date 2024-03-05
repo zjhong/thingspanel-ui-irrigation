@@ -38,6 +38,7 @@ declare module "@elegant-router/types" {
     "dashboard_workbench": "/dashboard/workbench";
     "data-service": "/data-service";
     "device": "/device";
+    "device_details": "/device/details";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
@@ -171,6 +172,7 @@ declare module "@elegant-router/types" {
     | "dashboard_panel"
     | "dashboard_workbench"
     | "data-service"
+    | "device_details"
     | "device_grouping-details"
     | "device_grouping"
     | "device_manage"

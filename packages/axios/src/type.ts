@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import type {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 
 export type ContentType =
   | 'text/html'
@@ -36,12 +36,14 @@ export interface RequestOption<ResponseData = any> {
     response: AxiosResponse<ResponseData>,
     instance: AxiosInstance
   ) => Promise<AxiosResponse> | Promise<void>;
+
   /**
    * transform backend response when the responseType is json
    *
    * @param response Axios response
    */
   transformBackendResponse(response: AxiosResponse<ResponseData>): any | Promise<any>;
+
   /**
    * The hook to handle error
    *
@@ -59,6 +61,7 @@ interface ResponseMap {
   stream: ReadableStream<Uint8Array>;
   document: Document;
 }
+
 export type ResponseType = keyof ResponseMap | 'json';
 
 export type MappedType<R extends ResponseType, JsonType = any> = R extends keyof ResponseMap
@@ -72,24 +75,29 @@ export type CustomAxiosRequestConfig<R extends ResponseType = 'json'> = Omit<Axi
 /** The requestTs instance */
 export interface RequestInstance {
   <T = any, R extends ResponseType = 'json'>(config: CustomAxiosRequestConfig<R>): Promise<MappedType<R, T>>;
+
   get<T = any, R extends ResponseType = 'json'>(
     url: string,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   post<T = any, R extends ResponseType = 'json'>(
     url: string,
     data?: any,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   put<T = any, R extends ResponseType = 'json'>(
     url: string,
     data?: any,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   delete<T = any, R extends ResponseType = 'json'>(
     url: string,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   cancelRequest: (requestId: string) => void;
   cancelAllRequest: () => void;
 }
@@ -116,16 +124,19 @@ export interface FlatRequestInstance {
     url: string,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   post<T = any, R extends ResponseType = 'json'>(
     url: string,
     data?: any,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   put<T = any, R extends ResponseType = 'json'>(
     url: string,
     data?: any,
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   delete<T = any, R extends ResponseType = 'json'>(
     url: string,
     config?: CustomAxiosRequestConfig<R>

@@ -1,27 +1,34 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage } from 'naive-ui';
-import { deleteDeviceGroup, deviceGroupDetail, deviceList, getDeviceGroup } from '@/service/api/device';
-import { AddOrEditDevices } from '@/views/device/grouping/components';
+import {onMounted, reactive, ref, watch} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
+import {type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage} from 'naive-ui';
+import {
+  deleteDeviceGroup,
+  deleteDeviceGroupRelation,
+  deviceGroupDetail,
+  deviceList,
+  getDeviceGroup
+} from '@/service/api/device';
+import {AddOrEditDevices} from '@/views/device/grouping/components';
 
-import { createNoSelectDeviceColumns, group_columns } from '@/views/device/modules/all-columns';
+import {createNoSelectDeviceColumns, group_columns} from '@/views/device/modules/all-columns';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import DeviceSelectList from '@/views/device/grouping-details/modules/device-select-list.vue';
 
 const group_data = ref([]);
 const device_data = ref<DeviceManagement.DeviceData[]>([]);
 
-const { loading, startLoading, endLoading } = useLoadingEmpty(false);
+const {loading, startLoading, endLoading} = useLoadingEmpty(false);
 const route = useRoute();
-const id = route.query.id;
+console.log(route)
+const currentId = ref(route.query.id);
 const isEdit = ref(true);
 const the_modal1 = ref();
 const the_modal2 = ref();
 
-const editData = ref({ id: '', parent_id: '', name: '', description: '' });
+const editData = ref({id: '', parent_id: '', name: '', description: ''});
 
-const addChildData = ref({ id: '', parent_id: id as string, name: '', description: '' });
+const addChildData = reactive({id: '', parent_id: currentId.value as string, name: '', description: ''});
 const details_data = ref({
   detail: {
     created_at: '',
@@ -47,14 +54,15 @@ const queryParams = reactive<{ parent_id: string; page: number; page_size: numbe
 });
 
 const getDetails = async (tid: string) => {
-  if (!id) {
+  if (!currentId) {
     message.error('没有传人的分组id');
   } else {
     queryParams.parent_id = tid;
     startLoading();
-    const { data, error } = await deviceGroupDetail({ id: tid });
+    const {data, error} = await deviceGroupDetail({id: tid});
 
     if (!error && data) {
+
       details_data.value = data;
       editData.value.id = data.detail.id;
       editData.value.description = data.detail.description;
@@ -78,28 +86,29 @@ const group_pagination: PaginationProps = reactive({
   onChange: (page: number) => {
     group_pagination.page = page;
     queryParams.page = page;
-    getDetails(id as string);
+    getDetails(currentId.value as string);
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDeviceList();
+    getDeviceList(<string>currentId.value);
   },
   onUpdatePageSize: (pageSize: number) => {
     group_pagination.pageSize = pageSize;
     group_pagination.page = 1;
     queryParams.page = 1;
     queryParams.page_size = pageSize;
-    getDetails(id as string);
+    getDetails(currentId.value as string);
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDeviceList();
+    getDeviceList(<string>currentId.value);
   }
 });
 const router = useRouter();
+console.log(router)
 const viewDetails = (rid: string) => {
-  router.push(`/device/grouping-details?id=${rid}`);
+  router.push({name: 'device_grouping-details', query: {id: rid}})
 };
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
-  await deleteDeviceGroup({ id: rid });
-  await getDetails(id as string);
+  await deleteDeviceGroup({id: rid});
+  await getDetails(currentId.value as string);
 };
 const group_column = group_columns(viewDetails, deleteItem);
 const showGroupModal = () => {
@@ -109,6 +118,7 @@ const showGroupModal = () => {
   }
 };
 const showGroupModalChild = () => {
+  addChildData.parent_id = <string>currentId.value
   if (the_modal1.value) {
     the_modal1.value.showModal = true;
   }
@@ -120,13 +130,19 @@ const handleChildChange = (newValue: boolean) => {
 };
 
 const queryParams2 = reactive<{ group_id: string; page: number; page_size: number }>({
-  group_id: id as string,
+  group_id: currentId.value as string,
   page: 1,
   page_size: 5
 });
-const getDeviceList = async () => {
-  const res = await deviceList(queryParams2);
-  device_data.value = res.data?.list as DeviceManagement.DeviceData[];
+const getDeviceList = async (id: string) => {
+  console.log(id, "999999")
+  const res = await deviceList({...queryParams2, group_id: id});
+  if (res.data?.list) {
+    device_data.value = res.data?.list
+  } else {
+    device_data.value = []
+  }
+
   if (res?.data?.total) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     devicePagination.pageCount = Math.ceil(res?.data?.total / 5);
@@ -134,7 +150,7 @@ const getDeviceList = async () => {
 };
 const refresh_data = (newValue: boolean) => {
   if (newValue) {
-    getDeviceList();
+    getDeviceList(<string>currentId.value);
   }
 };
 const devicePagination = reactive<PaginationProps>({
@@ -143,28 +159,52 @@ const devicePagination = reactive<PaginationProps>({
   onChange: (page: number) => {
     devicePagination.page = page;
     queryParams2.page = page;
-    getDeviceList();
+    getDeviceList(<string>currentId.value);
   }
 });
 const viewDevicsseDetails = rid => {
   console.log(rid);
+
+  router.push({name: 'device_details', query: {id: rid}})
+
 };
-const deleteDeviceItem = rid => {
-  console.log(rid);
+const deleteDeviceItem = async (rid: string) => {
+
+  await deleteDeviceGroupRelation({
+    device_id: rid,
+    group_id: currentId.value
+  })
+  await getDeviceList(<string>currentId.value);
+
 };
 const deviceColumns: DataTableColumns<DeviceManagement.DeviceData> = createNoSelectDeviceColumns(
   viewDevicsseDetails,
   deleteDeviceItem
 );
 onMounted(async () => {
-  await getDetails(id as string);
-  await getDeviceList();
+  await getDetails(<string>currentId.value);
+  await getDeviceList(<string>currentId.value);
 });
+const reload = async (nid: string) => {
+  await getDetails(nid);
+  await getDeviceList(nid);
+}
+
+const goWhere = (key: string) => {
+  if (key === 'back') {
+    router.go(-1)
+  } else {
+    router.push({name: 'device_grouping'})
+  }
+
+
+}
 watch(
-  () => route.query,
-  newSystemName => {
-    if (newSystemName.id) {
-      getDetails(newSystemName.id as string);
+  () => route.query.id,
+  newId => {
+    if (newId) {
+      currentId.value = newId;
+      reload(<string>newId)
     }
   }
 );
@@ -173,7 +213,13 @@ watch(
 <template>
   <div>
     <NSpace vertical :size="16">
-      <NCard :title="details_data.detail.name" style="margin-bottom: 16px">
+      <NCard :title="details_data.detail.name">
+        <template #header-extra>
+          <NSpace>
+            <NButton @click="goWhere('back')" v-if="details_data.detail.parent_id!=='0'">返回上一级</NButton>
+            <NButton @click="goWhere('first')">返回分组列表</NButton>
+          </NSpace>
+        </template>
         <NTabs type="line" animated>
           <NTabPane name="详情" tab="详情">
             <NDescriptions label-placement="top" bordered :column="6">
@@ -230,7 +276,7 @@ watch(
               is-pid-no-edit
               :refresh-data="
                 () => {
-                  getDetails(id as string);
+                  getDetails(currentId as string);
                 }
               "
             />
@@ -245,7 +291,7 @@ watch(
               :edit-data="editData"
               :refresh-data="
                 () => {
-                  getDetails(id as string);
+                  getDetails(currentId as string);
                 }
               "
             />
@@ -256,7 +302,8 @@ watch(
 
     <NModal v-model:show="showGroupDeviceModal">
       <NCard style="width: 800px" title="添加设备到分组" :bordered="false" size="huge" role="dialog" aria-modal="true">
-        <DeviceSelectList :group_id="id as string" @closed_modal="handleChildChange" @refresh_data="refresh_data" />
+        <DeviceSelectList :group_id="currentId as string" @closed_modal="handleChildChange"
+                          @refresh_data="refresh_data"/>
       </NCard>
     </NModal>
   </div>

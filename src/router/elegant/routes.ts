@@ -171,6 +171,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'device_details',
+        path: '/device/details',
+        component: 'view.device_details',
+        meta: {
+          title: 'device_details',
+          i18nKey: 'route.device_details'
+        }
+      },
+      {
         name: 'device_grouping',
         path: '/device/grouping',
         component: 'view.device_grouping',

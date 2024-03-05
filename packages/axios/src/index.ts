@@ -1,9 +1,9 @@
-import axios, { AxiosError } from 'axios';
-import type { AxiosResponse, CancelTokenSource, CreateAxiosDefaults, InternalAxiosRequestConfig } from 'axios';
+import axios, {AxiosError} from 'axios';
+import type {AxiosResponse, CancelTokenSource, CreateAxiosDefaults, InternalAxiosRequestConfig} from 'axios';
 import axiosRetry from 'axios-retry';
-import { nanoid } from '@sa/utils';
-import { createAxiosConfig, createDefaultOptions, createRetryOptions } from './options';
-import { BACKEND_ERROR_CODE, REQUEST_ID_KEY } from './constant';
+import {nanoid} from '@sa/utils';
+import {createAxiosConfig, createDefaultOptions, createRetryOptions} from './options';
+import {BACKEND_ERROR_CODE, REQUEST_ID_KEY} from './constant';
 import type {
   CustomAxiosRequestConfig,
   FlatRequestInstance,
@@ -29,7 +29,7 @@ function createCommonRequest<ResponseData = any>(
   axiosRetry(instance, retryOptions);
 
   instance.interceptors.request.use(conf => {
-    const config: InternalAxiosRequestConfig = { ...conf };
+    const config: InternalAxiosRequestConfig = {...conf};
 
     // set requestTs id
     const requestId = nanoid();
@@ -109,7 +109,7 @@ export function createRequest<ResponseData = any>(
   axiosConfig?: CreateAxiosDefaults,
   options?: Partial<RequestOption<ResponseData>>
 ) {
-  const { instance, opts, cancelRequest, cancelAllRequest } = createCommonRequest<ResponseData>(axiosConfig, options);
+  const {instance, opts, cancelRequest, cancelAllRequest} = createCommonRequest<ResponseData>(axiosConfig, options);
 
   const request: RequestInstance = async function request<T = any, R extends ResponseType = 'json'>(
     config: CustomAxiosRequestConfig
@@ -126,7 +126,7 @@ export function createRequest<ResponseData = any>(
   } as RequestInstance;
   const requestMethods = {
     async get<T = any, R extends ResponseType = 'json'>(url: string, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, method: 'get' };
+      const fullConfig = {...config, url, method: 'get'};
       return request<T, R>(fullConfig);
     },
     async post<T = any, R extends ResponseType = 'json'>(
@@ -134,17 +134,26 @@ export function createRequest<ResponseData = any>(
       data?: any,
       config?: CustomAxiosRequestConfig<R>
     ) {
-      const fullConfig = { ...config, url, data, method: 'post' };
+      const fullConfig = {...config, url, data, method: 'post'};
       return request<T, R>(fullConfig);
     },
     async put<T = any, R extends ResponseType = 'json'>(url: string, data?: any, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, data, method: 'put' };
+      const fullConfig = {...config, url, data, method: 'put'};
       return request<T, R>(fullConfig);
     },
     async delete<T = any, R extends ResponseType = 'json'>(url: string, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, method: 'delete' };
+      const fullConfig = {...config, url, method: 'delete'};
       return request<T, R>(fullConfig);
-    }
+    },
+    async delete2<T = any, R extends ResponseType = 'json'>(
+      url: string,
+      data?: any,
+      config?: CustomAxiosRequestConfig<R>
+    ) {
+      const fullConfig = {...config, url, data, method: 'delete'};
+
+      return request<T, R>(fullConfig);
+    },
   };
 
   Object.assign(request, requestMethods, {
@@ -164,16 +173,17 @@ export function createRequest<ResponseData = any>(
  * @param options requestTs options
  */
 
-export { BACKEND_ERROR_CODE, REQUEST_ID_KEY };
+export {BACKEND_ERROR_CODE, REQUEST_ID_KEY};
 export type * from './type';
 export type * from './options';
 export type * from './constant';
 export type * from './shared';
+
 export function createFlatRequest<ResponseData = any>(
   axiosConfig?: CreateAxiosDefaults,
   options?: Partial<RequestOption<ResponseData>>
 ) {
-  const { instance, opts, cancelRequest, cancelAllRequest } = createCommonRequest<ResponseData>(axiosConfig, options);
+  const {instance, opts, cancelRequest, cancelAllRequest} = createCommonRequest<ResponseData>(axiosConfig, options);
   // 确保在请求拦截器中移除所有null值的字段
 
   instance.interceptors.request.use(config => {
@@ -206,17 +216,17 @@ export function createFlatRequest<ResponseData = any>(
       if (responseType === 'json') {
         const data = opts.transformBackendResponse(response);
 
-        return { data, error: null };
+        return {data, error: null};
       }
 
-      return { data: response.data as MappedType<R, T>, error: null };
+      return {data: response.data as MappedType<R, T>, error: null};
     } catch (error) {
-      return { data: null, error };
+      return {data: null, error};
     }
   } as FlatRequestInstance;
   const requestMethods = {
     async get<T = any, R extends ResponseType = 'json'>(url: string, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, method: 'get' };
+      const fullConfig = {...config, url, method: 'get'};
       return flatRequest<T, R>(fullConfig);
     },
     async post<T = any, R extends ResponseType = 'json'>(
@@ -224,17 +234,25 @@ export function createFlatRequest<ResponseData = any>(
       data?: any,
       config?: CustomAxiosRequestConfig<R>
     ) {
-      const fullConfig = { ...config, url, data, method: 'post' };
+      const fullConfig = {...config, url, data, method: 'post'};
       return flatRequest<T, R>(fullConfig);
     },
     async put<T = any, R extends ResponseType = 'json'>(url: string, data?: any, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, data, method: 'put' };
+      const fullConfig = {...config, url, data, method: 'put'};
       return flatRequest<T, R>(fullConfig);
     },
     async delete<T = any, R extends ResponseType = 'json'>(url: string, config?: CustomAxiosRequestConfig<R>) {
-      const fullConfig = { ...config, url, method: 'delete' };
+      const fullConfig = {...config, url, method: 'delete'};
       return flatRequest<T, R>(fullConfig);
-    }
+    },
+    async delete2<T = any, R extends ResponseType = 'json'>(
+      url: string,
+      data?: any,
+      config?: CustomAxiosRequestConfig<R>
+    ) {
+      const fullConfig = {...config, url, data, method: 'delete'};
+      return flatRequest<T, R>(fullConfig);
+    },
   };
   Object.assign(flatRequest, requestMethods, {
     cancelRequest,
@@ -243,4 +261,5 @@ export function createFlatRequest<ResponseData = any>(
 
   return flatRequest;
 }
-export type { CreateAxiosDefaults, AxiosError };
+
+export type {CreateAxiosDefaults, AxiosError};

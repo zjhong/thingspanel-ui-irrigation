@@ -2,15 +2,12 @@
 import { onMounted, ref } from 'vue';
 // Import UI components from Naive UI
 import { NButton, NDataTable, NFlex, NPagination } from 'naive-ui';
-
 import { IosSearch } from '@vicons/ionicons4';
 import { debounce } from 'lodash';
+import { useRouter } from 'vue-router';
 import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
 import { group_columns } from '@/views/device/modules/all-columns';
-import { useRouterPush } from '@/hooks/common/router';
 import { AddOrEditDevices } from './components';
-
-const { routerPushByKey } = useRouterPush();
 
 const the_modal = ref();
 const searchValue = ref('');
@@ -28,9 +25,9 @@ const getDevice = async () => {
   });
   data.value = res.data.list;
   totalPages.value = Math.ceil(res.data.total / 10);
-
   loading.value = false;
 };
+
 // 使用 lodash 的 debounce 函数来延迟搜索请求的发送
 const debouncedSearch = debounce(async () => {
   if (isRequestPending.value) {
@@ -46,9 +43,7 @@ const debouncedSearch = debounce(async () => {
   });
   data.value = res.data.list;
   totalPages.value = Math.ceil(res.data.total / 10);
-
   loading.value = false;
-
   // eslint-disable-next-line require-atomic-updates
   isRequestPending.value = false;
 }, 500); // 设置延迟为 500 毫秒
@@ -60,13 +55,13 @@ const handleInput = () => {
 // Async function to fetch device groups from the backend
 
 // Function to delete a device group
-const deleteItem = async (id: string) => {
-  await deleteDeviceGroup({ id });
+const deleteItem = async (rid: string) => {
+  await deleteDeviceGroup({ id: rid });
   await getDevice();
 };
-
-const viewDetails = (id: string) => {
-  routerPushByKey('device_grouping-details', { query: { id } });
+const router = useRouter();
+const viewDetails = (rid: string) => {
+  router.push({ name: 'device_grouping-details', query: { id: rid } });
 };
 
 // Define columns for the data table

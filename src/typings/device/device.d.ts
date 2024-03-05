@@ -35,4 +35,28 @@ declare namespace DeviceManagement {
       group_path: string;
     };
   }
+
+  interface GroupDeviceData {
+    any;
+  }
+
+  interface DeviceData {
+    id: string;
+    activate_flag: string;
+    current_version: string;
+    device_config_id: string;
+    device_number: string;
+    device_type: number;
+    group_id: string;
+    is_enabled: string;
+    lable: string;
+    name: string;
+    product_id: string;
+    protocol: string;
+  }
+
+  interface DeviceDatas {
+    list: DeviceData[];
+    total: number;
+  }
 }

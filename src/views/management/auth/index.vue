@@ -25,6 +25,7 @@ const queryParams = reactive<QueryFormModel>({
 });
 
 const tableData = ref<CustomRoute.Route[]>([]);
+
 function setTableData(data: CustomRoute.Route[]) {
   tableData.value = data;
 }
@@ -93,7 +94,8 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
           '1': 'success',
           '2': 'error',
           '3': 'warning',
-          '4': 'default'
+          '4': 'default',
+          '5': 'info'
         };
         return <NTag type={tagTypes[row.element_type]}>{routerTypeLabels[row.element_type]}</NTag>;
       }

@@ -287,10 +287,12 @@ soybean-admin
 
 ---
 ### 页面开发：
-##### 在[src/views](src/views)创建页面文件即可，如果不想生成路由或类型的文件，请使用 modules创建文件夹，而不是 components
+#### 在[src/views](src/views)创建页面文件即可，如果不想生成路由或类型的文件，请使用 modules创建文件夹，而不是 components
+
 ---
 
 ---
+
 ### mock相关：
 #####  请尽量使用 https://apifox.com/ ，在 [env.config.ts](env.config.ts)，修改 `const mockURL = 'https://mock.apifox.com/m1/4080832-0-default';`
 ##### 并将该文件排除提交

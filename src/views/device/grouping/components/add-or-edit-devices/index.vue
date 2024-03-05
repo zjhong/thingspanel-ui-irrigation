@@ -97,7 +97,7 @@ const getOptions = async () => {
 // Submit form data
 const handleSubmit = async () => {
   await formRef?.value?.validate();
-
+  showModal.value = false;
   if (props.isEdit) {
     await putDeviceGroup(formItem.value);
     message.success('修改成功');
@@ -108,7 +108,7 @@ const handleSubmit = async () => {
 
   await getOptions();
   props.refreshData();
-  showModal.value = false;
+
   // eslint-disable-next-line require-atomic-updates
   if (formItem?.value) {
     formItem.value = {

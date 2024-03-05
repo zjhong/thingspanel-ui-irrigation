@@ -54,7 +54,8 @@ export const routerTypeLabels: Record<CustomRoute.routerTypeKey, string> = {
   1: '菜单',
   2: '目录',
   3: '路由',
-  4: '按钮'
+  4: '按钮',
+  5: '隐藏'
 };
 export const routeTypeOptions = transformObjectToOption(routerTypeLabels);
 /** 路由管理 - 访问标识 */

@@ -25,7 +25,7 @@ export function createServiceConfig(env: Env.ImportMeta) {
       }
     },
     prod: {
-      baseURL: devURL,
+      baseURL: prodURL,
       otherBaseURL: {
         demo: prodURL,
         mock: mockURL

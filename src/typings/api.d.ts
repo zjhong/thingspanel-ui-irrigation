@@ -90,6 +90,7 @@ declare namespace Api {
    */
   namespace Route {
     type ElegantConstRoute = import('@elegant-router/types').ElegantConstRoute;
+
     interface MenuRoute extends ElegantConstRoute {
       id: string;
       /** 父节点ID */
@@ -109,7 +110,7 @@ declare namespace Api {
       /** 排序 */
       orders: number;
       /** 类型 */
-      element_type: 1 | 2 | 3 | 4;
+      element_type: 1 | 2 | 3 | 4 | 5;
       /** 访问标识 */
       authority: any;
       /** 描述 */
@@ -121,10 +122,12 @@ declare namespace Api {
       /** 子节点 */
       children: MenuRoute[];
     }
+
     interface Data {
       list: MenuRoute[];
       total: number;
     }
+
     interface UserRoute {
       list: ElegantConstRoute[];
       home: import('@elegant-router/types').LastLevelRouteKey;

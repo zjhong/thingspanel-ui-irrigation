@@ -64,7 +64,7 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
         roles: JSON.parse(item.authority),
         icon: item.param2,
         order: item.orders,
-        hideInMenu: item.element_type === 4
+        hideInMenu: item.element_type === 5
       },
       children: item.children?.length ? replaceKeys(item.children) : []
     } as ElegantRoute;

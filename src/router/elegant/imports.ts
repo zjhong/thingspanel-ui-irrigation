@@ -29,6 +29,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   dashboard_panel: () => import("@/views/dashboard/panel/index.vue"),
   dashboard_workbench: () => import("@/views/dashboard/workbench/index.vue"),
   "data-service": () => import("@/views/data-service/index.vue"),
+  device_details: () => import("@/views/device/details/index.vue"),
   "device_grouping-details": () => import("@/views/device/grouping-details/index.vue"),
   device_grouping: () => import("@/views/device/grouping/index.vue"),
   device_manage: () => import("@/views/device/manage/index.vue"),

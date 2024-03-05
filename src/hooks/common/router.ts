@@ -25,11 +25,10 @@ export function useRouterPush(inSetup = true) {
 
   async function routerPushByKey(key: LastLevelRouteKey | RouteKey, options?: RouterPushOptions) {
     const { query, params } = options || {};
-    console.log(key);
     const routeLocation: RouteLocationRaw = {
       name: key
     };
-
+    console.log(routeLocation);
     if (query) {
       routeLocation.query = query;
     }

@@ -38,7 +38,8 @@ export const czh_cn = {
   device: '设备接入',
   device_grouping: '分组管理',
   'device_grouping-details': '分组详情',
-  device_manage: '设备管理'
+  device_manage: '设备管理',
+  device_details: '设备详情'
 };
 
 export const cen = {
@@ -77,5 +78,6 @@ export const cen = {
   device: 'Device Access',
   device_grouping: 'Group Management',
   'device_grouping-details': 'Group Details',
-  device_manage: 'Equipment Management'
+  device_manage: 'Equipment Management',
+  device_details: 'Device Details'
 };

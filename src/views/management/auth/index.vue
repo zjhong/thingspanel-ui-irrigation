@@ -1,18 +1,18 @@
 <script setup lang="tsx">
-import {h, reactive, ref} from 'vue';
-import type {Ref} from 'vue';
-import {NButton, NPopconfirm, NSpace, NTag} from 'naive-ui';
-import type {DataTableColumns, PaginationProps} from 'naive-ui';
-import {useBoolean, useLoading} from '@sa/hooks';
-import {routerSysFlagLabels, routerTypeLabels} from '@/constants/business';
-import {delElement, fetchElementList} from '@/service/api/route';
-import {deepClone} from '@/utils/common/tool';
-import {$t} from '@/locales';
+import { h, reactive, ref } from 'vue';
+import type { Ref } from 'vue';
+import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
+import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { routerSysFlagLabels, routerTypeLabels } from '@/constants/business';
+import { delElement, fetchElementList } from '@/service/api/route';
+import { deepClone } from '@/utils/common/tool';
+import { $t } from '@/locales';
 import TableActionModal from './components/table-action-modal.vue';
-import type {ModalType} from './components/table-action-modal.vue';
+import type { ModalType } from './components/table-action-modal.vue';
 
-const {loading, startLoading, endLoading} = useLoading(false);
-const {bool: visible, setTrue: openModal} = useBoolean();
+const { loading, startLoading, endLoading } = useLoading(false);
+const { bool: visible, setTrue: openModal } = useBoolean();
 
 type QueryFormModel = {
   page: number;
@@ -32,7 +32,7 @@ function setTableData(data: CustomRoute.Route[]) {
 
 async function getTableData() {
   startLoading();
-  const {data} = await fetchElementList(queryParams);
+  const { data } = await fetchElementList(queryParams);
   if (data) {
     const list: Api.Route.MenuRoute[] = data.list;
     setTableData(list);
@@ -64,7 +64,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     align: 'left',
     render: row => {
       if (row.param2) {
-        return <svg-icon icon={row.param2}/>;
+        return <svg-icon icon={row.param2} />;
       }
       return <span></span>;
     }
@@ -218,7 +218,7 @@ init();
     <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
         <NButton type="primary" @click="handleAddTable">
-          <IconIcRoundPlus class="mr-4px text-20px"/>
+          <IconIcRoundPlus class="mr-4px text-20px" />
           {{ $t('common.add') }}
         </NButton>
       </template>

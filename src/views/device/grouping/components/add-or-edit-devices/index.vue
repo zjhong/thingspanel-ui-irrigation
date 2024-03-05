@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {onMounted, ref, watch} from 'vue';
-import type {FormInst, FormRules} from 'naive-ui';
-import {useMessage} from 'naive-ui';
-import {deviceGroup, deviceGroupTree, putDeviceGroup} from '@/service/api/device';
+import { onMounted, ref, watch } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui';
+import { useMessage } from 'naive-ui';
+import { deviceGroup, deviceGroupTree, putDeviceGroup } from '@/service/api/device';
 
 interface Group {
   id: string;
@@ -22,7 +22,7 @@ interface TreeNode {
 }
 
 const showModal = ref<boolean>(false);
-defineExpose({showModal});
+defineExpose({ showModal });
 
 // Props received from parent component
 interface Props {
@@ -77,10 +77,10 @@ const extractIdAndName = (data: TreeNode[]): opNode[] => {
 // Fetch options for tree select and handle edit mode data echo back
 const getOptions = async () => {
   if (props.editData) {
-    formItem.value = {...props.editData};
+    formItem.value = { ...props.editData };
   }
 
-  const {data} = await deviceGroupTree({});
+  const { data } = await deviceGroupTree({});
   options.value = [
     {
       id: '0', // Root node for tree select
@@ -140,10 +140,10 @@ watch(
   () => props.editData,
   newVal => {
     if (props.isEdit && newVal) {
-      formItem.value = {...newVal};
+      formItem.value = { ...newVal };
     }
   },
-  {deep: true, immediate: true}
+  { deep: true, immediate: true }
 );
 
 // Expose showModal for parent component
@@ -167,11 +167,11 @@ watch(
         </NFormItem>
         <!-- Group name input field -->
         <NFormItem :rules="[rules.name]" label="分组名称" path="name">
-          <NInput v-model:value="formItem.name"/>
+          <NInput v-model:value="formItem.name" />
         </NFormItem>
         <!-- Description textarea for optional input -->
         <NFormItem label="描述" path="description">
-          <NInput v-model:value="formItem.description" type="textarea"/>
+          <NInput v-model:value="formItem.description" type="textarea" />
         </NFormItem>
         <!-- Form action buttons -->
         <div style="display: flex; justify-content: flex-end; gap: 8px">

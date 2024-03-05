@@ -1,5 +1,5 @@
-import type {ElegantRoute} from '@elegant-router/types';
-import type {ElegantConstRoute} from '@elegant-router/vue';
+import type { ElegantRoute } from '@elegant-router/types';
+import type { ElegantConstRoute } from '@elegant-router/vue';
 
 /**
  * 递归处理数据

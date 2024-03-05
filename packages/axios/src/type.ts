@@ -142,6 +142,12 @@ export interface FlatRequestInstance {
     config?: CustomAxiosRequestConfig<R>
   ): Promise<FlatResponseData<MappedType<R, T>>>;
 
+  delete2<T = any, R extends ResponseType = 'json'>(
+    url: string,
+    data?: any,
+    config?: CustomAxiosRequestConfig<R>
+  ): Promise<FlatResponseData<MappedType<R, T>>>;
+
   cancelRequest: (requestId: string) => void;
   cancelAllRequest: () => void;
 }

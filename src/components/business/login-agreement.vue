@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import {computed} from 'vue';
 
-defineOptions({ name: 'LoginAgreement' });
+defineOptions({name: 'LoginAgreement'});
 
 interface Props {
   /** 是否勾选 */
@@ -14,8 +14,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:value', value: boolean): void;
+
   /** 点击协议 */
   (e: 'click-protocol'): void;
+
   /** 点击隐私政策 */
   (e: 'click-policy'): void;
 }
@@ -34,6 +36,7 @@ const checked = computed({
 function handleClickProtocol() {
   emit('click-protocol');
 }
+
 function handleClickPolicy() {
   emit('click-policy');
 }
@@ -42,6 +45,7 @@ function handleClickPolicy() {
 <template>
   <div class="w-full text-14px">
     <NCheckbox v-model:checked="checked">我已经仔细阅读并接受</NCheckbox>
+
     <NButton :text="true" type="primary" @click="handleClickProtocol">《用户协议》</NButton>
     <NButton :text="true" type="primary" @click="handleClickPolicy">《隐私权政策》</NButton>
   </div>

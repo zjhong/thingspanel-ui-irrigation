@@ -1,13 +1,13 @@
 <script lang="tsx" setup>
-import { onMounted, ref } from 'vue';
+import {onMounted, ref} from 'vue';
 // Import UI components from Naive UI
-import { useRouter } from 'vue-router';
-import { NButton, NDataTable, NFlex, NPagination } from 'naive-ui';
-import { IosSearch } from '@vicons/ionicons4';
-import { debounce } from 'lodash';
-import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
-import { group_columns } from '@/views/device/modules/all-columns';
-import { AddOrEditDevices } from './components';
+import {useRouter} from 'vue-router';
+import {NButton, NDataTable, NFlex, NPagination} from 'naive-ui';
+import {IosSearch} from '@vicons/ionicons4';
+import {debounce} from 'lodash';
+import {deleteDeviceGroup, getDeviceGroup} from '@/service/api/device';
+import {group_columns} from '@/views/device/modules/all-columns';
+import {AddOrEditDevices} from './components';
 
 const the_modal = ref();
 const searchValue = ref('');
@@ -56,12 +56,12 @@ const handleInput = () => {
 
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
-  await deleteDeviceGroup({ id: rid });
+  await deleteDeviceGroup({id: rid});
   await getDevice();
 };
 const router = useRouter();
 const viewDetails = (rid: string) => {
-  router.push({ name: 'device_grouping-details', query: { id: rid } });
+  router.push({name: 'device_grouping-details', query: {id: rid}});
 };
 
 // Define columns for the data table
@@ -79,7 +79,7 @@ onMounted(getDevice); // Fetch device groups on component mount
 <template>
   <div class="h-full overflow-auto">
     <!-- Add or edit device modal component with props for edit mode and data -->
-    <AddOrEditDevices ref="the_modal" :is-edit="false" :refresh-data="getDevice" />
+    <AddOrEditDevices ref="the_modal" :is-edit="false" :refresh-data="getDevice"/>
     <NCard>
       <NFlex justify="start">
         <!-- Button to trigger modal for creating a new device group -->
@@ -90,22 +90,22 @@ onMounted(getDevice); // Fetch device groups on component mount
           :disabled="isRequestPending"
           autosize
           placeholder="请输入设备分组名称"
-          style="min-width: 180px"
+          class="min-w-240px"
           type="text"
           @input="handleInput"
         >
           <template #prefix>
             <NIcon>
-              <IosSearch />
+              <IosSearch/>
             </NIcon>
           </template>
         </NInput>
       </NFlex>
-      <div style="margin-top: 20px">
+      <div class="mt-20">
         <!-- Data table to display device groups -->
         <NDataTable :columns="columns" :data="data" :loading="loading"></NDataTable>
         <!-- Pagination component -->
-        <NPagination v-model:page="currentPage" :page-count="totalPages" @update:page="getDevice" />
+        <NPagination v-model:page="currentPage" :page-count="totalPages" @update:page="getDevice"/>
       </div>
     </NCard>
   </div>

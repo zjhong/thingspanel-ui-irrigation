@@ -10,8 +10,10 @@ import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 import { getStaticUrl } from '@/utils/common/tool';
+import TableDetailModal from './table-detail-modal.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
+const { bool: visibleTable, setTrue: openTable } = useBoolean();
 const props = defineProps({
   mid: {
     type: Number,
@@ -94,7 +96,7 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
+          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
             {$t('page.product.update-ota.taskDetail')}
           </NButton>
         </NSpace>
@@ -111,11 +113,9 @@ function setModalType(type: ModalType) {
 
 const editData = ref<productDeviceRecord | null>(null);
 
-function setEditData(data: productDeviceRecord | null) {
-  editData.value = data;
-}
 
 function handleAddTable() {
+  editData.value = null;
   openModal();
   setModalType('add');
 }
@@ -127,14 +127,11 @@ function handleAddTable() {
 // 	}
 // 	openEditPwdModal();
 // }
-
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId);
-  if (findItem) {
-    setEditData(findItem);
-  }
+const rowData = ref<productDeviceRecord | null>(null);
+function handleEditTable(row) {
+  rowData.value = row;
   setModalType('edit');
-  openModal();
+  openTable();
 }
 
 function init() {
@@ -197,7 +194,9 @@ const downloadPackage = () => {
             </NGrid>
           </NForm>
         </div>
-        <TableDeviceModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableDeviceModal v-model:visible="visible" :type="modalType" :pid="props.record.id" :edit-data="editData"
+          @success="getTableData" />
+        <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
       </div>
     </NCard>
   </div>

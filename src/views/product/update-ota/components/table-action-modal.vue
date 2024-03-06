@@ -14,6 +14,7 @@ export interface Props {
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
   editData?: otaRecord | null;
+  selectedKeys: string[];
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -22,13 +23,15 @@ defineOptions({ name: 'TableActionModal' });
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'add',
-  editData: null
+  editData: null,
+  selectedKeys: () => []
 });
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
   /** 点击协议 */
-  (e: 'success'): void;
+  (e: 'success', data: any): void;
+  (e: 'update:selectedKeys', data: any[]): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -41,6 +44,17 @@ const modalVisible = computed({
     emit('update:visible', visible);
   }
 });
+
+// (e: 'update:selectedKeys', selectedKeys: string[]): void;
+const selectedKeys = computed({
+  get: () => {
+    return props.selectedKeys;
+  },
+  set: (selectedKeys) => {
+    emit('update:selectedKeys', selectedKeys);
+  }
+})
+
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
     add: $t('page.product.list.addProduct'),
@@ -90,20 +104,20 @@ function handleUpdateFormModelByModalType() {
       handleUpdateFormModel(defaultFormModel);
     },
     edit: () => {
-      if (props.editData) {
-        handleUpdateFormModel(props.editData as productAdd);
-      }
+      handleUpdateFormModel(props.editData as productAdd);
     }
   };
 
   handlers[props.type]();
 }
-
+const backupData = ref([]);
 watch(
   () => props.visible,
   newValue => {
     if (newValue) {
       handleUpdateFormModelByModalType();
+    } else {
+      backupData.value = JSON.parse(JSON.stringify(props.selectedKeys));
     }
   }
 );
@@ -162,8 +176,8 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     type: 'selection',
-    disabled(row: productPackageRecord) {
-      return row.name === 'Edward King 3'
+    checked: (row: productPackageRecord) => {
+      return props.selectedKeys.includes(row.id);
     }
   },
   {
@@ -186,11 +200,17 @@ function init() {
 
 // 初始化
 init();
-const checkedRowKeys = ref<DataTableRowKey[]>([])
 const rowKey = (row: productPackageRecord) => row.id
 function handleCheck(rowKeys: DataTableRowKey[]) {
-  checkedRowKeys.value = rowKeys
+  emit('update:selectedKeys', rowKeys);
 }
+const closeModal = () => {
+  emit('update:selectedKeys', backupData.value);
+  modalVisible.value = false;
+};
+const onSubmit = () => {
+  modalVisible.value = false;
+};
 </script>
 
 <template>
@@ -211,14 +231,15 @@ function handleCheck(rowKeys: DataTableRowKey[]) {
             </NFormItem>
           </NForm>
           <NDataTable :row-key="rowKey" @update:checked-row-keys="handleCheck" remote :columns="columns" :data="tableData"
-            :loading="loading" :pagination="pagination" flex-height class="flex-1-hidden" />
+            :loading="loading" :pagination="pagination" :checked-row-keys="selectedKeys" flex-height
+            class="flex-1-hidden" />
           <NSpace class="pb-12px mt-10px" justify="space-between">
-            <NSpace>已选择{{ checkedRowKeys.length }}条</NSpace>
+            <NSpace>已选择{{ selectedKeys.length }}条</NSpace>
             <NSpace align="center" :size="18">
-              <NButton @click="getTableData">
+              <NButton @click="closeModal">
                 {{ $t('common.cancel') }}
               </NButton>
-              <NButton type="primary" @click="getTableData">
+              <NButton type="primary" @click="onSubmit">
                 {{ $t('common.confirm') }}
               </NButton>
             </NSpace>

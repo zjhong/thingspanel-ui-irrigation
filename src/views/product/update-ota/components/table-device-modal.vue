@@ -3,15 +3,17 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { $t } from '@/locales';
-import { addProduct, editProduct } from '~/src/service/product/list';
+import { editProduct } from '~/src/service/product/list';
 import TableActionModal from './table-action-modal.vue';
+import { addOtaTask } from '@/service/product/update-ota';
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
   /** 弹窗类型 add: 新增 edit: 编辑 */
   type?: 'add' | 'edit';
+  pid: string;
   /** 编辑的表格行数据 */
-  editData?: productDeviceRecord | null;
+  editData?: UpgradeTaskCreate | null;
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -39,6 +41,7 @@ const modalVisible = computed({
     emit('update:visible', visible);
   }
 });
+
 const closeModal = () => {
   modalVisible.value = false;
 };
@@ -53,18 +56,25 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-const formModel = reactive<productDeviceRecord>(createDefaultFormModel() as productDeviceRecord);
+const formModel = reactive<UpgradeTaskCreate>(createDefaultFormModel());
 
 const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
   device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
 };
 
-function createDefaultFormModel() {
-  return {};
+function createDefaultFormModel(): UpgradeTaskCreate {
+  const defaultFormModel: UpgradeTaskCreate = {
+    device_id_list: [],
+    description: '',
+    name: '',
+    ota_upgrade_package_id: props.pid,
+    remark: ''
+  };
+  return defaultFormModel;
 }
 
-function handleUpdateFormModel(model: Partial<productDeviceRecord>) {
+function handleUpdateFormModel(model: Partial<UpgradeTaskCreate>) {
   Object.assign(formModel, model);
 }
 
@@ -76,7 +86,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       if (props.editData) {
-        handleUpdateFormModel(props.editData as productDeviceRecord);
+        handleUpdateFormModel(props.editData as UpgradeTaskCreate);
       }
     }
   };
@@ -88,12 +98,12 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct(formModel);
+    data = await addOtaTask(formModel);
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
+    window.$message?.success(data.msg || data.message || '操作成功');
     emit('success');
   }
   closeModal();
@@ -121,19 +131,21 @@ const deviceChange = (value) => {
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="24" :label="'任务名称'" path="name">
-          <NInput v-model:value="formModel.deviceNumber" />
+          <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
       </NGrid>
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" :label="'选择设备'" path="name">
+        <NFormItemGridItem :span="24" :label="'选择设备'" path="device_id_list">
           <NSpace class="w-full" :size="24" align="center">
-            <NButton type="primary" @click="checkDevice">批量选择设备</NButton>{{ 0 }}已选
+            <NButton type="default" @click="checkDevice">批量选择设备</NButton>{{ formModel.device_id_list.length }}已选
+            <TableActionModal v-model:visible="deviceVisible" v-model:selected-keys="formModel.device_id_list"
+              @success="deviceChange" />
           </NSpace>
         </NFormItemGridItem>
       </NGrid>
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" :label="'描述'" path="name">
-          <NInput type="textarea" v-model:value="formModel.deviceNumber" />
+        <NFormItemGridItem :span="24" :label="'描述'" path="description">
+          <NInput type="textarea" v-model:value="formModel.description" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
@@ -142,7 +154,6 @@ const deviceChange = (value) => {
       </NSpace>
     </NForm>
   </NModal>
-  <TableActionModal v-model:visible="deviceVisible" @success="deviceChange"></TableActionModal>
 </template>
 
 <style scoped></style>

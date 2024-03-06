@@ -15,7 +15,7 @@ interface productRecord extends productAdd {
   created_at: string;
   id: string;
 }
-type QueryFormModel = Pick<productRecord, 'name'> & {
+type QueryFormModel = Pick<productRecord, "name"> & {
   page: number;
   page_size: number;
 };
@@ -45,4 +45,9 @@ type deviceAddType = {
 
 type DeviceRegisterProps = {
   pid: string | number;
+};
+
+type PreproductDeviceRecord = {
+  created_at: any;
+  activate_at: any;
 };

@@ -145,12 +145,12 @@ function setEditData(data: productPackageRecord | null) {
 }
 
 function handleAddTable() {
-  openModal();
   setEditData(null);
   setModalType('add');
+  openModal();
 }
 
-function handleEditTable(rowId: number) {
+function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
     setEditData(findItem);
@@ -159,7 +159,7 @@ function handleEditTable(rowId: number) {
   openModal();
 }
 
-async function handleDeleteTable(rowId: number) {
+async function handleDeleteTable(rowId: string) {
   const data = await deleteOtaPackage(rowId);
   if (!data.error) {
     window.$message?.success($t('common.deleteSuccess'));

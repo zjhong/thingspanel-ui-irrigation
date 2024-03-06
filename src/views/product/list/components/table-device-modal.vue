@@ -111,7 +111,7 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
+    window.$message?.success(data.msg || data.message || '操作成功');
     emit('success');
   }
   closeModal();
@@ -144,15 +144,8 @@ watch(
           </NRadioGroup>
         </NFormItemGridItem>
         <NFormItemGridItem v-if="formModel.create_type === '2'" :span="24" label="选择文件" path="batch_file">
-          <UploadCard
-            v-model:value="formModel.batch_file"
-            text="选择文件"
-            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-"
-            source-type="importBatch"
-            class="mt-10px"
-            :file-type="['xls', 'xlsx']"
-          ></UploadCard>
+          <UploadCard v-model:value="formModel.batch_file" text="选择文件" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+" source-type="importBatch" class="mt-10px" :file-type="['xls', 'xlsx']"></UploadCard>
           <NButton quaternary type="primary">下载模板</NButton>
         </NFormItemGridItem>
         <NFormItemGridItem v-else :span="24" label="设备数量" path="device_count">

@@ -1,9 +1,9 @@
 type productPackageRecord = productPackageEdit & {
-  id: number;
+  id: string;
 };
 
 type productPackageEdit = {
-  id?: number;
+  id?: string;
   additional_info: string;
   description: string;
   module: string;

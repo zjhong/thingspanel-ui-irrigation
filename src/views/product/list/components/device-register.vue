@@ -11,7 +11,7 @@ import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
-
+import moment from "moment"
 const props: DeviceRegisterProps = defineProps({
   pid: {
     type: String,
@@ -33,8 +33,8 @@ watch(
   },
   { deep: true }
 );
-const tableData = ref<productDeviceRecord[]>([]);
-function setTableData(data: productDeviceRecord[]) {
+const tableData = ref<PreproductDeviceRecord[]>([]);
+function setTableData(data: PreproductDeviceRecord[]) {
   tableData.value = data;
 }
 const exportFile = () => {
@@ -74,34 +74,41 @@ async function getTableData() {
   startLoading();
   const { data } = await getDeviceList(queryParams);
   if (data) {
-    const list: productDeviceRecord[] = data.list;
+    const list: PreproductDeviceRecord[] = data.list;
     setTableData(list);
     pagination.pageCount = Math.ceil(data.total / queryParams.page_size);
     endLoading();
   }
 }
-const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
+
+const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   {
     key: 'name',
     title: $t('page.product.list.deviceNumber')
   },
   {
-    key: 'device_number',
+    key: 'batch_number',
     title: $t('page.product.list.batchNumber')
   },
   {
-    key: 'product_model',
+    key: 'current_version',
     title: $t('page.product.list.firmwareVersion')
   },
   {
     key: 'created_at',
-    title: $t('page.product.list.activeStatus')
+    title: $t('page.product.list.activeStatus'),
+    render: (row) => {
+      return row.created_at ? moment(row.created_at) : '-'
+    },
   },
   {
-    key: 'updated_at',
-    title: $t('page.product.list.activeDate')
+    key: 'activate_at',
+    title: $t('page.product.list.activeDate'),
+    render: (row) => {
+      return row.activate_at ? moment(row.activate_at) : '-'
+    },
   }
-]) as Ref<DataTableColumns<productDeviceRecord>>;
+]) as Ref<DataTableColumns<PreproductDeviceRecord>>;
 
 const modalType = ref<ModalType>('add');
 
@@ -109,9 +116,10 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<productDeviceRecord | null>(null);
+const editData = ref<PreproductDeviceRecord | null>(null);
 
 function handleAddTable() {
+  editData.value = null;
   openModal();
   setModalType('add');
 }
@@ -181,22 +189,10 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableDeviceModal
-          v-model:visible="visible"
-          :pid="props.pid"
-          :type="modalType"
-          :edit-data="(editData as unknown as deviceAddType)"
-          @success="getTableData"
-        />
+        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
+          class="flex-1-hidden" />
+        <TableDeviceModal v-model:visible="visible" :pid="props.pid" :type="modalType"
+          :edit-data="(editData as unknown as deviceAddType)" @success="getTableData" />
       </div>
     </NCard>
   </div>

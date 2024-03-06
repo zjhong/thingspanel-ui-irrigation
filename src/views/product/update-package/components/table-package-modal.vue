@@ -68,7 +68,7 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-const formModel = reactive<productPackageRecord>(createDefaultFormModel() as productPackageRecord);
+const formModel = reactive<productPackageRecord>(createDefaultFormModel());
 type formModelRuleName =
   | 'name'
   | 'version'
@@ -87,8 +87,22 @@ const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
   package_url: createRequiredFormRule($t('page.product.update-package.packagePlaceholder'))
 };
 
-function createDefaultFormModel() {
-  return {};
+function createDefaultFormModel(): productPackageRecord {
+  const defaultFormModel: productPackageRecord = {
+    id: "",
+    additional_info: "",
+    description: "",
+    module: "",
+    name: "",
+    package_type: undefined as unknown as number,
+    package_url: "",
+    device_configs_id: "",
+    remark: "",
+    signature_type: "",
+    target_version: "",
+    version: "",
+  }
+  return defaultFormModel;
 }
 
 function handleUpdateFormModel(model: Partial<productPackageRecord>) {
@@ -120,7 +134,7 @@ async function handleSubmit() {
     data = await editOtaPackage(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
+    window.$message?.success(data.msg || data.message || '操作成功');
     emit('success');
   }
   closeModal();
@@ -143,12 +157,8 @@ watch(
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.type')" path="package_type">
           <NSelect v-model:value="formModel.package_type" :options="packageOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          v-if="formModel.package_type === 1"
-          :span="12"
-          :label="$t('page.product.update-package.version')"
-          path="target_version"
-        >
+        <NFormItemGridItem v-if="formModel.package_type === 1" :span="12"
+          :label="$t('page.product.update-package.version')" path="target_version">
           <NInput v-model:value="formModel.target_version" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.versionCode')" path="version">

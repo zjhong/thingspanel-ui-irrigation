@@ -98,7 +98,7 @@ const swiperExample: SwiperExample[] = [
           <h3 class="py-24px text-24px font-bold">{{ item.label }}</h3>
           <Swiper v-bind="item.options">
             <SwiperSlide v-for="i in 5" :key="i">
-              <div class="flex-center h-240px border-1px border-#999 text-18px font-bold">Slide{{ i }}</div>
+              <div class="h-240px flex-center border-1px border-#999 text-18px font-bold">Slide{{ i }}</div>
             </SwiperSlide>
           </Swiper>
         </div>

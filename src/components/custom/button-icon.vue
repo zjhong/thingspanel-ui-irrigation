@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { createReusableTemplate } from '@vueuse/core';
 import type { PopoverPlacement } from 'naive-ui';
+import { createReusableTemplate } from '@vueuse/core';
 
 defineOptions({
   name: 'ButtonIcon',

@@ -81,7 +81,7 @@ init();
               <div>{{ $t('page.manage.setting.themeSetting.form.homeAndBackendLogo') }}</div>
               <NImage
                 width="140"
-                class="h-140px mt-20px"
+                class="mt-20px h-140px"
                 object-fit="contain"
                 :src="url.origin + formModel.logo_background?.slice(1)"
               />
@@ -97,7 +97,7 @@ init();
               <div>{{ $t('page.manage.setting.themeSetting.form.loadingPageLogo') }}</div>
               <NImage
                 width="140"
-                class="h-140px mt-20px"
+                class="mt-20px h-140px"
                 object-fit="contain"
                 :src="url.origin + formModel.logo_loading?.slice(1)"
               />
@@ -129,7 +129,7 @@ init();
               <div>{{ $t('page.manage.setting.themeSetting.form.background') }}</div>
               <NImage
                 width="140"
-                class="h-140px mt-20px"
+                class="mt-20px h-140px"
                 object-fit="contain"
                 :src="url.origin + formModel.home_background?.slice(1)"
               />

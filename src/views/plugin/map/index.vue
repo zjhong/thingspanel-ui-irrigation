@@ -18,7 +18,7 @@ const maps: Map[] = [
 <template>
   <div class="h-full">
     <NCard title="地图插件" :bordered="false" class="h-full rounded-8px shadow-sm" content-style="overflow:hidden">
-      <NTabs type="line" class="flex-col-stretch h-full" pane-class="flex-1-hidden">
+      <NTabs type="line" class="h-full flex-col-stretch" pane-class="flex-1-hidden">
         <NTabPane v-for="item in maps" :key="item.id" :name="item.id" :tab="item.label">
           <component :is="item.component" />
         </NTabPane>

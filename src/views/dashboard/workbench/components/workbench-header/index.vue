@@ -37,7 +37,7 @@ const statisticData: StatisticData[] = [
         <IconLocalAvatar class="text-70px" />
         <div class="pl-12px">
           <h3 class="text-18px font-semibold">早安，{{ auth.userInfo.userName }}, 今天又是充满活力的一天！</h3>
-          <p class="leading-30px text-#999">今日多云转晴，20℃ - 25℃！</p>
+          <p class="text-#999 leading-30px">今日多云转晴，20℃ - 25℃！</p>
         </div>
       </div>
       <NSpace :size="24" :wrap="false">

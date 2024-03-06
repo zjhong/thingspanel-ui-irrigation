@@ -181,7 +181,7 @@ init();
 <template>
   <div class="overflow-hidden">
     <NCard :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>
             <NButton type="primary" @click="handleAddTable">
@@ -198,12 +198,12 @@ init();
           </NSpace>
         </NSpace>
         <NDataTable
-          remote
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
           flex-height
+          remote
           class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />

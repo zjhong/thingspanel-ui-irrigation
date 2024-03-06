@@ -16,10 +16,10 @@ const findCardComponent = (id: string) => {
 </script>
 
 <template>
-  <NCard class="h-full w-full relative" content-style="padding: 0px">
+  <NCard class="relative h-full w-full" content-style="padding: 0px">
     <div
       v-if="data.basicSettings?.showTitle"
-      class="h-7 leading-7 text-sm px-2 border-b dark:border-gray-200/10 border-gray-200 w-full truncate"
+      class="h-7 w-full truncate border-b border-gray-200 px-2 text-sm leading-7 dark:border-gray-200/10"
     >
       {{ data.basicSettings?.title }}
     </div>

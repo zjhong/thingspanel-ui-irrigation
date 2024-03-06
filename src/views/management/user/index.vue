@@ -6,10 +6,10 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { userStatusLabels, userStatusOptions } from '@/constants/business';
 import { delUser, fetchUserList } from '@/service/api/auth';
-import { $t } from '~/src/locales';
 import TableActionModal from './components/table-action-modal.vue';
 import EditPasswordModal from './components/edit-password-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
+import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -215,7 +215,7 @@ init();
 <template>
   <div class="overflow-auto">
     <NCard :title="$t('route.management_user')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
             <NInput v-model:value="queryParams.email" />
@@ -228,7 +228,7 @@ init();
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">

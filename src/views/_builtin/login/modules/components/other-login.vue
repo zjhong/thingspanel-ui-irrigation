@@ -4,7 +4,7 @@ import { $t } from '@/locales';
 
 <template>
   <NSpace :vertical="true">
-    <NDivider class="!mb-0 text-14px text-#666">{{ $t('page.login.pwdLogin.otherLoginMode') }}</NDivider>
+    <NDivider class="text-14px text-#666 !mb-0">{{ $t('page.login.pwdLogin.otherLoginMode') }}</NDivider>
     <div class="flex-center">
       <NButton :text="true">
         <IconMdiWechat class="text-22px text-#888 hover:text-#52BF5E" />

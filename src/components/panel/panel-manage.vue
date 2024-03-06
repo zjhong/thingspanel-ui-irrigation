@@ -34,28 +34,28 @@ const edit = (view: ICardView) => {
 </script>
 
 <template>
-  <div ref="box" class="w-full py-5 px-5">
-    <div class="flex items-center justify-between px-10px border-b dark:border-gray-200/10 border-gray-200 pb-3">
+  <div ref="box" class="w-full px-5 py-5">
+    <div class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10">
       <div>
         <NButton>
-          <SvgIcon icon="ep:back" class="text-lg mr-0.5" />
+          <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           返回
         </NButton>
       </div>
       <NSpace align="center">
         <NButton @click="add">
-          <SvgIcon icon="material-symbols:add" class="text-lg mr-0.5" />
+          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
           添加组件
         </NButton>
         <NButton>
-          <SvgIcon icon="material-symbols:settings-outline" class="text-lg mr-0.5" />
+          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />
         </NButton>
         <NDivider vertical />
         <NButton>取消</NButton>
         <NButton>保存</NButton>
       </NSpace>
     </div>
-    <div v-if="!layout.length" class="text-center dark:text-gray-400 text-gray-500 mt-20">
+    <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
       <NEmpty description="暂未添加组件"></NEmpty>
     </div>
     <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="30" @edit="edit" />

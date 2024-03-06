@@ -24,7 +24,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="domRef" class="w-full h-full"></div>
+  <div ref="domRef" class="h-full w-full"></div>
 </template>
 
 <style scoped></style>

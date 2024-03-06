@@ -2,11 +2,11 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { getDeviceList } from '@/service/product/update-ota';
+import UploadCard from './upload-card.vue';
 import { addOtaPackage, editOtaPackage } from '~/src/service/product/update-package';
 import { $t } from '~/src/locales';
 import { packageOptions, signModeOptions } from '~/src/constants/business';
-import { getDeviceList } from '@/service/product/update-ota';
-import UploadCard from './upload-card.vue';
 const productOptions = ref();
 const getOptions = () => {
   getDeviceList({ page: 1, page_size: 99 }).then(({ data }) => {

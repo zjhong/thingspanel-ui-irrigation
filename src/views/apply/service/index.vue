@@ -6,9 +6,9 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { serviceManagementStatusLabels, serviceManagementTypeLabels } from '@/constants/business';
 import { fetchServiceManagementList } from '@/service/api_demo/management';
-import { $t } from '~/src/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
+import { $t } from '~/src/locales';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
@@ -181,7 +181,7 @@ init();
       <template #header-extra>
         <NButton type="primary" @click="handleAddTable">新增</NButton>
       </template>
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NDataTable
           :scroll-x="1088"
           :columns="columns"

@@ -54,8 +54,8 @@ watch(
     <div class="w-180px">
       <VueDraggable v-model="list" item-key="key">
         <template #item="{ element }">
-          <div v-if="element.key" class="flex-y-center h-36px px-12px hover:bg-primary_active">
-            <IconMdiDrag class="mr-8px text-20px cursor-move" />
+          <div v-if="element.key" class="hover:bg-primary_active h-36px flex-y-center px-12px">
+            <IconMdiDrag class="mr-8px cursor-move text-20px" />
             <NCheckbox v-model:checked="element.checked">
               {{ element.title }}
             </NCheckbox>

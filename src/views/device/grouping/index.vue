@@ -1,10 +1,10 @@
 <script lang="tsx" setup>
 import { onMounted, ref } from 'vue';
 // Import UI components from Naive UI
+import { useRouter } from 'vue-router';
 import { NButton, NDataTable, NFlex, NPagination } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
 import { debounce } from 'lodash';
-import { useRouter } from 'vue-router';
 import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
 import { group_columns } from '@/views/device/modules/all-columns';
 import { AddOrEditDevices } from './components';

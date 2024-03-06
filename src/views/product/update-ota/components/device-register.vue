@@ -5,10 +5,10 @@ import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { getOtaTaskList } from '~/src/service/product/update-ota';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
+import { getOtaTaskList } from '~/src/service/product/update-ota';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const props = defineProps({
@@ -138,9 +138,9 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden h-full">
+  <div class="h-full overflow-hidden">
     <NCard class="h-full">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NTabs v-model:value="activeTab" type="line" animated>
           <NTabPane name="mission" tab="任务列表"></NTabPane>
           <NTabPane name="info" tab="升级包信息"></NTabPane>

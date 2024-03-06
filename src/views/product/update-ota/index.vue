@@ -126,9 +126,9 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden h-full">
+  <div class="h-full overflow-hidden">
     <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
             <NInput v-model:value="queryParams.product_id" />
@@ -138,7 +138,7 @@ init();
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">

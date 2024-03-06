@@ -94,9 +94,9 @@ const removeLayout = (i: number) => {
         :h="item.h"
         :i="item.i"
       >
-        <div class="h-full w-full relative">
+        <div class="relative h-full w-full">
           <NIcon
-            class="cursor-pointer right-8 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
+            class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
             @click="emit('edit', item)"
           >
             <SvgIcon icon="uil:setting" class="text-base" />
@@ -109,7 +109,7 @@ const removeLayout = (i: number) => {
           >
             <template #trigger>
               <NIcon
-                class="cursor-pointer right-2 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
+                class="absolute right-2 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
               >
                 <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
               </NIcon>

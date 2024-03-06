@@ -15,7 +15,7 @@ defineProps<Props>();
 
 <template>
   <div
-    class="flex-col-center h-120px p-12px border-1px border-#efeff5 dark:border-#ffffff17 rounded-4px hover:shadow-sm cursor-pointer"
+    class="h-120px flex-col-center cursor-pointer border-1px border-#efeff5 rounded-4px p-12px dark:border-#ffffff17 hover:shadow-sm"
   >
     <SvgIcon :icon="icon" :style="{ color: iconColor }" class="text-30px" />
     <p class="py-8px text-16px">{{ label }}</p>

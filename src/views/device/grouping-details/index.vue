@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage} from 'naive-ui';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage } from 'naive-ui';
 import {
   deleteDeviceGroup,
   deleteDeviceGroupRelation,
@@ -9,26 +9,25 @@ import {
   deviceList,
   getDeviceGroup
 } from '@/service/api/device';
-import {AddOrEditDevices} from '@/views/device/grouping/components';
-
-import {createNoSelectDeviceColumns, group_columns} from '@/views/device/modules/all-columns';
+import { AddOrEditDevices } from '@/views/device/grouping/components';
+import { createNoSelectDeviceColumns, group_columns } from '@/views/device/modules/all-columns';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import DeviceSelectList from '@/views/device/grouping-details/modules/device-select-list.vue';
 
 const group_data = ref([]);
 const device_data = ref<DeviceManagement.DeviceData[]>([]);
 
-const {loading, startLoading, endLoading} = useLoadingEmpty(false);
+const { loading, startLoading, endLoading } = useLoadingEmpty(false);
 const route = useRoute();
-console.log(route)
+console.log(route);
 const currentId = ref(route.query.id);
 const isEdit = ref(true);
 const the_modal1 = ref();
 const the_modal2 = ref();
 
-const editData = ref({id: '', parent_id: '', name: '', description: ''});
+const editData = ref({ id: '', parent_id: '', name: '', description: '' });
 
-const addChildData = reactive({id: '', parent_id: currentId.value as string, name: '', description: ''});
+const addChildData = reactive({ id: '', parent_id: currentId.value as string, name: '', description: '' });
 const details_data = ref({
   detail: {
     created_at: '',
@@ -54,15 +53,14 @@ const queryParams = reactive<{ parent_id: string; page: number; page_size: numbe
 });
 
 const getDetails = async (tid: string) => {
-  if (!currentId) {
+  if (!currentId.value) {
     message.error('没有传人的分组id');
   } else {
     queryParams.parent_id = tid;
     startLoading();
-    const {data, error} = await deviceGroupDetail({id: tid});
+    const { data, error } = await deviceGroupDetail({ id: tid });
 
     if (!error && data) {
-
       details_data.value = data;
       editData.value.id = data.detail.id;
       editData.value.description = data.detail.description;
@@ -88,7 +86,7 @@ const group_pagination: PaginationProps = reactive({
     queryParams.page = page;
     getDetails(currentId.value as string);
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDeviceList(<string>currentId.value);
+    getDeviceList(currentId.value as string);
   },
   onUpdatePageSize: (pageSize: number) => {
     group_pagination.pageSize = pageSize;
@@ -97,17 +95,17 @@ const group_pagination: PaginationProps = reactive({
     queryParams.page_size = pageSize;
     getDetails(currentId.value as string);
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDeviceList(<string>currentId.value);
+    getDeviceList(currentId.value as string);
   }
 });
 const router = useRouter();
-console.log(router)
+console.log(router);
 const viewDetails = (rid: string) => {
-  router.push({name: 'device_grouping-details', query: {id: rid}})
+  router.push({ name: 'device_grouping-details', query: { id: rid } });
 };
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
-  await deleteDeviceGroup({id: rid});
+  await deleteDeviceGroup({ id: rid });
   await getDetails(currentId.value as string);
 };
 const group_column = group_columns(viewDetails, deleteItem);
@@ -117,16 +115,18 @@ const showGroupModal = () => {
     the_modal2.value.showModal = true;
   }
 };
-const showGroupModalChild = () => {
-  addChildData.parent_id = <string>currentId.value
-  if (the_modal1.value) {
-    the_modal1.value.showModal = true;
-  }
-};
 
 const showGroupDeviceModal = ref(false);
 const handleChildChange = (newValue: boolean) => {
   showGroupDeviceModal.value = newValue;
+};
+const showGroupModalChild = () => {
+  addChildData.parent_id = currentId.value as string;
+  if (the_modal1.value) {
+    the_modal1.value.showModal = true;
+  } else {
+    console.log(addChildData.parent_id);
+  }
 };
 
 const queryParams2 = reactive<{ group_id: string; page: number; page_size: number }>({
@@ -135,14 +135,12 @@ const queryParams2 = reactive<{ group_id: string; page: number; page_size: numbe
   page_size: 5
 });
 const getDeviceList = async (id: string) => {
-  console.log(id, "999999")
-  const res = await deviceList({...queryParams2, group_id: id});
+  const res = await deviceList({ ...queryParams2, group_id: id });
   if (res.data?.list) {
-    device_data.value = res.data?.list
+    device_data.value = res.data?.list;
   } else {
-    device_data.value = []
+    device_data.value = [];
   }
-
   if (res?.data?.total) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     devicePagination.pageCount = Math.ceil(res?.data?.total / 5);
@@ -150,7 +148,7 @@ const getDeviceList = async (id: string) => {
 };
 const refresh_data = (newValue: boolean) => {
   if (newValue) {
-    getDeviceList(<string>currentId.value);
+    getDeviceList(currentId.value as string);
   }
 };
 const devicePagination = reactive<PaginationProps>({
@@ -159,52 +157,46 @@ const devicePagination = reactive<PaginationProps>({
   onChange: (page: number) => {
     devicePagination.page = page;
     queryParams2.page = page;
-    getDeviceList(<string>currentId.value);
+    getDeviceList(currentId.value as string);
   }
 });
-const viewDevicsseDetails = rid => {
+const viewDeviceDetails = (rid: string) => {
   console.log(rid);
-
-  router.push({name: 'device_details', query: {id: rid}})
-
+  router.push({ name: 'device_details', query: { id: rid } });
 };
 const deleteDeviceItem = async (rid: string) => {
-
   await deleteDeviceGroupRelation({
     device_id: rid,
     group_id: currentId.value
-  })
-  await getDeviceList(<string>currentId.value);
-
+  });
+  await getDeviceList(currentId.value as string);
 };
 const deviceColumns: DataTableColumns<DeviceManagement.DeviceData> = createNoSelectDeviceColumns(
-  viewDevicsseDetails,
+  viewDeviceDetails,
   deleteDeviceItem
 );
 onMounted(async () => {
-  await getDetails(<string>currentId.value);
-  await getDeviceList(<string>currentId.value);
+  await getDetails(currentId.value as string);
+  await getDeviceList(currentId.value as string);
 });
 const reload = async (nid: string) => {
   await getDetails(nid);
   await getDeviceList(nid);
-}
+};
 
 const goWhere = (key: string) => {
   if (key === 'back') {
-    router.go(-1)
+    router.go(-1);
   } else {
-    router.push({name: 'device_grouping'})
+    router.push({ name: 'device_grouping' });
   }
-
-
-}
+};
 watch(
   () => route.query.id,
   newId => {
     if (newId) {
       currentId.value = newId;
-      reload(<string>newId)
+      reload(newId as string);
     }
   }
 );
@@ -216,7 +208,7 @@ watch(
       <NCard :title="details_data.detail.name">
         <template #header-extra>
           <NSpace>
-            <NButton @click="goWhere('back')" v-if="details_data.detail.parent_id!=='0'">返回上一级</NButton>
+            <NButton v-if="details_data.detail.parent_id !== '0'" @click="goWhere('back')">返回上一级</NButton>
             <NButton @click="goWhere('first')">返回分组列表</NButton>
           </NSpace>
         </template>
@@ -302,8 +294,11 @@ watch(
 
     <NModal v-model:show="showGroupDeviceModal">
       <NCard style="width: 800px" title="添加设备到分组" :bordered="false" size="huge" role="dialog" aria-modal="true">
-        <DeviceSelectList :group_id="currentId as string" @closed_modal="handleChildChange"
-                          @refresh_data="refresh_data"/>
+        <DeviceSelectList
+          :group_id="currentId as string"
+          @closed_modal="handleChildChange"
+          @refresh_data="refresh_data"
+        />
       </NCard>
     </NModal>
   </div>

@@ -17,7 +17,7 @@ const gradientStyle = computed(() => `linear-gradient(to bottom right, ${props.s
 </script>
 
 <template>
-  <div class="p-16px rounded-8px text-white" :style="{ backgroundImage: gradientStyle }">
+  <div class="rounded-8px p-16px text-white" :style="{ backgroundImage: gradientStyle }">
     <slot></slot>
   </div>
 </template>

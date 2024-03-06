@@ -5,12 +5,11 @@ import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { getOtaTaskList } from '~/src/service/product/update-ota';
+import { getStaticUrl } from '@/utils/common/tool';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
-import { getStaticUrl } from '@/utils/common/tool';
-import TableDetailModal from './table-detail-modal.vue';
+import { getOtaTaskList } from '@/service/product/update-ota';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: visibleTable, setTrue: openTable } = useBoolean();
@@ -21,7 +20,7 @@ const props = defineProps({
   },
   record: {
     type: Object,
-    default: {},
+    default: () => { },
     required: true
   }
 });
@@ -35,6 +34,7 @@ const queryParams = reactive({
 
 const activeTab = ref('mission');
 const tableData = ref<productDeviceRecord[]>([]);
+
 function setTableData(data: productDeviceRecord[]) {
   tableData.value = data;
 }
@@ -68,6 +68,7 @@ async function getTableData() {
     endLoading();
   }
 }
+
 const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 任务名称
   {
@@ -142,15 +143,17 @@ function init() {
 init();
 
 const downloadPackage = () => {
-  const url = getStaticUrl(props.record.package_url)
-  if (url) { window.open(url) }
-}
+  const url = getStaticUrl(props.record.package_url);
+  if (url) {
+    window.open(url);
+  }
+};
 </script>
 
 <template>
-  <div class="overflow-hidden h-full">
+  <div class="h-full overflow-hidden">
     <NCard class="h-full">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NTabs v-model:value="activeTab" type="line" animated>
           <NTabPane name="mission" tab="任务列表"></NTabPane>
           <NTabPane name="info" tab="升级包信息"></NTabPane>
@@ -175,20 +178,20 @@ const downloadPackage = () => {
         <div v-if="activeTab === 'info'">
           <NForm label-placement="left" :model="props.record">
             <NGrid :cols="24" :x-gap="18">
-              <NFormItemGridItem :span="24" :label="'签名算法：'" path="signature_type">
+              <NFormItemGridItem :span="24" label="签名算法：" path="signature_type">
                 {{ props.record.signature_type || '-' }}
               </NFormItemGridItem>
             </NGrid>
             <NGrid :cols="24" :x-gap="18">
-              <NFormItemGridItem :span="24" :label="'升级包签名：'" path="signature">
-                <NSpace class="w-full" :size="24" align="center">{{ props.record.signature || '-' }}<NButton
-                    class="w-72px" type="primary" @click="downloadPackage">下载</NButton>
+              <NFormItemGridItem :span="24" label="升级包签名：" path="signature">
+                <NSpace class="w-full" :size="24" align="center">
+                  {{ props.record.signature || '-' }}
+                  <NButton class="w-72px" type="primary" @click="downloadPackage">下载</NButton>
                 </NSpace>
-
               </NFormItemGridItem>
             </NGrid>
             <NGrid :cols="24" :x-gap="24">
-              <NFormItemGridItem :span="24" :label="'自定义信息：'" path="additional_info">
+              <NFormItemGridItem :span="24" label="自定义信息：" path="additional_info">
                 {{ props.record.additional_info || '-' }}
               </NFormItemGridItem>
             </NGrid>

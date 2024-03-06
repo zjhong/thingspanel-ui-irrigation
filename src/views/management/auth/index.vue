@@ -222,7 +222,7 @@ init();
           {{ $t('common.add') }}
         </NButton>
       </template>
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NDataTable
           size="small"
           :row-key="rowKey"

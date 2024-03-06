@@ -59,7 +59,7 @@ async function handleSubmit() {
       <NInput v-model:value="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
     </NFormItem>
     <NFormItem path="code">
-      <div class="flex-y-center w-full">
+      <div class="w-full flex-y-center">
         <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
         <div class="w-18px"></div>
         <NButton size="large" :disabled="isCounting" :loading="smsLoading" @click="handleSmsCode">
@@ -87,10 +87,10 @@ async function handleSubmit() {
 
     <NSpace vertical :size="18" class="w-full">
       <LoginAgreement v-model:value="agreement" />
-      <NButton type="primary" size="large" block round :loading="auth.loginLoading" @click="handleSubmit">
+      <NButton type="primary" size="large" round block :loading="auth.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </NButton>
-      <NButton size="large" block round @click="toggleLoginModule('pwd-login')">
+      <NButton size="large" round block @click="toggleLoginModule('pwd-login')">
         {{ $t('page.login.common.back') }}
       </NButton>
     </NSpace>

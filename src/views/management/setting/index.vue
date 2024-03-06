@@ -6,7 +6,7 @@ import DataClearSetting from './components/data-clear-setting.vue';
 <template>
   <div class="overflow-hidden">
     <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NTabs type="line" animated>
           <NTabPane name="1" :tab="$t('page.manage.setting.themeSetting.title')">
             <ThemeSetting></ThemeSetting>

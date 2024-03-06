@@ -12,7 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex h-full items-center">
+  <div class="h-full flex items-center">
     <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
     <span v-if="card.dataSource?.origin === 'system'" class="ml-2">
       数据名：{{ card.dataSource.systemSource?.[0]?.name }}

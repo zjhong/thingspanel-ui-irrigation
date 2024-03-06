@@ -47,7 +47,7 @@ function handleChange(iconItem: string) {
     <template #trigger>
       <NInput v-model:value="modelValue" readonly placeholder="点击选择图标">
         <template #suffix>
-          <SvgIcon :icon="selectedIcon" class="text-30px p-5px" />
+          <SvgIcon :icon="selectedIcon" class="p-5px text-30px" />
         </template>
       </NInput>
     </template>
@@ -58,7 +58,7 @@ function handleChange(iconItem: string) {
       <span v-for="iconItem in iconsList" :key="iconItem" @click="handleChange(iconItem)">
         <SvgIcon
           :icon="iconItem"
-          class="border-1px border-#d9d9d9 text-30px m-2px p-5px cursor-pointer"
+          class="m-2px cursor-pointer border-1px border-#d9d9d9 p-5px text-30px"
           :class="{ 'border-primary': modelValue === iconItem }"
         />
       </span>

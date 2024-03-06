@@ -86,8 +86,8 @@ defineExpose({
                 <NInput v-model:value="item.name" placeholder="数据源名称" style="width: 200px" />
                 <NButton
                   v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
-                  tertiary
                   ghost
+                  tertiary
                   type="warning"
                   @click="removeSource(i)"
                 >

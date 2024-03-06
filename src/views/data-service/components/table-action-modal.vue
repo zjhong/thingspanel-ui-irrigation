@@ -189,7 +189,7 @@ watch(
               :options="dataServiceFlagOptions"
               @update:value="handleChangeFlag"
             />
-            <NDataTable :columns="columns" :data="tableData" class="flex-1-hidden mt-20px" />
+            <NDataTable :columns="columns" :data="tableData" class="mt-20px flex-1-hidden" />
           </div>
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" label="SQL">

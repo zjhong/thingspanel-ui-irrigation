@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import { computed, reactive, ref, watch } from 'vue';
-import { $t } from '@/locales';
-import { getDeviceList } from '~/src/service/product/list';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
-import type { DataTableColumns, PaginationProps, DataTableRowKey } from 'naive-ui';
+import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
 import { getOtaPackageList } from '@/service/product/update-package';
+import { getDeviceList } from '~/src/service/product/list';
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -75,8 +75,6 @@ const getList = () => {
   });
 };
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
-
-
 
 function createDefaultFormModel() {
   return {
@@ -191,7 +189,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     key: 'product _id',
     title: '设备编号'
-  },
+  }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
 
 function init() {
@@ -215,9 +213,9 @@ const onSubmit = () => {
 
 <template>
   <NModal v-model:show="modalVisible" preset="card" :on-after-enter="getList" :title="title" class="w-700px">
-    <div class="overflow-hidden h-700px">
+    <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-        <div class="flex-col h-full">
+        <div class="h-full flex-col">
           <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
             <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
               <NInput v-model:value="queryParams.product_id" />
@@ -226,8 +224,8 @@ const onSubmit = () => {
               <NInput v-model:value="queryParams.name" />
             </NFormItem>
             <NFormItem>
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t("common.search") }}</NButton>
-              <NButton class="w-72px ml-20px" type="primary" @click="handleReset">{{ $t("common.reset") }}</NButton>
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItem>
           </NForm>
           <NDataTable :row-key="rowKey" @update:checked-row-keys="handleCheck" remote :columns="columns" :data="tableData"

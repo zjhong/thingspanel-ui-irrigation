@@ -165,7 +165,7 @@ init();
         </n-button>
 -->
       </template>
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NDataTable
           :scroll-x="1088"
           :columns="columns"

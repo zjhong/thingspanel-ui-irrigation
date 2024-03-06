@@ -2,9 +2,9 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import UploadCard from '../../update-package/components/upload-card.vue';
 import { $t } from '~/src/locales';
 import { addDevice, editProduct } from '~/src/service/product/list';
-import UploadCard from '../../update-package/components/upload-card.vue';
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;

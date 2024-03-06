@@ -1,36 +1,34 @@
-import { STATIC_BASE_URL } from "@/constants/common";
+import { STATIC_BASE_URL } from '@/constants/common';
 
 export function typeOf(obj: any): any {
   const toString: any = Object.prototype.toString;
   const map: any = {
-    "[object Boolean]": "boolean",
-    "[object Number]": "number",
-    "[object String]": "string",
-    "[object Function]": "function",
-    "[object Array]": "array",
-    "[object Date]": "date",
-    "[object RegExp]": "regExp",
-    "[object Undefined]": "undefined",
-    "[object Null]": "null",
-    "[object Object]": "object",
+    '[object Boolean]': 'boolean',
+    '[object Number]': 'number',
+    '[object String]': 'string',
+    '[object Function]': 'function',
+    '[object Array]': 'array',
+    '[object Date]': 'date',
+    '[object RegExp]': 'regExp',
+    '[object Undefined]': 'undefined',
+    '[object Null]': 'null',
+    '[object Object]': 'object'
   };
   return map[toString.call(obj)];
 }
 /**
  * get static source url
+ *
  * @param url source url
  * @param showError is show error message
  * @returns static source url
  */
-export const getStaticUrl = (
-  url: string,
-  showError: boolean = true,
-): string => {
+export const getStaticUrl = (url: string, showError: boolean = true): string => {
   if (!url) {
-    if (showError) window.NMessage.error("资源不存在");
-    return "";
+    if (showError) window.NMessage.error('资源不存在');
+    return '';
   }
-  return url.replace(".", STATIC_BASE_URL);
+  return url.replace('.', STATIC_BASE_URL);
 };
 
 export function deepClone(data: any): any {
@@ -39,13 +37,13 @@ export function deepClone(data: any): any {
   // 定义一个返回any类型的数据
   let reData: any;
   // 递归遍历一个array类型数据，
-  if (type === "array") {
+  if (type === 'array') {
     reData = [];
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < data.length; i++) {
       reData.push(deepClone(data[i]));
     }
-  } else if (type === "object") {
+  } else if (type === 'object') {
     // 递归遍历一个object类型数据
     reData = {};
     // eslint-disable-next-line guard-for-in
@@ -62,16 +60,16 @@ export function deepClone(data: any): any {
 
 export function generateUUID(): string {
   let d = new Date().getTime();
-  const uuidFormat: string = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-  return uuidFormat.replace(/[xy]/g, (c) => {
+  const uuidFormat: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+  return uuidFormat.replace(/[xy]/g, c => {
     const r = (d + Math.random() * 16) % 16 || 0;
     d = Math.floor(d / 16);
-    return (c === "x" ? r : (r && 0x3) || 0x8).toString(16);
+    return (c === 'x' ? r : (r && 0x3) || 0x8).toString(16);
   });
 }
 
 export function getFileName(url: string): string {
   const regex = /[^/]*$/;
   const matches = url.match(regex);
-  return matches ? matches[0] : "unknown.file";
+  return matches ? matches[0] : 'unknown.file';
 }

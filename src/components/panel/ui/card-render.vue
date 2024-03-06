@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
-import type { ICardData, ICardView } from '@/components/panel/card';
+import {GridItem, GridLayout} from 'vue3-drr-grid-layout';
+import type {ICardData, ICardView} from '@/components/panel/card';
 import './gird.css';
 
 const props = defineProps<{
@@ -79,7 +79,7 @@ const removeLayout = (i: number) => {
     :row-height="rowHeight"
     :auto-size="true"
     :margin="[10, 10]"
-    style="width: 100%"
+    class="w-full"
     @update:layout="data => emit('update:layout', data)"
   >
     <template #default="{ gridItemProps }">
@@ -94,12 +94,12 @@ const removeLayout = (i: number) => {
         :h="item.h"
         :i="item.i"
       >
-        <div class="h-full w-full relative">
+        <div class="relative h-full w-full">
           <NIcon
-            class="cursor-pointer right-8 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
+            class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
             @click="emit('edit', item)"
           >
-            <SvgIcon icon="uil:setting" class="text-base" />
+            <SvgIcon icon="uil:setting" class="text-base"/>
           </NIcon>
           <NPopconfirm
             :show-icon="false"
@@ -109,14 +109,14 @@ const removeLayout = (i: number) => {
           >
             <template #trigger>
               <NIcon
-                class="cursor-pointer right-2 top-1.5 absolute cursor-pointer opacity-50 duration-200 hover:opacity-100 z-50"
+                class="absolute right-2 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
               >
-                <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
+                <SvgIcon icon="material-symbols:delete-outline" class="text-base"/>
               </NIcon>
             </template>
             <span>确认删除看板。</span>
           </NPopconfirm>
-          <CardItem :data="item.data!" />
+          <CardItem :data="item.data!"/>
         </div>
       </GridItem>
     </template>

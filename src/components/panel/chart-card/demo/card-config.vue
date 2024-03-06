@@ -8,7 +8,7 @@ const ctx = inject<IConfigCtx>('config-ctx')!;
 <template>
   <NForm :model="ctx.config">
     <NFormItem label="选择icon">
-      <div class="space-x-3 flex">
+      <div class="flex space-x-3">
         <div
           v-for="item in icons"
           :key="item.name"

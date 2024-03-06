@@ -9,7 +9,7 @@ defineOptions({ name: 'DashboardAnalysisTopCard' });
   <NGrid :x-gap="16" :y-gap="16" :item-responsive="true">
     <NGridItem span="0:24 640:24 1024:6">
       <NCard :bordered="false" class="rounded-8px shadow-sm">
-        <div class="w-full h-360px py-12px">
+        <div class="h-360px w-full py-12px">
           <h3 class="text-16px font-bold">Dashboard</h3>
           <p class="text-#aaa">Overview Of Lasted Month</p>
           <h3 class="pt-32px text-24px font-bold">

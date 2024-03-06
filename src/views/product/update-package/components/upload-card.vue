@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 // eslint-disable-next-line import/order
-
-// eslint-disable-next-line import/order
 import type { UploadFileInfo } from 'naive-ui';
 import { generateUUID, getFileName } from '@/utils/common/tool';
 import { localStg } from '@/utils/storage';
@@ -13,6 +11,7 @@ import { createServiceConfig } from '~/env.config';
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 defineOptions({ name: 'UploadFile' });
+
 enum SourceType {
   image = 'image',
   upgradePackage = 'upgradePackage',
@@ -20,6 +19,7 @@ enum SourceType {
   plugin = 'plugin',
   other = 'other'
 }
+
 export interface Props {
   /** 选取文件的类型 */
   accept: string;
@@ -52,6 +52,7 @@ const dataList = computed((): UploadFileInfo[] => {
 
 interface Emits {
   (e: 'update:value', val: string): void;
+
   (e: 'success', file: UploadFileInfo): void;
 }
 

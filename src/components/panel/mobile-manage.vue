@@ -58,7 +58,7 @@ const update = (data: ICardData) => {
 </script>
 
 <template>
-  <div class="w-full py-5 px-5 flex justify-between items-start">
+  <div class="w-full flex items-start justify-between px-5 py-5">
     <div>
       <NCard class="operation-panel" content-style="padding:5px 15px">
         <NTabs type="line" animated>
@@ -66,11 +66,11 @@ const update = (data: ICardData) => {
             <NGrid x-gap="10" y-gap="10" :cols="2">
               <NGridItem v-for="item in PanelCards.builtin" :key="item.id">
                 <div
-                  class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
+                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
                   @mousedown.prevent=""
                   @click="openConfig(item)"
                 >
-                  <div class="leading-8 font-medium text-center dark:bg-zinc-900">{{ item.title }}</div>
+                  <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
                   <div>
                     <img :src="item.poster" alt="" class="w-full object-cover" />
                   </div>
@@ -84,12 +84,12 @@ const update = (data: ICardData) => {
             <NGrid x-gap="10" y-gap="10" :cols="2" class="operation-tab">
               <NGridItem v-for="item in PanelCards.chart" :key="item.id">
                 <div
-                  class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
+                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
                   @mousedown.prevent=""
                   @click="openConfig(item)"
                 >
-                  <div class="h-8 items-center font-medium text-center dark:bg-zinc-900 flex justify-center px-2">
-                    <div class="text-sm flex-1 truncate">
+                  <div class="h-8 flex items-center justify-center px-2 text-center font-medium dark:bg-zinc-900">
+                    <div class="flex-1 truncate text-sm">
                       {{ item.title }}
                     </div>
                   </div>
@@ -103,22 +103,22 @@ const update = (data: ICardData) => {
         </NTabs>
       </NCard>
     </div>
-    <div class="w-430px border b1 rounded">
-      <div class="flex justify-between items-center textxs h-6">
+    <div class="b1 w-430px border rounded">
+      <div class="textxs h-6 flex items-center justify-between">
         <div class="w-16 px-2">{{ state.time }}</div>
         <div class="flex-1 text-center"></div>
-        <div class="w-16 px-2 flex justify-end">
+        <div class="w-16 flex justify-end px-2">
           <SvgIcon icon="mingcute:signal-fill" class="mr-2" />
           <SvgIcon icon="material-symbols:wifi" />
         </div>
       </div>
-      <div class="text-base flex justify-between items-center h-10 border-b b1">
-        <div class="w-16 text-lg pl-3 font-medium"></div>
+      <div class="b1 h-10 flex items-center justify-between border-b text-base">
+        <div class="w-16 pl-3 text-lg font-medium"></div>
         <div>{{ state.title }}</div>
         <div class="w-16"></div>
       </div>
       <div class="canvas overflow-y-auto">
-        <div v-if="!layout.length" class="text-center dark:text-gray-400 text-gray-500 mt-20">
+        <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
           <NEmpty description="暂未添加组件"></NEmpty>
         </div>
         <div>

@@ -143,7 +143,7 @@ init();
 </script>
 
 <template>
-  <div ref="domRef" class="w-full h-360px"></div>
+  <div ref="domRef" class="h-360px w-full"></div>
 </template>
 
 <style scoped></style>

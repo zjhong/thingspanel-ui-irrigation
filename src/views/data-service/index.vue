@@ -220,7 +220,7 @@ init();
         </n-button>
 -->
       </template>
-      <div class="flex-col h-full">
+      <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem label="规则名称" path="name">
             <NInput v-model:value="queryParams.name" />

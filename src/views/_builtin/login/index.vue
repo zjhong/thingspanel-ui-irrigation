@@ -59,7 +59,7 @@ const bgColor = computed(() => {
 </script>
 
 <template>
-  <div class="relative flex-center wh-full overflow-hidden" :style="{ backgroundColor: bgColor }">
+  <div class="relative wh-full flex-center overflow-hidden" :style="{ backgroundColor: bgColor }">
     <div class="i-flex-vertical">
       <ThemeSchemaSwitch
         :theme-schema="themeStore.themeScheme"
@@ -75,7 +75,7 @@ const bgColor = computed(() => {
       <!--            />-->
     </div>
     <WaveBg :theme-color="bgThemeColor" />
-    <NCard :bordered="false" class="relative w-auto rd-12px z-4">
+    <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
       <div class="w-300px sm:w-360px">
         <header class="flex-y-center justify-between">
           <SystemLogo class="text-64px text-primary <sm:text-48px" />

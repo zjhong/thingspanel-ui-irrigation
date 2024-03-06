@@ -75,7 +75,7 @@ const selectCard = (item: ICardDefine) => {
         <div :class="!data ? 'mr-10' : ''">
           <div
             v-if="state.curCardData?.cardId"
-            class="overflow-y-auto mt-2 rounded flex items-center justify-center h-[230px] bg-[#f6f9f8] dark:bg-[#101014]"
+            class="mt-2 h-[230px] flex items-center justify-center overflow-y-auto rounded bg-[#f6f9f8] dark:bg-[#101014]"
           >
             <div class="w-[300px]">
               <CardItem :data="state.curCardData as any" />
@@ -86,7 +86,7 @@ const selectCard = (item: ICardDefine) => {
               <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
             </div>
             <div
-              class="border-t border-t dark:border-gray-200/10 border-gray-200 justify-center pt-3 flex justify-center space-x-5"
+              class="flex justify-center justify-center border-t border-t border-gray-200 pt-3 space-x-5 dark:border-gray-200/10"
             >
               <NButton @click="$emit('update:open', false)">取消</NButton>
               <NButton type="primary" @click="save">添加卡片</NButton>
@@ -101,11 +101,11 @@ const selectCard = (item: ICardDefine) => {
             <NGrid x-gap="10" y-gap="10" :cols="2">
               <NGridItem v-for="item in PanelCards.builtin" :key="item.id">
                 <div
-                  class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
+                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
                   @mousedown.prevent=""
                   @click="selectCard(item)"
                 >
-                  <div class="leading-8 font-medium text-center dark:bg-zinc-900">{{ item.title }}</div>
+                  <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
                   <div>
                     <img :src="item.poster" alt="" class="w-full object-cover" />
                   </div>
@@ -119,11 +119,11 @@ const selectCard = (item: ICardDefine) => {
             <NGrid x-gap="10" y-gap="10" :cols="2">
               <NGridItem v-for="item in PanelCards.chart" :key="item.id">
                 <div
-                  class="rounded overflow-hidden cursor-pointer dark:border-gray-200/10 border border-gray-200 duration-200"
+                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
                   @mousedown.prevent=""
                   @click="selectCard(item)"
                 >
-                  <div class="leading-8 font-medium text-center dark:bg-zinc-900">{{ item.title }}</div>
+                  <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
                   <div>
                     <img :src="item.poster" alt="" class="w-full object-cover" />
                   </div>

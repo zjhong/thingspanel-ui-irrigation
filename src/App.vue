@@ -26,8 +26,13 @@ const naiveDateLocale = computed(() => {
   <NMessageProvider>
     <Content />
   </NMessageProvider>
-  <NConfigProvider :theme="naiveDarkTheme" :theme-overrides="themeStore.naiveTheme" :locale="naiveLocale"
-    :date-locale="naiveDateLocale" class="h-full">
+  <NConfigProvider
+    :theme="naiveDarkTheme"
+    :theme-overrides="themeStore.naiveTheme"
+    :locale="naiveLocale"
+    :date-locale="naiveDateLocale"
+    class="h-full"
+  >
     <AppProvider>
       <RouterView class="bg-layout" />
     </AppProvider>

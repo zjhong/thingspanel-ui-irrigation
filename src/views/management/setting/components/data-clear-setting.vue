@@ -145,7 +145,7 @@ init();
 </script>
 
 <template>
-  <div class="flex-col h-full">
+  <div class="h-full flex-col">
     <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height min-height="150px" />
     <NModal v-model:show="visible" preset="card" :title="$t('common.edit')" class="w-700px">
       <NForm ref="formRef" label-placement="left" :label-width="120" :model="editData">

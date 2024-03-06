@@ -169,8 +169,8 @@ const shortcuts: Shortcuts[] = [
           </NGrid>
         </NCard>
         <NCard title="创意" :bordered="false" size="small" class="rounded-8px shadow-sm">
-          <div class="flex-center h-380px">
-            <IconLocalBanner class="text-400px sm:text-320px text-primary" />
+          <div class="h-380px flex-center">
+            <IconLocalBanner class="text-400px text-primary sm:text-320px" />
           </div>
         </NCard>
       </NSpace>

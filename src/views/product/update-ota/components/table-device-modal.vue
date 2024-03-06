@@ -121,9 +121,9 @@ const deviceVisible = ref(false);
 const checkDevice = () => {
   deviceVisible.value = true;
 };
-const deviceChange = (value) => {
-  console.log(value)
-}
+const deviceChange = value => {
+  console.log(value);
+};
 </script>
 
 <template>

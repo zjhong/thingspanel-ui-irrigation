@@ -64,7 +64,7 @@ function handleLoginOtherAccount(param: { userName: string; password: string }) 
           {{ $t('page.login.pwdLogin.forgetPassword') }}
         </NButton>
       </div>
-      <NButton type="primary" size="large" block round :loading="authStore.loginLoading" @click="handleSubmit">
+      <NButton type="primary" size="large" round block :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </NButton>
       <div class="flex-y-center justify-between gap-12px">

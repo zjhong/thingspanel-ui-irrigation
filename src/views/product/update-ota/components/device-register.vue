@@ -5,26 +5,36 @@ import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { getStaticUrl } from '@/utils/common/tool';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 import { getOtaTaskList } from '~/src/service/product/update-ota';
+
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const props = defineProps({
   mid: {
     type: Number,
     required: true
+  },
+  record: {
+    type: Object,
+    default: () => {},
+    required: true
   }
 });
+
 const queryParams = reactive({
   deviceNumber: '',
   batchNumber: '',
   page: 1,
   page_size: 10
 });
+
 const activeTab = ref('mission');
 const tableData = ref<productDeviceRecord[]>([]);
+
 function setTableData(data: productDeviceRecord[]) {
   tableData.value = data;
 }
@@ -58,6 +68,7 @@ async function getTableData() {
     endLoading();
   }
 }
+
 const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 任务名称
   {
@@ -66,17 +77,17 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   },
   // 设备数量
   {
-    key: 'device_type',
+    key: 'device_count',
     title: $t('page.product.update-ota.deviceNum')
   },
   // 描述
   {
-    key: 'product_model',
+    key: 'description',
     title: $t('page.product.update-ota.desc')
   },
   // 创建日期
   {
-    key: 'device_config_id',
+    key: 'created_at',
     title: $t('page.product.update-ota.createTime')
   },
   {
@@ -135,6 +146,13 @@ function init() {
 
 // 初始化
 init();
+
+const downloadPackage = () => {
+  const url = getStaticUrl(props.record.package_url);
+  if (url) {
+    window.open(url);
+  }
+};
 </script>
 
 <template>
@@ -170,7 +188,28 @@ init();
           flex-height
           class="flex-1-hidden"
         />
-        <div v-if="activeTab === 'info'">info</div>
+        <div v-if="activeTab === 'info'">
+          <NForm label-placement="left" :model="props.record">
+            <NGrid :cols="24" :x-gap="18">
+              <NFormItemGridItem :span="24" label="签名算法：" path="signature_type">
+                {{ props.record.signature_type || '-' }}
+              </NFormItemGridItem>
+            </NGrid>
+            <NGrid :cols="24" :x-gap="18">
+              <NFormItemGridItem :span="24" label="升级包签名：" path="signature">
+                <NSpace class="w-full" :size="24" align="center">
+                  {{ props.record.signature || '-' }}
+                  <NButton class="w-72px" type="primary" @click="downloadPackage">下载</NButton>
+                </NSpace>
+              </NFormItemGridItem>
+            </NGrid>
+            <NGrid :cols="24" :x-gap="24">
+              <NFormItemGridItem :span="24" label="自定义信息：" path="additional_info">
+                {{ props.record.additional_info || '-' }}
+              </NFormItemGridItem>
+            </NGrid>
+          </NForm>
+        </div>
         <TableDeviceModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
       </div>
     </NCard>

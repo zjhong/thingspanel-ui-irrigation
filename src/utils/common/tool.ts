@@ -1,3 +1,5 @@
+import { STATIC_BASE_URL } from '@/constants/common';
+
 export function typeOf(obj: any): any {
   const toString: any = Object.prototype.toString;
   const map: any = {
@@ -14,6 +16,20 @@ export function typeOf(obj: any): any {
   };
   return map[toString.call(obj)];
 }
+/**
+ * get static source url
+ *
+ * @param url source url
+ * @param showError is show error message
+ * @returns static source url
+ */
+export const getStaticUrl = (url: string, showError: boolean = true): string => {
+  if (!url) {
+    if (showError) window.NMessage.error('资源不存在');
+    return '';
+  }
+  return url.replace('.', STATIC_BASE_URL);
+};
 
 export function deepClone(data: any): any {
   // 获取传入拷贝函数的数据类型

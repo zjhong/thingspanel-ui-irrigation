@@ -63,8 +63,10 @@ async function getTableData() {
   }
 }
 const drawerTitle: Ref<string> = ref('');
+const editData = ref<productPackageRecord>();
 async function handleRegisterConfig(record: productPackageRecord) {
   currentMid.value = record.id;
+  editData.value = record;
   openConfig();
   drawerTitle.value = `${record.name}-${$t('page.product.list.preRegister')}`;
 }
@@ -161,8 +163,8 @@ init();
           class="flex-1-hidden"
         />
         <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
-          <NDrawerContent :title="$t('page.product.update-ota.lookTask')">
-            <DeviceRegister :mid="currentMid" />
+          <NDrawerContent :title="$t('page.product.update-ota.lookTask')" closable>
+            <DeviceRegister :mid="currentMid" :record="editData" />
           </NDrawerContent>
         </NDrawer>
       </div>

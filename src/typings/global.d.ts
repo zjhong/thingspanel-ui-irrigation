@@ -33,3 +33,7 @@ declare namespace Common2 {
 
 /** Build time of the project */
 declare const BUILD_TIME: string;
+
+declare interface Window {
+  NMessage: any;
+}

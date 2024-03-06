@@ -84,7 +84,6 @@ function handleError({ event }: { event?: ProgressEvent }) {
 </script>
 
 <template>
-  {{ dataList }}
   <NUpload
     :action="url + '/file/up'"
     :headers="{

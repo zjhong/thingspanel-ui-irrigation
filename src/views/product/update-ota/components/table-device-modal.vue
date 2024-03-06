@@ -3,8 +3,8 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { $t } from '@/locales';
+import TableActionModal from './table-action-modal.vue';
 import { addProduct, editProduct } from '~/src/service/product/list';
-
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -107,14 +107,34 @@ watch(
     }
   }
 );
+const deviceVisible = ref(false);
+const checkDevice = () => {
+  deviceVisible.value = true;
+};
+const deviceChange = value => {
+  console.log(value);
+};
 </script>
 
 <template>
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.productName')" path="name">
+        <NFormItemGridItem :span="24" label="任务名称" path="name">
           <NInput v-model:value="formModel.deviceNumber" />
+        </NFormItemGridItem>
+      </NGrid>
+      <NGrid :cols="24" :x-gap="18">
+        <NFormItemGridItem :span="24" label="选择设备" path="name">
+          <NSpace class="w-full" :size="24" align="center">
+            <NButton type="primary" @click="checkDevice">批量选择设备</NButton>
+            {{ 0 }}已选
+          </NSpace>
+        </NFormItemGridItem>
+      </NGrid>
+      <NGrid :cols="24" :x-gap="18">
+        <NFormItemGridItem :span="24" label="描述" path="name">
+          <NInput v-model:value="formModel.deviceNumber" type="textarea" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
@@ -123,6 +143,7 @@ watch(
       </NSpace>
     </NForm>
   </NModal>
+  <TableActionModal v-model:visible="deviceVisible" @success="deviceChange"></TableActionModal>
 </template>
 
 <style scoped></style>

@@ -4,11 +4,10 @@ import { NConfigProvider, darkTheme } from 'naive-ui';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
-
+import Content from './components/content/index.vue';
 defineOptions({
   name: 'App'
 });
-
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 
@@ -24,6 +23,9 @@ const naiveDateLocale = computed(() => {
 </script>
 
 <template>
+  <NMessageProvider>
+    <Content />
+  </NMessageProvider>
   <NConfigProvider
     :theme="naiveDarkTheme"
     :theme-overrides="themeStore.naiveTheme"

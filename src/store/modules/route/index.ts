@@ -171,7 +171,13 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
     if (!error) {
       const routes = data?.list;
-      const home = 'home';
+      let home;
+      if (authStore.userInfo.authority === 'SYS_ADMIN') {
+        home = 'home';
+      } else {
+        home = 'device';
+      }
+
       console.log(routes);
 
       handleAuthRoutes(routes);

@@ -29,6 +29,8 @@ declare module 'vue' {
     IconGridiconsFullscreenExit: typeof import('~icons/gridicons/fullscreen-exit')['default']
     IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     IconLocalLogo: typeof import('~icons/local/logo')['default']
+    IconMdiDrag: typeof import('~icons/mdi/drag')['default']
+    IconMdiRefresh: typeof import('~icons/mdi/refresh')['default']
     IconMdiWechat: typeof import('~icons/mdi/wechat')['default']
     IconSelect: typeof import('./../components/custom/icon-select.vue')['default']
     ImageVerify: typeof import('./../components/custom/image-verify.vue')['default']

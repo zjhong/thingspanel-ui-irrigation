@@ -8,6 +8,7 @@ import { $t } from '@/locales';
 import { getStaticUrl } from '@/utils/common/tool';
 import { getOtaTaskList } from '@/service/product/update-ota';
 import TableDeviceModal from './table-device-modal.vue';
+import TableDetailModal from './table-detail-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -130,7 +131,7 @@ function handleAddTable() {
 // 	}
 // 	openEditPwdModal();
 // }
-const rowData = ref<productDeviceRecord | null>(null);
+const rowData = ref<UpgradeTaskDetail | null>(null);
 function handleEditTable(row) {
   rowData.value = row;
   setModalType('edit');
@@ -211,13 +212,12 @@ const downloadPackage = () => {
           v-model:visible="visible"
           :type="modalType"
           :pid="props.record.id"
-          :edit-data="editData as unknown as UpgradeTaskCreate"
           @success="getTableData"
         />
         <TableDetailModal
           v-model:visible="visibleTable"
           :type="modalType"
-          :edit-data="rowData as unknown as UpgradeTaskCreate"
+          :edit-data="rowData"
         />
       </div>
     </NCard>

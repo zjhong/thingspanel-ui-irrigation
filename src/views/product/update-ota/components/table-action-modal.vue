@@ -5,7 +5,6 @@ import { NButton } from 'naive-ui';
 import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { getOtaPackageList } from '@/service/product/update-package';
 import { getDeviceList } from '~/src/service/product/list';
 export interface Props {
   /** 弹窗可见性 */
@@ -62,17 +61,6 @@ const title = computed(() => {
   return titles[props.type];
 });
 
-const deviceOptions = ref();
-
-const getList = () => {
-  getDeviceList({
-    page: 1,
-    page_size: 99
-  }).then(({ data }) => {
-    const list = data.list || [];
-    deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || [];
-  });
-};
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
 function createDefaultFormModel() {
@@ -162,7 +150,7 @@ const pagination: PaginationProps = reactive({
 
 async function getTableData() {
   startLoading();
-  const { data } = await getOtaPackageList(queryParams);
+  const { data } = await getDeviceList(queryParams);
   if (data) {
     const list: productPackageRecord[] = data.list;
     setTableData(list);
@@ -187,7 +175,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'product _id',
-    title: '设备编号'
+    title: $t('page.product.list.deviceNumber')
   }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
 
@@ -211,7 +199,7 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :on-after-enter="getList" :title="title" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
         <div class="h-full flex-col">
@@ -240,7 +228,10 @@ const onSubmit = () => {
             @update:checked-row-keys="handleCheck"
           />
           <NSpace class="mt-10px pb-12px" justify="space-between">
-            <NSpace>已选择{{ selectedKeys.length }}条</NSpace>
+            <NSpace>
+              {{ $t('page.product.update-package.selected') }}{{ selectedKeys.length
+              }}{{ $t('page.product.update-package.selectedNumber') }}
+            </NSpace>
             <NSpace align="center" :size="18">
               <NButton @click="closeModal">
                 {{ $t('common.cancel') }}

@@ -5,6 +5,7 @@ import type { UploadFileInfo } from 'naive-ui';
 import { generateUUID, getFileName } from '@/utils/common/tool';
 import { localStg } from '@/utils/storage';
 import { STATIC_BASE_URL } from '@/constants/common';
+import { $t } from '~/src/locales';
 import { createServiceConfig } from '~/env.config';
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
@@ -79,7 +80,7 @@ function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressE
 }
 
 function handleError({ event }: { event?: ProgressEvent }) {
-  window.$message?.error((event?.target as XMLHttpRequest).response || '文件上传失败，请重试');
+  window.$message?.error((event?.target as XMLHttpRequest).response || $t('page.product.list.fileUploadFail'));
 }
 </script>
 

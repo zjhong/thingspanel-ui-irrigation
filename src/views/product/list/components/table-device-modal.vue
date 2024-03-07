@@ -64,10 +64,11 @@ const formModel = reactive<deviceAddType>(createDefaultFormModel());
 type RuleKey = Extract<keyof deviceAddType, 'batch_file' | 'batch_number' | 'create_type' | 'device_count'>;
 const rules = computed(() => {
   const rulesData: Record<RuleKey, FormItemRule | FormItemRule[]> = {
-    batch_file: formModel.create_type === '2' ? createRequiredFormRule('请选择文件') : [],
-    batch_number: createRequiredFormRule('请填写批次编号'),
-    create_type: createRequiredFormRule('请选择设备类型'),
-    device_count: formModel.create_type === '1' ? createRequiredFormRule('请输入设备数量') : []
+    batch_file: formModel.create_type === '2' ? createRequiredFormRule($t('page.product.list.filePlaceholder')) : [],
+    batch_number: createRequiredFormRule($t('page.product.list.batchNumberPlaceholder')),
+    create_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder')),
+    device_count:
+      formModel.create_type === '1' ? createRequiredFormRule($t('page.product.list.deviceNumberPlaceholder')) : []
   };
   return rulesData;
 });
@@ -111,7 +112,7 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || '操作成功');
+    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -131,37 +132,42 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="批次编号" path="batch_number">
+        <NFormItemGridItem :span="24" :label="$t('page.product.list.deviceNumber')" path="batch_number">
           <NInput v-model:value="formModel.batch_number" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="固件版本号" path="current_version">
+        <NFormItemGridItem :span="24" :label="$t('page.product.list.firmwareVersion')" path="current_version">
           <NInput v-model:value="formModel.current_version" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="添加方式" path="create_type">
+        <NFormItemGridItem :span="24" :label="$t('page.product.list.addType')" path="create_type">
           <NRadioGroup v-model:value="formModel.create_type">
-            <NRadio value="1" label="自动生成" />
-            <NRadio value="2" label="批量上传" />
+            <NRadio value="1" :label="$t('page.product.list.autoGenerate')" />
+            <NRadio value="2" :label="$t('page.product.list.batchUpload')" />
           </NRadioGroup>
         </NFormItemGridItem>
-        <NFormItemGridItem v-if="formModel.create_type === '2'" :span="24" label="选择文件" path="batch_file">
+        <NFormItemGridItem
+          v-if="formModel.create_type === '2'"
+          :span="24"
+          label="$t('page.product.list.file')"
+          path="batch_file"
+        >
           <UploadCard
             v-model:value="formModel.batch_file"
-            text="选择文件"
+            text="$t('page.product.list.file')"
             accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 "
             source-type="importBatch"
             class="mt-10px"
             :file-type="['xls', 'xlsx']"
           ></UploadCard>
-          <NButton quaternary type="primary">下载模板</NButton>
+          <NButton quaternary type="primary">{{ $t('page.product.list.downloadTemplate') }}</NButton>
         </NFormItemGridItem>
-        <NFormItemGridItem v-else :span="24" label="设备数量" path="device_count">
+        <NFormItemGridItem v-else :span="24" :label="$t('page.product.list.deviceCount')" path="device_count">
           <NInput v-model:value="formModel.device_count" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">确定</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

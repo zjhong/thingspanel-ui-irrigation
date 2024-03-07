@@ -6,6 +6,7 @@ import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { STATIC_BASE_URL } from '@/constants/common';
 import { createServiceConfig } from '~/env.config';
+import { $t } from '~/src/locales';
 // eslint-disable-next-line import/order
 
 defineOptions({ name: 'UploadFile' });
@@ -74,7 +75,7 @@ function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressE
 }
 
 function handleError({ event }: { event?: ProgressEvent }) {
-  window.$message?.error((event?.target as XMLHttpRequest).response || '文件上传失败，请重试');
+  window.$message?.error((event?.target as XMLHttpRequest).response || $t('page.product.list.fileUploadFail'));
 }
 </script>
 

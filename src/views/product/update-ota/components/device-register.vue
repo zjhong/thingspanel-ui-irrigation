@@ -158,8 +158,8 @@ const downloadPackage = () => {
     <NCard class="h-full">
       <div class="h-full flex-col">
         <NTabs v-model:value="activeTab" type="line" animated>
-          <NTabPane name="mission" tab="任务列表"></NTabPane>
-          <NTabPane name="info" tab="升级包信息"></NTabPane>
+          <NTabPane name="mission" :tab="$t('page.product.update-ota.taskList')"></NTabPane>
+          <NTabPane name="info" :tab="$t('page.product.update-ota.packageInfo')"></NTabPane>
         </NTabs>
         <NSpace v-if="activeTab === 'mission'" class="pb-12px" justify="space-between">
           <NSpace>
@@ -189,36 +189,37 @@ const downloadPackage = () => {
         <div v-if="activeTab === 'info'">
           <NForm label-placement="left" :model="props.record">
             <NGrid :cols="24" :x-gap="18">
-              <NFormItemGridItem :span="24" label="签名算法：" path="signature_type">
+              <NFormItemGridItem
+                :span="24"
+                :label="`${$t('page.product.update-package.signMode')}：`"
+                path="signature_type"
+              >
                 {{ props.record.signature_type || '-' }}
               </NFormItemGridItem>
             </NGrid>
             <NGrid :cols="24" :x-gap="18">
-              <NFormItemGridItem :span="24" label="升级包签名：" path="signature">
+              <NFormItemGridItem :span="24" :label="`${$t('page.product.update-ota.packageSign')}：`" path="signature">
                 <NSpace class="w-full" :size="24" align="center">
                   {{ props.record.signature || '-' }}
-                  <NButton class="w-72px" type="primary" @click="downloadPackage">下载</NButton>
+                  <NButton class="w-72px" type="primary" @click="downloadPackage">
+                    {{ $t('page.product.update-ota.download') }}
+                  </NButton>
                 </NSpace>
               </NFormItemGridItem>
             </NGrid>
             <NGrid :cols="24" :x-gap="24">
-              <NFormItemGridItem :span="24" label="自定义信息：" path="additional_info">
+              <NFormItemGridItem
+                :span="24"
+                :label="`${$t('page.product.update-ota.customMessage')}：`"
+                path="additional_info"
+              >
                 {{ props.record.additional_info || '-' }}
               </NFormItemGridItem>
             </NGrid>
           </NForm>
         </div>
-        <TableDeviceModal
-          v-model:visible="visible"
-          :type="modalType"
-          :pid="props.record.id"
-          @success="getTableData"
-        />
-        <TableDetailModal
-          v-model:visible="visibleTable"
-          :type="modalType"
-          :edit-data="rowData"
-        />
+        <TableDeviceModal v-model:visible="visible" :type="modalType" :pid="props.record.id" @success="getTableData" />
+        <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
       </div>
     </NCard>
   </div>

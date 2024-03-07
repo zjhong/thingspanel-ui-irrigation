@@ -26,7 +26,19 @@ export const productLocaleZhCn: ProductLocal = {
     firmwareVersion: '固件版本',
     onlineDate: '上线日期',
     activeStatus: '激活状态',
-    activeDate: '激活日期'
+    downloadTemplate: '下载模板',
+    fileUploadFail: '文件上传失败，请重试',
+    activeDate: '激活日期',
+    batchAdd: '创建批次',
+    deviceCount: '设备数量',
+    success: '操作成功',
+    batchNumberPlaceholder: '请填写批次编号',
+    file: '选择文件',
+    filePlaceholder: '请选择文件',
+    deviceNumberPlaceholder: '请输入设备数量',
+    addType: '添加方式',
+    batchUpload: '批量上传',
+    autoGenerate: '自动生成'
   },
   'update-package': {
     packageList: '升级包列表',
@@ -61,6 +73,31 @@ export const productLocaleZhCn: ProductLocal = {
     desc: '描述',
     createTime: '创建日期',
     updateTask: '添加升级任务', //
-    taskDetail: '任务详情'
+    taskDetail: '任务详情',
+    taskList: '任务列表',
+    packageInfo: '升级包信息',
+    packageSign: '升级包签名',
+    download: '下载',
+    customMessage: '自定义信息',
+    selected: '已选择',
+    deviceName: '设备名',
+    currentVersion: '当前版本号',
+    targetVersion: '目标版本号',
+    progress: '升级进度',
+    updateTime: '状态更新时间',
+    statusTask: '状态',
+    pendingTask: '待推送',
+    pushTask: '已推送',
+    cancelTask: '已取消',
+    upgradingTask: '升级中',
+    failTask: '升级失败',
+    statusDetail: '状态详情',
+    completeTask: '升级成功',
+    retryTask: '重升级',
+    cancelMakeTask: '取消升级',
+    allStatus: '所有状态',
+    selectedNumber: '条',
+    batchSelectDevice: '批量选择设备',
+    selectDevice: '选择设备'
   }
 };

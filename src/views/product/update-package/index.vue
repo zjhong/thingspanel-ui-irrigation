@@ -6,6 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { deleteOtaPackage, getOtaPackageList } from '@/service/product/update-package';
+import { getDeviceList } from '@/service/product/list';
 import TablePackageModal from './components/table-package-modal.vue';
 import type { ModalType } from './components/table-package-modal.vue';
 import ColumnSetting from './components/column-setting.vue';
@@ -14,7 +15,7 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 
 const queryParams = reactive({
   name: '',
-  product_id: '',
+  device_config_id: '',
   page: 1,
   page_size: 10
 });
@@ -86,7 +87,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     title: $t('page.product.update-package.versionCode')
   },
   {
-    key: 'product _id',
+    key: 'device_config_name',
     title: $t('page.product.update-package.deviceConfig')
   },
   {
@@ -166,8 +167,17 @@ async function handleDeleteTable(rowId: string) {
     getTableData();
   }
 }
-
+const deviceOptions = ref();
+const getDevice = () => {
+  getDeviceList({ page: 1, page_size: 99 }).then(res => {
+    deviceOptions.value = res.data.list.map(item => ({
+      label: item.name,
+      value: item.id
+    }));
+  });
+};
 function init() {
+  getDevice();
   getTableData();
 }
 
@@ -184,16 +194,18 @@ init();
     >
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
-            <NInput v-model:value="queryParams.product_id" />
-          </NFormItem>
-          <NFormItem :label="$t('page.product.update-package.packageName')" path="name">
-            <NInput v-model:value="queryParams.name" />
-          </NFormItem>
-          <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-          </NFormItem>
+          <NGrid :cols="24" :x-gap="18">
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
+              <NSelect v-model:value="queryParams.device_config_id" :options="deviceOptions" />
+            </NFormItemGridItem>
+            <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
+              <NInput v-model:value="queryParams.name" />
+            </NFormItemGridItem>
+            <NFormItemGridItem>
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+            </NFormItemGridItem>
+          </NGrid>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>

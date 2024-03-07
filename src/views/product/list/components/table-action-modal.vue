@@ -115,7 +115,7 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || '操作成功');
+    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -163,8 +163,8 @@ watch(
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">确定</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

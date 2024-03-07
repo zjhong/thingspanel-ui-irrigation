@@ -160,8 +160,8 @@ init();
             <NInput v-model:value="queryParams.deviceNumber" />
           </NFormItem>
           <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
-            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">重置</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">
@@ -170,15 +170,15 @@ init();
               <template #icon>
                 <IconIcRoundPlus class="mr-4px text-20px" />
               </template>
-
-              创建批次
+              <!-- 创建批次 -->
+              {{ $t('page.product.list.batchAdd') }}
             </NButton>
             <NButton type="primary" @click="exportFile">
               <template #icon>
                 <IconAntDesignExportOutlined class="mr-4px text-20px" />
               </template>
 
-              导出
+              {{ $t('commin.export') }}
             </NButton>
           </NSpace>
           <NSpace align="center" :size="18">

@@ -103,7 +103,7 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || '操作成功');
+    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -130,15 +130,24 @@ const deviceChange = value => {
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="任务名称" path="name">
+        <NFormItemGridItem :span="24" :label="$t('page.product.update-ota.taskName') /*任务名称*/" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
       </NGrid>
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="选择设备" path="device_id_list">
+        <NFormItemGridItem
+          :span="24"
+          :label="$t('page.product.update-ota.selectDevice') /*选择设备*/"
+          path="device_id_list"
+        >
           <NSpace class="w-full" :size="24" align="center">
-            <NButton type="default" @click="checkDevice">批量选择设备</NButton>
-            {{ formModel.device_id_list.length }}已选
+            <NButton type="default" @click="checkDevice">
+              <!-- 批量选择设备 -->
+              {{ $t('page.product.update-ota.batchSelectDevice') }}
+            </NButton>
+            {{ formModel.device_id_list.length }}
+            {{ $t('page.product.update-ota.selected') }}
+            <!-- 已选 -->
             <TableActionModal
               v-model:visible="deviceVisible"
               v-model:selected-keys="formModel.device_id_list"
@@ -148,13 +157,13 @@ const deviceChange = value => {
         </NFormItemGridItem>
       </NGrid>
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="描述" path="description">
+        <NFormItemGridItem :span="24" :label="$t('page.product.update-ota.desc') /*描述*/" path="description">
           <NInput v-model:value="formModel.description" type="textarea" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">确定</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

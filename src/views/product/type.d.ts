@@ -21,12 +21,26 @@ type ProductLocal = {
     productKey: string;
     productImage: string;
     preRegister: string;
-    deviceNumber: string;
+    fileUploadFail: string;
+    deviceCount: string;
+    downloadTemplate: string;
     batchNumber: string;
     firmwareVersion: string;
     onlineDate: string;
     activeStatus: string;
     activeDate: string;
+    batchAdd: string;
+    success: string;
+    batchNumberPlaceholder: string;
+    filePlaceholder: string;
+    deviceNumberPlaceholder: string;
+    addType: string;
+    // 批量上传
+    file: string;
+    deviceNumber: string;
+    batchUpload: string;
+    // 自动生成
+    autoGenerate: string;
   };
   'update-package': {
     packageList: string;
@@ -63,5 +77,30 @@ type ProductLocal = {
     updateTask: string;
     // 任务详情
     taskDetail: string;
+    taskList: string;
+    packageInfo: string;
+    packageSign: string;
+    download: string;
+    customMessage: string;
+    selected: string;
+    selectedNumber: string;
+    deviceName: string;
+    currentVersion: string;
+    targetVersion: string;
+    progress: string;
+    updateTime: string;
+    statusTask: string;
+    pendingTask: string;
+    pushTask: string;
+    cancelTask: string;
+    upgradingTask: string;
+    failTask: string;
+    statusDetail: string;
+    completeTask: string;
+    retryTask: string;
+    cancelMakeTask: string;
+    allStatus: string;
+    batchSelectDevice: string;
+    selectDevice: string;
   };
 };

@@ -47,7 +47,7 @@ const modalVisible = computed({
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
     add: $t('page.product.list.addProduct'),
-    edit: '任务详情'
+    edit: $t('page.product.update-ota.taskDetail')
   };
   return titles[props.type];
 });
@@ -89,8 +89,8 @@ watch(
 const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
-  name: '',
-  product_id: '',
+  device_name: '',
+  ota_upgrade_task_id: props.editData?.id,
   page: 1,
   page_size: 10
 });
@@ -103,7 +103,7 @@ function handleQuery() {
 }
 function handleReset() {
   Object.assign(queryParams, {
-    name: '',
+    device_name: '',
     product_id: '',
     page: 1
   });
@@ -130,6 +130,7 @@ const pagination: PaginationProps = reactive({
 const stateData = ref({});
 async function getTableData() {
   startLoading();
+  queryParams.ota_upgrade_task_id = props.editData?.id;
   const { data } = await getOtaTaskDetail(queryParams);
   if (data) {
     const list: UpgradeTaskDetail[] = data.list;
@@ -146,48 +147,55 @@ async function getTableData() {
 const toUpdate = async ({ id }, action: number) => {
   const data = await editOtaTaskDetail({ id, action });
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || '操作成功');
+    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
   }
 };
+
 const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   {
     key: 'name',
-    title: '设备名'
+    title: $t('page.product.update-ota.deviceName')
   },
   {
     key: 'current_version',
-    title: '当前版本号'
+    title: $t('page.product.update-ota.currentVersion')
+    // title: '当前版本号'
   },
   {
     key: 'version',
-    title: '目标版本号'
+    title: $t('page.product.update-ota.targetVersion')
+    // title: '目标版本号'
   },
   {
     key: 'steps',
-    title: '升级进度'
+    title: $t('page.product.update-ota.progress')
+    // title: '升级进度'
   },
   {
     key: 'updated_at',
-    title: '状态更新时间'
+    title: $t('page.product.update-ota.updateTime')
+    // title: '状态更新时间'
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('page.product.update-ota.statusTask'),
+    // title: '状态',
     render: (row: UpgradeTaskDetail) => {
       const text = {
-        1: '待推送',
-        2: '已推送',
-        3: '升级中',
-        4: '升级成功',
-        5: '升级失败',
-        6: '已取消'
+        1: $t('page.product.update-ota.pendingTask'), // 待推送,
+        2: $t('page.product.update-ota.pushTask'), // 已推送,
+        3: $t('page.product.update-ota.upgradingTask'), // 升级中,
+        4: $t('page.product.update-ota.completeTask'), // 升级成功,
+        5: $t('page.product.update-ota.failTask'), // 升级失败,
+        6: $t('page.product.update-ota.cancelTask') // 已取消
       };
       return text[row.status] || '-';
     }
   },
   {
     key: 'status_description',
-    title: '状态详情'
+    title: $t('page.product.update-ota.statusDetail')
+    // title: '状态详情'
   },
   {
     key: 'actions',
@@ -203,21 +211,24 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
               toUpdate(row, 1);
             }}
           >
-            {'重升级'}
+            {/* {'重升级'} */}
+            {$t('page.product.update-ota.retryTask')}
           </NButton>
         );
       } else if (row.status === 6) {
-        return <NButton size="small">{'已取消'}</NButton>;
+        return <NButton size="small">{$t('page.product.update-ota.cancelTask')}</NButton>;
       } else if (row.status === 4) {
         return (
           <NButton size="small" type="success">
-            {'升级成功'}
+            {$t('page.product.update-ota.completeTask')}
+            {/* {'升级成功'} */}
           </NButton>
         );
       } else if (row.status === 1 || row.status === 2 || row.status === 3) {
         return (
           <NButton size={'small'} type="primary" onClick={() => toUpdate(row, 6)}>
-            {'取消升级'}
+            {$t('page.product.update-ota.cancelMakeTask')}
+            {/* {'取消升级'} */}
           </NButton>
         );
       }
@@ -231,54 +242,52 @@ function init() {
 }
 
 // 初始化
-init();
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-1200px">
+  <NModal v-model:show="modalVisible" :on-after-enter="init" preset="card" :title="title" class="w-1200px">
     <div class="h-800px overflow-hidden">
       <div class="h-full flex-col">
         <NGrid :cols="24" x-gap="12px">
           <NGridItem span="3">
-            <!-- 状态态1-待推送2-已推送3-升级中4-升级成功-5-升级失败-6已取消 -->
-            <NCard title="所有状态" size="small">
+            <NCard :title="/*所有状态*/ $t('page.product.update-ota.allStatus')" size="small">
               {{ stateData[0] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="待推送" size="small">
+            <NCard :title="/*待推送*/ $t('page.product.update-ota.pendingTask')" size="small">
               {{ stateData[1] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="已推送" size="small">
+            <NCard :title="/*已推送*/ $t('page.product.update-ota.pushTask')" size="small">
               {{ stateData[2] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="升级中" size="small">
+            <NCard :title="/*升级中*/ $t('page.product.update-ota.upgradingTask')" size="small">
               {{ stateData[3] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="升级成功" size="small">
+            <NCard :title="/*升级成功*/ $t('page.product.update-ota.completeTask')" size="small">
               {{ stateData[4] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="升级失败" size="small">
+            <NCard :title="/*升级失败*/ $t('page.product.update-ota.failTask')" size="small">
               {{ stateData[5] || '-' }}
             </NCard>
           </NGridItem>
           <NGridItem span="3">
-            <NCard title="已取消" size="small">
+            <NCard :title="/*已取消*/ $t('page.product.update-ota.cancelTask')" size="small">
               {{ stateData[6] || '-' }}
             </NCard>
           </NGridItem>
         </NGrid>
         <NForm ref="queryFormRef" class="mt-10px" inline label-placement="left" :model="queryParams">
-          <NFormItem label="设备名称" path="name">
-            <NInput v-model:value="queryParams.name" />
+          <NFormItem :label="$t('page.product.update-ota.deviceName') /*设备名称*/" path="device_name">
+            <NInput v-model:value="queryParams.device_name" />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>

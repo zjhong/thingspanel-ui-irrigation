@@ -30,23 +30,26 @@ export function adapterOfFetchRouterList(data: Api.Route.Data): Api.Route.MenuRo
 function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
   return data.map((item: any): ElegantRoute => {
     let componentStr: string = '';
-    switch (item.param3) {
-      case 'basic':
-        componentStr = item.children?.length ? 'layout.base' : `layout.base$view.${item.element_code}`;
-        break;
-      case 'self':
-        componentStr = item.parent_id !== '0' ? `view.${item.element_code}` : `layout.base$view.${item.element_code}`;
-        break;
-      case 'multi':
-        componentStr = item.children?.length ? 'layout.multi' : `layout.multi$view.${item.element_code}`;
-        break;
-      case 'blank':
-        componentStr = item.children?.length ? 'layout.blank' : `layout.blank$view.${item.element_code}`;
-        break;
-      default:
-        componentStr = `view.${item.element_code}`;
+    if (item.route_path) {
+      componentStr = item.route_path;
+    } else {
+      switch (item.param3) {
+        case 'basic':
+          componentStr = item.children?.length ? 'layout.base' : `layout.base$view.${item.element_code}`;
+          break;
+        case 'self':
+          componentStr = item.parent_id !== '0' ? `view.${item.element_code}` : `layout.base$view.${item.element_code}`;
+          break;
+        case 'multi':
+          componentStr = item.children?.length ? 'layout.multi' : `layout.multi$view.${item.element_code}`;
+          break;
+        case 'blank':
+          componentStr = item.children?.length ? 'layout.blank' : `layout.blank$view.${item.element_code}`;
+          break;
+        default:
+          componentStr = `view.${item.element_code}`;
+      }
     }
-
     return {
       // id: item.id,
       // parentId: item.parent_id,

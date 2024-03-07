@@ -92,7 +92,7 @@ onMounted(() => {
 <template>
   <div class="rounded-8px p-16px text-white" :style="{ backgroundImage: gradientStyle }">
     <div>设备总数</div>
-    <div id="equipment" ref="equipment" style="width: 100%; height: 100%"></div>
+    <div id="equipment" ref="equipment" class="h-full w-full"></div>
   </div>
 </template>
 

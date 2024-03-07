@@ -3,6 +3,7 @@ import { computed, reactive, ref, toRefs, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { editUser } from '@/service/api/auth';
 import { formRules, getConfirmPwdRule } from '@/utils/form/rule';
+import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */

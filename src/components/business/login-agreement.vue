@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {computed} from 'vue';
+import { computed } from 'vue';
 
-defineOptions({name: 'LoginAgreement'});
+defineOptions({ name: 'LoginAgreement' });
 
 interface Props {
   /** 是否勾选 */

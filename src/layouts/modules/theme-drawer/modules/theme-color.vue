@@ -34,12 +34,12 @@ const swatches: string[] = [
 </script>
 
 <template>
-  <NDivider>{{ $t('theme.themeColor.title') }}</NDivider>
+  <NDivider>{{ $t('theme.themeColor.title' as any) }}</NDivider>
   <div class="flex-vertical-stretch gap-12px">
-    <SettingItem v-for="(_, key) in themeStore.themeColors" :key="key" :label="$t(`theme.themeColor.${key}`)">
+    <SettingItem v-for="(_, key) in themeStore.themeColors" :key="key" :label="$t(`theme.themeColor.${key}` as any)">
       <template v-if="key === 'info'" #suffix>
         <NCheckbox v-model:checked="themeStore.isInfoFollowPrimary">
-          {{ $t('theme.themeColor.followPrimary') }}
+          {{ $t('theme.themeColor.followPrimary' as any) }}
         </NCheckbox>
       </template>
       <NColorPicker

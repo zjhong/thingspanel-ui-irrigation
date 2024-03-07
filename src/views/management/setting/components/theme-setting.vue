@@ -7,7 +7,7 @@ import { deepClone } from '@/utils/common/tool';
 import { createServiceConfig } from '~/env.config';
 import { useSysSettingStore } from '@/store/modules/sys-setting';
 import UploadImage from './upload-image.vue';
-
+import { $t } from '~/src/locales';
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 
@@ -78,7 +78,9 @@ init();
           <div class="w-120px"></div>
           <NSpace class="text-center">
             <div>
-              <div>{{ $t('page.manage.setting.themeSetting.form.homeAndBackendLogo') }}</div>
+              <div>
+                {{ $t('page.manage.setting.themeSetting.form.homeAndBackendLogo') }}
+              </div>
               <NImage
                 width="140"
                 class="mt-20px h-140px"
@@ -94,7 +96,9 @@ init();
               ></UploadImage>
             </div>
             <div class="ml-20px">
-              <div>{{ $t('page.manage.setting.themeSetting.form.loadingPageLogo') }}</div>
+              <div>
+                {{ $t('page.manage.setting.themeSetting.form.loadingPageLogo') }}
+              </div>
               <NImage
                 width="140"
                 class="mt-20px h-140px"
@@ -110,7 +114,9 @@ init();
               ></UploadImage>
             </div>
             <div class="ml-20px">
-              <div>{{ $t('page.manage.setting.themeSetting.form.websiteLogo') }}</div>
+              <div>
+                {{ $t('page.manage.setting.themeSetting.form.websiteLogo') }}
+              </div>
               <NImage
                 width="140"
                 class="mt-20px"
@@ -126,7 +132,9 @@ init();
               ></UploadImage>
             </div>
             <div class="ml-20px">
-              <div>{{ $t('page.manage.setting.themeSetting.form.background') }}</div>
+              <div>
+                {{ $t('page.manage.setting.themeSetting.form.background') }}
+              </div>
               <NImage
                 width="140"
                 class="mt-20px h-140px"

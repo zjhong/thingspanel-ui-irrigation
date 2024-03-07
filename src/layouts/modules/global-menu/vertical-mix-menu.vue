@@ -8,6 +8,7 @@ import { useRouterPush } from '@/hooks/common/router';
 import { useMixMenu } from '../../hooks/use-mix-menu';
 import FirstLevelMenu from './first-level-menu.vue';
 import BaseMenu from './base-menu.vue';
+import { $t } from '~/src/locales';
 
 defineOptions({
   name: 'VerticalMixMenu'

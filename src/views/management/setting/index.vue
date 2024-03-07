@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ThemeSetting from './components/theme-setting.vue';
 import DataClearSetting from './components/data-clear-setting.vue';
+import { $t } from '~/src/locales';
 </script>
 
 <template>

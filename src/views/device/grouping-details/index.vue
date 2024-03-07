@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref, watch} from 'vue';
-import {useRoute, useRouter} from 'vue-router';
-import {type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage} from 'naive-ui';
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { type DataTableColumns, NButton, NDataTable, type PaginationProps, useMessage } from 'naive-ui';
 import {
   deleteDeviceGroup,
   deleteDeviceGroupRelation,
@@ -9,15 +9,15 @@ import {
   deviceList,
   getDeviceGroup
 } from '@/service/api/device';
-import {AddOrEditDevices} from '@/views/device/grouping/components';
-import {createNoSelectDeviceColumns, group_columns} from '@/views/device/modules/all-columns';
+import { AddOrEditDevices } from '@/views/device/grouping/components';
+import { createNoSelectDeviceColumns, group_columns } from '@/views/device/modules/all-columns';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import DeviceSelectList from '@/views/device/grouping-details/modules/device-select-list.vue';
 
 const group_data = ref([]);
 const device_data = ref<DeviceManagement.DeviceData[]>([]);
 
-const {loading, startLoading, endLoading} = useLoadingEmpty(false);
+const { loading, startLoading, endLoading } = useLoadingEmpty(false);
 const route = useRoute();
 console.log(route);
 const currentId = ref(route.query.id);
@@ -25,9 +25,9 @@ const isEdit = ref(true);
 const the_modal1 = ref();
 const the_modal2 = ref();
 
-const editData = ref({id: '', parent_id: '', name: '', description: ''});
+const editData = ref({ id: '', parent_id: '', name: '', description: '' });
 
-const addChildData = reactive({id: '', parent_id: currentId.value as string, name: '', description: ''});
+const addChildData = reactive({ id: '', parent_id: currentId.value as string, name: '', description: '' });
 const details_data = ref({
   detail: {
     created_at: '',
@@ -58,7 +58,7 @@ const getDetails = async (tid: string) => {
   } else {
     queryParams.parent_id = tid;
     startLoading();
-    const {data, error} = await deviceGroupDetail({id: tid});
+    const { data, error } = await deviceGroupDetail({ id: tid });
 
     if (!error && data) {
       details_data.value = data;
@@ -101,11 +101,11 @@ const group_pagination: PaginationProps = reactive({
 const router = useRouter();
 console.log(router);
 const viewDetails = (rid: string) => {
-  router.push({name: 'device_grouping-details', query: {id: rid}});
+  router.push({ name: 'device_grouping-details', query: { id: rid } });
 };
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
-  await deleteDeviceGroup({id: rid});
+  await deleteDeviceGroup({ id: rid });
   await getDetails(currentId.value as string);
 };
 const group_column = group_columns(viewDetails, deleteItem);
@@ -135,7 +135,7 @@ const queryParams2 = reactive<{ group_id: string; page: number; page_size: numbe
   page_size: 5
 });
 const getDeviceList = async (id: string) => {
-  const res = await deviceList({...queryParams2, group_id: id});
+  const res = await deviceList({ ...queryParams2, group_id: id });
   if (res.data?.list) {
     device_data.value = res.data?.list;
   } else {
@@ -162,7 +162,7 @@ const devicePagination = reactive<PaginationProps>({
 });
 const viewDeviceDetails = (rid: string) => {
   console.log(rid);
-  router.push({name: 'device_details', query: {id: rid}});
+  router.push({ name: 'device_details', query: { id: rid } });
 };
 const deleteDeviceItem = async (rid: string) => {
   await deleteDeviceGroupRelation({
@@ -186,25 +186,23 @@ const reload = async (nid: string) => {
 
 const goWhere = (key: string) => {
   switch (key) {
-
     case 'up':
-      router.push({name: 'device_grouping-details', query: {id: editData.value.parent_id}});
-      break
+      router.push({ name: 'device_grouping-details', query: { id: editData.value.parent_id } });
+      break;
     case 'back':
       router.go(-1);
-      break
+      break;
     case 'first':
-      router.push({name: 'device_grouping'});
-      break
+      router.push({ name: 'device_grouping' });
+      break;
     default:
-      break
+      break;
   }
 
-
   if (key === 'back') {
-    router.push({name: 'device_grouping-details', query: {id: editData.value.parent_id}});
+    router.push({ name: 'device_grouping-details', query: { id: editData.value.parent_id } });
   } else {
-    router.push({name: 'device_grouping'});
+    router.push({ name: 'device_grouping' });
   }
 };
 watch(
@@ -226,13 +224,13 @@ watch(
           <NSpace>
             <NButton quaternary type="info" @click="goWhere('back')">
               <template #icon>
-                <svg-icon icon="material-symbols:arrow-back"/>
+                <svg-icon icon="material-symbols:arrow-back" />
               </template>
               上一页
             </NButton>
-            <NButton type="primary" v-if="details_data.detail.parent_id !== '0'" @click="goWhere('up')">
+            <NButton v-if="details_data.detail.parent_id !== '0'" type="primary" @click="goWhere('up')">
               <template #icon>
-                <svg-icon icon="material-symbols:fitbit-arrow-upward"/>
+                <svg-icon icon="material-symbols:fitbit-arrow-upward" />
               </template>
 
               上一级

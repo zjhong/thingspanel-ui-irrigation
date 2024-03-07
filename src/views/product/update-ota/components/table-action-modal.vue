@@ -30,7 +30,6 @@ const props = withDefaults(defineProps<Props>(), {
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
   /** 点击协议 */
-  (e: 'success', data: any): void;
   (e: 'update:selectedKeys', data: any[]): void;
 }
 
@@ -50,10 +49,10 @@ const selectedKeys = computed({
   get: () => {
     return props.selectedKeys;
   },
-  set: (selectedKeys) => {
-    emit('update:selectedKeys', selectedKeys);
+  set: keys => {
+    emit('update:selectedKeys', keys);
   }
-})
+});
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
@@ -198,7 +197,7 @@ function init() {
 
 // 初始化
 init();
-const rowKey = (row: productPackageRecord) => row.id
+const rowKey = (row: productPackageRecord) => row.id;
 function handleCheck(rowKeys: DataTableRowKey[]) {
   emit('update:selectedKeys', rowKeys);
 }
@@ -216,7 +215,7 @@ const onSubmit = () => {
     <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
         <div class="h-full flex-col">
-          <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+          <NForm inline label-placement="left" :model="queryParams">
             <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
               <NInput v-model:value="queryParams.product_id" />
             </NFormItem>
@@ -228,10 +227,19 @@ const onSubmit = () => {
               <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItem>
           </NForm>
-          <NDataTable :row-key="rowKey" @update:checked-row-keys="handleCheck" remote :columns="columns" :data="tableData"
-            :loading="loading" :pagination="pagination" :checked-row-keys="selectedKeys" flex-height
-            class="flex-1-hidden" />
-          <NSpace class="pb-12px mt-10px" justify="space-between">
+          <NDataTable
+            :row-key="rowKey"
+            remote
+            :columns="columns"
+            :data="tableData"
+            :loading="loading"
+            :pagination="pagination"
+            :checked-row-keys="selectedKeys"
+            flex-height
+            class="flex-1-hidden"
+            @update:checked-row-keys="handleCheck"
+          />
+          <NSpace class="mt-10px pb-12px" justify="space-between">
             <NSpace>已选择{{ selectedKeys.length }}条</NSpace>
             <NSpace align="center" :size="18">
               <NButton @click="closeModal">

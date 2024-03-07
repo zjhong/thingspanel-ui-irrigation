@@ -6,10 +6,10 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { getStaticUrl } from '@/utils/common/tool';
+import { getOtaTaskList } from '@/service/product/update-ota';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
-import { getOtaTaskList } from '@/service/product/update-ota';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: visibleTable, setTrue: openTable } = useBoolean();
@@ -20,7 +20,7 @@ const props = defineProps({
   },
   record: {
     type: Object,
-    default: () => { },
+    default: () => {},
     required: true
   }
 });
@@ -60,7 +60,10 @@ const pagination: PaginationProps = reactive({
 
 async function getTableData() {
   startLoading();
-  const { data } = await getOtaTaskList({ ...queryParams, ota_upgrade_package_id: props.mid });
+  const { data } = await getOtaTaskList({
+    ...queryParams,
+    ota_upgrade_package_id: props.mid
+  });
   if (data) {
     const list: productDeviceRecord[] = data.list;
     setTableData(list);
@@ -113,7 +116,6 @@ function setModalType(type: ModalType) {
 }
 
 const editData = ref<productDeviceRecord | null>(null);
-
 
 function handleAddTable() {
   editData.value = null;
@@ -173,8 +175,16 @@ const downloadPackage = () => {
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable v-if="activeTab === 'mission'" remote :columns="columns" :data="tableData" :loading="loading"
-          :pagination="pagination" flex-height class="flex-1-hidden" />
+        <NDataTable
+          v-if="activeTab === 'mission'"
+          remote
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          flex-height
+          class="flex-1-hidden"
+        />
         <div v-if="activeTab === 'info'">
           <NForm label-placement="left" :model="props.record">
             <NGrid :cols="24" :x-gap="18">
@@ -197,9 +207,18 @@ const downloadPackage = () => {
             </NGrid>
           </NForm>
         </div>
-        <TableDeviceModal v-model:visible="visible" :type="modalType" :pid="props.record.id" :edit-data="editData"
-          @success="getTableData" />
-        <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :type="modalType"
+          :pid="props.record.id"
+          :edit-data="editData as unknown as UpgradeTaskCreate"
+          @success="getTableData"
+        />
+        <TableDetailModal
+          v-model:visible="visibleTable"
+          :type="modalType"
+          :edit-data="rowData as unknown as UpgradeTaskCreate"
+        />
       </div>
     </NCard>
   </div>

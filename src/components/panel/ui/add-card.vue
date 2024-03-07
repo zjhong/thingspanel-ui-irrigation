@@ -7,13 +7,14 @@ const formRef = ref<ICardFormIns>();
 const state = reactive({
   curCardData: null as null | Record<string, any>
 });
-const $emit = defineEmits<{
+// $emit是内置变量 不可以使用$emit 作为变量名
+const emit = defineEmits<{
   (e: 'update:open', value: boolean): void;
   (e: 'save', value: any): void;
 }>();
 const save = () => {
-  $emit('update:open', false);
-  $emit('save', JSON.parse(JSON.stringify(state.curCardData)));
+  emit('update:open', false);
+  emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
 
 const props = defineProps<{
@@ -64,8 +65,8 @@ const selectCard = (item: ICardDefine) => {
     title="配置"
     size="huge"
     :style="{ maxWidth: '1200px', width: !data ? 'calc(100vw - 100px)' : '700px', minHeight: 'calc(100vh - 100px)' }"
-    @close="$emit('update:open', false)"
-    @mask-click="$emit('update:open', false)"
+    @close="emit('update:open', false)"
+    @mask-click="emit('update:open', false)"
   >
     <div class="flex">
       <div class="flex-1">
@@ -88,7 +89,7 @@ const selectCard = (item: ICardDefine) => {
             <div
               class="flex justify-center justify-center border-t border-t border-gray-200 pt-3 space-x-5 dark:border-gray-200/10"
             >
-              <NButton @click="$emit('update:open', false)">取消</NButton>
+              <NButton @click="emit('update:open', false)">取消</NButton>
               <NButton type="primary" @click="save">添加卡片</NButton>
             </div>
           </div>

@@ -89,19 +89,19 @@ const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
 
 function createDefaultFormModel(): productPackageRecord {
   const defaultFormModel: productPackageRecord = {
-    id: "",
-    additional_info: "",
-    description: "",
-    module: "",
-    name: "",
+    id: '',
+    additional_info: '',
+    description: '',
+    module: '',
+    name: '',
     package_type: undefined as unknown as number,
-    package_url: "",
-    device_configs_id: "",
-    remark: "",
-    signature_type: "",
-    target_version: "",
-    version: "",
-  }
+    package_url: '',
+    device_configs_id: '',
+    remark: '',
+    signature_type: '',
+    target_version: '',
+    version: ''
+  };
   return defaultFormModel;
 }
 
@@ -157,8 +157,12 @@ watch(
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.type')" path="package_type">
           <NSelect v-model:value="formModel.package_type" :options="packageOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem v-if="formModel.package_type === 1" :span="12"
-          :label="$t('page.product.update-package.version')" path="target_version">
+        <NFormItemGridItem
+          v-if="formModel.package_type === 1"
+          :span="12"
+          :label="$t('page.product.update-package.version')"
+          path="target_version"
+        >
           <NInput v-model:value="formModel.target_version" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.versionCode')" path="version">

@@ -183,7 +183,7 @@ init();
       class="h-full rounded-8px shadow-sm"
     >
       <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+        <NForm inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
             <NInput v-model:value="queryParams.product_id" />
           </NFormItem>

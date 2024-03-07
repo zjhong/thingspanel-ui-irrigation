@@ -88,7 +88,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
   const domRef = ref<HTMLElement | null>(null);
   const initialSize = { width: 0, height: 0 };
-  const { width, height } = useElementSize(domRef, initialSize);
+  const { width, height } = useElementSize(domRef as unknown as any, initialSize);
 
   let chart: echarts.ECharts | null = null;
   const chartOptions: T = optionsFactory();
@@ -153,7 +153,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
       await nextTick();
 
-      chart = echarts.init(domRef.value, chartTheme);
+      chart = echarts.init(domRef.value as unknown as any, chartTheme);
 
       chart.setOption({ ...chartOptions, backgroundColor: 'transparent' });
 

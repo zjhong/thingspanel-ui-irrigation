@@ -18,7 +18,10 @@ interface ViewTransition {
 interface Document {
   startViewTransition?: (callback: () => Promise<void> | void) => ViewTransition;
 }
-
+type OptionTypes= {
+  label: string;
+  value:any
+}
 interface ImportMeta {
   readonly env: Env.ImportMeta;
 }

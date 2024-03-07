@@ -15,7 +15,7 @@ const domRef = ref<HTMLElement | null>(null);
 function initClipboard() {
   if (!domRef.value) return;
 
-  const clipboard = new Clipboard(domRef.value);
+  const clipboard = new Clipboard(domRef.value as unknown as any);
 
   clipboard.on('success', () => {
     window.$message?.success($t('theme.configOperation.copySuccessMsg'));

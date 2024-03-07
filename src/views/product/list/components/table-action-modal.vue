@@ -151,8 +151,12 @@ watch(
           <NInput v-model:value="formModel.product_key" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.productImage')" path="image_url">
-          <UploadCard v-model:value="formModel.image_url" accept="image/png, image/jpeg, image/jpg" class="mt-10px"
-            :file-type="['jpg', 'png', 'jpeg']"></UploadCard>
+          <UploadCard
+            v-model:value="formModel.image_url"
+            accept="image/png, image/jpeg, image/jpg"
+            class="mt-10px"
+            :file-type="['jpg', 'png', 'jpeg']"
+          ></UploadCard>
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.productDesc')" path="description">
           <NInput v-model:value="formModel.description" />

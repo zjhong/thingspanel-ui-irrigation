@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { ICardData, IConfigCtx } from '@/components/panel/card';
+import type { ICardData } from '@/components/panel/card';
 import icons from './icon';
 const iconMap = new Map(icons.map(c => [c.name, c.value]));
 // 正式环境可根据api获取
 const value = ref(1);
 defineProps<{
   card: ICardData;
-  mode: IConfigCtx['view'];
+  // mode: IConfigCtx['view'];
 }>();
 </script>
 

@@ -4,6 +4,7 @@ import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
+import moment from 'moment';
 import { $t } from '@/locales';
 import { exportDevice, getDeviceList } from '@/service/product/list';
 import TableDeviceModal from './table-device-modal.vue';
@@ -11,7 +12,6 @@ import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
-import moment from "moment"
 const props: DeviceRegisterProps = defineProps({
   pid: {
     type: String,
@@ -97,16 +97,16 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   {
     key: 'created_at',
     title: $t('page.product.list.activeStatus'),
-    render: (row) => {
-      return row.created_at ? moment(row.created_at) : '-'
-    },
+    render: row => {
+      return row.created_at ? moment(row.created_at) : '-';
+    }
   },
   {
     key: 'activate_at',
     title: $t('page.product.list.activeDate'),
-    render: (row) => {
-      return row.activate_at ? moment(row.activate_at) : '-'
-    },
+    render: row => {
+      return row.activate_at ? moment(row.activate_at) : '-';
+    }
   }
 ]) as Ref<DataTableColumns<PreproductDeviceRecord>>;
 
@@ -152,7 +152,7 @@ init();
   <div class="h-full overflow-hidden">
     <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+        <NForm inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.product.list.batchNumber')" path="email">
             <NInput v-model:value="queryParams.batchNumber" />
           </NFormItem>
@@ -189,10 +189,22 @@ init();
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
         </NSpace>
-        <NDataTable remote :columns="columns" :data="tableData" :loading="loading" :pagination="pagination" flex-height
-          class="flex-1-hidden" />
-        <TableDeviceModal v-model:visible="visible" :pid="props.pid" :type="modalType"
-          :edit-data="(editData as unknown as deviceAddType)" @success="getTableData" />
+        <NDataTable
+          remote
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          flex-height
+          class="flex-1-hidden"
+        />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :pid="props.pid"
+          :type="modalType"
+          :edit-data="(editData as unknown as deviceAddType)"
+          @success="getTableData"
+        />
       </div>
     </NCard>
   </div>

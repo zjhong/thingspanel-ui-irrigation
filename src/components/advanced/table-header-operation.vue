@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FilteredColumn } from '@/hooks/common/table';
+import { $t } from '~/src/locales';
 
 defineOptions({
   name: 'TableHeaderOperation'

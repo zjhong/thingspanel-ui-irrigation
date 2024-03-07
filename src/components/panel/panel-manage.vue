@@ -34,7 +34,7 @@ const edit = (view: ICardView) => {
 </script>
 
 <template>
-  <div ref="box" class="w-full px-5 py-5">
+  <div class="w-full px-5 py-5">
     <div class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10">
       <div>
         <NButton>

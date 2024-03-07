@@ -50,12 +50,13 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
           componentStr = `view.${item.element_code}`;
       }
     }
+    console.log(item.param1 && item.param1[0] === '/' ? item.param : (`/${item.param1}` as string));
     return {
       // id: item.id,
       // parentId: item.parent_id,
       name: item.element_code,
       // elementType: item.element_type,
-      path: item.param1 && item.param1[0] === '/' ? 'item.param' : (`/${item.param}` as string),
+      path: item.param1 && item.param1[0] === '/' ? item.param1 : (`/${item.param1}` as string),
       component: componentStr,
       // remark: item.remark,
       meta: {

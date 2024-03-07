@@ -3,7 +3,6 @@ import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { useBoolean, useLoading } from '@sa/hooks';
 import {
   dataServiceFlagLabels,
   dataServiceSignModeLabels,
@@ -14,6 +13,7 @@ import { fetchDataServiceList } from '@/service/api_demo/management';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 import SecretKeyModal from './components/secret-key-modal.vue';
+import { useBoolean, useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
@@ -25,6 +25,7 @@ const queryParams = reactive({
 });
 
 const tableData = ref<DataService.Data[]>([]);
+
 function setTableData(data: DataService.Data[]) {
   tableData.value = data;
 }

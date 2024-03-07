@@ -155,11 +155,22 @@ export const generatedRoutes: GeneratedRoute[] = [
   {
     name: 'data-service',
     path: '/data-service',
-    component: 'layout.base$view.data-service',
+    component: 'layout.base',
     meta: {
       title: 'data-service',
       i18nKey: 'route.data-service'
-    }
+    },
+    children: [
+      {
+        name: 'data-service_rule-engine',
+        path: '/data-service/rule-engine',
+        component: 'view.data-service_rule-engine',
+        meta: {
+          title: 'data-service_rule-engine',
+          i18nKey: 'route.data-service_rule-engine'
+        }
+      }
+    ]
   },
   {
     name: 'device',

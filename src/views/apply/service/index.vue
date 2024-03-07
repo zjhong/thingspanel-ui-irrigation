@@ -14,13 +14,14 @@ const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
 const tableData = ref<ServiceManagement.Service[]>([]);
+
 function setTableData(data: ServiceManagement.Service[]) {
   tableData.value = data;
 }
 
 async function getTableData() {
   startLoading();
-  const data = (await fetchServiceManagementList()) as any;
+  const { data } = await fetchServiceManagementList();
   if (data) {
     setTimeout(() => {
       setTableData(data);

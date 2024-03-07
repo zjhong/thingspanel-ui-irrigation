@@ -4,8 +4,9 @@
 
 export const czh_cn = {
   apply: '应用管理',
-  apply_service: '服务管理',
+  apply_service: '协议插件管理',
   'rule-engine': '规则引擎',
+  'data-service_rule-engine': '规则引擎',
   'data-service': '数据服务',
   product: '产品管理',
   product_list: '产品列表',
@@ -44,8 +45,9 @@ export const czh_cn = {
 
 export const cen = {
   apply: 'ApplicationManagement',
-  apply_service: 'ServiceManagement',
+  apply_service: 'ProtocolPlugInManagement',
   'rule-engine': 'RuleEngine',
+  'data-service_rule-engine': 'RuleEngine',
   'data-service': 'DataService',
   product: 'ProductManagement',
   product_list: 'ProductList',

@@ -114,14 +114,14 @@ function transformElegantRouteToVueRoute(
     }
 
   }
-  
+
   // add redirect to child
   if (children?.length && !vueRoute.redirect) {
     vueRoute.redirect = {
       name: children[0].name
     };
   }
-  
+
   if (children?.length) {
     const childRoutes = children.flatMap(child => transformElegantRouteToVueRoute(child, layouts, views));
 
@@ -213,6 +213,7 @@ const routeMap: RouteMap = {
   "product_update-ota": "/product/update-ota",
   "product_update-package": "/product/update-package",
   "rule-engine": "/rule-engine",
+  "test": "/test",
   "user-center": "/user-center"
 };
 

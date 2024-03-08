@@ -1,13 +1,7 @@
-<script setup lang="tsx">
-import { ref } from 'vue';
-
-const message = ref('你好');
-</script>
+<script setup lang="tsx"></script>
 
 <template>
-  <div>
-    {{ message }}
-  </div>
+  <div>打撒都是</div>
 </template>
 
 <style scoped></style>

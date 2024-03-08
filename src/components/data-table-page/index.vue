@@ -1,101 +1,105 @@
 <script lang="tsx" setup>
-import { computed, ref, watchEffect } from 'vue';
-import { NButton, NDataTable, NInput, NSpace } from 'naive-ui';
+import { computed, defineProps, ref, watchEffect } from 'vue';
+import { NButton, NDataTable, NDatePicker, NInput, NSelect, NSpace } from 'naive-ui';
 
+// 定义搜索配置项的类型
 export type SearchConfig =
   | {
       key: string;
       label: string;
-      type: 'input' | 'date'; // 'input' 和 'date' 类型没有 options
+      type: 'input' | 'date' | 'date-range';
     }
   | {
       key: string;
       label: string;
-      type: 'select'; // 'select' 类型需要有 options
+      type: 'select';
       options: { label: string; value: any }[];
     }
   | {
       key: string;
       label: string;
-      type: 'date-range'; // 'date-range' 类型没有 options
+      type: 'tree-select';
+      options: { label: string; value: any; children?: any[] }[];
+      multiple: boolean;
     };
-// 定义Props类型，包括数据获取函数、列显示配置和表格操作配置
+
+// 使用props接收父组件传递的参数
 const props = defineProps<{
-  fetch_data: (data: any) => Promise<any>;
-  columnsToShow: string[] | 'all';
-  // eslint-disable-next-line vue/prop-name-casing
-  table_actions: Array<{
+  fetchData: (data: any) => Promise<any>;
+  columnsToShow:
+    | {
+        key: string;
+        label: string;
+      }[]
+    | 'all';
+  tableActions: Array<{
     label: string;
     callback: (row: any) => void;
   }>;
   searchConfigs: SearchConfig[];
+  topActions: Array<{
+    // 重新命名以避免混淆
+    label: string;
+    onClick: () => void; // 点击事件处理函数
+  }>;
 }>();
 
-const { fetch_data, columnsToShow, table_actions, searchConfigs } = props;
-
+// 解构props以简化访问
+const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
+const isTableView = ref(true); // 默认显示表格视图
 // 组件状态：数据列表、总数、当前页、页面大小
-const dataList = ref<any[]>([]);
+const dataList = ref([]);
 const total = ref(0);
-const the_page = ref(1);
-const the_pageSize = ref(10);
+const currentPage = ref(1);
+const pageSize = ref(10);
 
 // 搜索条件状态
 const searchCriteria = ref({});
 
-// 获取数据函数，包含分页和搜索逻辑
+// 获取数据函数，结合分页和搜索逻辑
 const getData = async () => {
-  // 模拟搜索条件处理，这里只是一个基础示例
-  const processedSearchCriteria = {};
-  Object.keys(searchCriteria).forEach(key => {
-    const value = searchCriteria[key];
-    if (value) {
-      if (key === 'dateRange') {
-        // 处理日期范围条件，确保其格式适合您的后端或模拟函数
-        processedSearchCriteria[key] = [value[0]?.toISOString(), value[1]?.toISOString()];
-      } else if (key === 'registrationDate') {
-        // 单个日期的处理
-        processedSearchCriteria[key] = value?.toISOString();
-      } else {
-        // 其他类型的条件可以直接使用
-        processedSearchCriteria[key] = value;
+  const processedSearchCriteria = Object.fromEntries(
+    Object.entries(searchCriteria.value).map(([key, value]) => {
+      if (value && Array.isArray(value)) {
+        return [key, value.map(v => (v instanceof Date ? v.toISOString() : v))];
       }
-    }
-  });
-  console.log(processedSearchCriteria, '232432');
-  // 使用调整后的搜索条件调用fetch_data
-  const { data, error } = await fetch_data({
-    page: the_page.value,
-    page_size: the_pageSize.value,
+      return [key, value instanceof Date ? value.toISOString() : value];
+    })
+  );
+
+  const response = await fetchData({
+    page: currentPage.value,
+    page_size: pageSize.value,
     ...processedSearchCriteria
   });
 
-  if (!error) {
-    dataList.value = data.list;
-    total.value = data.total;
+  if (!response.error) {
+    dataList.value = response.data.list;
+    total.value = response.data.total;
   } else {
-    console.error('错误:', error);
+    console.error('Error fetching data:', response.error);
   }
 };
 
 // 动态生成列配置，包括操作列
 const generatedColumns = computed(() => {
-  const columns =
-    dataList.value.length > 0
-      ? (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(key => ({
-          title: key, // 标题可根据需要进行国际化处理
-          key,
-          render: row => <>{row[key]}</>
-        }))
-      : [];
+  let columns;
 
-  // 添加操作列
-  if (table_actions.length > 0) {
+  if (dataList.value.length > 0) {
+    columns = (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(item => ({
+      title: item.label,
+      key: item.key,
+      render: row => <>{row[item.key]}</>
+    }));
+  }
+
+  if (dataList.value.length > 0 && tableActions?.length > 0) {
     columns.push({
       title: '操作',
       key: 'actions',
       render: row => (
         <NSpace>
-          {table_actions.map(action => (
+          {tableActions.map(action => (
             <NButton text size="small" onClick={() => action.callback(row)}>
               {action.label}
             </NButton>
@@ -105,66 +109,153 @@ const generatedColumns = computed(() => {
     });
   }
 
-  return columns;
+  return columns || [];
 });
 
-// 分页配置
-const paginationConfig = computed(() => ({
-  page: the_page.value,
-  pageSize: the_pageSize.value,
-  pageCount: Math.ceil(total.value / the_pageSize.value),
-  showSizePicker: true,
-  onUpdatePage: newPage => {
-    the_page.value = newPage;
-  },
-  onUpdatePageSize: newPageSize => {
-    the_pageSize.value = newPageSize;
-    the_page.value = 1; // 切换页面大小时回到第一页
-  }
-}));
+// 分页配置计算属性
 
-// 监听分页和搜索条件的变化来重新获取数据
-watchEffect(() => {
-  getData();
-});
+const onUpdatePage = newPage => {
+  currentPage.value = newPage;
+  getData(); // 更新数据
+};
+const onUpdatePageSize = newPageSize => {
+  pageSize.value = newPageSize;
+  currentPage.value = 1; // 重置为第一页
+  getData(); // 更新数据
+};
+// 重新获取数据当分页和搜索条件变化
+watchEffect(getData);
 
-// 搜索和重置逻辑
+// 搜索和重置按钮逻辑
 const handleSearch = () => {
-  the_page.value = 1; // 开始搜索时回到第一页
+  currentPage.value = 1; // 搜索时重置到第一页
   getData();
 };
 
 const handleReset = () => {
   searchCriteria.value = {}; // 清空搜索条件
-  handleSearch(); // 重置搜索后重新获取数据
+  handleSearch(); // 重新获取数据
+};
+
+const handleTreeSelectUpdate = (value, key) => {
+  searchCriteria.value[key] = value;
 };
 </script>
 
 <template>
-  <!-- 搜索输入和操作按钮 -->
-  <div style="margin-bottom: 16px">
-    <NSpace>
-      <div v-for="config in searchConfigs" :key="config.key">
-        <template v-if="config.type === 'input'">
-          <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" />
-        </template>
-        <template v-if="config.type === 'date-range'">
-          <!-- 日期范围选择器，假设使用Naive UI的日期范围选择器 -->
-          <NDatePicker v-model:value="searchCriteria[config.key]" type="daterange" :placeholder="config.label" />
-        </template>
-        <template v-if="config.type === 'select'">
-          <!-- 下拉选择框 -->
-          <NSelect v-model:value="searchCriteria[config.key]" :options="config.options" :placeholder="config.label" />
-        </template>
-        <template v-if="config.type === 'date'">
-          <!-- 单一日期选择器 -->
-          <NDatePicker v-model:value="searchCriteria[config.key]" type="date" :placeholder="config.label" />
-        </template>
+  <div class="flex flex-col gap-6 rounded-lg bg-[#fff] p-6 shadow">
+    <!-- 搜索区域与操作按钮 -->
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <!-- 搜索输入和选择器 -->
+      <div class="flex flex-1 flex-wrap items-end gap-4">
+        <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
+          <template v-if="config.type === 'input'">
+            <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" class="input-style" />
+          </template>
+          <template v-else-if="config.type === 'date-range'">
+            <NDatePicker
+              v-model:value="searchCriteria[config.key]"
+              type="daterange"
+              :placeholder="config.label"
+              class="input-style"
+            />
+          </template>
+          <template v-else-if="config.type === 'select'">
+            <NSelect
+              v-model:value="searchCriteria[config.key]"
+              :options="config.options"
+              :placeholder="config.label"
+              class="input-style min-w-240px"
+            />
+          </template>
+          <template v-else-if="config.type === 'date'">
+            <NDatePicker
+              v-model:value="searchCriteria[config.key]"
+              type="date"
+              :placeholder="config.label"
+              class="input-style"
+            />
+          </template>
+          <template v-else-if="config.type === 'tree-select'">
+            <n-tree-select
+              v-model:value="searchCriteria[config.key]"
+              :options="config.options"
+              :multiple="config.multiple"
+              class="input-style min-w-240px"
+              @update:value="value => handleTreeSelectUpdate(value, config.key)"
+            />
+          </template>
+        </div>
+        <NButton class="btn-style" @click="handleSearch">搜索</NButton>
+        <NButton class="btn-style" @click="handleReset">重置</NButton>
       </div>
-    </NSpace>
-    <NButton @click="handleSearch">搜索</NButton>
-    <NButton @click="handleReset">重置</NButton>
+      <!-- 新建与返回按钮 -->
+    </div>
+    <div class="mb--6 flex items-center justify-between">
+      <div class="flex gap-2">
+        <NButton v-for="action in topActions" :key="action.label" class="btn-style" @click="action.onClick">
+          {{ action.label }}
+        </NButton>
+      </div>
+      <!-- 组件内部的表操作 -->
+      <div>
+        <NButton quaternary @click="isTableView = true">
+          <template #icon>
+            <n-icon text style="font-size: 24px">
+              <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px" />
+            </n-icon>
+          </template>
+        </NButton>
+        <NButton quaternary @click="isTableView = false">
+          <template #icon>
+            <n-icon text style="font-size: 24px">
+              <icon-material-symbols:map-rounded class="text-24px" />
+            </n-icon>
+          </template>
+        </NButton>
+        <NButton quaternary @click="getData">
+          <template #icon>
+            <n-icon text style="font-size: 24px">
+              <icon-material-symbols:refresh class="text-24px" />
+            </n-icon>
+          </template>
+        </NButton>
+      </div>
+    </div>
+    <!-- 数据表格 -->
+    <div v-if="isTableView" class="overflow-x-auto">
+      <NDataTable :columns="generatedColumns" :data="dataList" class="card-wrapper" />
+    </div>
+    <div v-else>
+      <!-- 地图视图占位 -->
+      <div class="map-placeholder">地图视图占位</div>
+    </div>
+
+    <n-pagination
+      v-model:page="currentPage"
+      v-model:page-size="pageSize"
+      class="justify-end"
+      :item-count="total"
+      :page-size-options="[10, 20, 30, 40]"
+      show-size-picker
+      @update:page="onUpdatePage"
+      @update:page-size="onUpdatePageSize"
+    />
   </div>
-  <!-- 数据表格 -->
-  <NDataTable :columns="generatedColumns" :data="dataList" :pagination="paginationConfig" />
 </template>
+
+<style scoped>
+.input-style {
+  @apply border-[var(--color-border)] bg-[var(--color-input-bg)] text-[var(--color-text)];
+}
+
+.btn-style {
+  @apply text-black hover:bg-[var(--color-primary-hover)] rounded-md shadow;
+}
+
+.card-wrapper {
+  @apply rounded-lg shadow overflow-hidden;
+  margin: 0 auto;
+  padding: 16px;
+}
+</style>

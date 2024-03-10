@@ -171,6 +171,24 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'device_config',
+        path: '/device/config',
+        component: 'view.device_config',
+        meta: {
+          title: 'device_config',
+          i18nKey: 'route.device_config'
+        }
+      },
+      {
+        name: 'device_config-detail',
+        path: '/device/config-detail',
+        component: 'view.device_config-detail',
+        meta: {
+          title: 'device_config-detail',
+          i18nKey: 'route.device_config-detail'
+        }
+      },
+      {
         name: 'device_grouping',
         path: '/device/grouping',
         component: 'view.device_grouping',

@@ -164,6 +164,8 @@ const routeMap: RouteMap = {
   "dashboard_workbench": "/dashboard/workbench",
   "data-service": "/data-service",
   "device": "/device",
+  "device_config": "/device/config",
+  "device_config-detail": "/device/config-detail",
   "device_grouping": "/device/grouping",
   "device_grouping-details": "/device/grouping-details",
   "device_manage": "/device/manage",

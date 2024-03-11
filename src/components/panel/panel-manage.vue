@@ -52,7 +52,15 @@ const edit = (view: ICardView) => {
         </NButton>
         <NDivider vertical />
         <NButton>取消</NButton>
-        <NButton>保存</NButton>
+        <NButton
+          @click="
+            () => {
+              console.log(layout, '4434343');
+            }
+          "
+        >
+          保存
+        </NButton>
       </NSpace>
     </div>
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">

@@ -9,9 +9,10 @@ import { useLoading } from '~/packages/hooks';
 const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
-  name: '',
+  username: '',
   selected_time: null
 });
+const total = ref(0);
 
 const tableData = ref<Api.SystemManage.SystemLogList[]>([]);
 
@@ -33,18 +34,29 @@ const pagination: PaginationProps = reactive({
   }
 });
 
+const formatTime = (time: string | null) => {
+  if (time) {
+    return new Date(time + 8 * 60 * 60 * 1000).toISOString().toString();
+  }
+  return '';
+};
+
 const getTableData = async () => {
   startLoading();
-  const res = await getSystemLogList({
+  const start_time = queryParams.selected_time ? queryParams.selected_time[0] : null;
+  const end_time = queryParams.selected_time ? queryParams.selected_time[1] : null;
+  const prams = {
     page: pagination.page || 1,
     page_size: pagination.pageSize || 10,
-    username: queryParams.name,
-    start_time: undefined,
-    end_time: undefined
-  });
+    username: queryParams.username,
+    start_time: formatTime(start_time),
+    end_time: formatTime(end_time)
+  };
+  const res = await getSystemLogList(prams);
   console.log(res);
   if (res?.data) {
     setTableData(res?.data.list || []);
+    total.value = res.data.total || 0;
   }
   endLoading();
 };
@@ -53,7 +65,8 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'created_at',
     title: '时间',
-    align: 'left'
+    align: 'left',
+    width: '280'
   },
   {
     key: 'ip',
@@ -63,7 +76,8 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'path',
     title: '请求路径',
-    align: 'left'
+    align: 'left',
+    width: '200'
   },
   {
     key: 'ip',
@@ -95,24 +109,26 @@ getTableData();
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
           <NFormItem label="用户名" path="name">
-            <NInput v-model:value="queryParams.name" />
+            <NInput v-model:value="queryParams.username" />
           </NFormItem>
           <NFormItem path="selected_time">
             <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
           </NFormItem>
           <NButton class="w-72px" type="primary" @click="handleQuery">查询</NButton>
         </NForm>
-        <NDataTable
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
+        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
+        <div class="pagination-box">
+          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
+        </div>
       </div>
     </NCard>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.pagination-box {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+</style>

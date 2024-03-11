@@ -275,9 +275,9 @@ declare namespace Api {
     type SystemLogSearchParams = {
       page: number;
       page_size: number;
-      username?: string;
-      start_time?: string;
-      end_time?: string;
+      username?: string | null;
+      start_time?: string | null;
+      end_time?: string | null;
     };
 
     type SystemLogList = {

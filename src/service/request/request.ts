@@ -15,12 +15,24 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const { headers } = config;
+      const { headers, params } = config;
       // set token
       const token = localStg.get('token');
       // const Authorization = token ? `Bearer ${token}` : null;
       const headersWithToken = token ? { 'x-token': token } : {};
       Object.assign(headers, headersWithToken);
+      console.log(params);
+      if (params && typeof params === 'object' && !Array.isArray(params)) {
+        const filteredData = Object.keys(params).reduce((acc, key) => {
+          if (params[key] !== '') {
+            acc[key] = params[key];
+          }
+          return acc;
+        }, {});
+
+        // 使用过滤后的数据替换原始数据
+        config.data = filteredData;
+      }
 
       return config;
     },

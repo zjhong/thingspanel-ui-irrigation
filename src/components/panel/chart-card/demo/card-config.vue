@@ -2,6 +2,7 @@
 import { inject } from 'vue';
 import type { IConfigCtx } from '@/components/panel/card';
 import icons from './icon';
+
 const ctx = inject<IConfigCtx>('config-ctx')!;
 </script>
 

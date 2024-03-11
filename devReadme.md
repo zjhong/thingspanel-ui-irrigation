@@ -1,14 +1,19 @@
-
 ## 开发原则及规范
+
 ### 开发第一原则：尊重原作者，不要直接改原有的
+
 ### 开发第二原则：如果必须扩展，写在最后，不要随便乱插，如果觉得每次都要滚到最后麻烦，就自己建个文件，把需要引用进去即可
-### 开发第三原则 先拉后推原则，推前必拉！(不是拉便便的拉),
+
+### 推送代码必须遵守的原则  <span style="color:red;">推送前请先进行页面测试， 并遵循先拉后推原则，推前必拉！， 没问题再进行推送</span>
+
 ---
+
 ### 代码规范
 
 ##### 命名规范
 
 ##### 1 文件和文件夹命名: 统一用小写加连字符`-`命名，多个单词用连字符连接
+
 ```
 views
 ├── home
@@ -17,6 +22,7 @@ views
 ```
 
 ##### 2 Vue 组件名称
+
 - 组件名称统一用 PascalCase 法命名，多个单词首字母大写
   ```vue
   <template>
@@ -31,15 +37,17 @@ views
     <icon-mdi-emoticon />
   </template>
   ```
-> 方便iconify插件直接展示图标
 
+> 方便iconify插件直接展示图标
 
 ##### 3 构造函数、class 类、TS 类型命名：统一用 PascalCase 法命名，多个单词首字母大写
 
 ```ts
-function Person() {}
+function Person() {
+}
 
-class Person {}
+class Person {
+}
 
 type Person = {
   name: string;
@@ -55,7 +63,8 @@ interface Person {
 ```ts
 let num: number = 1;
 
-function getNum() {}
+function getNum() {
+}
 ```
 
 ##### 5 常量命名：统一用大写字母命名，多个单词用下划线连接
@@ -77,9 +86,13 @@ const MAX_COUNT = 10;
 ---
 
 ---
+
 ## 开发相关说明
-###  项目环境需求
+
+### 项目环境需求
+
 ##### 1 谷歌浏览器请升级到最新
+
 ##### 浏览器支持
 
 本地开发推荐使用`Chrome 90+` 浏览器
@@ -87,11 +100,11 @@ const MAX_COUNT = 10;
 支持现代浏览器, 不支持 IE
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png" alt="IE" width="24px" height="24px"  />](http://godban.github.io/browsers-support-badges/)IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Safari |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                                                                                                                not support                                                                                                                |                                                                                          last 2 versions                                                                                          |                                                                                               last 2 versions                                                                                                |                                                                                             last 2 versions                                                                                              |                                                                                             last 2 versions                                                                                              |
 
-
 ##### 2 nodejs  v18 以上，建议使nodejs用多版本管理器  npm  使用方法 谷歌 百度搜一些，或者参照：[https://blog.csdn.net/qq_41904629/article/details/123552090](https://blog.csdn.net/qq_41904629/article/details/123552090)
+
 确保你的环境满足以下要求：
 
 - **git**: 你需要git来克隆和管理项目版本。
@@ -99,48 +112,55 @@ const MAX_COUNT = 10;
   > 你可以使用 [volta](https://volta.sh/) 或 [fnm](https://github.com/Schniz/fnm) 来管理你的NodeJS版本。
 - **pnpm**: >= 8.0.0，推荐最新版本。
 
-
-
-
-
 ---
 
 ---
 
 ### 开发建议 ：
+
 ##### 1 类型文件件建在自己的文件夹里，使用引用方式 用原有的类型
+
 ##### 2 因为是联合开发，拉完代码有人装了包你也不知道，所有 直接使用 这个命令 `pnpm i && pnpm` dev会先装包后跑
+
 ##### 2 VSCode插件建议
 
 ##### 本项目推荐使用 VSCode 进行开发，项目里面已内置 VSCode 配置，包含推荐的插件和设置。
 
 ##### 以下为推荐的插件：
 
-- [Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag) - 自动添加 HTML/XML 结束标签
-- [Auto Complete Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-complete-tag) - 为 HTML/XML 添加关闭标签和自动重命名成对的标签
-- [Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag) - 自动重命名成对的 HTML/XML 标签
+- [Auto Close Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-close-tag) - 自动添加 HTML/XML
+  结束标签
+- [Auto Complete Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-complete-tag) - 为 HTML/XML
+  添加关闭标签和自动重命名成对的标签
+- [Auto Rename Tag](https://marketplace.visualstudio.com/items?itemName=formulahendry.auto-rename-tag) - 自动重命名成对的
+  HTML/XML 标签
 - [Color Highlight](https://github.com/naumovs/vscode-ext-color-highlight) - 颜色高亮插件
 - [DotENV](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv) - 高亮.env 文件
-- [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) - 统一不同编辑器的一些配置
+- [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) -
+  统一不同编辑器的一些配置
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - 代码检查
 - [Git Graph](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph) - Git 图形化操作工具
-- [GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) - 显示具体某行代码的 git 信息
+- [GitLens — Git supercharged](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) - 显示具体某行代码的
+  git 信息
 - [Icônes](https://marketplace.visualstudio.com/items?itemName=afzalsayed96.icones) - 搜索 iconify 图标的插件
 - [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) - Iconify 图标实时显示的插件
 - [i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally) - i18n 国际化插件
-- [javascript console utils](https://marketplace.visualstudio.com/items?itemName=whtouche.vscode-js-console-utils) - 提供快捷键 ctrl+l 直接输入 console.log()
-- [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) - 图标主题，显示文件和文件多种图标
+- [javascript console utils](https://marketplace.visualstudio.com/items?itemName=whtouche.vscode-js-console-utils) -
+  提供快捷键 ctrl+l 直接输入 console.log()
+- [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme) -
+  图标主题，显示文件和文件多种图标
 - [One Dark Pro](https://marketplace.visualstudio.com/items?itemName=zhuangtongfa.Material-theme) - 主题
 - [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) - 代码格式化插件
 - [UnoCSS](https://marketplace.visualstudio.com/items?itemName=antfu.unocss) - unocss 写法提示插件
 - [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) - Vue 服务插件
-- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) - Vue 的 TS 服务插件
+- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) -
+  Vue 的 TS 服务插件
 - [Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets) - vue2、vue3 写法提示
 
-
 ---
 
 ---
+
 ### 目录说明
 
 ```
@@ -281,12 +301,12 @@ soybean-admin
 └── vite.config.ts             //vite配置
 ```
 
-
-
 ---
 
 ---
+
 ### 页面开发：
+
 #### 在[src/views](src/views)创建页面文件即可，如果不想生成路由或类型的文件，请使用 modules创建文件夹，而不是 components
 
 ---
@@ -294,28 +314,42 @@ soybean-admin
 ---
 
 ### mock相关：
-#####  请尽量使用 https://apifox.com/ ，在 [env.config.ts](env.config.ts)，修改 `const mockURL = 'https://mock.apifox.com/m1/4080832-0-default';`
+
+##### 请尽量使用 https://apifox.com/ ，在 [env.config.ts](env.config.ts)，修改 `const mockURL = 'https://mock.apifox.com/m1/4080832-0-default';`
+
 ##### 并将该文件排除提交
 ---
 
 ---
+
 ### 类型概览：
 
 ##### 01 国际化类型:[src/typings/app.d.ts](src/typings/app.d.ts)   type（App.I18n.Schema）
+
 ##### 02 接口类型:[src/typings/api.d.ts](src/typings/api.d.ts)
+
 ##### 03 路由类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts)
+
 ##### 04 RouteMeta类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts)
+
 ##### 05 全局类型:[src/typings/elegant-router.d.ts](src/typings/elegant-router.d.ts])
+
 ##### 06 缓存数据类型:[src/typings/storage.d.ts](src/typings/storage.d.ts) 缓存的数据类型需要预先在 src/typings/storage.d.ts 里面定义好
+
 ##### 99 其他应该是迁移而来，用到自行分析
 
 基本不用动 的类型
+
 ##### 07 组件类型:[src/typings/components.d.ts](src/typings/components.d.ts)  不要动，只要在views里 基本都是自己生成的
+
 ##### 08 naive-ui类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)
 
 基本不会用的类型
+
 ##### 09  package类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)  作者有个 package 二次封装了一些库的功能，跟这个有关，不明白就不动即可
+
 ##### 10 环境类型:[src/typings/env.d.ts](src/typings/env.d.ts)  尽量不动 ，估计业务层开发也用不上
+
 ##### 11 联合密钥:[src/typings/union-key.d.ts](src/typings/union-key.d.ts) 作者用的一些类型吧，应该用不上
 
 ---
@@ -323,8 +357,8 @@ soybean-admin
 
 
 ---
-### 系统路由说明
 
+### 系统路由说明
 
 #### 本系统的路由基于插件 [Elegant Router](https://github.com/soybeanjs/elegant-router)，详细用法请查看插件文档。
 
@@ -341,14 +375,19 @@ soybean-admin
 ##### **路由名称的命名规则**
 
 ##### - 一级路由: `demo`, `demo-page`, `route1`
-#####   > 名称为小写加连字符`-`的形式
+
+##### > 名称为小写加连字符`-`的形式
+
 ##### - 二级路由: `demo2_child`, `demo2-page_child`, `route2_child`
-#####  > 路由的层级用下划线`_`分隔，两边仍然遵守一级路由的命名规则
+
+##### > 路由的层级用下划线`_`分隔，两边仍然遵守一级路由的命名规则
+
 ##### - 三级及三级以上路由: `demo3_child_child`, `demo3-page_child_child_child`
 
 ##### 手动创建
 
 ##### **手动创建路由文件，需要遵循以下规则：**
+
 ##### 每层路由的文件夹名称为路由名称，文件夹下的 index.vue 或者 [id].vue 为路由组件
 
 #### 路由详解
@@ -368,12 +407,19 @@ views
 ```ts
 {
   name: 'about',
-  path: '/about',
-  component: 'layout.base$view.about',
-  meta: {
+    path
+:
+  '/about',
+    component
+:
+  'layout.base$view.about',
+    meta
+:
+  {
     title: 'about'
   }
-},
+}
+,
 ```
 
 ##### > 它是一个单级路由，为了添加布局，组件属性将布局和视图组件组合在一起，用美元符号“$”分割
@@ -383,8 +429,12 @@ views
 ```ts
 {
   path: '/about',
-  component: BaseLayout,
-  children: [
+    component
+:
+  BaseLayout,
+    children
+:
+  [
     {
       name: 'about',
       path: '',
@@ -394,7 +444,8 @@ views
       }
     }
   ]
-},
+}
+,
 ```
 
 ##### 二级路由
@@ -419,6 +470,7 @@ views
 │   ├── detail
 │   │   └── index.vue
 ```
+
 > 请不要出现上述 index.vue 和文件夹同级的情况，这种情况不在约定的规则中
 
 ##### 生成的路由
@@ -426,11 +478,18 @@ views
 ```ts
 {
   name: 'list',
-  path: '/list',
-  component: 'layout.base',
-  meta: {
+    path
+:
+  '/list',
+    component
+:
+  'layout.base',
+    meta
+:
+  {
     title: 'list'
-  },
+  }
+,
   children: [
     {
       name: 'list_home',
@@ -459,14 +518,22 @@ views
 ```ts
 {
   name: 'list',
-  path: '/list',
-  component: BaseLayout,
-  redirect: {
+    path
+:
+  '/list',
+    component
+:
+  BaseLayout,
+    redirect
+:
+  {
     name: 'list_home'
-  },
+  }
+,
   meta: {
     title: 'list'
-  },
+  }
+,
   children: [
     {
       name: 'list_home',
@@ -485,7 +552,8 @@ views
       }
     }
   ]
-},
+}
+,
 ```
 
 ##### > 路由数据的第一层包含重定向的配置，默认重定向到第一个子路由
@@ -526,11 +594,18 @@ views
 ```ts
 {
   name: 'multi-menu',
-  path: '/multi-menu',
-  component: 'layout.base',
-  meta: {
+    path
+:
+  '/multi-menu',
+    component
+:
+  'layout.base',
+    meta
+:
+  {
     title: 'multi-menu'
-  },
+  }
+,
   children: [
     {
       name: 'multi-menu_first',
@@ -586,14 +661,22 @@ views
 ```ts
 {
   name: 'multi-menu',
-  path: '/multi-menu',
-  component: BaseLayout,
-  redirect: {
+    path
+:
+  '/multi-menu',
+    component
+:
+  BaseLayout,
+    redirect
+:
+  {
     name: 'multi-menu_first'
-  },
+  }
+,
   meta: {
     title: 'multi-menu'
-  },
+  }
+,
   children: [
     {
       name: 'multi-menu_first',
@@ -669,25 +752,45 @@ views
 ```ts
 {
   name: '403',
-  path: '/403',
-  component: 'layout.base$view.403',
-  meta: {
+    path
+:
+  '/403',
+    component
+:
+  'layout.base$view.403',
+    meta
+:
+  {
     title: '403'
   }
-},
+}
+,
 {
   name: '404',
-  path: '/404',
-  component: 'layout.base$view.404',
-  meta: {
+    path
+:
+  '/404',
+    component
+:
+  'layout.base$view.404',
+    meta
+:
+  {
     title: '404'
   }
-},
+}
+,
 {
   name: '500',
-  path: '/500',
-  component: 'layout.base$view.500',
-  meta: {
+    path
+:
+  '/500',
+    component
+:
+  'layout.base$view.500',
+    meta
+:
+  {
     title: '500'
   }
 }
@@ -708,10 +811,18 @@ views
 ```ts
 {
   name: 'user',
-  path: '/user/:id',
-  component: 'layout.base$view.user',
-  props: true,
-  meta: {
+    path
+:
+  '/user/:id',
+    component
+:
+  'layout.base$view.user',
+    props
+:
+  true,
+    meta
+:
+  {
     title: 'user'
   }
 }
@@ -720,7 +831,7 @@ views
 ##### 高级的参数路由
 
 ```ts
-import type { RouteKey } from "@elegant-router/types";
+import type {RouteKey} from "@elegant-router/types";
 
 ElegantVueRouter({
   routePathTransformer(routeName, routePath) {
@@ -771,7 +882,7 @@ type CustomRouteKey = "root" | "notFound" | "two-level" | "two-level_route";
 ##### **复用已经存在的页面路由component**
 
 ```ts
-import type { CustomRoute } from "@elegant-router/types";
+import type {CustomRoute} from "@elegant-router/types";
 
 const customRoutes: CustomRoute[] = [
   {
@@ -829,7 +940,8 @@ const customRoutes: CustomRoute[] = [
 
 **解释：**
 
-联合类型 RouteKey 声明所有的路由 key，方便统一管理路由， 该类型由插件 [Elegant Router](https://github.com/soybeanjs/elegant-router) 根据 views 下面的页面文件自动生成
+联合类型 RouteKey 声明所有的路由 key，方便统一管理路由，
+该类型由插件 [Elegant Router](https://github.com/soybeanjs/elegant-router) 根据 views 下面的页面文件自动生成
 
 ::: tip 代码位置
 src/typings/elegant-router.d.ts
@@ -916,20 +1028,31 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
 
 ```typescript
 {
-    name: '403',
-    path: '/403',
-    component: 'layout.blank$view.403',
-    meta: {
-      title: '403',
-      i18nKey: 'route.403',
-      hideInMenu: true
-    }
+  name: '403',
+    path
+:
+  '/403',
+    component
+:
+  'layout.blank$view.403',
+    meta
+:
+  {
+    title: '403',
+      i18nKey
+  :
+    'route.403',
+      hideInMenu
+  :
+    true
+  }
 }
 ```
 
 ---
 
 ---
+
 ### 系统图标
 
 ##### 图标渲染原理
@@ -946,9 +1069,11 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
 
 - **iconify**
 
-  - 安装 vscode 智能提示的插件: [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify)
+  - 安装 vscode
+    智能提示的插件: [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify)
 
-  - 找图标：网址 [https://icones.js.org/](https://icones.js.org/) 或者 vscode 安装 - [Icônes](https://marketplace.visualstudio.com/items?itemName=afzalsayed96.icones)
+  - 找图标：网址 [https://icones.js.org/](https://icones.js.org/) 或者 vscode
+    安装 - [Icônes](https://marketplace.visualstudio.com/items?itemName=afzalsayed96.icones)
 
   - 确定图标名字：找到图标后复制名字 如：'mdi:emoticon' 或者 'mdi-emoticon'，则对应的 vue 的 template 为
 
@@ -1036,10 +1161,12 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
 
     SvgIconVNode({ localIcon: "custom-icon" }); // 本地svg图标
     ```
+
 ---
 
 
 ---
+
 ### 系统主题
 
 ##### 系统主题的实现分为两个部分，一部分是组件库的主题配置，另一部分是 UnoCSS 的主题配置。为了统一两个部分的主题配置，在这之上维护了一些主题配置，通过这些主题配置分别控制组件库和 UnoCSS 的主题配置。
@@ -1107,7 +1234,7 @@ src/theme/settings.ts
  * @param colors Theme colors
  */
 function getNaiveTheme(colors: App.Theme.ThemeColor) {
-  const { primary: colorLoading } = colors;
+  const {primary: colorLoading} = colors;
 
   const theme: GlobalThemeOverrides = {
     common: {
@@ -1125,6 +1252,7 @@ function getNaiveTheme(colors: App.Theme.ThemeColor) {
 const naiveTheme = computed(() => getNaiveTheme(themeColors.value));
 
 ```
+
 ::: tip 代码位置
 src/store/modules/theme/shared.ts
 
@@ -1134,6 +1262,7 @@ src/store/modules/theme/index.ts
 **应用主题变量**
 
 ```vue
+
 <template>
   <NConfigProvider
     :theme="naiveDarkTheme"
@@ -1143,11 +1272,12 @@ src/store/modules/theme/index.ts
     class="h-full"
   >
     <AppProvider>
-      <RouterView class="bg-layout" />
+      <RouterView class="bg-layout"/>
     </AppProvider>
   </NConfigProvider>
 </template>
 ```
+
 ::: tip 代码位置
 src/App.vue
 :::
@@ -1164,9 +1294,9 @@ src/App.vue
  * @param darkMode Is dark mode
  */
 function getAntdTheme(colors: App.Theme.ThemeColor, darkMode: boolean) {
-  const { defaultAlgorithm, darkAlgorithm } = antdTheme;
+  const {defaultAlgorithm, darkAlgorithm} = antdTheme;
 
-  const { primary, info, success, warning, error } = colors;
+  const {primary, info, success, warning, error} = colors;
 
   const theme: ConfigProviderProps['theme'] = {
     token: {
@@ -1200,10 +1330,11 @@ src/store/modules/theme/index.ts
 **应用主题变量**
 
 ```vue
+
 <template>
   <ConfigProvider :theme="themeStore.antdTheme" :locale="antdLocale">
     <AppProvider>
-      <RouterView class="bg-layout" />
+      <RouterView class="bg-layout"/>
     </AppProvider>
   </ConfigProvider>
 </template>
@@ -1223,6 +1354,7 @@ type ThemeToken = {
   };
 };
 ```
+
 ::: tip 代码位置
 src/typings/app.d.ts
 :::
@@ -1234,20 +1366,20 @@ src/typings/app.d.ts
 ```ts
 /** Theme vars */
 export const themeVars: App.Theme.ThemeToken = {
-  colors: {
-    ...colorPaletteVars,
-    nprogress: 'rgb(var(--nprogress-color))',
-    container: 'rgb(var(--container-bg-color))',
-    layout: 'rgb(var(--layout-bg-color))',
-    inverted: 'rgb(var(--inverted-bg-color))',
-    base_text: 'rgb(var(--base-text-color))'
-  },
-  boxShadow: {
-    header: 'var(--header-box-shadow)',
-    sider: 'var(--sider-box-shadow)',
-    tab: 'var(--tab-box-shadow)'
-  }
-};
+    colors: {
+      ...colorPaletteVars,
+      nprogress: 'rgb(var(--nprogress-color))',
+      container: 'rgb(var(--container-bg-color))',
+      layout: 'rgb(var(--layout-bg-color))',
+      inverted: 'rgb(var(--inverted-bg-color))',
+      base_text: 'rgb(var(--base-text-color))'
+    },
+    boxShadow: {
+      header: 'var(--header-box-shadow)',
+      sider: 'var(--sider-box-shadow)',
+      tab: 'var(--tab-box-shadow)'
+    }
+  };
 ```
 
 ::: tip 代码位置
@@ -1259,7 +1391,7 @@ src/theme/vars.ts
 通过上述的 `themeVars` 注入到 UnoCSS 的主题配置中
 
 ```ts
-import { themeVars } from './src/theme/vars';
+import {themeVars} from './src/theme/vars';
 
 export default defineConfig<Theme>({
   theme: {
@@ -1277,11 +1409,12 @@ export default defineConfig<Theme>({
 
 ##### UnoCSS 的暗黑模式
 
-通过 UnoCSS 提供的预设暗黑模式方案, 只要在 html 上添加 class="dark"，则项目中类似于 `dark:text-#000 dark:bg-#333` 的 class 就会生效，从而达到暗黑模式的效果
+通过 UnoCSS 提供的预设暗黑模式方案, 只要在 html 上添加 class="dark"，则项目中类似于 `dark:text-#000 dark:bg-#333` 的
+class 就会生效，从而达到暗黑模式的效果
 
 ```ts
 export default defineConfig<Theme>({
-	presets: [presetUno({ dark: "class" })],
+  presets: [presetUno({dark: "class"})],
 });
 ```
 
@@ -1314,7 +1447,7 @@ export default defineConfig<Theme>({
 export function setupLoading() {
   const themeColor = localStg.get('themeColor') || '#DB5A6B';
 
-  const { r, g, b } = getRgbOfColor(themeColor);
+  const {r, g, b} = getRgbOfColor(themeColor);
 
   const primaryColor = `--primary-color: ${r} ${g} ${b}`;
 
@@ -1366,20 +1499,25 @@ async function setupApp() {
 }
 ```
 
-
-
 ---
 
 ---
 
 ### 其他：请采用问答的形式进行，在这里直接提问，任何人知道的话都可直接回答，如果嫌麻烦要在群里问，请您把本次问答的内容补充在这里，做一名高素质的开发人员
+
 ## Q&A：
+
 ### 1 问： Q:最近开心吗？
+
 ##### 1 答：
+
 A:还好，挺开心的
+
 ### 2 问： 缓存方面的问题
+
 ##### 2 答：
-的项目配置默认是  localStorage , 初始化时对项目的主题涉及的数据进行持久化
+
+的项目配置默认是 localStorage , 初始化时对项目的主题涉及的数据进行持久化
 
 项目的缓存分为两方面
 
@@ -1393,16 +1531,21 @@ get：通过给方法传递必填参数 key 获取缓存的数据
 remove：通过给方法传递必填参数 key 移除指定的缓存数据
 clear：通过调用该方法，清除当前所有的 Storage 相关的缓存数据
 缓存的数据类型需要预先在 src/typings/storage.d.ts 里面定义好
+
 ### 3 问： 关于修改文件相关的问题
+
 ##### 3 答：
-1. 当修改  `.env`  等环境文件及  `vite.config.ts`  文件时，vite 会自动重启服务。
+
+1. 当修改`.env`等环境文件及`vite.config.ts`文件时，vite 会自动重启服务。
 
 > 但是自动重启有几率出现问题，请重新运行项目即可解决。
 
 2. 当修改 `.vue` 或者 `.ts` 时， vite 进行热部署时有几率造成页面卡顿导致无法看到
 
 > 实时修改的效果，`F5` 刷新即可解决
+
 ### 4 问：前端静态路由添加菜单后没显示
+
 ##### 4 答：
 
 问题背景
@@ -1421,8 +1564,8 @@ src/typings/router.d.ts
 
 去除 `hideInMenu` 属性即可正常显示菜单和页面
 
-
 ### 5 问：项目中的权限路由模式如何理解，相应的渲染路由的数据格式怎么定义
+
 ##### 5 答：
 
 **问题背景**
@@ -1441,8 +1584,8 @@ src/typings/router.d.ts
 > 项目使用动态路由模式进行数据渲染时，会自动覆盖路由首页的 name 值
 
 ### 6 问： Tab 页签刷新后一片空白
-##### 6 答：
 
+##### 6 答：
 
 ---
 
@@ -1452,6 +1595,7 @@ src/typings/router.d.ts
 ❌ **错误示范**
 
 ```vue
+
 <template>
   <!-- 注释也算一个标签节点哦  -->
   <p1></p1>
@@ -1462,6 +1606,7 @@ src/typings/router.d.ts
 ✔ **正确示范**
 
 ```vue
+
 <template>
   <div>
     <p1></p1>
@@ -1471,8 +1616,8 @@ src/typings/router.d.ts
 ```
 
 ### 7 问：组件命名问题
-##### 7 答：
 
+##### 7 答：
 
 **命名规范**
 
@@ -1505,9 +1650,11 @@ views
 - 构造函数、class 类、TS 类型命名：统一用 PascalCase 法命名，多个单词首字母大写
 
 ```ts
-function Person() {}
+function Person() {
+}
 
-class Person {}
+class Person {
+}
 
 type Person = {
   name: string;
@@ -1523,7 +1670,8 @@ interface Person {
 ```ts
 let num: number = 1;
 
-function getNum() {}
+function getNum() {
+}
 ```
 
 - 常量命名：统一用大写字母命名，多个单词用下划线连接
@@ -1542,22 +1690,25 @@ const MAX_COUNT = 10;
 }
 ```
 
-
 ### 8 问：项目中使用 Iframe 嵌入本地的 HTML 时出现 404 的问题
+
 ##### 8 答：
 
 问题背景
 
-整个项目都是单页面应用，所以从路径里去加载不同的 HTML 本身就不支持，要么创建多页面应用，要么在单页面应用里通过 iframe 去加载其它的 HTML。
+整个项目都是单页面应用，所以从路径里去加载不同的 HTML 本身就不支持，要么创建多页面应用，要么在单页面应用里通过 iframe
+去加载其它的 HTML。
 
 解决方案
 
 集成 vite-plugin-mpa 插件。
 
 ### xx 问：
+
 ##### xx 答：
 
 ---
 
 ---
+
 ##### end

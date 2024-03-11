@@ -7,12 +7,13 @@ const props = defineProps<{
   view?: boolean;
   data: ICardData;
 }>();
-
 const cardId = computed(() => props.data?.cardId);
 const store = usePanelStore();
 const findCardComponent = (id: string) => {
   return store.$state.cardMap.get(id)?.component || null;
 };
+console.log(cardId.value, '0988-099');
+console.log(findCardComponent(cardId.value || ''), '0988-099');
 </script>
 
 <template>

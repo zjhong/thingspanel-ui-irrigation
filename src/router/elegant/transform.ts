@@ -165,6 +165,8 @@ const routeMap: RouteMap = {
   "data-service": "/data-service",
   "data-service_rule-engine": "/data-service/rule-engine",
   "device": "/device",
+  "device_config": "/device/config",
+  "device_config-detail": "/device/config-detail",
   "device_details": "/device/details",
   "device_grouping": "/device/grouping",
   "device_grouping-details": "/device/grouping-details",

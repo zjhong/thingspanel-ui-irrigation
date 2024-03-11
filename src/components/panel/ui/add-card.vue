@@ -42,6 +42,7 @@ watch(props, pr => {
   }
 });
 const selectCard = (item: ICardDefine) => {
+  console.log(0);
   state.curCardData = {
     cardId: item.id,
     type: item.type,
@@ -54,7 +55,9 @@ const selectCard = (item: ICardDefine) => {
       deviceSource: [{}]
     }
   };
+  console.log(1);
   formRef.value?.setCard(state.curCardData as any);
+  console.log(2);
 };
 </script>
 

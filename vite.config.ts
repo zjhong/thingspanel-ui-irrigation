@@ -2,6 +2,7 @@ import process from 'node:process';
 import { URL, fileURLToPath } from 'node:url';
 import { defineConfig, loadEnv } from 'vite';
 import dayjs from 'dayjs';
+import svgLoader from 'vite-svg-loader';
 import { setupVitePlugins } from './build/plugins';
 import { createViteProxy } from './build/config';
 
@@ -25,7 +26,7 @@ export default defineConfig(configEnv => {
         }
       }
     },
-    plugins: setupVitePlugins(viteEnv),
+    plugins: [...setupVitePlugins(viteEnv), svgLoader()],
     define: {
       BUILD_TIME: JSON.stringify(buildTime)
     },

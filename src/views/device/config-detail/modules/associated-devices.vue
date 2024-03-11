@@ -1,7 +1,16 @@
 <script setup lang="ts">
-import {Ref, ref} from 'vue'
-import {DataTableColumns, FormInst, NButton, NPagination} from "naive-ui";
-import {deviceList} from "@/service/api/device";
+import {onMounted, Ref, ref} from 'vue'
+import {DataTableColumns, FormInst, NButton, NPagination, useMessage} from "naive-ui";
+import {deviceConfigBatch, deviceList} from "@/service/api/device";
+import moment from "moment/moment";
+const message = useMessage();
+
+const props = defineProps({
+    device_config_id: {
+        type: String,
+        default: '',
+    },
+})
 const visible = ref(false)
 const associatedFormRef = ref<HTMLElement & FormInst>();
 const associatedForm = ref(defaultAssociatedForm());
@@ -9,50 +18,39 @@ const associatedForm = ref(defaultAssociatedForm());
 function defaultAssociatedForm() {
   return {
     device_ids: null,
+    device_config_id:'',
   };
 }
 const associatedFormRules = ref({
-  name: {
-    required: true,
-    message: '请输入设备配置名称',
-    trigger: 'blur'
-  },
-  device_type: {
-    required: true,
-    message: '请选择设备接入类型',
-    trigger: 'change'
-  },
-  device_conn_type: {
-    required: true,
-    message: '请选择设备连接方式',
-    trigger: 'change'
-  }
+  // device_ids: {
+  //   required: true,
+  //   message: '请选择设备',
+  //   trigger: 'change'
+  // },
 })
-const associatedList=ref([])
-const associatedTotal=ref(0)
-const associatedQuery=ref({
-  page:1,
-  page_size:10,
-})
-const getTableData=()=>{
 
-}
-const deviceOptions=ref([] as any [])
 const addDevice= () =>{
-  getDeviceList()
+  getDeviceOptions()
   visible.value=true
 }
 const modalClose= ()=>{
 
 }
-const handleSubmit=()=>{
-
+const handleSubmit=async ()=>{
+  await associatedFormRef?.value?.validate();
+  associatedForm.value.device_config_id=props.device_config_id
+  const res=await  deviceConfigBatch(associatedForm.value)
+  if (!res.error) {
+    message.success('新增成功');
+    handleClose()
+  }
 }
 const handleClose=()=>{
   associatedFormRef.value?.restoreValidation();
   associatedForm.value=defaultAssociatedForm()
   visible.value=false
-
+  queryData.value.page=1
+  getDeviceList()
 }
 const handleScroll=(e: Event)=>{
   const currentTarget = e.currentTarget as HTMLElement
@@ -62,18 +60,20 @@ const handleScroll=(e: Event)=>{
   ) {
     if(deviceOptions.value.length<=queryDevice.value.total){
       queryDevice.value.page+=1
-      getDeviceList()
+      getDeviceOptions()
     }
   }
 }
+
+const deviceOptions=ref([] as any [])
 const queryDevice=ref({
   page:1,
   page_size:20,
   total:0,
 })
-const getDeviceList= async ()=>{
+const getDeviceOptions= async ()=>{
   const res=await  deviceList(queryDevice.value)
-  deviceOptions.value=res.data.list
+  deviceOptions.value=deviceOptions.value.concat(res.data.list)
   queryDevice.value.total=res.data.total
 }
 const columnsData :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
@@ -93,30 +93,54 @@ const columnsData :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
     align: 'center',
   },
   {
-    key: 'userName',
+    key: 'ts',
     title: '推送时间',
     align: 'center',
+    render: row => {
+      if(row.ts){
+        return moment(row.ts).format('YYYY-MM-DD hh:mm:ss');
+      }else{
+        return ''
+      }
+    }
   },
 ])
+const queryData=ref({
+  device_config_id:'',
+  page:1,
+  page_size:10,
+})
+const configDevice=ref([])
+const configDeviceTotal=ref(0)
+const getDeviceList=async ()=>{
+  queryData.value.device_config_id=props.device_config_id
+  const res= await deviceList(queryData.value)
+  configDevice.value=res.data.list
+  configDeviceTotal.value=res.data.total
+}
+const device_config_id=ref('7d7fd9f7-9ce8-cf8a-5bfd-27ef3c4eb824')
+onMounted(async ()=>{
+  await getDeviceList()
+})
 </script>
 
 <template>
-  <div >
+  <div class="associated-box">
     <NButton type="primary" @click="addDevice()" >+添加设备</NButton>
     <NDataTable
         :columns="columnsData"
-        :data="associatedList"
+        :data="configDevice"
         size="small"
         :row-key="item => item.id"
         class="flex-1-hidden"
-        style="margin: 10px 0"
+        style="margin: 10px ;height: 50%"
     />
     <div class="pagination-box">
       <!-- Data table to display device groups -->
       <!-- Pagination component -->
-      <NPagination v-model:page="associatedQuery.page" :item-count="associatedTotal" @update:page="getTableData"  />
+      <NPagination v-model:page="queryData.page" :page-size="queryData.page_size" :item-count="configDeviceTotal" @update:page="getDeviceList"  />
     </div>
-    <NModal v-model:show="visible" :mask-closable="false" title="添加设备" class="w-400px"
+    <NModal v-model:show="visible" :mask-closable="false" title="添加设备" class="w-600px"
             preset="card" @after-leave="modalClose">
       <NForm ref="associatedFormRef" :model="associatedForm" :rules="associatedFormRules" label-placement="left" label-width="auto">
         <NFormItem label="选择设备" path="device_ids">
@@ -125,10 +149,11 @@ const columnsData :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
               :options="deviceOptions"
               label-field="name"
               value-field="id"
+              multiple
+              filterable
               @scroll="handleScroll"
           ></NSelect>
         </NFormItem>
-
         <div style="display: flex; justify-content: flex-end; gap: 8px">
           <NButton @click="handleClose">取消</NButton>
           <NButton @click="handleSubmit" type="primary">添加</NButton>
@@ -139,6 +164,9 @@ const columnsData :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
 </template>
 
 <style scoped lang="scss">
+.associated-box{
+  height: 100%;
+}
 .pagination-box{
   display: flex;
   justify-content: flex-end;

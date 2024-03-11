@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { ref, watch} from 'vue'
-import {deviceConfigAdd, deviceConfigEdit, deviceTemplate} from "@/service/api/device";
+import {onMounted, ref, watch} from 'vue'
+import {deviceConfigAdd, deviceConfigEdit, deviceConfigInfo, deviceTemplate} from "@/service/api/device";
 import {FormInst, useMessage} from "naive-ui";
+import {useRoute} from "vue-router";
+import {router} from "@/router";
 
+const route = useRoute();
 const message = useMessage();
+const configId = ref(route.query.id || '')
 
 const props = defineProps({
   modalVisible: {
@@ -34,6 +38,7 @@ function defaultConfigForm() {
     voucher_type: null
   };
 }
+
 const configFormRules = ref({
   name: {
     required: true,
@@ -51,43 +56,37 @@ const configFormRules = ref({
     trigger: 'change'
   }
 })
+const queryTemplate = ref({
+  page: 1,
+  page_size: 20,
+  total: 0,
+})
 const deviceTemplateOptions = ref([])
 const getDeviceTemplate = () => {
-  const paramsData = {
-    page: 1,
-    page_size: 100,
-  }
-  deviceTemplate(paramsData).then(res => {
-    deviceTemplateOptions.value = res.data.list
+  deviceTemplate(queryTemplate.value).then(res => {
+    deviceTemplateOptions.value = deviceTemplateOptions.value.concat(res.data.list)
+    queryTemplate.value.total = res.data.total
   })
 }
-const emit = defineEmits();
-const visible = ref(false)
-watch(
-    () => props.modalVisible,
-    (newValue) => {
-      visible.value = newValue
-      if (props.modalType === 'add') {
-        modalTitle.value = '添加'
-      } else {
-        modalTitle.value = '编辑'
-      }
+
+const deviceTemplateScroll = (e: Event) => {
+  const currentTarget = e.currentTarget as HTMLElement
+  if (
+      currentTarget.scrollTop + currentTarget.offsetHeight >=
+      currentTarget.scrollHeight
+  ) {
+    if (deviceTemplateOptions.value.length <= queryTemplate.value.total) {
+      queryTemplate.value.page += 1
       getDeviceTemplate()
     }
-)
-const modalClose = () => {
-  emit('modalClose');
-}
-
-const deviceTemplateScroll = () => {
+  }
 
 }
 const configFormRef = ref<HTMLElement & FormInst>();
 const handleClose = () => {
   configFormRef.value?.restoreValidation();
-  configForm.value=defaultConfigForm()
-  visible.value = false
-  modalClose()
+  configForm.value = defaultConfigForm()
+  router.go(-1)
 }
 //提交表单
 const handleSubmit = async () => {
@@ -104,15 +103,39 @@ const handleSubmit = async () => {
     }
   }
   handleClose()
-  emit('submitted');
 }
+const getConfig = async () => {
+  const res = await deviceConfigInfo({id: configId.value})
+  configForm.value = {...res.data}
+}
+
+watch(
+    () => configId.value,
+    async (newId) => {
+      if (newId) {
+        modalTitle.value = '编辑'
+      }
+    }
+);
+
+onMounted(async () => {
+  // configId.value=<string>route.query.id || ''
+  if (configId.value) {
+    modalTitle.value = '编辑'
+    await getConfig()
+  } else {
+    modalTitle.value = '添加'
+  }
+  getDeviceTemplate()
+})
 
 </script>
 
 <template>
   <div class="overflow-hidden">
-    <NCard  :title="`${modalTitle}设备配置`" >
-      <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
+    <NCard :title="`${modalTitle}设备配置`">
+      <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto"
+             style="width: 600px">
         <NFormItem label="设备配置名称" path="name">
           <NInput v-model:value="configForm.name" placeholder="请输入设备名称"/>
         </NFormItem>
@@ -120,6 +143,7 @@ const handleSubmit = async () => {
           <NSelect
               v-model:value="configForm.device_template_id"
               :options="deviceTemplateOptions"
+              filterable
               label-field="name"
               value-field="id"
               @scroll="deviceTemplateScroll"
@@ -143,12 +167,9 @@ const handleSubmit = async () => {
           </n-radio-group>
         </NFormItem>
         <div style="display: flex; justify-content: flex-end; gap: 8px">
-          <NButton @click="handleClose">取消</NButton>
-            <NButton @click="handleSubmit" type="primary">确定</NButton>
+          <NButton type="primary" @click="handleSubmit">确定</NButton>
         </div>
       </NForm>
     </NCard>
   </div>
 </template>
-
-

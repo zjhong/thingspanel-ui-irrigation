@@ -63,6 +63,11 @@ export const  deviceTemplate= async (params: any) => {
   return await request.get<Api.BaseApi.Data | any>(`/device/template`, {params});
 };
 
+/** 获取设备模板列表 */
+export const  deviceTemplateDetail= async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>(`/device/template/detail/${params.id}`, );
+};
+
 /** 获取设备配置列表 */
 export const  deviceConfig= async (params: any) => {
   return await request.get<Api.BaseApi.Data | any>(`/device_config`, {params});
@@ -79,9 +84,19 @@ export const  deviceConfigEdit= async (params: any) => {
 };
 
 /** 删除设备配置 */
-export const  deviceConfigDel= async (params: any) => {
-  return await request.post<Api.BaseApi.Data |any>(`device_config/${params.id}`, );
+export const  deviceConfigInfo= async (params: any) => {
+  return await request.get<Api.BaseApi.Data |any>(`device_config/${params.id}`, );
 };
+/** 删除设备配置 */
+export const  deviceConfigDel= async (params: any) => {
+  return await request.delete<Api.BaseApi.Data |any>(`device_config/${params.id}`, );
+};
+/** 删除设备配置 */
+export const  deviceConfigBatch= async (params: any) => {
+  return await request.put<Api.BaseApi.Data |any>(`/device_config/batch`, params);
+};
+
+
 
 /** 获取设备列表 */
 /** 获取设备列表 */

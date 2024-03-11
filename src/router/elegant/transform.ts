@@ -167,6 +167,7 @@ const routeMap: RouteMap = {
   "device": "/device",
   "device_config": "/device/config",
   "device_config-detail": "/device/config-detail",
+  "device_config-edit": "/device/config-edit",
   "device_details": "/device/details",
   "device_grouping": "/device/grouping",
   "device_grouping-details": "/device/grouping-details",

@@ -37,9 +37,9 @@ declare module "@elegant-router/types" {
     "dashboard_panel": "/dashboard/panel";
     "dashboard_workbench": "/dashboard/workbench";
     "data-service": "/data-service";
-    "data-service_rule-engine": "/data-service/rule-engine";
     "device": "/device";
-    "device_details": "/device/details";
+    "device_config": "/device/config";
+    "device_config-detail": "/device/config-detail";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
@@ -87,7 +87,6 @@ declare module "@elegant-router/types" {
     "product_update-ota": "/product/update-ota";
     "product_update-package": "/product/update-package";
     "rule-engine": "/rule-engine";
-    "test": "/test";
     "user-center": "/user-center";
   };
 
@@ -142,7 +141,6 @@ declare module "@elegant-router/types" {
     | "plugin"
     | "product"
     | "rule-engine"
-    | "test"
     | "user-center"
   >;
 
@@ -174,8 +172,9 @@ declare module "@elegant-router/types" {
     | "dashboard_mobile-panel"
     | "dashboard_panel"
     | "dashboard_workbench"
-    | "data-service_rule-engine"
-    | "device_details"
+    | "data-service"
+    | "device_config-detail"
+    | "device_config"
     | "device_grouping-details"
     | "device_grouping"
     | "device_manage"
@@ -210,7 +209,6 @@ declare module "@elegant-router/types" {
     | "product_update-ota"
     | "product_update-package"
     | "rule-engine"
-    | "test"
     | "user-center"
   >;
 

@@ -48,7 +48,7 @@ const queryData=ref({
   page:1,
   page_size:12,
 })
-const deviceConfigList=ref([])
+const deviceConfigList=ref([] as any [])
 const dataTotal=ref(0)
 const getData=async ()=>{
   const res= await deviceConfig(queryData.value)

@@ -7,6 +7,7 @@ const extendForm=ref({
   protocol_type:null,
   voucher_type:null,
 })
+const extendFormRules=ref({})
 const handleSubmit=()=>{
 
 }

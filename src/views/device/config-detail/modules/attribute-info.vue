@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
-import {NPagination} from "naive-ui";
-import {ref} from "vue";
+import {DataTableColumns, NPagination} from "naive-ui";
+import {Ref, ref} from "vue";
 const showPopover=ref(false)
-const deviceTemplateId=ref(1)
-const columns=ref([
+const deviceTemplateId=ref('1')
+const columns :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
   {
     key: 'name',
     title: '名称',

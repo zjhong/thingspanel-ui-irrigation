@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {reactive, ref, watch} from 'vue'
+import { ref, watch} from 'vue'
 import {deviceConfigAdd, deviceConfigEdit, deviceTemplate} from "@/service/api/device";
 import {FormInst, useMessage} from "naive-ui";
 
@@ -52,7 +52,15 @@ const configFormRules = ref({
   }
 })
 const deviceTemplateOptions = ref([])
-
+const getDeviceTemplate = () => {
+  const paramsData = {
+    page: 1,
+    page_size: 100,
+  }
+  deviceTemplate(paramsData).then(res => {
+    deviceTemplateOptions.value = res.data.list
+  })
+}
 const emit = defineEmits();
 const visible = ref(false)
 watch(
@@ -70,20 +78,17 @@ watch(
 const modalClose = () => {
   emit('modalClose');
 }
-const getDeviceTemplate = () => {
-  const paramsData = {
-    page: 1,
-    page_size: 100,
-  }
-  deviceTemplate(paramsData).then(res => {
-    deviceTemplateOptions.value = res.data.list
-  })
-}
+
 const deviceTemplateScroll = () => {
 
 }
 const configFormRef = ref<HTMLElement & FormInst>();
-
+const handleClose = () => {
+  configFormRef.value?.restoreValidation();
+  configForm.value=defaultConfigForm()
+  visible.value = false
+  modalClose()
+}
 //提交表单
 const handleSubmit = async () => {
   await configFormRef?.value?.validate();
@@ -101,12 +106,7 @@ const handleSubmit = async () => {
   handleClose()
   emit('submitted');
 }
-const handleClose = () => {
-  configFormRef.value?.restoreValidation();
-  configForm.value=defaultConfigForm()
-  visible.value = false
-  modalClose()
-}
+
 </script>
 
 <template>
@@ -152,6 +152,4 @@ const handleClose = () => {
   </div>
 </template>
 
-<style scoped>
 
-</style>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import {FormInst, NButton, NPagination} from "naive-ui";
+import {Ref, ref} from 'vue'
+import {DataTableColumns, FormInst, NButton, NPagination} from "naive-ui";
 import {deviceList} from "@/service/api/device";
 const visible = ref(false)
 const associatedFormRef = ref<HTMLElement & FormInst>();
@@ -37,7 +37,7 @@ const associatedQuery=ref({
 const getTableData=()=>{
 
 }
-const deviceOptions=ref([])
+const deviceOptions=ref([] as any [])
 const addDevice= () =>{
   getDeviceList()
   visible.value=true
@@ -71,17 +71,15 @@ const queryDevice=ref({
   page_size:20,
   total:0,
 })
-const getDeviceList=()=>{
-  deviceList(queryDevice.value).then(res=>{
-    deviceOptions.value=deviceOptions.value.concat(res.data?.list)
-    queryDevice.value.total=res.data?.total
-  })
+const getDeviceList= async ()=>{
+  const res=await  deviceList(queryDevice.value)
+  deviceOptions.value=res.data.list
+  queryDevice.value.total=res.data.total
 }
-const columns=ref([
+const columnsData :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
   {
     key: 'name',
     title: '设备名称',
-    render: (_, index): string => getIndex(index),
     align: 'center',
   },
   {
@@ -106,7 +104,7 @@ const columns=ref([
   <div >
     <NButton type="primary" @click="addDevice()" >+添加设备</NButton>
     <NDataTable
-        :columns="columns"
+        :columns="columnsData"
         :data="associatedList"
         size="small"
         :row-key="item => item.id"

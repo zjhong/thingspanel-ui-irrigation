@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import {NButton, NPagination} from "naive-ui";
+import {NButton} from "naive-ui";
 import AssociatedDevices  from './modules/associated-devices.vue';
 import ExtendInfo  from './modules/extend-info.vue';
 import AttributeInfo  from './modules/attribute-info.vue';
@@ -10,7 +10,6 @@ import ConnectionInfo  from './modules/connection-info.vue';
 import { PencilOutline as editIcon } from '@vicons/ionicons5'
 import { CopyOutline as copyIcon } from '@vicons/ionicons5'
 import { TrashOutline as trashIcon } from '@vicons/ionicons5'
-import {ref} from "vue";
 
 const showGroupModal=()=>{
 
@@ -36,7 +35,7 @@ const showGroupModal=()=>{
             <AttributeInfo/>
           </n-tab-pane>
           <n-tab-pane name="连接与认证" tab="连接与认证">
-            <ConnectionInfo/>
+            <ConnectionInfo key="ConnectionInfo"/>
           </n-tab-pane>
           <n-tab-pane name="数据处理" tab="数据处理" :disabled="true">
             <div>
@@ -53,9 +52,9 @@ const showGroupModal=()=>{
               <div v-for="item in 5" class="alarm-item">
                 <div class="item-name">
                   <div>
-                    aaaa
+                    {{item}}
                   </div>
-                  <n-switch v-model:value="active" />
+                  <n-switch  />
                 </div>
                 <div class="item-desc">
                   温度大于28度报警
@@ -63,17 +62,17 @@ const showGroupModal=()=>{
                 <div class="item-operate">
                   <n-button tertiary circle type="warning">
                     <template #icon>
-                      <n-icon><edit-icon /></n-icon>
+                      <n-icon><editIcon /></n-icon>
                     </template>
                   </n-button>
                   <n-button tertiary circle type="info">
                     <template #icon>
-                      <n-icon><copy-icon /></n-icon>
+                      <n-icon><copyIcon /></n-icon>
                     </template>
                   </n-button>
                   <n-button tertiary circle type="error">
                     <template #icon>
-                      <n-icon><trash-icon /></n-icon>
+                      <n-icon><trashIcon /></n-icon>
                     </template>
                   </n-button>
                 </div>

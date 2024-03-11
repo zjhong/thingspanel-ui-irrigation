@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import {FormInst, NButton, NPagination} from "naive-ui";
+import {Ref, ref} from 'vue'
+import {DataTableColumns, FormInst, NButton, NPagination} from "naive-ui";
 const visible = ref(false)
 const extendFormRef = ref<HTMLElement & FormInst>();
 const extendForm = ref(defaultExtendForm());
@@ -25,7 +25,7 @@ const extendFormRules = ref({
     trigger: 'change'
   },
 })
-const extendInfoList=ref([])
+const extendInfoList=ref([] as any [])
 const associatedTotal=ref(0)
 const associatedQuery=ref({
   page:1,
@@ -64,21 +64,7 @@ const handleClose=()=>{
   extendForm.value=defaultExtendForm()
   visible.value=false
 }
-const handleScroll=(e: Event)=>{
-  console.log(444)
-  const currentTarget = e.currentTarget as HTMLElement
-  if (
-      currentTarget.scrollTop + currentTarget.offsetHeight >=
-      currentTarget.scrollHeight
-  ) {
-    console.log(9999)
-    if(deviceOptions.value.length<=queryDevice.value.total){
-      queryDevice.value.page+=1
-      getDeviceList()
-    }
-  }
-}
-const columns=ref([
+const columns :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
   {
     key: 'name',
     title: '名称',

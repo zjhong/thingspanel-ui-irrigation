@@ -15,8 +15,8 @@ const queryParams = reactive({
 
 const tableData = ref<Api.SystemManage.SystemLogList[]>([]);
 
-function setTableData(data: Api.SystemManage.SystemLogList[]) {
-  tableData.value = data;
+function setTableData(data: Api.SystemManage.SystemLogList[] | []) {
+  tableData.value = data || [];
 }
 
 const pagination: PaginationProps = reactive({
@@ -39,11 +39,12 @@ const getTableData = async () => {
     page: pagination.page || 1,
     page_size: pagination.pageSize || 10,
     username: queryParams.name,
-    start_time: '',
-    end_time: ''
+    start_time: undefined,
+    end_time: undefined
   });
+  console.log(res);
   if (res?.data) {
-    setTableData(res?.data);
+    setTableData(res?.data.list || []);
   }
   endLoading();
 };

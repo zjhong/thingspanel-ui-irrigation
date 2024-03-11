@@ -281,17 +281,17 @@ declare namespace Api {
     };
 
     type SystemLogList = {
-      id: string;
-      ip: string;
-      path: string;
-      user_id: string;
-      name: null | string;
-      created_at: Date;
-      latency: number;
-      request_message: string;
-      response_message: string;
-      tenant_id: string;
-      remark: null;
+      id?: string;
+      ip?: string;
+      path?: string;
+      user_id?: string;
+      name?: null | string;
+      created_at?: Date;
+      latency?: number;
+      request_message?: string;
+      response_message?: string;
+      tenant_id?: string;
+      remark?: null;
     };
   }
   /** 系统设置-路由管理 */

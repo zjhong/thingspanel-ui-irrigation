@@ -89,6 +89,8 @@ declare module "@elegant-router/types" {
     "product_update-ota": "/product/update-ota";
     "product_update-package": "/product/update-package";
     "rule-engine": "/rule-engine";
+    "system-management-user": "/system-management-user";
+    "system-management-user_system-log": "/system-management-user/system-log";
     "test": "/test";
     "user-center": "/user-center";
   };
@@ -144,6 +146,7 @@ declare module "@elegant-router/types" {
     | "plugin"
     | "product"
     | "rule-engine"
+    | "system-management-user"
     | "test"
     | "user-center"
   >;
@@ -214,6 +217,7 @@ declare module "@elegant-router/types" {
     | "product_update-ota"
     | "product_update-package"
     | "rule-engine"
+    | "system-management-user_system-log"
     | "test"
     | "user-center"
   >;

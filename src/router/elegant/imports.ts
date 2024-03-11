@@ -66,6 +66,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "product_update-ota": () => import("@/views/product/update-ota/index.vue"),
   "product_update-package": () => import("@/views/product/update-package/index.vue"),
   "rule-engine": () => import("@/views/rule-engine/index.vue"),
+  "system-management-user_system-log": () => import("@/views/system-management-user/system-log/index.vue"),
   test: () => import("@/views/test/index.vue"),
   "user-center": () => import("@/views/user-center/index.vue"),
 };

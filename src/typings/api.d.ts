@@ -271,6 +271,28 @@ declare namespace Api {
       /** children menu */
       children?: Menu[];
     }>;
+
+    type SystemLogSearchParams = {
+      page: number;
+      page_size: number;
+      username?: string;
+      start_time?: string;
+      end_time?: string;
+    };
+
+    type SystemLogList = {
+      id: string;
+      ip: string;
+      path: string;
+      user_id: string;
+      name: null | string;
+      created_at: Date;
+      latency: number;
+      request_message: string;
+      response_message: string;
+      tenant_id: string;
+      remark: null;
+    };
   }
   /** 系统设置-路由管理 */
   namespace ApiApplyManagement {

@@ -43,7 +43,9 @@ export const czh_cn = {
   device_manage: '设备管理',
   device_details: '设备详情',
   device_config: '设备配置',
-  'device_config-detail': '设备配置详情'
+  'device_config-detail': '设备配置详情',
+  'system-management-user': '系统管理(租户)',
+  'system-management-user_system-log': '系统日志'
 };
 
 export const cen = {
@@ -87,5 +89,7 @@ export const cen = {
   device_manage: 'Equipment Management',
   device_details: 'Device Details',
   device_config: 'deviceConfig',
-  'device_config-detail': 'deviceConfig Detail'
+  'device_config-detail': 'deviceConfig Detail',
+  'system-management-user': 'System Management (Tenant)',
+  'system-management-user_system-log': 'system log'
 };

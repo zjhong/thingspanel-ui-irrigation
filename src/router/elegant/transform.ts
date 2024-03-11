@@ -215,6 +215,8 @@ const routeMap: RouteMap = {
   "product_update-ota": "/product/update-ota",
   "product_update-package": "/product/update-package",
   "rule-engine": "/rule-engine",
+  "system-management-user": "/system-management-user",
+  "system-management-user_system-log": "/system-management-user/system-log",
   "test": "/test",
   "user-center": "/user-center"
 };

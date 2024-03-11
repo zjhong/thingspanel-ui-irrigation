@@ -155,11 +155,22 @@ export const generatedRoutes: GeneratedRoute[] = [
   {
     name: 'data-service',
     path: '/data-service',
-    component: 'layout.base$view.data-service',
+    component: 'layout.base',
     meta: {
       title: 'data-service',
       i18nKey: 'route.data-service'
-    }
+    },
+    children: [
+      {
+        name: 'data-service_rule-engine',
+        path: '/data-service/rule-engine',
+        component: 'view.data-service_rule-engine',
+        meta: {
+          title: 'data-service_rule-engine',
+          i18nKey: 'route.data-service_rule-engine'
+        }
+      }
+    ]
   },
   {
     name: 'device',
@@ -186,6 +197,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'device_config-detail',
           i18nKey: 'route.device_config-detail'
+        }
+      },
+      {
+        name: 'device_details',
+        path: '/device/details',
+        component: 'view.device_details',
+        meta: {
+          title: 'device_details',
+          i18nKey: 'route.device_details'
         }
       },
       {
@@ -669,6 +689,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'rule-engine',
       i18nKey: 'route.rule-engine'
+    }
+  },
+  {
+    name: 'test',
+    path: '/test',
+    component: 'layout.base$view.test',
+    meta: {
+      title: 'test',
+      i18nKey: 'route.test'
     }
   },
   {

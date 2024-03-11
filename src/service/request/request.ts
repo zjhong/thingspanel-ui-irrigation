@@ -23,15 +23,11 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       Object.assign(headers, headersWithToken);
       console.log(params);
       if (params && typeof params === 'object' && !Array.isArray(params)) {
-        const filteredData = Object.keys(params).reduce((acc, key) => {
-          if (params[key] !== '') {
-            acc[key] = params[key];
+        Object.keys(params).forEach(key => {
+          if (params[key] === '') {
+            params[key] = undefined;
           }
-          return acc;
-        }, {});
-
-        // 使用过滤后的数据替换原始数据
-        config.data = filteredData;
+        });
       }
 
       return config;

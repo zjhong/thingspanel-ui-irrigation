@@ -25,3 +25,9 @@ export const editDataClear = async (params: any) => {
   const data = await request.put<Api.BaseApi.Data>('/datapolicy', params);
   return data;
 };
+
+/** 编辑清理设置 */
+export const dictQuery = async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>('dict/enum', {params});
+};
+

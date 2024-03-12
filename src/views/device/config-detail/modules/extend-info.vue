@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import {Ref, ref} from 'vue'
-import {DataTableColumns, FormInst, NButton, NPagination} from "naive-ui";
+import {onMounted, Ref, ref} from 'vue'
+import {DataTableColumns, FormInst, NButton, useMessage} from "naive-ui";
+import {deviceConfigEdit} from "@/service/api/device";
 const visible = ref(false)
 const extendFormRef = ref<HTMLElement & FormInst>();
 const extendForm = ref(defaultExtendForm());
+const message = useMessage();
+const emit = defineEmits();
+const props = defineProps({
+  configInfo: {
+    type: Object,
+    default(){
+      return null
+    },
+  },
+})
 
 function defaultExtendForm() {
   return {
@@ -26,14 +37,6 @@ const extendFormRules = ref({
   },
 })
 const extendInfoList=ref([] as any [])
-const associatedTotal=ref(0)
-const associatedQuery=ref({
-  page:1,
-  page_size:10,
-})
-const getTableData=()=>{
-
-}
 const typeOptions=ref([
   {
     label:'String',
@@ -57,6 +60,13 @@ const modalClose= ()=>{
 const handleSubmit=async ()=>{
   await extendFormRef?.value?.validate();
   extendInfoList.value.push(extendForm.value)
+  const postData=props.configInfo
+  postData.additional_info=JSON.stringify(extendInfoList.value)
+  const  res=await deviceConfigEdit(postData)
+  if(!res.error){
+    message.success('修改成功');
+    emit('upDateConfig');
+  }
   handleClose()
 }
 const handleClose=()=>{
@@ -96,10 +106,18 @@ const columns :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
     align: 'center',
   },
 ])
+
+onMounted(()=>{
+  if(props.configInfo.additional_info && props.configInfo.additional_info==="{}"){
+    extendInfoList.value=[]
+  }else{
+    extendInfoList.value=JSON.parse(props.configInfo.additional_info)
+  }
+})
 </script>
 
 <template>
-  <div >
+  <div class="extend-box">
     <NButton type="primary" @click="addDevice()" >+添加扩展信息</NButton>
     <NDataTable
         :columns="columns"
@@ -108,11 +126,11 @@ const columns :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
         class="flex-1-hidden"
         style="margin: 10px 0"
     />
-    <div class="pagination-box">
-      <!-- Data table to display device groups -->
-      <!-- Pagination component -->
-      <NPagination v-model:page="associatedQuery.page" :item-count="associatedTotal" @update:page="getTableData"  />
-    </div>
+<!--    <div class="pagination-box">-->
+<!--      &lt;!&ndash; Data table to display device groups &ndash;&gt;-->
+<!--      &lt;!&ndash; Pagination component &ndash;&gt;-->
+<!--      <NPagination v-model:page="associatedQuery.page" :item-count="associatedTotal" @update:page="getTableData"  />-->
+<!--    </div>-->
     <NModal v-model:show="visible" :mask-closable="false" title="添加扩展信息" class="w-400px"
             preset="card" @after-leave="modalClose">
       <NForm ref="extendFormRef" :model="extendForm" :rules="extendFormRules" label-placement="left" label-width="auto">
@@ -138,8 +156,11 @@ const columns :Ref<DataTableColumns<ServiceManagement.Service>> =ref([
 </template>
 
 <style scoped lang="scss">
-.pagination-box{
-  display: flex;
-  justify-content: flex-end;
+.extend-box{
+  .pagination-box{
+    display: flex;
+    justify-content: flex-end;
+  }
 }
+
 </style>

@@ -200,6 +200,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'device_config-edit',
+        path: '/device/config-edit',
+        component: 'view.device_config-edit',
+        meta: {
+          title: 'device_config-edit',
+          i18nKey: 'route.device_config-edit'
+        }
+      },
+      {
         name: 'device_details',
         path: '/device/details',
         component: 'view.device_details',

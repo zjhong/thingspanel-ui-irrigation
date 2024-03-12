@@ -57,12 +57,18 @@ export function useRouterPush(inSetup = true) {
         module
       }
     };
+    let redirect = '';
+    const is_remember_rath = localStorage.getItem('isRememberPath');
 
-    const redirect = redirectUrl || route.value.fullPath;
+    if (is_remember_rath === '1') {
+      redirect = redirectUrl || route.value.fullPath;
+    }
 
-    options.query = {
-      redirect
-    };
+    if (redirect) {
+      options.query = {
+        redirect
+      };
+    }
 
     return routerPushByKey('login', options);
   }

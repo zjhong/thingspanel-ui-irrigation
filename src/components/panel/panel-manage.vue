@@ -1,8 +1,29 @@
 <script lang="tsx" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
+import { useFullscreen } from '@vueuse/core';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
+import { PutBoard, getBoard } from '@/service/api';
+import { useAppStore } from '@/store/modules/app';
 
+const props = defineProps<{ panelId: string }>();
+const panelDate = ref<Panel.Board>();
+const { isFullscreen, toggle } = useFullscreen();
+const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
+const fetchBroad = async () => {
+  const { data } = await getBoard(props.panelId);
+  if (data) {
+    panelDate.value = data;
+    if (data.config) {
+      const configJson = JSON.parse(data.config);
+      console.log(configJson, 'rewrere');
+      console.log(typeof configJson, 'rewrere');
+
+      layout.value = [...configJson, ...layout.value];
+    }
+  }
+};
+
 const state = reactive({
   openAddPanel: false,
   cardData: null as null | ICardData
@@ -31,11 +52,27 @@ const edit = (view: ICardView) => {
   state.cardData = view.data || null;
   state.openAddPanel = true;
 };
+
+const savePanel = async () => {
+  const layoutJson = JSON.stringify(layout.value);
+
+  await PutBoard({
+    id: props.panelId,
+    config: layoutJson,
+    name: panelDate.value?.name,
+    home_flag: panelDate.value?.home_flag
+  });
+};
+
+onMounted(fetchBroad);
 </script>
 
 <template>
   <div class="w-full px-5 py-5">
-    <div class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10">
+    <div
+      v-show="!appStore.fullContent"
+      class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10"
+    >
       <div>
         <NButton>
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
@@ -52,15 +89,17 @@ const edit = (view: ICardView) => {
         </NButton>
         <NDivider vertical />
         <NButton>取消</NButton>
-        <NButton
+        <NButton @click="savePanel">保存</NButton>
+        <FullScreen
+          :full="isFullscreen"
           @click="
             () => {
-              console.log(layout, '4434343');
+              appStore.toggleFullContent();
+
+              toggle();
             }
           "
-        >
-          保存
-        </NButton>
+        />
       </NSpace>
     </div>
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">

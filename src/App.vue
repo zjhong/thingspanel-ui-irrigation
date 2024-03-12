@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { NConfigProvider, darkTheme } from 'naive-ui';
+import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
 import Content from './components/content/index.vue';
+
 defineOptions({
   name: 'App'
 });
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-
+const { toggle } = useFullscreen();
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
 
 const naiveLocale = computed(() => {
@@ -19,6 +21,24 @@ const naiveLocale = computed(() => {
 
 const naiveDateLocale = computed(() => {
   return naiveDateLocales[appStore.locale];
+});
+const handleFullScreenChange = () => {
+  console.log(document.fullscreenElement, '3243434');
+  if (!document.fullscreenElement) {
+    appStore.toggleFullContent();
+
+    toggle();
+  }
+};
+
+onMounted(() => {
+  // 当组件挂载时，添加全屏变化事件的监听器
+  document.addEventListener('fullscreenchange', handleFullScreenChange);
+});
+
+onBeforeUnmount(() => {
+  // 当组件卸载前，移除全屏变化事件的监听器
+  document.removeEventListener('fullscreenchange', handleFullScreenChange);
 });
 </script>
 

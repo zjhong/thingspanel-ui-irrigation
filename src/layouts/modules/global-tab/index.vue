@@ -189,7 +189,7 @@ init();
       </BetterScroll>
     </div>
     <ReloadButton :loading="!appStore.reloadFlag" @click="refresh" />
-    <FullScreen :full="appStore.fullContent" @click="appStore.toggleFullContent" />
+    <!--    <FullScreen :full="appStore.fullContent" @click="appStore.toggleFullContent" />-->
   </DarkModeContainer>
   <ContextMenu
     :visible="dropdown.visible"

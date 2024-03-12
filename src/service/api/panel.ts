@@ -4,6 +4,10 @@ export const getBoardList = async (params: Panel.RequestParams) => {
   return await request.get<Panel.Data>('/board', { params });
 };
 
+export const getBoard = async (params: string) => {
+  return await request.get<Panel.Board>(`/board/${params}`);
+};
+
 export const PostBoard = async (params: any) => {
   return await request.post<any>('/board', params);
 };

@@ -729,5 +729,43 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.user-center',
       hideInMenu: true
     }
+  },
+  {
+    name: 'visualization',
+    path: '/visualization',
+    component: 'layout.base',
+    meta: {
+      title: 'visualization',
+      i18nKey: 'route.visualization'
+    },
+    children: [
+      {
+        name: 'visualization_panel',
+        path: '/visualization/panel',
+        component: 'view.visualization_panel',
+        meta: {
+          title: 'visualization_panel',
+          i18nKey: 'route.visualization_panel'
+        }
+      },
+      {
+        name: 'visualization_panel-details',
+        path: '/visualization/panel-details',
+        component: 'view.visualization_panel-details',
+        meta: {
+          title: 'visualization_panel-details',
+          i18nKey: 'route.visualization_panel-details'
+        }
+      },
+      {
+        name: 'visualization_panel-preview',
+        path: '/visualization/panel-preview',
+        component: 'view.visualization_panel-preview',
+        meta: {
+          title: 'visualization_panel-preview',
+          i18nKey: 'route.visualization_panel-preview'
+        }
+      }
+    ]
   }
 ];

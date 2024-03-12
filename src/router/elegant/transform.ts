@@ -218,7 +218,11 @@ const routeMap: RouteMap = {
   "system-management-user": "/system-management-user",
   "system-management-user_system-log": "/system-management-user/system-log",
   "test": "/test",
-  "user-center": "/user-center"
+  "user-center": "/user-center",
+  "visualization": "/visualization",
+  "visualization_panel": "/visualization/panel",
+  "visualization_panel-details": "/visualization/panel-details",
+  "visualization_panel-preview": "/visualization/panel-preview"
 };
 
 /**

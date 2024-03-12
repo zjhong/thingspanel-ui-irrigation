@@ -45,7 +45,11 @@ export const czh_cn = {
   device_config: '设备配置',
   'device_config-detail': '设备配置详情',
   'system-management-user': '系统管理(租户)',
-  'system-management-user_system-log': '系统日志'
+  'system-management-user_system-log': '系统日志',
+  visualization: '可视化',
+  visualization_panel: '看板列表',
+  'visualization_panel-details': '看板详情',
+  'visualization_panel-preview': '看板预览'
 };
 
 export const cen = {
@@ -91,5 +95,9 @@ export const cen = {
   device_config: 'deviceConfig',
   'device_config-detail': 'deviceConfig Detail',
   'system-management-user': 'System Management (Tenant)',
-  'system-management-user_system-log': 'system log'
+  'system-management-user_system-log': 'system log',
+  visualization: 'visualization',
+  visualization_panel: 'kanban list',
+  'visualization_panel-details': 'kanban details',
+  'visualization_panel-preview': 'kanban preview'
 };

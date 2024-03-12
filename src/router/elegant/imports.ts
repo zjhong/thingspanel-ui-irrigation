@@ -69,4 +69,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "system-management-user_system-log": () => import("@/views/system-management-user/system-log/index.vue"),
   test: () => import("@/views/test/index.vue"),
   "user-center": () => import("@/views/user-center/index.vue"),
+  "visualization_panel-details": () => import("@/views/visualization/panel-details/index.vue"),
+  "visualization_panel-preview": () => import("@/views/visualization/panel-preview/index.vue"),
+  visualization_panel: () => import("@/views/visualization/panel/index.vue"),
 };

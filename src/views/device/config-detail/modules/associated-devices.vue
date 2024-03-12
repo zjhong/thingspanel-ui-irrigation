@@ -8,7 +8,9 @@ const message = useMessage();
 const props = defineProps({
     device_config_id: {
         type: String,
-        default: '',
+        default(){
+          return ''
+        },
     },
 })
 const visible = ref(false)
@@ -115,10 +117,10 @@ const configDeviceTotal=ref(0)
 const getDeviceList=async ()=>{
   queryData.value.device_config_id=props.device_config_id
   const res= await deviceList(queryData.value)
-  configDevice.value=res.data.list
+  configDevice.value=res.data.list || []
   configDeviceTotal.value=res.data.total
 }
-const device_config_id=ref('7d7fd9f7-9ce8-cf8a-5bfd-27ef3c4eb824')
+// const device_config_id=ref('7d7fd9f7-9ce8-cf8a-5bfd-27ef3c4eb824')
 onMounted(async ()=>{
   await getDeviceList()
 })

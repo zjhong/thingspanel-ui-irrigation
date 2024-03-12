@@ -80,10 +80,10 @@ export const  deviceConfigAdd= async (params: any) => {
 
 /** 更新设备配置 */
 export const  deviceConfigEdit= async (params: any) => {
-  return await request.post<Api.BaseApi.Data |any>(`/device_config`, params);
+  return await request.put<Api.BaseApi.Data |any>(`/device_config`, params);
 };
 
-/** 删除设备配置 */
+/** 获取设备配置 */
 export const  deviceConfigInfo= async (params: any) => {
   return await request.get<Api.BaseApi.Data |any>(`device_config/${params.id}`, );
 };
@@ -91,7 +91,7 @@ export const  deviceConfigInfo= async (params: any) => {
 export const  deviceConfigDel= async (params: any) => {
   return await request.delete<Api.BaseApi.Data |any>(`device_config/${params.id}`, );
 };
-/** 删除设备配置 */
+/** 批量新设备配置关联的设备 */
 export const  deviceConfigBatch= async (params: any) => {
   return await request.put<Api.BaseApi.Data |any>(`/device_config/batch`, params);
 };

@@ -10,13 +10,11 @@ const message = useMessage();
 const emit = defineEmits();
 
 const showPopover = ref(false);
-const props = defineProps({
-  configInfo: {
-    type: Object,
-    default() {
-      return null;
-    }
-  }
+interface Props {
+  configInfo?: object | any;
+}
+const props = withDefaults(defineProps<Props>(), {
+  configInfo: null
 });
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
@@ -131,20 +129,20 @@ onMounted(async () => {
 
 <template>
   <div class="attribute-box">
-    <div class="flex" style="align-items: center">
-      <div style="margin-right: 10px">绑定设备模板</div>
+    <NFlex align="center">
+      <div class="m-b-10">绑定设备模板</div>
       <n-popover :show="showPopover" placement="bottom-start" trigger="manual" @clickoutside="showPopover = false">
         <template #trigger>
           <NInput
             v-model:value="templateDetail.name"
-            style="width: 300px; margin: 0 15px"
+            class="w-300px"
             @focus="openPopover"
             @blur="showPopover = false"
           />
         </template>
-        <div style="width: 500px">
+        <div class="w-500">
           <NInput v-model:value="plugQuery.name" @focus="showPopover = true" @input="searchPlug" />
-          <NDataTable :columns="columns" :data="plugList" size="small" class="flex-1-hidden" style="margin: 10px 0" />
+          <NDataTable :columns="columns" :data="plugList" size="small" class="m-tb-10" />
           <div class="pagination-box">
             <!-- Data table to display device groups -->
             <!-- Pagination component -->
@@ -158,7 +156,7 @@ onMounted(async () => {
         </div>
       </n-popover>
       <div class="to-create">没有找到？去创建</div>
-    </div>
+    </NFlex>
   </div>
 </template>
 
@@ -176,9 +174,22 @@ onMounted(async () => {
     color: #646cff;
   }
 
-  .pagination-box {
-    display: flex;
-    justify-content: flex-end;
+  .m-b-10 {
+    margin-bottom: 10px;
   }
+}
+.pagination-box {
+  display: flex;
+  justify-content: flex-end;
+}
+.m-tb-10 {
+  margin: 10px 0;
+}
+.w-300px {
+  width: 300px;
+  margin: 0 15px;
+}
+.w-500 {
+  width: 500px;
 }
 </style>

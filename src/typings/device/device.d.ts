@@ -59,4 +59,27 @@ declare namespace DeviceManagement {
     list: DeviceData[];
     total: number;
   }
+
+  interface ConfigData {
+    id: string;
+    name: string;
+    device_template_id: string;
+    device_type: string;
+    protocol_type: string;
+    voucher_type: string;
+    protocol_config: string;
+    device_conn_type: string;
+    additional_info: string;
+    description: string;
+    tenant_id: string;
+    created_at: string;
+    updated_at: string;
+    remark: null;
+    device_count: number;
+  }
+
+  interface ConfigDatas {
+    list: ConfigData[];
+    total: number;
+  }
 }

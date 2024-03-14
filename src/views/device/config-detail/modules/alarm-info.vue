@@ -1,46 +1,43 @@
 <script setup lang="ts">
-import {CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon} from '@vicons/ionicons5'
-import {NButton} from "naive-ui";
+import { NButton } from 'naive-ui';
+import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 </script>
 
 <template>
   <div class="alarm-box">
-    <div v-for="item in 5" class="alarm-item">
+    <div v-for="item in 5" :key="item" class="alarm-item">
       <div class="item-name">
         <div>
           {{ item }}
         </div>
-        <n-switch/>
+        <n-switch />
       </div>
-      <div class="item-desc">
-        温度大于28度报警
-      </div>
+      <div class="item-desc">温度大于28度报警</div>
       <div class="item-operate">
-        <n-button circle tertiary type="warning">
+        <NButton circle tertiary type="warning">
           <template #icon>
             <n-icon>
-              <editIcon/>
+              <editIcon />
             </n-icon>
           </template>
-        </n-button>
-        <n-button circle tertiary type="info">
+        </NButton>
+        <NButton circle tertiary type="info">
           <template #icon>
             <n-icon>
-              <copyIcon/>
+              <copyIcon />
             </n-icon>
           </template>
-        </n-button>
-        <n-button circle tertiary type="error">
+        </NButton>
+        <NButton circle tertiary type="error">
           <template #icon>
             <n-icon>
-              <trashIcon/>
+              <trashIcon />
             </n-icon>
           </template>
-        </n-button>
+        </NButton>
       </div>
     </div>
   </div>
-
 </template>
 
 <style scoped lang="scss">
@@ -53,8 +50,8 @@ import {NButton} from "naive-ui";
   padding: 10px 40px;
 
   .alarm-item {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
-  //margin: 0 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    //margin: 0 10px;
     padding: 18px;
     flex: 0 0 23%;
     margin-right: calc(30% / 3);
@@ -79,5 +76,4 @@ import {NButton} from "naive-ui";
     }
   }
 }
-
 </style>

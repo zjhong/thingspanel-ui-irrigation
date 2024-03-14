@@ -8,13 +8,11 @@ import { deviceConfigBatch, deviceList } from '@/service/api/device';
 
 const message = useMessage();
 
-const props = defineProps({
-  device_config_id: {
-    type: String,
-    default() {
-      return '';
-    }
-  }
+interface Props {
+  deviceConfigId?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  deviceConfigId: ''
 });
 const visible = ref(false);
 const associatedFormRef = ref<HTMLElement & FormInst>();
@@ -23,7 +21,7 @@ const associatedForm = ref(defaultAssociatedForm());
 function defaultAssociatedForm() {
   return {
     device_ids: null,
-    device_config_id: ''
+    deviceConfigId: ''
   };
 }
 
@@ -43,7 +41,7 @@ const addDevice = () => {
 const modalClose = () => {};
 const handleSubmit = async () => {
   await associatedFormRef?.value?.validate();
-  associatedForm.value.device_config_id = props.device_config_id;
+  associatedForm.value.deviceConfigId = props.deviceConfigId;
   const res = await deviceConfigBatch(associatedForm.value);
   if (!res.error) {
     message.success('新增成功');
@@ -114,19 +112,18 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   }
 ]);
 const queryData = ref({
-  device_config_id: '',
+  deviceConfigId: '',
   page: 1,
   page_size: 10
 });
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
-  queryData.value.device_config_id = props.device_config_id;
+  queryData.value.deviceConfigId = props.deviceConfigId;
   const res = await deviceList(queryData.value);
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
 };
-// const device_config_id=ref('7d7fd9f7-9ce8-cf8a-5bfd-27ef3c4eb824')
 onMounted(async () => {
   await getDeviceList();
 });
@@ -140,8 +137,7 @@ onMounted(async () => {
       :data="configDevice"
       size="small"
       :row-key="item => item.id"
-      class="flex-1-hidden"
-      style="margin: 10px; height: 50%"
+      class="table-class"
     />
     <div class="pagination-box">
       <!-- Data table to display device groups -->
@@ -179,10 +175,10 @@ onMounted(async () => {
             @scroll="handleScroll"
           ></NSelect>
         </NFormItem>
-        <div style="display: flex; justify-content: flex-end; gap: 8px">
+        <NFlex justify="flex-end">
           <NButton @click="handleClose">取消</NButton>
           <NButton type="primary" @click="handleSubmit">添加</NButton>
-        </div>
+        </NFlex>
       </NForm>
     </NModal>
   </div>
@@ -196,5 +192,9 @@ onMounted(async () => {
 .pagination-box {
   display: flex;
   justify-content: flex-end;
+}
+.table-class {
+  margin: 10px;
+  height: 50%;
 }
 </style>

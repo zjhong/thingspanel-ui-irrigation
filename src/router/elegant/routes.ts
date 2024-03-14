@@ -68,6 +68,44 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'automation',
+    path: '/automation',
+    component: 'layout.base',
+    meta: {
+      title: 'automation',
+      i18nKey: 'route.automation'
+    },
+    children: [
+      {
+        name: 'automation_linkage-edit',
+        path: '/automation/linkage-edit',
+        component: 'view.automation_linkage-edit',
+        meta: {
+          title: 'automation_linkage-edit',
+          i18nKey: 'route.automation_linkage-edit'
+        }
+      },
+      {
+        name: 'automation_scene-linkage',
+        path: '/automation/scene-linkage',
+        component: 'view.automation_scene-linkage',
+        meta: {
+          title: 'automation_scene-linkage',
+          i18nKey: 'route.automation_scene-linkage'
+        }
+      },
+      {
+        name: 'automation_scene-manage',
+        path: '/automation/scene-manage',
+        component: 'view.automation_scene-manage',
+        meta: {
+          title: 'automation_scene-manage',
+          i18nKey: 'route.automation_scene-manage'
+        }
+      }
+    ]
+  },
+  {
     name: 'component',
     path: '/component',
     component: 'layout.base',

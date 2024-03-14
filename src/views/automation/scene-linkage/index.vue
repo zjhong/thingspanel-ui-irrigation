@@ -2,11 +2,12 @@
 import { onMounted, ref } from 'vue';
 import { NButton, NFlex, NPagination } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
+import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import { router } from '@/router';
 import { deviceConfig } from '@/service/api/device';
 
 const showModal = () => {
-  router.push({ name: 'device_config-edit' });
+  router.push({ name: 'automation_linkage-edit' });
 };
 const queryData = ref({
   page: 1,
@@ -26,8 +27,8 @@ const handleQuery = async () => {
   deviceConfigList.value = [];
   await getData();
 };
-const openDetail = (item: any) => {
-  router.push({ name: 'device_config-detail', query: { id: item.id } });
+const openDetail = () => {
+  // router.push({ name: 'device_config-detail', query: { id: item.id } });
 };
 
 onMounted(() => {
@@ -37,13 +38,13 @@ onMounted(() => {
 
 <template>
   <div class="overflow-hidden">
-    <NCard>
+    <NCard title="场景联动列表">
       <NFlex justify="space-between">
-        <NButton type="primary" @click="showModal()">+创建设备配置</NButton>
+        <NButton type="primary" @click="showModal()">+新增联动规则</NButton>
         <NFlex align="center">
           <NInput
             v-model:value="queryData.name"
-            placeholder="请输入配置名称"
+            placeholder="请输入场景联动名称"
             class="search-input"
             type="text"
             clearable
@@ -58,27 +59,36 @@ onMounted(() => {
         </NFlex>
       </NFlex>
       <div class="config-content h-full flex-col">
-        <div
-          v-for="(item, itemIndex) in deviceConfigList"
-          :key="itemIndex"
-          class="config-item"
-          @click="openDetail(item)"
-        >
-          <img
-            class="config-item-img"
-            src="https://img0.baidu.com/it/u=1010119301,1861323772&fm=253&fmt=auto&app=138&f=JPEG?w=535&h=500"
-            alt=""
-          />
-          <div class="config-item-title">
-            {{ item.name }}
-          </div>
-          <div class="config-item-statistics">
-            <div>{{ item.device_count }}个设备</div>
+        <div v-for="item in 5" :key="item" class="scene-item">
+          <div class="item-name">
             <div>
-              <template v-if="item.device_type === '1'">直连设备</template>
-              <template v-if="item.device_type === '2'">网关</template>
-              <template v-if="item.device_type === '3'">网关子设备</template>
+              {{ item }}
             </div>
+            <n-switch />
+          </div>
+          <div class="item-desc">温度大于28度报警</div>
+          <div class="item-operate">
+            <NButton circle tertiary type="warning" @click="openDetail">
+              <template #icon>
+                <n-icon>
+                  <editIcon />
+                </n-icon>
+              </template>
+            </NButton>
+            <NButton circle tertiary type="info">
+              <template #icon>
+                <n-icon>
+                  <copyIcon />
+                </n-icon>
+              </template>
+            </NButton>
+            <NButton circle tertiary type="error">
+              <template #icon>
+                <n-icon>
+                  <trashIcon />
+                </n-icon>
+              </template>
+            </NButton>
           </div>
         </div>
       </div>
@@ -110,40 +120,37 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 0;
-  .config-item {
-    //height: 120px;
-    //width: 25%;
-    //border: solid 1px #000000;
-    //margin: 0 10px;
-    padding: 12px;
-    flex: 0 0 23%;
-    margin-right: calc(8% / 3);
-    margin-bottom: 20px;
+  .scene-item {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    border-radius: 12px;
-    .config-item-img {
-      width: 80px;
-      height: 60px;
-    }
-    .config-item-title {
-      margin: 10px 0;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .config-item-statistics {
+    padding: 18px;
+    flex: 0 0 26%;
+    margin-right: calc(20% / 2);
+    margin-bottom: 30px;
+
+    .item-name {
       display: flex;
       flex-flow: row;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
+    }
+
+    .item-desc {
+      margin: 15px 0;
+    }
+
+    .item-operate {
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+      align-items: center;
     }
   }
-  .config-item:hover {
+  .scene-item:hover {
+    cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
   /* 去除每行尾多余的边距 */
-  .config-item:nth-child(4n) {
+  .scene-item:nth-child(3n) {
     margin-right: 0;
   }
 }

@@ -1,3 +1,4 @@
+import { tenant } from './../service/api/system-data';
 /**
  * Namespace Api
  *
@@ -189,7 +190,7 @@ declare namespace Api {
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
       Pick<Api.SystemManage.User, 'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'status'> &
-        CommonSearchParams
+      CommonSearchParams
     >;
 
     /** user list */
@@ -477,4 +478,57 @@ declare namespace Api {
   }
 
   /** 设备管理 */
+
+  /** 告警 */
+  namespace Alarm {
+    interface NotificationGroupParams {
+      name?: string;
+      notification_type?: string;
+      page: number;
+      page_size: number;
+      status?: string;
+      tenant_id?: string;
+    }
+
+    interface AddNotificationGroupParams {
+      name: string;
+      description?: string;
+      notification_config?: string;
+      notification_type: string;
+      remark?: string;
+      status: string;
+      tenant_id?: string;
+    }
+
+    interface NotificationGroupList {
+      created_at: Date;
+      description: string;
+      id: string;
+      name: string;
+      notification_config: string;
+      notification_type: string;
+      remark: string;
+      status: string;
+      tenant_id: string;
+      updated_at: Date;
+    }
+
+    interface NotificationHistoryParams {
+      page: number;
+      page_size: number;
+      notification_type: string;
+      send_target?: string;
+      send_time_start?: string;
+      send_time_stop?: string;
+    }
+
+    interface NotificationHistoryList {
+      page: number;
+      page_size: number;
+      notification_type: string;
+      send_target?: string;
+      send_time_start?: string;
+      send_time_stop?: string;
+    }
+  }
 }

@@ -114,14 +114,14 @@ function transformElegantRouteToVueRoute(
     }
 
   }
-
+  
   // add redirect to child
   if (children?.length && !vueRoute.redirect) {
     vueRoute.redirect = {
       name: children[0].name
     };
   }
-
+  
   if (children?.length) {
     const childRoutes = children.flatMap(child => transformElegantRouteToVueRoute(child, layouts, views));
 
@@ -151,8 +151,15 @@ const routeMap: RouteMap = {
   "404": "/404",
   "500": "/500",
   "about": "/about",
+  "alarm": "/alarm",
+  "alarm_notification-group": "/alarm/notification-group",
+  "alarm_notification-record": "/alarm/notification-record",
   "apply": "/apply",
   "apply_service": "/apply/service",
+  "automation": "/automation",
+  "automation_linkage-edit": "/automation/linkage-edit",
+  "automation_scene-linkage": "/automation/scene-linkage",
+  "automation_scene-manage": "/automation/scene-manage",
   "component": "/component",
   "component_button": "/component/button",
   "component_card": "/component/card",
@@ -223,12 +230,7 @@ const routeMap: RouteMap = {
   "visualization": "/visualization",
   "visualization_panel": "/visualization/panel",
   "visualization_panel-details": "/visualization/panel-details",
-  "visualization_panel-preview": "/visualization/panel-preview",
-  "automation": "/automation",
-  "automation_scene-manage": "/automation/scene-manage",
-  "automation_scene-linkage": "/automation/scene-linkage",
-  "automation_linkage-edit": "/automation/linkage-edit",
-
+  "visualization_panel-preview": "/visualization/panel-preview"
 };
 
 /**

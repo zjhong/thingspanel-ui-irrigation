@@ -54,7 +54,9 @@ export const czh_cn = {
   automation: '自动化',
   'automation_scene-manage': '自动化场景管理',
   'automation_scene-linkage': '自动化场景联动',
-  'automation_linkage-edit': '自动化联动编辑'
+  'automation_linkage-edit': '自动化联动编辑',
+  'alarm_notification-group': '通知组',
+  'alarm_notification-record': '通知记录'
 };
 
 export const cen = {
@@ -109,5 +111,7 @@ export const cen = {
   'automation_scene-manage': 'automation scene manage',
   'automation_scene-linkage': 'automation scene linkage',
   'automation_linkage-edit': 'automation linkage edit',
-  automation: 'automation'
+  automation: 'automation',
+  'alarm_notification-group': 'notification group',
+  'alarm_notification-record': 'notification record'
 };

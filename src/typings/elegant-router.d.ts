@@ -25,8 +25,15 @@ declare module "@elegant-router/types" {
     "404": "/404";
     "500": "/500";
     "about": "/about";
+    "alarm": "/alarm";
+    "alarm_notification-group": "/alarm/notification-group";
+    "alarm_notification-record": "/alarm/notification-record";
     "apply": "/apply";
     "apply_service": "/apply/service";
+    "automation": "/automation";
+    "automation_linkage-edit": "/automation/linkage-edit";
+    "automation_scene-linkage": "/automation/scene-linkage";
+    "automation_scene-manage": "/automation/scene-manage";
     "component": "/component";
     "component_button": "/component/button";
     "component_card": "/component/card";
@@ -137,7 +144,9 @@ declare module "@elegant-router/types" {
     | "404"
     | "500"
     | "about"
+    | "alarm"
     | "apply"
+    | "automation"
     | "component"
     | "dashboard"
     | "data-service"
@@ -177,7 +186,12 @@ declare module "@elegant-router/types" {
     | "500"
     | "login"
     | "about"
+    | "alarm_notification-group"
+    | "alarm_notification-record"
     | "apply_service"
+    | "automation_linkage-edit"
+    | "automation_scene-linkage"
+    | "automation_scene-manage"
     | "component_button"
     | "component_card"
     | "component_table"

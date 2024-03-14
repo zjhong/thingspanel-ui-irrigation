@@ -144,3 +144,34 @@ export const packageOptions = [
   { label: $t('page.product.update-package.diff'), value: 1 },
   { label: $t('page.product.update-package.full'), value: 2 }
 ];
+
+export const memberNotificationLabels: Record<CustomRoute.routerSysFlagKey, string> = {
+  EMAIL: '邮箱通知',
+  SME: '短信通知',
+  VOICE: '语音通知'
+};
+
+export const MemberNotificationOptions = transformObjectToOption(memberNotificationLabels);
+
+export const notificationOptions = [
+  {
+    label: '成员通知',
+    value: 'MEMBER'
+  },
+  {
+    label: '邮箱通知',
+    value: 'EMAIL'
+  },
+  {
+    label: '短信通知',
+    value: 'SME'
+  },
+  {
+    label: '语音通知',
+    value: 'VOICE'
+  },
+  {
+    label: 'webhook',
+    value: 'WEBHOOK'
+  }
+];

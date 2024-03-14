@@ -48,6 +48,35 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'alarm',
+    path: '/alarm',
+    component: 'layout.base',
+    meta: {
+      title: 'alarm',
+      i18nKey: 'route.alarm'
+    },
+    children: [
+      {
+        name: 'alarm_notification-group',
+        path: '/alarm/notification-group',
+        component: 'view.alarm_notification-group',
+        meta: {
+          title: 'alarm_notification-group',
+          i18nKey: 'route.alarm_notification-group'
+        }
+      },
+      {
+        name: 'alarm_notification-record',
+        path: '/alarm/notification-record',
+        component: 'view.alarm_notification-record',
+        meta: {
+          title: 'alarm_notification-record',
+          i18nKey: 'route.alarm_notification-record'
+        }
+      }
+    ]
+  },
+  {
     name: 'apply',
     path: '/apply',
     component: 'layout.base',

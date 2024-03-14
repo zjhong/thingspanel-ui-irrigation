@@ -178,7 +178,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         home = 'device';
       }
 
-      console.log(routes);
+      console.log(home);
 
       handleAuthRoutes(routes);
 

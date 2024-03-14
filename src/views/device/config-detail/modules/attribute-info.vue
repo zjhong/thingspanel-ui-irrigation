@@ -103,7 +103,7 @@ const searchPlug = () => {
   plugQuery.value.page = 1;
   getTableData();
 };
-const templateDetail = ref();
+const templateDetail = ref<any>({});
 const getTemplateDetail = async () => {
   if (props.configInfo.device_template_id) {
     const res = await deviceTemplateDetail({ id: props.configInfo.device_template_id });

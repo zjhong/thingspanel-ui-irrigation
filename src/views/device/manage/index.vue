@@ -4,8 +4,32 @@ import type { SearchConfig } from '@/components/data-table-page/index.vue';
 
 const columns_to_show = [
   {
-    key: 'id',
+    key: 'device_number',
     label: '设备编号'
+  },
+  {
+    key: 'name',
+    label: '设备名称'
+  },
+  {
+    key: 'dealy',
+    label: '在线状态'
+  },
+  {
+    key: 'dealy',
+    label: '告警'
+  },
+  {
+    key: 'device_config_name',
+    label: '设备配置'
+  },
+  {
+    key: 'ts',
+    label: '上次推送时间'
+  },
+  {
+    key: 'dealy',
+    label: '通过服务/协议'
   }
 ];
 const actions = [

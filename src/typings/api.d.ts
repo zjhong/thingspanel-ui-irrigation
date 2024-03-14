@@ -302,9 +302,9 @@ declare namespace Api {
       /** 服务名称 */
       name: string | null;
       /** 设备类型 */
-      device_type: string | number ;
+      device_type: string | number;
       /** 协议类型 */
-      protocol_type: string | number ;
+      protocol_type: string | number;
       /** 介绍 */
       description: string | null;
       /** HTTP服务地址 */
@@ -314,11 +314,10 @@ declare namespace Api {
       /** 插件订阅主题前缀 */
       sub_topic_prefix: string | null;
       /** 链接参数 */
-      additional_info: string
-
-      language_code: string
+      additional_info: string;
+      ts: string;
+      language_code: string;
     }
-
 
     interface Data {
       list: Service[];
@@ -379,6 +378,7 @@ declare namespace Api {
       email: string | null;
       /** 用户名 */
       name: string | null;
+      description: string | null;
       /** 用户手机号码 */
       phone_number: string;
       /**

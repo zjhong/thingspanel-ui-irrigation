@@ -301,21 +301,28 @@ declare namespace Api {
       id: string;
       /** 服务名称 */
       name: string | null;
-      /** 服务类别 */
-      serviceType: string | null;
+      /** 设备类型 */
+      device_type: string | number ;
+      /** 协议类型 */
+      protocol_type: string | number ;
       /** 介绍 */
-      desc: string | null;
-      /** 作者 */
-      author: string | null;
-      /** 版本 */
-      version: string | null;
-      /**
-       * 规则状态
-       *
-       * - 1: 已启动
-       * - 2: 已停止
-       */
-      status: '1' | '2' | null;
+      description: string | null;
+      /** HTTP服务地址 */
+      http_address: string | null;
+      /** 接入地址 */
+      access_address: string | null;
+      /** 插件订阅主题前缀 */
+      sub_topic_prefix: string | null;
+      /** 链接参数 */
+      additional_info: string
+
+      language_code: string
+    }
+
+
+    interface Data {
+      list: Service[];
+      total: number;
     }
   }
   /** 常规设置 */

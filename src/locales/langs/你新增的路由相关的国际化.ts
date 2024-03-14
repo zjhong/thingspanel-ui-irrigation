@@ -50,7 +50,11 @@ export const czh_cn = {
   visualization: '可视化',
   visualization_panel: '看板列表',
   'visualization_panel-details': '看板详情',
-  'visualization_panel-preview': '看板预览'
+  'visualization_panel-preview': '看板预览',
+  automation: '自动化',
+  'automation_scene-manage': '自动化场景管理',
+  'automation_scene-linkage': '自动化场景联动',
+  'automation_linkage-edit': '自动化联动编辑'
 };
 
 export const cen = {
@@ -101,5 +105,9 @@ export const cen = {
   visualization: 'visualization',
   visualization_panel: 'kanban list',
   'visualization_panel-details': 'kanban details',
-  'visualization_panel-preview': 'kanban preview'
+  'visualization_panel-preview': 'kanban preview',
+  'automation_scene-manage': 'automation scene manage',
+  'automation_scene-linkage': 'automation scene linkage',
+  'automation_linkage-edit': 'automation linkage edit',
+  automation: 'automation'
 };

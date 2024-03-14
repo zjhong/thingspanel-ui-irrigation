@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { usePanelStore } from '@/store/modules/panel';
-import type { ICardData } from '@/components/panel/card';
+import {computed} from 'vue';
+import {usePanelStore} from '@/store/modules/panel';
+import type {ICardData} from '@/components/panel/card';
 
 const props = defineProps<{
   view?: boolean;
@@ -12,8 +12,6 @@ const store = usePanelStore();
 const findCardComponent = (id: string) => {
   return store.$state.cardMap.get(id)?.component || null;
 };
-console.log(cardId.value, '0988-099');
-console.log(findCardComponent(cardId.value || ''), '0988-099');
 </script>
 
 <template>
@@ -25,7 +23,7 @@ console.log(findCardComponent(cardId.value || ''), '0988-099');
       {{ data.basicSettings?.title }}
     </div>
     <div class="p-4">
-      <component :is="findCardComponent(cardId || '')" :card="data" :view="view" />
+      <component :is="findCardComponent(cardId || '')" :card="data" :view="view"/>
     </div>
   </NCard>
 </template>

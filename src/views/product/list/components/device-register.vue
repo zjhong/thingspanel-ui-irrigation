@@ -178,7 +178,7 @@ init();
                 <IconAntDesignExportOutlined class="mr-4px text-20px" />
               </template>
 
-              {{ $t('commin.export') }}
+              {{ $t('common.export') }}
             </NButton>
           </NSpace>
           <NSpace align="center" :size="18">

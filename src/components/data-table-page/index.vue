@@ -1,58 +1,59 @@
 <script lang="tsx" setup>
-import type {VueElement} from 'vue';
-import {computed, defineProps, ref, watchEffect} from 'vue';
-import {NButton, NDataTable, NDatePicker, NInput, NSelect, NSpace} from 'naive-ui';
-import type {TreeSelectOption} from 'naive-ui';
-import {throttle} from 'lodash-es';
+import type { VueElement } from 'vue';
+import { computed, defineProps, ref, watchEffect } from 'vue';
+import { NButton, NDataTable, NDatePicker, NInput, NSelect, NSpace } from 'naive-ui';
+import type { TreeSelectOption } from 'naive-ui';
+import { throttle } from 'lodash-es';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type SearchConfig =
   | {
-  key: string;
-  label: string;
-  type: 'input' | 'date' | 'date-range';
-}
+      key: string;
+      label: string;
+      type: 'input' | 'date' | 'date-range';
+    }
   | {
-  key: string;
-  label: string;
-  type: 'select';
-  options: { label: string; value: any }[];
-  loadOptions?: (pattern) => Promise<{ label: string; value: any }[]>;
-}
+      key: string;
+      label: string;
+      type: 'select';
+      options: { label: string; value: any }[];
+      loadOptions?: (pattern) => Promise<{ label: string; value: any }[]>;
+    }
   | {
-  key: string;
-  label: string;
-  type: 'tree-select';
-  options: TreeSelectOption[];
-  multiple: boolean;
-  loadOptions?: () => Promise<TreeSelectOption[]>;
-};
+      key: string;
+      label: string;
+      type: 'tree-select';
+      options: TreeSelectOption[];
+      multiple: boolean;
+      loadOptions?: () => Promise<TreeSelectOption[]>;
+    };
 
 // 通过props从父组件接收参数
 const props = defineProps<{
-  fetchData: (data: any) => Promise<any>;// 数据获取函数
-  columnsToShow:// 表格列配置
-    | {
-    key: string;
-    label: string;
-    render?: (row: any) => VueElement | string | undefined;// 自定义渲染函数
-  }[]
-    | 'all';// 特殊值'all'表示显示所有列
-  searchConfigs: SearchConfig[];// 搜索配置数组
-  tableActions: Array<{// 表格行操作
-    label: string;// 按钮文本
-    callback: (row: any) => void;// 点击回调
+  fetchData: (data: any) => Promise<any>; // 数据获取函数
+  columnsToShow: // 表格列配置
+  | {
+        key: string;
+        label: string;
+        render?: (row: any) => VueElement | string | undefined; // 自定义渲染函数
+      }[]
+    | 'all'; // 特殊值'all'表示显示所有列
+  searchConfigs: SearchConfig[]; // 搜索配置数组
+  tableActions: Array<{
+    // 表格行操作
+    label: string; // 按钮文本
+    callback: (row: any) => void; // 点击回调
   }>;
-  topActions: { element: () => JSX.Element; }[];// 顶部操作组件列表
+  topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
 }>();
 
 // 解构props以简化访问
-const {fetchData, columnsToShow, tableActions, searchConfigs} = props;
+const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
 const isTableView = ref(true); // 默认显示表格视图
 const dataList = ref([]); // 表格数据列表
-const total = ref(0);// 数据总数
-const currentPage = ref(1);// 当前页码
-const pageSize = ref(10);// 每页显示数量
-const searchCriteria = ref({});// 每页显示数量
+const total = ref(0); // 数据总数
+const currentPage = ref(1); // 当前页码
+const pageSize = ref(10); // 每页显示数量
+const searchCriteria = ref({}); // 每页显示数量
 
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
@@ -73,7 +74,7 @@ const getData = async () => {
     page_size: pageSize.value,
     ...processedSearchCriteria
   });
-// 处理响应
+  // 处理响应
   if (!response.error) {
     dataList.value = response.data.list;
     total.value = response.data.total;
@@ -146,7 +147,7 @@ const handleReset = () => {
   Object.keys(searchCriteria.value).forEach(key => {
     searchCriteria.value[key] = ''; // 或者对应字段的默认值
   });
-  handleSearch();  //重置后重新获取数据
+  handleSearch(); // 重置后重新获取数据
 };
 
 // 更新树形选择器的选项
@@ -182,14 +183,14 @@ loadOptionsOnMount2();
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 rounded-lg  p-6 shadow">
+  <div class="flex flex-col gap-6 rounded-lg p-6 shadow">
     <!-- 搜索区域与操作按钮 -->
     <div class="flex flex-wrap items-end justify-between gap-4">
       <!-- 搜索输入和选择器 -->
       <div class="flex flex-1 flex-wrap items-end gap-4">
         <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
           <template v-if="config.type === 'input'">
-            <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" class="input-style"/>
+            <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" class="input-style" />
           </template>
           <template v-else-if="config.type === 'date-range'">
             <NDatePicker
@@ -239,30 +240,28 @@ loadOptionsOnMount2();
     </div>
     <div class="mb--6 flex items-center justify-between">
       <div class="flex gap-2">
-        <component :is="action.element" v-for="(action,index) in topActions" :key="index">
-
-        </component>
+        <component :is="action.element" v-for="(action, index) in topActions" :key="index"></component>
       </div>
       <!-- 组件内部的表操作 -->
       <div>
         <NButton quaternary @click="isTableView = true">
           <template #icon>
             <n-icon text style="font-size: 24px">
-              <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px"/>
+              <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px" />
             </n-icon>
           </template>
         </NButton>
         <NButton quaternary @click="isTableView = false">
           <template #icon>
             <n-icon text style="font-size: 24px">
-              <icon-material-symbols:map-rounded class="text-24px"/>
+              <icon-material-symbols:map-rounded class="text-24px" />
             </n-icon>
           </template>
         </NButton>
         <NButton quaternary @click="getData">
           <template #icon>
             <n-icon text style="font-size: 24px">
-              <icon-material-symbols:refresh class="text-24px"/>
+              <icon-material-symbols:refresh class="text-24px" />
             </n-icon>
           </template>
         </NButton>
@@ -270,7 +269,7 @@ loadOptionsOnMount2();
     </div>
     <!-- 数据表格 -->
     <div v-if="isTableView" class="overflow-x-auto">
-      <NDataTable :columns="generatedColumns" :data="dataList" class="card-wrapper"/>
+      <NDataTable :columns="generatedColumns" :data="dataList" class="card-wrapper" />
     </div>
     <div v-else>
       <!-- 地图视图占位 -->
@@ -292,6 +291,7 @@ loadOptionsOnMount2();
 
 <style scoped>
 .input-style {
+  margin: auto;
 }
 
 .btn-style {

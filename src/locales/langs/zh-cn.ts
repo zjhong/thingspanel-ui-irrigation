@@ -1,5 +1,6 @@
 import { productLocaleZhCn } from '@/views/product/locales/zh-CN';
 import { czh_cn } from './你新增的路由相关的国际化';
+
 const local: App.I18n.Schema = {
   default: '',
   system: {
@@ -38,6 +39,7 @@ const local: App.I18n.Schema = {
     changeTableColumns: '表格列设置',
     updateSuccess: '更新成功',
     userCenter: '个人中心',
+    export: '导出',
     yesOrNo: {
       yes: '是',
       no: '否'

@@ -29,6 +29,7 @@ import type {
 } from 'echarts/components';
 import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
+import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core';
 import { useElementSize } from '@vueuse/core';
 import { useThemeStore } from '@/store/modules/theme';
 
@@ -78,7 +79,7 @@ interface ChartHooks {
  * use echarts
  *
  * @param optionsFactory echarts options factory function
- * @param darkMode dark mode
+ * @param hooks
  */
 export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: ChartHooks = {}) {
   const scope = effectScope();
@@ -88,7 +89,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
   const domRef = ref<HTMLElement | null>(null);
   const initialSize = { width: 0, height: 0 };
-  const { width, height } = useElementSize(domRef, initialSize);
+  const { width, height } = useElementSize(domRef as unknown as MaybeComputedElementRef<MaybeElement>, initialSize);
 
   let chart: echarts.ECharts | null = null;
   const chartOptions: T = optionsFactory();
@@ -153,7 +154,7 @@ export function useEcharts<T extends ECOption>(optionsFactory: () => T, hooks: C
 
       await nextTick();
 
-      chart = echarts.init(domRef.value, chartTheme);
+      chart = echarts.init(domRef.value as unknown as HTMLElement, chartTheme);
 
       chart.setOption({ ...chartOptions, backgroundColor: 'transparent' });
 

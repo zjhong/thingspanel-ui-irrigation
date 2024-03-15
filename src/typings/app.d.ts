@@ -120,6 +120,7 @@ declare namespace App {
       layout: string;
       inverted: string;
       base_text: string;
+
       [key: string]: string;
     }
   }
@@ -282,6 +283,7 @@ declare namespace App {
         refreshTable: string;
         changeTableColumns: string;
         userCenter: string;
+        export: string;
         yesOrNo: {
           yes: string;
           no: string;
@@ -630,13 +632,21 @@ declare namespace App {
 
     interface $T {
       (key: I18nKey): string;
+
       (key: I18nKey, plural: number, options?: TranslateOptions<LangType>): string;
+
       (key: I18nKey, defaultMsg: string, options?: TranslateOptions<I18nKey>): string;
+
       (key: I18nKey, list: unknown[], options?: TranslateOptions<I18nKey>): string;
+
       (key: I18nKey, list: unknown[], plural: number): string;
+
       (key: I18nKey, list: unknown[], defaultMsg: string): string;
+
       (key: I18nKey, named: Record<string, unknown>, options?: TranslateOptions<LangType>): string;
+
       (key: I18nKey, named: Record<string, unknown>, plural: number): string;
+
       (key: I18nKey, named: Record<string, unknown>, defaultMsg: string): string;
     }
   }
@@ -687,6 +697,7 @@ declare namespace App {
      * - backend: 请求成功，响应的http状态码为200，由后端定义的业务错误
      */
     type RequestErrorType = 'axios' | 'http' | 'backend';
+
     /** 请求错误 */
     interface RequestError {
       /** 请求服务的错误类型 */
@@ -719,6 +730,7 @@ declare namespace App {
       /** 后端业务上定义的成功请求的状态 */
       successCode: number | string;
     }
+
     /** 自定义的请求成功结果 */
     interface SuccessResult<T = any> {
       /** 请求错误 */

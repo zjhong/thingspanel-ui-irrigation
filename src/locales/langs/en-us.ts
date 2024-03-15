@@ -1,5 +1,6 @@
 import { cen } from './你新增的路由相关的国际化';
 import { productLocaleEn } from '~/src/views/product/locales/en';
+
 const local: App.I18n.Schema = {
   default: '',
   system: {
@@ -38,6 +39,7 @@ const local: App.I18n.Schema = {
     changeTableColumns: 'Table Column Settings',
     refreshTable: 'Refresh Table',
     userCenter: 'User Center',
+    export: 'export',
     yesOrNo: {
       yes: 'Yes',
       no: 'No'

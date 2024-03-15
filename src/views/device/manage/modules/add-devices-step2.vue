@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {defineProps, reactive, watchEffect} from 'vue';
-import {NForm, NFormItem, NInput, NSelect, NButton} from 'naive-ui';
+import { defineProps, reactive, watchEffect } from 'vue';
+import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
+import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
@@ -38,13 +39,13 @@ const formData = reactive({});
 
 watchEffect(() => {
   if (props.formElements && Array.isArray(props.formElements)) {
-    props.formElements.forEach((element) => {
+    props.formElements.forEach(element => {
       if (element.type === 'table' && Array.isArray(element.array)) {
-        element.array.forEach((subElement) => {
-          formData[subElement.dataKey] = formData[subElement.dataKey] ?? '';
+        element.array.forEach(subElement => {
+          formData[subElement.dataKey] ??= '';
         });
       } else {
-        formData[element.dataKey] = formData[element.dataKey] ?? '';
+        formData[element.dataKey] ??= '';
       }
     });
   }
@@ -60,12 +61,12 @@ const handleSubmit = () => {
     <template v-for="element in formElements" :key="element.dataKey">
       <div v-if="element.type === 'input'" class="form-item">
         <NFormItem :label="element.label">
-          <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder"/>
+          <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
         </NFormItem>
       </div>
       <div v-if="element.type === 'select'" class="form-item">
         <NFormItem :label="element.label">
-          <NSelect v-model:value="formData[element.dataKey] " :options="element.options"/>
+          <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
         </NFormItem>
       </div>
       <div v-if="element.type === 'table'">
@@ -74,12 +75,15 @@ const handleSubmit = () => {
           <template v-for="subElement in element.array" :key="subElement.dataKey">
             <div v-if="subElement.type === 'input'" class="table-item">
               <NFormItem :label="subElement.label">
-                <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder"/>
+                <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
               </NFormItem>
             </div>
             <div v-if="subElement.type === 'select'" class="table-item">
               <NFormItem :label="subElement.label">
-                <NSelect v-model:value="formData[subElement.dataKey]" :options="subElement.options"/>
+                <NSelect
+                  v-model:value="formData[subElement.dataKey]"
+                  :options="subElement.options as SelectMixedOption[]"
+                />
               </NFormItem>
             </div>
           </template>

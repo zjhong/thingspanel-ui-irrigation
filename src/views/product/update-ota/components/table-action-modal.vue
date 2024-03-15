@@ -6,6 +6,7 @@ import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-u
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { getDeviceList } from '~/src/service/product/list';
+
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'update:selectedKeys', data: any[]): void;
 }
@@ -95,6 +97,7 @@ function handleUpdateFormModelByModalType() {
 
   handlers[props.type]();
 }
+
 const backupData = ref([]);
 watch(
   () => props.visible,
@@ -115,12 +118,15 @@ const queryParams = reactive({
   page_size: 10
 });
 const tableData = ref<productPackageRecord[]>([]);
+
 function setTableData(data: productPackageRecord[]) {
   tableData.value = data;
 }
+
 function handleQuery() {
   init();
 }
+
 function handleReset() {
   Object.assign(queryParams, {
     name: '',
@@ -129,6 +135,7 @@ function handleReset() {
   });
   handleQuery();
 }
+
 const pagination: PaginationProps = reactive({
   page: 1,
   pageSize: 10,
@@ -158,6 +165,7 @@ async function getTableData() {
     endLoading();
   }
 }
+
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     type: 'selection',
@@ -186,9 +194,11 @@ function init() {
 // 初始化
 init();
 const rowKey = (row: productPackageRecord) => row.id;
+
 function handleCheck(rowKeys: DataTableRowKey[]) {
   emit('update:selectedKeys', rowKeys);
 }
+
 const closeModal = () => {
   emit('update:selectedKeys', backupData.value);
   modalVisible.value = false;
@@ -229,8 +239,8 @@ const onSubmit = () => {
           />
           <NSpace class="mt-10px pb-12px" justify="space-between">
             <NSpace>
-              {{ $t('page.product.update-package.selected') }}{{ selectedKeys.length
-              }}{{ $t('page.product.update-package.selectedNumber') }}
+              {{ $t('page.product.update-ota.selected') }}{{ selectedKeys.length
+              }}{{ $t('page.product.update-ota.selectedNumber') }}
             </NSpace>
             <NSpace align="center" :size="18">
               <NButton @click="closeModal">

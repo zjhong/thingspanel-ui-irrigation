@@ -31,3 +31,4 @@ yarn.lock
 .VSCodeCounter
 env.config.ts
 settings.json
+vite.config.ts.timestamp*.mjs

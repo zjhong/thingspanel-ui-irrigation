@@ -3,11 +3,11 @@ import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { useLoading } from '~/packages/hooks';
-import { getNotificationHistoryList } from '@/service/api/notification';
-import { Api } from '@/typings/api';
-import { notificationOptions } from '@/constants/business';
 import dayjs from 'dayjs';
+import { getNotificationHistoryList } from '@/service/api/notification';
+import { notificationOptions } from '@/constants/business';
+import { useLoading } from '~/packages/hooks';
+
 const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
@@ -39,7 +39,7 @@ const pagination: PaginationProps = reactive({
 
 const formatTime = (time: string | null) => {
   if (time) {
-    return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
+    return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
   }
   return '';
 };
@@ -63,7 +63,6 @@ const getTableData = async () => {
   }
   endLoading();
 };
-
 
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
@@ -107,8 +106,11 @@ getTableData();
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
           <NFormItem path="name" label="通知类型:">
-            <NSelect v-model:value="queryParams.notification_type" :options="notificationOptions"
-              class="input-style min-w-160px" />
+            <NSelect
+              v-model:value="queryParams.notification_type"
+              :options="notificationOptions"
+              class="input-style min-w-160px"
+            />
           </NFormItem>
           <NFormItem path="selected_time">
             <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />

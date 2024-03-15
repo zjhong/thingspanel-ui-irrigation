@@ -68,7 +68,7 @@ onMounted(() => {
           </div>
           <div class="item-desc">温度大于28度报警</div>
           <div class="item-operate">
-            <NButton circle tertiary type="warning" @click="openDetail">
+            <NButton tertiary circle type="warning" @click="openDetail">
               <template #icon>
                 <n-icon>
                   <editIcon />

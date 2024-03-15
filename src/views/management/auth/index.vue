@@ -1,15 +1,15 @@
 <script setup lang="tsx">
-import { h, reactive, ref } from "vue";
-import type { Ref } from "vue";
-import { NButton, NPopconfirm, NSpace, NTag } from "naive-ui";
-import type { DataTableColumns, PaginationProps } from "naive-ui";
-import { useBoolean, useLoading } from "@sa/hooks";
-import { routerSysFlagLabels, routerTypeLabels } from "@/constants/business";
-import { delElement, fetchElementList } from "@/service/api/route";
-import { deepClone } from "@/utils/common/tool";
-import { $t } from "@/locales";
-import TableActionModal from "./components/table-action-modal.vue";
-import type { ModalType } from "./components/table-action-modal.vue";
+import { h, reactive, ref } from 'vue';
+import type { Ref } from 'vue';
+import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
+import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { routerSysFlagLabels, routerTypeLabels } from '@/constants/business';
+import { delElement, fetchElementList } from '@/service/api/route';
+import { deepClone } from '@/utils/common/tool';
+import { $t } from '@/locales';
+import TableActionModal from './components/table-action-modal.vue';
+import type { ModalType } from './components/table-action-modal.vue';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
@@ -21,7 +21,7 @@ type QueryFormModel = {
 
 const queryParams = reactive<QueryFormModel>({
   page: 1,
-  page_size: 10,
+  page_size: 10
 });
 
 const tableData = ref<CustomRoute.Route[]>([]);
@@ -47,7 +47,7 @@ const pagination: PaginationProps = reactive({
     queryParams.page = 1;
     queryParams.page_size = pageSize;
     getTableData();
-  },
+  }
 });
 
 async function getTableData() {
@@ -67,129 +67,120 @@ const rowKey = (row: CustomRoute.Route) => {
 
 const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   {
-    key: "description",
-    title: () => $t("page.manage.menu.title"),
-    align: "left",
-    width: "200px",
-    render: (row) => {
-      if (row.multilingual && row.multilingual !== "default") {
+    key: 'description',
+    title: () => $t('page.manage.menu.title'),
+    align: 'left',
+    width: '200px',
+    render: row => {
+      if (row.multilingual && row.multilingual !== 'default') {
         return <span>{$t(row.multilingual)}</span>;
       }
       return <span>{row.description}</span>;
-    },
+    }
   },
 
   {
-    key: "param2",
-    title: () => $t("page.manage.menu.icon"),
-    align: "left",
-    render: (row) => {
+    key: 'param2',
+    title: () => $t('page.manage.menu.icon'),
+    align: 'left',
+    render: row => {
       if (row.param2) {
         return <svg-icon icon={row.param2} />;
       }
       return <span></span>;
-    },
+    }
   },
   {
-    key: "element_code",
-    title: () => $t("page.manage.menu.menuName"),
-    align: "left",
+    key: 'element_code',
+    title: () => $t('page.manage.menu.menuName'),
+    align: 'left'
   },
   {
-    key: "param1",
-    title: () => $t("page.manage.menu.routeName"),
-    align: "left",
+    key: 'param1',
+    title: () => $t('page.manage.menu.routeName'),
+    align: 'left'
   },
   {
-    key: "param3",
-    title: () => $t("page.manage.menu.componentType"),
-    align: "left",
+    key: 'param3',
+    title: () => $t('page.manage.menu.componentType'),
+    align: 'left'
   },
   {
-    key: "element_type",
-    title: () => $t("page.manage.menu.menuType"),
-    align: "left",
-    render: (row) => {
+    key: 'element_type',
+    title: () => $t('page.manage.menu.menuType'),
+    align: 'left',
+    render: row => {
       if (row.element_type) {
-        const tagTypes: Record<CustomRoute.routerTypeKey, NaiveUI.ThemeColor> =
-          {
-            "1": "success",
-            "2": "error",
-            "3": "warning",
-            "4": "default",
-            "5": "info",
-          };
-        return (
-          <NTag type={tagTypes[row.element_type]}>
-            {routerTypeLabels[row.element_type]}
-          </NTag>
-        );
+        const tagTypes: Record<CustomRoute.routerTypeKey, NaiveUI.ThemeColor> = {
+          '1': 'success',
+          '2': 'error',
+          '3': 'warning',
+          '4': 'default',
+          '5': 'info'
+        };
+        return <NTag type={tagTypes[row.element_type]}>{routerTypeLabels[row.element_type]}</NTag>;
       }
       return <span></span>;
-    },
+    }
   },
   {
-    key: "authority",
-    title: () => $t("page.manage.menu.authority"),
-    align: "left",
-    render: (row) => {
+    key: 'authority',
+    title: () => $t('page.manage.menu.authority'),
+    align: 'left',
+    render: row => {
       if (row.authority && row.authority.length) {
         const tags = row.authority.map((tagKey: string) => {
           return h(
             NTag,
             {
-              type: "success",
+              type: 'success'
             },
             {
-              default: () => routerSysFlagLabels[tagKey],
-            },
+              default: () => routerSysFlagLabels[tagKey]
+            }
           );
         });
         return tags;
       }
       return <span></span>;
-    },
+    }
   },
   {
-    key: "remark",
-    title: () => $t("common.remark"),
-    align: "left",
+    key: 'remark',
+    title: () => $t('common.remark'),
+    align: 'left'
   },
   {
-    key: "actions",
-    title: () => $t("common.action"),
-    align: "left",
-    render: (row) => {
+    key: 'actions',
+    title: () => $t('common.action'),
+    align: 'left',
+    render: row => {
       return (
         <NSpace>
-          <NButton
-            type="primary"
-            size={"small"}
-            onClick={() => handleEditTable(row)}
-          >
-            {$t("common.edit")}
+          <NButton type="primary" size={'small'} onClick={() => handleEditTable(row)}>
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm
-            negative-text={$t("common.cancel")}
-            positive-text={$t("common.confirm")}
+            negative-text={$t('common.cancel')}
+            positive-text={$t('common.confirm')}
             onPositiveClick={() => handleDeleteTable(row.id)}
           >
             {{
-              default: () => $t("common.confirm"),
+              default: () => $t('common.confirm'),
               trigger: () => (
-                <NButton type="error" size={"small"}>
-                  {$t("common.delete")}
+                <NButton type="error" size={'small'}>
+                  {$t('common.delete')}
                 </NButton>
-              ),
+              )
             }}
           </NPopconfirm>
         </NSpace>
       );
-    },
-  },
+    }
+  }
 ]) as Ref<DataTableColumns<CustomRoute.Route>>;
 
-const modalType = ref<ModalType>("add");
+const modalType = ref<ModalType>('add');
 
 function setModalType(type: ModalType) {
   modalType.value = type;
@@ -199,19 +190,19 @@ const editData = ref<CustomRoute.Route | null>(null);
 
 function handleAddTable() {
   openModal();
-  setModalType("add");
+  setModalType('add');
 }
 
 function handleEditTable(row: any) {
   editData.value = deepClone(row);
-  setModalType("edit");
+  setModalType('edit');
   openModal();
 }
 
 async function handleDeleteTable(rowId: string) {
   const data = await delElement(rowId);
   if (!data.error) {
-    window.$message?.success($t("common.deleteSuccess"));
+    window.$message?.success($t('common.deleteSuccess'));
     await getTableData();
   }
 }
@@ -226,15 +217,11 @@ init();
 
 <template>
   <div class="overflow-hidden">
-    <NCard
-      :title="$t('page.manage.menu.title')"
-      :bordered="false"
-      class="h-full rounded-8px shadow-sm"
-    >
+    <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
         <NButton type="primary" @click="handleAddTable">
           <IconIcRoundPlus class="mr-4px text-20px" />
-          {{ $t("common.add") }}
+          {{ $t('common.add') }}
         </NButton>
       </template>
       <div class="h-full flex-col">

@@ -55,6 +55,7 @@ export const czh_cn = {
   'automation_scene-manage': '自动化场景管理',
   'automation_scene-linkage': '自动化场景联动',
   'automation_linkage-edit': '自动化联动编辑',
+  alarm: '告警',
   'alarm_notification-group': '通知组',
   'alarm_notification-record': '通知记录'
 };
@@ -112,6 +113,7 @@ export const cen = {
   'automation_scene-linkage': 'automation scene linkage',
   'automation_linkage-edit': 'automation linkage edit',
   automation: 'automation',
+  alarm: 'alarm',
   'alarm_notification-group': 'notification group',
   'alarm_notification-record': 'notification record'
 };

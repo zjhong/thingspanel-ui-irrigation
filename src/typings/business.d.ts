@@ -23,18 +23,10 @@ declare namespace CustomRoute {
 }
 /** 应用管理-服务管理模块 */
 declare namespace ServiceManagement {
-  interface Service extends Api.ApiApplyManagement.Service {
-
-  }
-  /**
-   * 设备类型
-   *
-   */
+  interface Service extends Api.ApiApplyManagement.Service {}
+  /** 设备类型 */
   type DeviceTypeKey = NonNullable<Service['device_type']>;
-  /**
-   * 协议类型
-   *
-   */
+  /** 协议类型 */
   type ProtocolTypeKey = NonNullable<Service['protocol_type']>;
 }
 

@@ -1,4 +1,3 @@
-import { tenant } from './../service/api/system-data';
 /**
  * Namespace Api
  *
@@ -190,7 +189,7 @@ declare namespace Api {
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
       Pick<Api.SystemManage.User, 'userName' | 'userGender' | 'nickName' | 'userPhone' | 'userEmail' | 'status'> &
-      CommonSearchParams
+        CommonSearchParams
     >;
 
     /** user list */

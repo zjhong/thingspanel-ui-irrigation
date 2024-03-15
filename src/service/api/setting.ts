@@ -28,6 +28,5 @@ export const editDataClear = async (params: any) => {
 
 /** 编辑清理设置 */
 export const dictQuery = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>('dict/enum', {params});
+  return await request.get<Api.BaseApi.Data | any>('dict/enum', { params });
 };
-

@@ -1,10 +1,7 @@
 <script setup lang="ts">
-
 defineProps<{
   id: string;
 }>();
-
-
 </script>
 
 <template>
@@ -14,6 +11,4 @@ defineProps<{
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

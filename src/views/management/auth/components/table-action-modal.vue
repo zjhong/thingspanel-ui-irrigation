@@ -1,42 +1,38 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from "vue";
-import type { FormInst } from "naive-ui";
-import {
-  routeComponentTypeOptions,
-  routeSysFlagOptions,
-  routeTypeOptions,
-} from "@/constants/business";
-import { addElement, editElement } from "@/service/api/route";
-import { deepClone } from "@/utils/common/tool";
-import { createRequiredFormRule } from "@/utils/form/rule";
-import { icons } from "@/plugins/icon/icons";
-import { $t } from "~/src/locales";
+import { computed, reactive, ref, watch } from 'vue';
+import type { FormInst } from 'naive-ui';
+import { routeComponentTypeOptions, routeSysFlagOptions, routeTypeOptions } from '@/constants/business';
+import { addElement, editElement } from '@/service/api/route';
+import { deepClone } from '@/utils/common/tool';
+import { createRequiredFormRule } from '@/utils/form/rule';
+import { icons } from '@/plugins/icon/icons';
+import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
   /** 弹窗类型 add: 新增 edit: 编辑 */
-  type?: "add" | "edit";
+  type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
   editData?: CustomRoute.Route | null;
   tableList: CustomRoute.Route[];
 }
 
-export type ModalType = NonNullable<Props["type"]>;
+export type ModalType = NonNullable<Props['type']>;
 
-defineOptions({ name: "TableActionModal" });
+defineOptions({ name: 'TableActionModal' });
 
-const common_cancel = $t("common.cancel");
-const common_confirm = $t("common.confirm");
+const common_cancel = $t('common.cancel');
+const common_confirm = $t('common.confirm');
 
 const props = withDefaults(defineProps<Props>(), {
-  type: "add",
-  editData: null,
+  type: 'add',
+  editData: null
 });
 
 interface Emits {
-  (e: "update:visible", visible: boolean): void;
-  (e: "success"): void;
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'success'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -46,8 +42,8 @@ const modalVisible = computed({
     return props.visible;
   },
   set(visible) {
-    emit("update:visible", visible);
-  },
+    emit('update:visible', visible);
+  }
 });
 const closeModal = () => {
   modalVisible.value = false;
@@ -55,8 +51,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t("common.add"),
-    edit: $t("common.edit"),
+    add: $t('common.add'),
+    edit: $t('common.edit')
   };
   return titles[props.type];
 });
@@ -71,42 +67,42 @@ const formRef = ref<HTMLElement & FormInst>();
 
 type FormModel = Pick<
   CustomRoute.Route,
-  | "parent_id"
-  | "element_code"
-  | "param1"
-  | "param3"
-  | "element_type"
-  | "authority"
-  | "route_path"
-  | "remark"
-  | "multilingual"
-  | "param2"
-  | "orders"
-  | "description"
+  | 'parent_id'
+  | 'element_code'
+  | 'param1'
+  | 'param3'
+  | 'element_type'
+  | 'authority'
+  | 'route_path'
+  | 'remark'
+  | 'multilingual'
+  | 'param2'
+  | 'orders'
+  | 'description'
 >;
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules = {
-  description: createRequiredFormRule($t("common.pleaseCheckValue")),
-  element_code: createRequiredFormRule($t("common.pleaseCheckValue")),
-  authority: createRequiredFormRule($t("common.pleaseCheckValue")),
+  description: createRequiredFormRule($t('common.pleaseCheckValue')),
+  element_code: createRequiredFormRule($t('common.pleaseCheckValue')),
+  authority: createRequiredFormRule($t('common.pleaseCheckValue'))
 };
 
 function createDefaultFormModel(): FormModel {
   return {
-    parent_id: "0",
-    element_code: "",
-    param1: "",
-    param3: "basic",
-    multilingual: "default",
-    param2: "",
+    parent_id: '0',
+    element_code: '',
+    param1: '',
+    param3: 'basic',
+    multilingual: 'default',
+    param2: '',
     orders: 1,
-    description: "",
+    description: '',
     element_type: 1,
     authority: [],
-    route_path: "",
-    remark: "",
+    route_path: '',
+    remark: ''
   };
 }
 
@@ -124,7 +120,7 @@ function handleUpdateFormModelByModalType() {
       if (props.editData) {
         handleUpdateFormModel(props.editData);
       }
-    },
+    }
   };
 
   handlers[props.type]();
@@ -133,51 +129,36 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate();
   const formData = deepClone(formModel);
-  formData.parent_id = formData.parent_id || "0";
+  formData.parent_id = formData.parent_id || '0';
   formData.authority = JSON.stringify(formData.authority);
   let data: any;
-  if (props.type === "add") {
+  if (props.type === 'add') {
     data = await addElement(formData);
-  } else if (props.type === "edit") {
+  } else if (props.type === 'edit') {
     data = await editElement(formData);
   }
   if (!data.error) {
     window.$message?.success(data.msg);
-    emit("success");
+    emit('success');
   }
   closeModal();
 }
 
 watch(
   () => props.visible,
-  (newValue) => {
+  newValue => {
     if (newValue) {
       handleUpdateFormModelByModalType();
     }
-  },
+  }
 );
 </script>
 
 <template>
-  <NModal
-    v-model:show="modalVisible"
-    preset="card"
-    :title="title"
-    class="w-800px"
-  >
-    <NForm
-      ref="formRef"
-      label-placement="left"
-      :label-width="120"
-      :model="formModel"
-      :rules="rules"
-    >
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
+    <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.parent')"
-          path="parent_id"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.parent')" path="parent_id">
           <NTreeSelect
             v-model:value="formModel.parent_id"
             :options="parentOptions"
@@ -185,92 +166,41 @@ watch(
             key-field="id"
           />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.title')"
-          path="description"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.title')" path="description">
           <NInput v-model:value="formModel.description" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.multilingual')"
-          path="multilingual"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.multilingual')" path="multilingual">
           <NInput v-model:value="formModel.multilingual" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.name')"
-          path="element_code"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.name')" path="element_code">
           <NInput v-model:value="formModel.element_code" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.path')"
-          path="param1"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.path')" path="param1">
           <NInput v-model:value="formModel.param1" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.route_path')"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
           <NInput v-model:value="formModel.route_path" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.componentType')"
-          path="param3"
-        >
-          <NSelect
-            v-model:value="formModel.param3"
-            :options="routeComponentTypeOptions"
-          />
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.componentType')" path="param3">
+          <NSelect v-model:value="formModel.param3" :options="routeComponentTypeOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.icon')"
-          path="param2"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.icon')" path="param2">
           <IconSelect v-model:value="formModel.param2" :icons="icons" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.order')"
-          path="orders"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.order')" path="orders">
           <NInputNumber v-model:value="formModel.orders" />
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.type')"
-          path="element_type"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.type')" path="element_type">
           <NRadioGroup v-model:value="formModel.element_type">
-            <NRadio
-              v-for="item in routeTypeOptions"
-              :key="item.value"
-              :value="Number(item.value)"
-            >
+            <NRadio v-for="item in routeTypeOptions" :key="item.value" :value="Number(item.value)">
               {{ item.label }}
             </NRadio>
           </NRadioGroup>
         </NFormItemGridItem>
-        <NFormItemGridItem
-          :span="12"
-          :label="$t('page.manage.menu.form.authority')"
-          path="authority"
-        >
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.authority')" path="authority">
           <NCheckboxGroup v-model:value="formModel.authority">
             <NSpace item-style="display: flex;">
-              <NCheckbox
-                v-for="item in routeSysFlagOptions"
-                :key="item.value"
-                :value="item.value"
-                :label="item.label"
-              >
+              <NCheckbox v-for="item in routeSysFlagOptions" :key="item.value" :value="item.value" :label="item.label">
                 {{ item.label }}
               </NCheckbox>
             </NSpace>
@@ -281,12 +211,8 @@ watch(
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">{{
-          common_cancel
-        }}</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">{{
-          common_confirm
-        }}</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ common_cancel }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ common_confirm }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

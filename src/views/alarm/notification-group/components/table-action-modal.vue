@@ -2,17 +2,17 @@
 import { computed, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { Api } from '@/typings/api';
 import { notificationOptions } from '@/constants/business';
-import MemberTypeData from './member-type-data.vue'
 import { postNotificationGroup, putNotificationGroup } from '@/service/api/notification';
 import { handleSearch, initMemberData, memberTypeData, notificationTypeOptions } from '../utils';
+import MemberTypeData from './member-type-data.vue';
 
 export interface Props {
   visible: boolean;
   type?: 'add' | 'edit';
   editData?: Api.Alarm.NotificationGroupList | null;
 }
+
 export type ModalType = NonNullable<Props['type']>;
 
 defineOptions({ name: 'TableActionModal' });
@@ -24,14 +24,45 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   (e: 'getTableData'): void;
 }
 
 const emit = defineEmits<Emits>();
 
+function createDefaultFormModel(): FormModel {
+  return {
+    name: '',
+    description: '',
+    notification_type: '',
+    status: 'CLOSE'
+  };
+}
+
+const initNotificationConfig = {
+  MEMBER: '',
+  EMAIL: '',
+  SME: '',
+  VOICE: '',
+  WEBHOOK: '',
+  PayloadURL: '',
+  Secret: ''
+};
+
+const formModel = ref<FormModel>(createDefaultFormModel());
+const notificationConfig = ref<any>({ ...initNotificationConfig });
+const closeModal = () => {
+  memberTypeData.value = [{ ...initMemberData }];
+  formModel.value = createDefaultFormModel();
+  notificationConfig.value = { ...initNotificationConfig };
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  modalVisible.value = false;
+};
 const modalVisible = computed({
   get() {
-    if (!props.visible) { closeModal() }
+    if (!props.visible) {
+      closeModal();
+    }
     return props.visible;
   },
   set(visible) {
@@ -51,38 +82,11 @@ const formRef = ref<HTMLElement & FormInst>();
 
 type FormModel = Pick<DataService.Data, any>;
 
-const formModel = ref<FormModel>(createDefaultFormModel());
-const initNotificationConfig = {
-  'MEMBER': '',
-  'EMAIL': '',
-  'SME': '',
-  'VOICE': '',
-  'WEBHOOK': '',
-  'PayloadURL': '',
-  'Secret': ''
-}
-const notificationConfig = ref<any>({ ...initNotificationConfig });
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule('请输入规则名称'),
   description: createRequiredFormRule('请输入通知组描述'),
-  notification_type: createRequiredFormRule('请选择通知方式'),
+  notification_type: createRequiredFormRule('请选择通知方式')
 };
-
-const closeModal = () => {
-  memberTypeData.value = [{ ...initMemberData }]
-  formModel.value = createDefaultFormModel();
-  notificationConfig.value = { ...initNotificationConfig }
-  modalVisible.value = false;
-};
-
-function createDefaultFormModel(): FormModel {
-  return {
-    name: '',
-    description: '',
-    notification_type: '',
-    status: 'CLOSE'
-  };
-}
 
 function handleUpdateFormModel(model: Partial<FormModel>) {
   Object.assign(formModel.value, model);
@@ -100,14 +104,14 @@ function handleUpdateFormModelByModalType() {
         const notification_config = JSON.parse(props.editData.notification_config);
         const notification_type = props.editData.notification_type;
         if (notification_type === 'MEMBER') {
-          notificationConfig.value.MEMBER = memberTypeData
+          notificationConfig.value.MEMBER = memberTypeData;
         } else if (['EMAIL', 'SME', 'VOICE'].includes(notification_type)) {
-          formModel.value.info = notification_config[notification_type]
+          formModel.value.info = notification_config[notification_type];
         } else if (notification_type === 'WEBHOOK') {
-          notificationConfig.value.PayloadURL = notification_config.PayloadURL
-          notificationConfig.value.Secret = notification_config.Secret
+          notificationConfig.value.PayloadURL = notification_config.PayloadURL;
+          notificationConfig.value.Secret = notification_config.Secret;
         }
-        notificationConfig.value[notification_type] = notification_config[notification_type]
+        notificationConfig.value[notification_type] = notification_config[notification_type];
       }
     }
   };
@@ -118,9 +122,9 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate();
   if (formModel.value.notification_type === 'MEMBER') {
-    notificationConfig.value.MEMBER = memberTypeData
+    notificationConfig.value.MEMBER = memberTypeData;
   } else if (['EMAIL', 'SME', 'VOICE'].includes(formModel.value.notification_type)) {
-    notificationConfig.value[formModel.value.notification_type] = formModel.value.info
+    notificationConfig.value[formModel.value.notification_type] = formModel.value.info;
   }
 
   const params = {
@@ -128,8 +132,8 @@ async function handleSubmit() {
     description: formModel.value.description,
     notification_type: formModel.value.notification_type,
     notification_config: JSON.stringify(notificationConfig.value),
-    status: formModel.value.status,
-  }
+    status: formModel.value.status
+  };
   if (props.type === 'add') {
     await postNotificationGroup(params);
   } else {
@@ -157,9 +161,8 @@ watch(
 );
 
 const handleAddMember = () => {
-  memberTypeData.value.push(initMemberData)
-}
-
+  memberTypeData.value.push(initMemberData);
+};
 </script>
 
 <template>
@@ -175,19 +178,18 @@ const handleAddMember = () => {
         <NSelect v-model:value="formModel.notification_type" :options="notificationOptions" class="w-full" />
       </NFormItem>
 
-      <div style="margin-left: 120px;">
+      <div style="margin-left: 120px">
         <template v-if="formModel.notification_type === 'MEMBER'">
           <NFormItem path="age" label="">
             <div class="flex">
               <div>设置成员通知方式</div>
-              <NButton type="primary" size="small" @click="handleAddMember" style="margin-left: 24px;">新增</NButton>
+              <NButton type="primary" size="small" style="margin-left: 24px" @click="handleAddMember">新增</NButton>
             </div>
           </NFormItem>
 
           <template v-for="(item, index) in memberTypeData" :key="item">
-            <MemberTypeData :selectedNotificationType="item.notificationType" :index="index" />
+            <MemberTypeData :selected-notification-type="item.notificationType" :index="index" />
           </template>
-
         </template>
 
         <template v-if="['EMAIL', 'SME', 'VOICE'].includes(formModel.notification_type)">
@@ -204,7 +206,7 @@ const handleAddMember = () => {
           </NFormItem>
           <div>Secret</div>
           <NInput v-model:value="notificationConfig.Secret" />
-          <div style="font-size: 12px; color: #8F8E94;margin-top: 8px;">
+          <div style="font-size: 12px; color: #8f8e94; margin-top: 8px">
             <div>签名：使用 SHA-256 哈希函数和 HMAC 生成</div>
             <div>格式："sha256="+signature</div>
             <div>请求头：X-Signature-256</div>

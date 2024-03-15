@@ -5,7 +5,6 @@ import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { getSystemLogList } from '@/service/api/system-management-user';
 import { useLoading } from '~/packages/hooks';
-import { Api } from '@/typings/api';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 

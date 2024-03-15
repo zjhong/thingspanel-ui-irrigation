@@ -131,7 +131,7 @@ onMounted(fetchBoards);
                 {{ board.description }}
               </NTooltip>
               <div class="flex justify-end gap-2">
-                <NButton strong secondary circle @click.stop="editBoard(board)">
+                <NButton circle strong secondary @click.stop="editBoard(board)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>

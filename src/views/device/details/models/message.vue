@@ -2,7 +2,6 @@
 defineProps<{
   id: string;
 }>();
-
 </script>
 
 <template>
@@ -10,9 +9,6 @@ defineProps<{
     <p>设备id：{{ id }}</p>
     <p><span>message 信息</span></p>
   </div>
-
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

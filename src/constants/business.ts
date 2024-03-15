@@ -79,7 +79,6 @@ export const serviceManagementProtocolTypeLabels: Record<ServiceManagement.Proto
 };
 export const serviceManagementProtocolTypeOptions = transformObjectToOption(serviceManagementProtocolTypeLabels);
 
-
 /** 规则引擎状态状态 */
 export const ruleEngineStatusLabels: Record<RuleEngine.StatusKey, string> = {
   1: '已启动',

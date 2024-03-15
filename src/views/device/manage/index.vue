@@ -1,16 +1,34 @@
 <script setup lang="tsx">
 import {ref} from 'vue';
 import type {TreeSelectOption} from 'naive-ui/es/tree-select/src/interface';
-import {deviceGroupTree, deviceList, getDeviceConfigList} from '@/service/api/device';
+import {devicCeonnectForm, deviceGroupTree, deviceList, getDeviceConfigList} from '@/service/api/device';
 import type {SearchConfig} from '@/components/data-table-page/index.vue';
 import {DrawerPlacement, StepsProps} from "naive-ui";
 import AddDevicesStep1 from "@/views/device/manage/modules/add-devices-step1.vue";
-// import AddDevicesStep2 from "@/views/device/manage/modules/add-devices-step2.vue";
+import AddDevicesStep2 from "@/views/device/manage/modules/add-devices-step2.vue";
 import AddDevicesStep3 from "@/views/device/manage/modules/add-devices-step3.vue";
 
 const addKey = ref()
 const deviceNumber = ref()
 const configOptions = ref()
+const deviceId = ref()
+const configId = ref();
+const formData = ref();
+
+const getFormJson = async (id) => {
+  const res = await devicCeonnectForm({device_id: id})
+
+  formData.value = res.data
+
+}
+const setUpId = (dId, cId) => {
+
+  deviceId.value = dId
+  configId.value = cId
+  getFormJson(dId)
+
+
+}
 const getDeviceGroupOptions = async () => {
   // 将原始数据转换为树形结构
   function convertTreeNodeToTarget(treeNode: DeviceManagement.TreeNode): TreeSelectOption {
@@ -235,11 +253,11 @@ function handleSelect(key: string | number) {
 
         <n-card border class="mt-6" bordered>
           <div v-if="current===1">
-            <AddDevicesStep1 :configOptions="configOptions" :prevCallback="()=>{current+=1}"/>
+            <AddDevicesStep1 :setIdCallback="setUpId" :configOptions="configOptions" :prevCallback="()=>{current+=1}"/>
           </div>
           <div v-if="current===2">
 
-            <!--            <AddDevicesStep2/>-->
+            <AddDevicesStep2 :formElements="formData"/>
             <!--            <n-button @click="current-=1">取消</n-button>-->
             <!--            <n-button @click="current+=1">完成</n-button>-->
           </div>

@@ -9,10 +9,10 @@ const numberAnimationInstRef = ref<NumberAnimationInst | null>(null);
 const equipment = ref(null);
 
 // 定义响应数据的引用类型
-const tenantNum = ref<number>(0); // 假设 tenantNum 是一个响应式引用
-const user_added_yesterday = ref<number>(0); // 假设 user_added_yesterday 是一个响应式引用
-const user_added_month = ref<number>(0); // 假设 user_added_month 是一个响应式引用
-let user_list_month: number[] = []; // 假设 user_list_month 是一个普通的数组
+const tenantNum = ref<number>(0);
+const user_added_yesterday = ref<number>(0);
+const user_added_month = ref<number>(0);
+let user_list_month: number[] = [];
 
 const init: () => void = () => {
   // const myecharts = echarts.init(box.value);

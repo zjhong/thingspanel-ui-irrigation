@@ -61,7 +61,7 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
       // remark: item.remark,
       meta: {
         title: item.description,
-        i18nTitle: item.multilingual,
+        i18nKey: item.multilingual,
         requiresAuth: true,
         permissions: JSON.parse(item.authority),
         roles: JSON.parse(item.authority),

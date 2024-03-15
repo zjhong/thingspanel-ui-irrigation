@@ -103,6 +103,18 @@ declare namespace GeneralSetting {
   type EnabledTypeKey = NonNullable<DataClearSetting['enabled']>;
 }
 
+declare namespace NotificationServices {
+  interface Email extends Api.NotificationServices.Email {}
+
+  /**
+   * 开启/关闭 服务
+   *
+   * - OPEN-开启
+   * - CLOSE-关闭
+   */
+  type StatusKey = NonNullable<Email['status']>;
+}
+
 declare namespace UserManagement {
   interface User extends Api.UserManagement.User {}
 

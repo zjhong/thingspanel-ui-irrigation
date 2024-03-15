@@ -370,6 +370,16 @@ declare namespace Api {
       total: number;
     }
   }
+  namespace NotificationServices {
+    interface Email {
+      id: string;
+      config: string;
+      email_config: any;
+      notice_type: string;
+      remark: string;
+      status: string;
+    }
+  }
   namespace UserManagement {
     interface User {
       /** 用户id */

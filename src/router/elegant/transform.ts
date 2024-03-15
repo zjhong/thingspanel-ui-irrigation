@@ -195,6 +195,7 @@ const routeMap: RouteMap = {
   "manage_user-detail": "/manage/user-detail/:id",
   "management": "/management",
   "management_auth": "/management/auth",
+  "management_notification": "/management/notification",
   "management_role": "/management/role",
   "management_route": "/management/route",
   "management_setting": "/management/setting",

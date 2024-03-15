@@ -500,6 +500,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'management_notification',
+        path: '/management/notification',
+        component: 'view.management_notification',
+        meta: {
+          title: 'management_notification',
+          i18nKey: 'route.management_notification'
+        }
+      },
+      {
         name: 'management_role',
         path: '/management/role',
         component: 'view.management_role',

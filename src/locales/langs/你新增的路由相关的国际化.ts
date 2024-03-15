@@ -57,7 +57,8 @@ export const czh_cn = {
   'automation_linkage-edit': '自动化联动编辑',
   alarm: '告警',
   'alarm_notification-group': '通知组',
-  'alarm_notification-record': '通知记录'
+  'alarm_notification-record': '通知记录',
+  management_notification: '通知服务配置'
 };
 
 export const cen = {
@@ -115,5 +116,6 @@ export const cen = {
   automation: 'automation',
   alarm: 'alarm',
   'alarm_notification-group': 'notification group',
-  'alarm_notification-record': 'notification record'
+  'alarm_notification-record': 'notification record',
+  management_notification: 'Notification service configuration'
 };

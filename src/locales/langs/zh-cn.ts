@@ -43,7 +43,9 @@ const local: App.I18n.Schema = {
     yesOrNo: {
       yes: '是',
       no: '否'
-    }
+    },
+    debug: '调试',
+    send: '发送'
   },
   theme: {
     themeSchema: {
@@ -416,6 +418,24 @@ const local: App.I18n.Schema = {
             lastCleanupDataTime: '上次清理数据时间节点',
             enabled: '是否启用'
           }
+        }
+      },
+      notification: {
+        enableDisableService: '开启/关闭服务',
+        email: {
+          title: '邮箱',
+          form: {
+            sendMailServer: '发送邮件服务器',
+            sendPort: '发送端口',
+            senderMail: '发送人邮件',
+            authorizationCodeOrPassword: '授权码/密码',
+            ssl: '开启SSL',
+            inbox: '收件箱',
+            message: '消息内容'
+          }
+        },
+        shortMessage: {
+          title: '短信'
         }
       }
     }

@@ -119,7 +119,7 @@ init();
               </div>
               <NImage
                 width="140"
-                class="mt-20px"
+                class="mt-20px h-140px"
                 object-fit="contain"
                 :src="url.origin + formModel.logo_cache?.slice(1)"
               />
@@ -153,7 +153,9 @@ init();
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" class="mt-60px">
           <div class="w-120px"></div>
-          <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
+          <NButton class="w-72px" type="primary" @click="handleSubmit">
+            {{ $t('common.save') }}
+          </NButton>
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="start"></NSpace>

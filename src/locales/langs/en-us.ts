@@ -43,7 +43,9 @@ const local: App.I18n.Schema = {
     yesOrNo: {
       yes: 'Yes',
       no: 'No'
-    }
+    },
+    debug: 'Debug',
+    send: 'Send'
   },
   theme: {
     themeSchema: {
@@ -416,6 +418,24 @@ const local: App.I18n.Schema = {
             lastCleanupDataTime: 'Last Cleanup Data Time',
             enabled: 'Enabled'
           }
+        }
+      },
+      notification: {
+        enableDisableService: 'Enable/Disable the service',
+        email: {
+          title: 'EMAIL',
+          form: {
+            sendMailServer: 'Send mail server',
+            sendPort: 'Send port',
+            senderMail: 'Sender email',
+            authorizationCodeOrPassword: 'Authorization code/Password',
+            ssl: 'Open SSL',
+            inbox: 'Inbox',
+            message: 'Message'
+          }
+        },
+        shortMessage: {
+          title: 'SME'
         }
       }
     }

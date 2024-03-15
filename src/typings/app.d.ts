@@ -288,6 +288,8 @@ declare namespace App {
           yes: string;
           no: string;
         };
+        debug: string;
+        send: string;
       };
       theme: {
         themeSchema: { title: string } & Record<UnionKey.ThemeScheme, string>;
@@ -592,6 +594,24 @@ declare namespace App {
                 lastCleanupDataTime: string;
                 enabled: string;
               };
+            };
+          };
+          notification: {
+            enableDisableService: string;
+            email: {
+              title: string;
+              form: {
+                sendMailServer: string;
+                sendPort: string;
+                senderMail: string;
+                authorizationCodeOrPassword: string;
+                ssl: string;
+                inbox: string;
+                message: string;
+              };
+            };
+            shortMessage: {
+              title: string;
             };
           };
         };

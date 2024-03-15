@@ -5,3 +5,4 @@ export * from './system-manage';
 export * from './panel';
 export * from './rlesList';
 export * from './protocol-plugin';
+export * from './notification-services';

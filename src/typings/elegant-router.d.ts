@@ -69,6 +69,7 @@ declare module "@elegant-router/types" {
     "manage_user-detail": "/manage/user-detail/:id";
     "management": "/management";
     "management_auth": "/management/auth";
+    "management_notification": "/management/notification";
     "management_role": "/management/role";
     "management_route": "/management/route";
     "management_setting": "/management/setting";
@@ -218,6 +219,7 @@ declare module "@elegant-router/types" {
     | "manage_user-detail"
     | "manage_user"
     | "management_auth"
+    | "management_notification"
     | "management_role"
     | "management_route"
     | "management_setting"

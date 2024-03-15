@@ -2,6 +2,7 @@ import { useRouter } from 'vue-router';
 import type { RouteLocationRaw } from 'vue-router';
 import type { LastLevelRouteKey, RouteKey } from '@elegant-router/types';
 import { router as globalRouter } from '@/router';
+import { useAuthStore } from '@/store/modules/auth';
 
 /**
  * Router push
@@ -23,12 +24,14 @@ export function useRouterPush(inSetup = true) {
     params?: Record<string, string>;
   }
 
+  const authStore = useAuthStore();
+
   async function routerPushByKey(key: LastLevelRouteKey | RouteKey, options?: RouterPushOptions) {
     const { query, params } = options || {};
+
     const routeLocation: RouteLocationRaw = {
       name: key
     };
-    console.log(routeLocation);
     if (query) {
       routeLocation.query = query;
     }
@@ -36,12 +39,18 @@ export function useRouterPush(inSetup = true) {
     if (params) {
       routeLocation.params = params;
     }
-
     return routerPush(routeLocation);
   }
 
   async function toHome() {
-    return routerPushByKey('home');
+    let home;
+    if (authStore.userInfo.authority === 'SYS_ADMIN') {
+      home = 'home';
+    } else {
+      home = 'device';
+    }
+
+    return routerPushByKey(home);
   }
 
   /**
@@ -58,12 +67,18 @@ export function useRouterPush(inSetup = true) {
         module
       }
     };
+    let redirect = '';
+    const is_remember_rath = localStorage.getItem('isRememberPath');
 
-    const redirect = redirectUrl || route.value.fullPath;
+    if (is_remember_rath === '1') {
+      redirect = redirectUrl || route.value.fullPath;
+    }
 
-    options.query = {
-      redirect
-    };
+    if (redirect) {
+      options.query = {
+        redirect
+      };
+    }
 
     return routerPushByKey('login', options);
   }

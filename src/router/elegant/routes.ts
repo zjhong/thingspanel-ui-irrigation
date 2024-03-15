@@ -48,6 +48,35 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'alarm',
+    path: '/alarm',
+    component: 'layout.base',
+    meta: {
+      title: 'alarm',
+      i18nKey: 'route.alarm'
+    },
+    children: [
+      {
+        name: 'alarm_notification-group',
+        path: '/alarm/notification-group',
+        component: 'view.alarm_notification-group',
+        meta: {
+          title: 'alarm_notification-group',
+          i18nKey: 'route.alarm_notification-group'
+        }
+      },
+      {
+        name: 'alarm_notification-record',
+        path: '/alarm/notification-record',
+        component: 'view.alarm_notification-record',
+        meta: {
+          title: 'alarm_notification-record',
+          i18nKey: 'route.alarm_notification-record'
+        }
+      }
+    ]
+  },
+  {
     name: 'apply',
     path: '/apply',
     component: 'layout.base',
@@ -63,6 +92,44 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'apply_service',
           i18nKey: 'route.apply_service'
+        }
+      }
+    ]
+  },
+  {
+    name: 'automation',
+    path: '/automation',
+    component: 'layout.base',
+    meta: {
+      title: 'automation',
+      i18nKey: 'route.automation'
+    },
+    children: [
+      {
+        name: 'automation_linkage-edit',
+        path: '/automation/linkage-edit',
+        component: 'view.automation_linkage-edit',
+        meta: {
+          title: 'automation_linkage-edit',
+          i18nKey: 'route.automation_linkage-edit'
+        }
+      },
+      {
+        name: 'automation_scene-linkage',
+        path: '/automation/scene-linkage',
+        component: 'view.automation_scene-linkage',
+        meta: {
+          title: 'automation_scene-linkage',
+          i18nKey: 'route.automation_scene-linkage'
+        }
+      },
+      {
+        name: 'automation_scene-manage',
+        path: '/automation/scene-manage',
+        component: 'view.automation_scene-manage',
+        meta: {
+          title: 'automation_scene-manage',
+          i18nKey: 'route.automation_scene-manage'
         }
       }
     ]
@@ -197,6 +264,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'device_config-detail',
           i18nKey: 'route.device_config-detail'
+        }
+      },
+      {
+        name: 'device_config-edit',
+        path: '/device/config-edit',
+        component: 'view.device_config-edit',
+        meta: {
+          title: 'device_config-edit',
+          i18nKey: 'route.device_config-edit'
         }
       },
       {
@@ -692,6 +768,26 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'system-management-user',
+    path: '/system-management-user',
+    component: 'layout.base',
+    meta: {
+      title: 'system-management-user',
+      i18nKey: 'route.system-management-user'
+    },
+    children: [
+      {
+        name: 'system-management-user_system-log',
+        path: '/system-management-user/system-log',
+        component: 'view.system-management-user_system-log',
+        meta: {
+          title: 'system-management-user_system-log',
+          i18nKey: 'route.system-management-user_system-log'
+        }
+      }
+    ]
+  },
+  {
     name: 'test',
     path: '/test',
     component: 'layout.base$view.test',
@@ -709,5 +805,43 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.user-center',
       hideInMenu: true
     }
+  },
+  {
+    name: 'visualization',
+    path: '/visualization',
+    component: 'layout.base',
+    meta: {
+      title: 'visualization',
+      i18nKey: 'route.visualization'
+    },
+    children: [
+      {
+        name: 'visualization_panel',
+        path: '/visualization/panel',
+        component: 'view.visualization_panel',
+        meta: {
+          title: 'visualization_panel',
+          i18nKey: 'route.visualization_panel'
+        }
+      },
+      {
+        name: 'visualization_panel-details',
+        path: '/visualization/panel-details',
+        component: 'view.visualization_panel-details',
+        meta: {
+          title: 'visualization_panel-details',
+          i18nKey: 'route.visualization_panel-details'
+        }
+      },
+      {
+        name: 'visualization_panel-preview',
+        path: '/visualization/panel-preview',
+        component: 'view.visualization_panel-preview',
+        meta: {
+          title: 'visualization_panel-preview',
+          i18nKey: 'route.visualization_panel-preview'
+        }
+      }
+    ]
   }
 ];

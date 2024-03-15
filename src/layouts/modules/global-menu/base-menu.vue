@@ -57,6 +57,7 @@ function updateExpandedKeys() {
 }
 
 function handleClickMenu(key: RouteKey) {
+  // const { query } = routeStore.getSelectedMenuMetaByKey(key) || {};
   routerPushByKey(key);
 }
 

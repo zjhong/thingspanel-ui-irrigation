@@ -19,7 +19,7 @@ const device_data = ref<DeviceManagement.DeviceData[]>([]);
 
 const { loading, startLoading, endLoading } = useLoadingEmpty(false);
 const route = useRoute();
-console.log(route);
+
 const currentId = ref(route.query.id);
 const isEdit = ref(true);
 const the_modal1 = ref();

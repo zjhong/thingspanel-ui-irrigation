@@ -144,6 +144,7 @@ function handleClickMask() {
       <!-- Tab -->
       <template v-if="showTab">
         <div
+          v-show="!fullContent"
           class="flex-shrink-0"
           :class="[
             style['layout-tab'],

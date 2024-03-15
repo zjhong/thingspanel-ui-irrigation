@@ -25,8 +25,15 @@ declare module "@elegant-router/types" {
     "404": "/404";
     "500": "/500";
     "about": "/about";
+    "alarm": "/alarm";
+    "alarm_notification-group": "/alarm/notification-group";
+    "alarm_notification-record": "/alarm/notification-record";
     "apply": "/apply";
     "apply_service": "/apply/service";
+    "automation": "/automation";
+    "automation_linkage-edit": "/automation/linkage-edit";
+    "automation_scene-linkage": "/automation/scene-linkage";
+    "automation_scene-manage": "/automation/scene-manage";
     "component": "/component";
     "component_button": "/component/button";
     "component_card": "/component/card";
@@ -41,6 +48,7 @@ declare module "@elegant-router/types" {
     "device": "/device";
     "device_config": "/device/config";
     "device_config-detail": "/device/config-detail";
+    "device_config-edit": "/device/config-edit";
     "device_details": "/device/details";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
@@ -89,8 +97,14 @@ declare module "@elegant-router/types" {
     "product_update-ota": "/product/update-ota";
     "product_update-package": "/product/update-package";
     "rule-engine": "/rule-engine";
+    "system-management-user": "/system-management-user";
+    "system-management-user_system-log": "/system-management-user/system-log";
     "test": "/test";
     "user-center": "/user-center";
+    "visualization": "/visualization";
+    "visualization_panel": "/visualization/panel";
+    "visualization_panel-details": "/visualization/panel-details";
+    "visualization_panel-preview": "/visualization/panel-preview";
   };
 
   /**
@@ -130,7 +144,9 @@ declare module "@elegant-router/types" {
     | "404"
     | "500"
     | "about"
+    | "alarm"
     | "apply"
+    | "automation"
     | "component"
     | "dashboard"
     | "data-service"
@@ -144,8 +160,10 @@ declare module "@elegant-router/types" {
     | "plugin"
     | "product"
     | "rule-engine"
+    | "system-management-user"
     | "test"
     | "user-center"
+    | "visualization"
   >;
 
   /**
@@ -168,7 +186,12 @@ declare module "@elegant-router/types" {
     | "500"
     | "login"
     | "about"
+    | "alarm_notification-group"
+    | "alarm_notification-record"
     | "apply_service"
+    | "automation_linkage-edit"
+    | "automation_scene-linkage"
+    | "automation_scene-manage"
     | "component_button"
     | "component_card"
     | "component_table"
@@ -178,6 +201,7 @@ declare module "@elegant-router/types" {
     | "dashboard_workbench"
     | "data-service_rule-engine"
     | "device_config-detail"
+    | "device_config-edit"
     | "device_config"
     | "device_details"
     | "device_grouping-details"
@@ -214,8 +238,12 @@ declare module "@elegant-router/types" {
     | "product_update-ota"
     | "product_update-package"
     | "rule-engine"
+    | "system-management-user_system-log"
     | "test"
     | "user-center"
+    | "visualization_panel-details"
+    | "visualization_panel-preview"
+    | "visualization_panel"
   >;
 
   /**

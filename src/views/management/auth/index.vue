@@ -30,11 +30,32 @@ function setTableData(data: CustomRoute.Route[]) {
   tableData.value = data;
 }
 
+const pagination: PaginationProps = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  itemCount: 0,
+  pageSizes: [10, 15, 20, 25, 30],
+  onChange: (page: number) => {
+    pagination.page = page;
+    queryParams.page = page;
+    getTableData();
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    queryParams.page = 1;
+    queryParams.page_size = pageSize;
+    getTableData();
+  }
+});
+
 async function getTableData() {
   startLoading();
   const { data } = await fetchElementList(queryParams);
   if (data) {
     const list: Api.Route.MenuRoute[] = data.list;
+    pagination.itemCount = data.total;
     setTableData(list);
     endLoading();
   }
@@ -186,25 +207,6 @@ async function handleDeleteTable(rowId: string) {
   }
 }
 
-const pagination: PaginationProps = reactive({
-  page: 1,
-  pageSize: 10,
-  showSizePicker: true,
-  pageSizes: [10, 15, 20, 25, 30],
-  onChange: (page: number) => {
-    pagination.page = page;
-    queryParams.page = page;
-    getTableData();
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    pagination.pageSize = pageSize;
-    pagination.page = 1;
-    queryParams.page = 1;
-    queryParams.page_size = pageSize;
-    getTableData();
-  }
-});
-
 function init() {
   getTableData();
 }
@@ -226,6 +228,7 @@ init();
         <NDataTable
           size="small"
           :row-key="rowKey"
+          :remote="true"
           :columns="columns"
           :data="tableData"
           :loading="loading"

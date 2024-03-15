@@ -15,12 +15,20 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const { headers } = config;
+      const { headers, params } = config;
       // set token
       const token = localStg.get('token');
       // const Authorization = token ? `Bearer ${token}` : null;
       const headersWithToken = token ? { 'x-token': token } : {};
       Object.assign(headers, headersWithToken);
+      console.log(params);
+      if (params && typeof params === 'object' && !Array.isArray(params)) {
+        Object.keys(params).forEach(key => {
+          if (params[key] === '') {
+            params[key] = undefined;
+          }
+        });
+      }
 
       return config;
     },

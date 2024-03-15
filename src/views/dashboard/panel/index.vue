@@ -1,5 +1,5 @@
 <script setup lang="ts"></script>
 
 <template>
-  <PanelManage />
+  <div>看板迁移至可视化</div>
 </template>

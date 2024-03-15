@@ -2,10 +2,10 @@
 import { computed, reactive, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t } from '~/src/locales';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
+import { $t } from '~/src/locales';
 defineOptions({
   name: 'MenuOperateDrawer'
 });
@@ -124,7 +124,12 @@ watch(visible, () => {
       <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="80">
         <NFormItem :label="$t('page.manage.menu.menuType')" path="menuType">
           <NRadioGroup v-model:value="model.menuType">
-            <NRadio v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="$t(item.label as any)" />
+            <NRadio
+              v-for="item in menuTypeOptions"
+              :key="item.value"
+              :value="item.value"
+              :label="$t(item.label as any)"
+            />
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.menu.menuName')" path="menuName">
@@ -132,7 +137,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.manage.menu.iconTypeTitle')" path="iconType">
           <NRadioGroup v-model:value="model.iconType">
-            <NRadio v-for="item in menuIconTypeOptions" :key="item.value" :value="item.value" :label="$t(item.label as any)" />
+            <NRadio
+              v-for="item in menuIconTypeOptions"
+              :key="item.value"
+              :value="item.value"
+              :label="$t(item.label as any)"
+            />
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.menu.icon')" path="icon">
@@ -159,7 +169,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.manage.menu.menuStatus')" path="status">
           <NRadioGroup v-model:value="model.status">
-            <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="$t(item.label as any)" />
+            <NRadio
+              v-for="item in enableStatusOptions"
+              :key="item.value"
+              :value="item.value"
+              :label="$t(item.label as any)"
+            />
           </NRadioGroup>
         </NFormItem>
         <NFormItem :label="$t('page.manage.menu.hideInMenu')" path="hideInMenu">

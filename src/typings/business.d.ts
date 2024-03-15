@@ -23,25 +23,11 @@ declare namespace CustomRoute {
 }
 /** 应用管理-服务管理模块 */
 declare namespace ServiceManagement {
-  interface Service extends Api.ApiApplyManagement.Service {
-    /** 序号 */
-    index: number;
-  }
-  /**
-   * 服务类别
-   *
-   * - 1: 接入协议
-   * - 2: 通知服务
-   * - 3: 接入服务
-   */
-  type ServiceTypeKey = NonNullable<Service['serviceType']>;
-  /**
-   * 服务状态
-   *
-   * - 1: 运行中
-   * - 2: 已停止
-   */
-  type StatusKey = NonNullable<Service['status']>;
+  interface Service extends Api.ApiApplyManagement.Service {}
+  /** 设备类型 */
+  type DeviceTypeKey = NonNullable<Service['device_type']>;
+  /** 协议类型 */
+  type ProtocolTypeKey = NonNullable<Service['protocol_type']>;
 }
 
 /** 规则引擎模块 */

@@ -1,23 +1,20 @@
 <script lang="ts" setup>
-import { ref, watch} from 'vue'
-import {deviceConfigAdd, deviceConfigEdit, deviceTemplate} from "@/service/api/device";
-import {FormInst, useMessage} from "naive-ui";
+import { ref, watch } from 'vue';
+import type { FormInst } from 'naive-ui';
+import { useMessage } from 'naive-ui';
+import { deviceConfigAdd, deviceConfigEdit, deviceTemplate } from '@/service/api/device';
 
 const message = useMessage();
 
-const props = defineProps({
-  modalVisible: {
-    type: Boolean,
-    default: false,
-  },
-  modalType: {
-    type: String,
-    default() {
-      return 'add'
-    }
-  }
-})
-const modalTitle = ref('添加')
+interface Props {
+  modalVisible?: boolean;
+  modalType?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  modalVisible: false,
+  modalType: 'add'
+});
+const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
 
 function defaultConfigForm() {
@@ -50,46 +47,48 @@ const configFormRules = ref({
     message: '请选择设备连接方式',
     trigger: 'change'
   }
-})
-const deviceTemplateOptions = ref([])
+});
+const deviceTemplateOptions = ref([]);
 const getDeviceTemplate = () => {
   const paramsData = {
     page: 1,
-    page_size: 100,
-  }
+    page_size: 100
+  };
   deviceTemplate(paramsData).then(res => {
-    deviceTemplateOptions.value = res.data.list
-  })
+    deviceTemplateOptions.value = res.data.list;
+  });
+};
+interface Emits {
+  (e: 'modalClose'): void;
+  (e: 'submitted'): void;
 }
-const emit = defineEmits();
-const visible = ref(false)
+const emit = defineEmits<Emits>();
+const visible = ref(false);
 watch(
-    () => props.modalVisible,
-    (newValue) => {
-      visible.value = newValue
-      if (props.modalType === 'add') {
-        modalTitle.value = '添加'
-      } else {
-        modalTitle.value = '编辑'
-      }
-      getDeviceTemplate()
+  () => props.modalVisible,
+  newValue => {
+    visible.value = newValue;
+    if (props.modalType === 'add') {
+      modalTitle.value = '添加';
+    } else {
+      modalTitle.value = '编辑';
     }
-)
+    getDeviceTemplate();
+  }
+);
 const modalClose = () => {
   emit('modalClose');
-}
+};
 
-const deviceTemplateScroll = () => {
-
-}
+const deviceTemplateScroll = () => {};
 const configFormRef = ref<HTMLElement & FormInst>();
 const handleClose = () => {
   configFormRef.value?.restoreValidation();
-  configForm.value=defaultConfigForm()
-  visible.value = false
-  modalClose()
-}
-//提交表单
+  configForm.value = defaultConfigForm();
+  visible.value = false;
+  modalClose();
+};
+// 提交表单
 const handleSubmit = async () => {
   await configFormRef?.value?.validate();
   if (props.modalType === 'add') {
@@ -103,28 +102,26 @@ const handleSubmit = async () => {
       message.success('修改成功');
     }
   }
-  handleClose()
+  handleClose();
   emit('submitted');
-}
-
+};
 </script>
 
 <template>
   <div class="overflow-hidden">
-    <NModal v-model:show="visible" :mask-closable="false" :title="`${modalTitle}设备配置`" class="w-600px"
-            preset="card" @after-leave="modalClose">
+    <NCard :title="`${modalTitle}设备配置`">
       <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
         <NFormItem label="设备配置名称" path="name">
-          <NInput v-model:value="configForm.name" placeholder="请输入设备名称"/>
+          <NInput v-model:value="configForm.name" placeholder="请输入设备名称" />
         </NFormItem>
         <NFormItem label="选择设备模板" path="device_template_id">
-          <NTreeSelect
-              v-model:value="configForm.device_template_id"
-              :options="deviceTemplateOptions"
-              label-field="name"
-              value-field="author"
-              @scroll="deviceTemplateScroll"
-          ></NTreeSelect>
+          <NSelect
+            v-model:value="configForm.device_template_id"
+            :options="deviceTemplateOptions"
+            label-field="name"
+            value-field="id"
+            @scroll="deviceTemplateScroll"
+          ></NSelect>
         </NFormItem>
         <NFormItem label="设备接入类型" path="device_type">
           <n-radio-group v-model:value="configForm.device_type" name="device_type">
@@ -143,13 +140,11 @@ const handleSubmit = async () => {
             </n-space>
           </n-radio-group>
         </NFormItem>
-        <div style="display: flex; justify-content: flex-end; gap: 8px">
+        <NFlex>
           <NButton @click="handleClose">取消</NButton>
-            <NButton @click="handleSubmit" type="primary">确定</NButton>
-        </div>
+          <NButton type="primary" @click="handleSubmit">确定</NButton>
+        </NFlex>
       </NForm>
-    </NModal>
+    </NCard>
   </div>
 </template>
-
-

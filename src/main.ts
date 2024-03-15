@@ -8,18 +8,9 @@ import { i18n, setupI18n } from './locales';
 import App from './App.vue';
 
 async function setupApp() {
-  setupLoading();
-
-  setupNProgress();
-
-  setupIconifyOffline();
-
-  setupDayjs();
-
   const app = createApp(App);
 
   setupStore(app);
-
   setupI18n(app);
   const sysSettingStore = useSysSettingStore();
   // 确保系统设置在应用启动时加载
@@ -39,8 +30,12 @@ async function setupApp() {
     },
     { immediate: true }
   );
+  setupLoading();
+  setupNProgress();
+  setupIconifyOffline();
+  setupDayjs();
   await setupRouter(app);
-
   app.mount('#app');
 }
+
 setupApp();

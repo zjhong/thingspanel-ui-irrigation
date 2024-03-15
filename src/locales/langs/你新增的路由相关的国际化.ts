@@ -43,7 +43,21 @@ export const czh_cn = {
   device_manage: '设备管理',
   device_details: '设备详情',
   device_config: '设备配置',
-  'device_config-detail': '设备配置详情'
+  'device_config-detail': '设备配置详情',
+  'device_config-edit': '编辑设备',
+  'system-management-user': '系统管理(租户)',
+  'system-management-user_system-log': '系统日志',
+  visualization: '可视化',
+  visualization_panel: '看板列表',
+  'visualization_panel-details': '看板详情',
+  'visualization_panel-preview': '看板预览',
+  automation: '自动化',
+  'automation_scene-manage': '自动化场景管理',
+  'automation_scene-linkage': '自动化场景联动',
+  'automation_linkage-edit': '自动化联动编辑',
+  alarm: '告警',
+  'alarm_notification-group': '通知组',
+  'alarm_notification-record': '通知记录'
 };
 
 export const cen = {
@@ -87,5 +101,19 @@ export const cen = {
   device_manage: 'Equipment Management',
   device_details: 'Device Details',
   device_config: 'deviceConfig',
-  'device_config-detail': 'deviceConfig Detail'
+  'device_config-detail': 'deviceConfig Detail',
+  'device_config-edit': 'edit the device',
+  'system-management-user': 'System Management (Tenant)',
+  'system-management-user_system-log': 'system log',
+  visualization: 'visualization',
+  visualization_panel: 'kanban list',
+  'visualization_panel-details': 'kanban details',
+  'visualization_panel-preview': 'kanban preview',
+  'automation_scene-manage': 'automation scene manage',
+  'automation_scene-linkage': 'automation scene linkage',
+  'automation_linkage-edit': 'automation linkage edit',
+  automation: 'automation',
+  alarm: 'alarm',
+  'alarm_notification-group': 'notification group',
+  'alarm_notification-record': 'notification record'
 };

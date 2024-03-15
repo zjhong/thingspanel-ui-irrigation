@@ -1,7 +1,9 @@
 <script lang="tsx" setup>
+import type { VueElement } from 'vue';
 import { computed, defineProps, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NSelect, NSpace } from 'naive-ui';
-
+import type { TreeSelectOption } from 'naive-ui';
+import { throttle } from 'lodash-es';
 // 定义搜索配置项的类型
 export type SearchConfig =
   | {
@@ -14,13 +16,15 @@ export type SearchConfig =
       label: string;
       type: 'select';
       options: { label: string; value: any }[];
+      loadOptions?: (pattern) => Promise<{ label: string; value: any }[]>;
     }
   | {
       key: string;
       label: string;
       type: 'tree-select';
-      options: { label: string; value: any; children?: any[] }[];
+      options: TreeSelectOption[];
       multiple: boolean;
+      loadOptions?: () => Promise<TreeSelectOption[]>;
     };
 
 // 使用props接收父组件传递的参数
@@ -30,13 +34,14 @@ const props = defineProps<{
     | {
         key: string;
         label: string;
+        render?: (row: any) => VueElement | string | undefined;
       }[]
     | 'all';
+  searchConfigs: SearchConfig[];
   tableActions: Array<{
     label: string;
     callback: (row: any) => void;
   }>;
-  searchConfigs: SearchConfig[];
   topActions: Array<{
     // 重新命名以避免混淆
     label: string;
@@ -86,14 +91,21 @@ const generatedColumns = computed(() => {
   let columns;
 
   if (dataList.value.length > 0) {
-    columns = (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(item => ({
-      title: item.label,
-      key: item.key,
-      render: row => <>{row[item.key]}</>
-    }));
-  }
-
-  if (dataList.value.length > 0 && tableActions?.length > 0) {
+    columns = (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(item => {
+      if (item.render) {
+        // 使用自定义的render函数渲染列
+        return {
+          title: item.label,
+          key: item.key,
+          render: row => item.render(row)
+        };
+      }
+      return {
+        title: item.label,
+        key: item.key,
+        render: row => <>{row[item.key]}</>
+      };
+    });
     columns.push({
       title: '操作',
       key: 'actions',
@@ -128,18 +140,44 @@ watchEffect(getData);
 
 // 搜索和重置按钮逻辑
 const handleSearch = () => {
+  console.log('Resetting search criteria');
   currentPage.value = 1; // 搜索时重置到第一页
   getData();
 };
 
 const handleReset = () => {
-  searchCriteria.value = {}; // 清空搜索条件
+  Object.keys(searchCriteria.value).forEach(key => {
+    searchCriteria.value[key] = ''; // 或者对应字段的默认值
+  });
   handleSearch(); // 重新获取数据
 };
 
 const handleTreeSelectUpdate = (value, key) => {
   searchCriteria.value[key] = value;
 };
+
+const loadOptionsOnMount = async pattern => {
+  for (const config of searchConfigs) {
+    if (config.type === 'select' && config.loadOptions) {
+      // eslint-disable-next-line no-await-in-loop
+      const opts = await config.loadOptions(pattern); // 调用传入的loadOptions函数加载选项数据
+      config.options = [...config.options, ...opts];
+    }
+  }
+};
+
+const loadOptionsOnMount2 = async () => {
+  for (const config of searchConfigs) {
+    if (config.type === 'tree-select' && config.loadOptions) {
+      // eslint-disable-next-line no-await-in-loop
+      const opts = await config.loadOptions(); // 调用传入的loadOptions函数加载选项数据
+      config.options = [...config.options, ...opts];
+    }
+  }
+};
+const throttledLoadOptionsOnMount = throttle(loadOptionsOnMount, 300);
+loadOptionsOnMount('');
+loadOptionsOnMount2();
 </script>
 
 <template>
@@ -163,9 +201,15 @@ const handleTreeSelectUpdate = (value, key) => {
           <template v-else-if="config.type === 'select'">
             <NSelect
               v-model:value="searchCriteria[config.key]"
+              filterable
               :options="config.options"
               :placeholder="config.label"
               class="input-style min-w-240px"
+              @search="
+                value => {
+                  throttledLoadOptionsOnMount(value);
+                }
+              "
             />
           </template>
           <template v-else-if="config.type === 'date'">
@@ -179,6 +223,7 @@ const handleTreeSelectUpdate = (value, key) => {
           <template v-else-if="config.type === 'tree-select'">
             <n-tree-select
               v-model:value="searchCriteria[config.key]"
+              filterable
               :options="config.options"
               :multiple="config.multiple"
               class="input-style min-w-240px"

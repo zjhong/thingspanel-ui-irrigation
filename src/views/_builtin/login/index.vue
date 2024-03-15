@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import type { Component } from 'vue';
 import { getColorPalette, mixColor } from '@sa/utils';
 import { $t } from '@/locales';
-// import { useAppStore } from '@/store/modules/app';
+import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { loginModuleRecord } from '@/constants/app';
 import { useSysSettingStore } from '@/store/modules/sys-setting';
@@ -23,9 +23,10 @@ const props = withDefaults(defineProps<Props>(), {
   module: 'pwd-login'
 });
 
-// const appStore = useAppStore();
+const appStore = useAppStore();
 const themeStore = useThemeStore();
 const sysSetting = useSysSettingStore();
+
 interface LoginModule {
   key: UnionKey.LoginModule;
   label: string;
@@ -67,12 +68,12 @@ const bgColor = computed(() => {
         class="absolute left-48px top-24px z-3 text-20px"
         @switch="themeStore.toggleThemeScheme"
       />
-      <!--            <LangSwitch-->
-      <!--              :lang="appStore.locale"-->
-      <!--              :lang-options="appStore.localeOptions"-->
-      <!--              :show-tooltip="false"-->
-      <!--              @change-lang="appStore.changeLocale"-->
-      <!--            />-->
+      <LangSwitch
+        :lang="appStore.locale"
+        :lang-options="appStore.localeOptions"
+        :show-tooltip="false"
+        @change-lang="appStore.changeLocale"
+      />
     </div>
     <WaveBg :theme-color="bgThemeColor" />
     <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
@@ -82,7 +83,7 @@ const bgColor = computed(() => {
           <NGradientText type="primary" :size="28">{{ $t('system.title') }}</NGradientText>
         </header>
         <main class="pt-24px">
-          <h3 class="text-18px text-primary font-medium">{{ $t("activeModule.label"  as any) }}</h3>
+          <h3 class="text-18px text-primary font-medium">{{ $t('activeModule.label' as any) }}</h3>
           <div class="pt-24px">
             <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
               <component :is="activeModule.component" />

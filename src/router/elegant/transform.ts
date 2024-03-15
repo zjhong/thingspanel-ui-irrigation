@@ -151,8 +151,15 @@ const routeMap: RouteMap = {
   "404": "/404",
   "500": "/500",
   "about": "/about",
+  "alarm": "/alarm",
+  "alarm_notification-group": "/alarm/notification-group",
+  "alarm_notification-record": "/alarm/notification-record",
   "apply": "/apply",
   "apply_service": "/apply/service",
+  "automation": "/automation",
+  "automation_linkage-edit": "/automation/linkage-edit",
+  "automation_scene-linkage": "/automation/scene-linkage",
+  "automation_scene-manage": "/automation/scene-manage",
   "component": "/component",
   "component_button": "/component/button",
   "component_card": "/component/card",
@@ -167,6 +174,7 @@ const routeMap: RouteMap = {
   "device": "/device",
   "device_config": "/device/config",
   "device_config-detail": "/device/config-detail",
+  "device_config-edit": "/device/config-edit",
   "device_details": "/device/details",
   "device_grouping": "/device/grouping",
   "device_grouping-details": "/device/grouping-details",
@@ -215,8 +223,14 @@ const routeMap: RouteMap = {
   "product_update-ota": "/product/update-ota",
   "product_update-package": "/product/update-package",
   "rule-engine": "/rule-engine",
+  "system-management-user": "/system-management-user",
+  "system-management-user_system-log": "/system-management-user/system-log",
   "test": "/test",
-  "user-center": "/user-center"
+  "user-center": "/user-center",
+  "visualization": "/visualization",
+  "visualization_panel": "/visualization/panel",
+  "visualization_panel-details": "/visualization/panel-details",
+  "visualization_panel-preview": "/visualization/panel-preview"
 };
 
 /**

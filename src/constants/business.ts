@@ -66,19 +66,18 @@ export const routerSysFlagLabels: Record<CustomRoute.routerSysFlagKey, string> =
 
 export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 
-/** 应用管理 - 服务管理 - 服务管理类别 */
-export const serviceManagementTypeLabels: Record<ServiceManagement.ServiceTypeKey, string> = {
-  1: '接入协议',
-  2: '通知服务',
-  3: '接入服务'
+/** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
+export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
+  1: '网关'
 };
 
-export const serviceManagementTypeOptions = transformObjectToOption(serviceManagementTypeLabels);
+export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);
 
-export const serviceManagementStatusLabels: Record<ServiceManagement.StatusKey, string> = {
-  1: '运行中',
-  2: '已停止'
+/** 应用管理 - 服务管理 - 服务管理 - 协议类型 */
+export const serviceManagementProtocolTypeLabels: Record<ServiceManagement.ProtocolTypeKey, string> = {
+  1: 'MODBUS_RTU'
 };
+export const serviceManagementProtocolTypeOptions = transformObjectToOption(serviceManagementProtocolTypeLabels);
 
 /** 规则引擎状态状态 */
 export const ruleEngineStatusLabels: Record<RuleEngine.StatusKey, string> = {
@@ -143,4 +142,35 @@ export const signModeOptions = [
 export const packageOptions = [
   { label: $t('page.product.update-package.diff'), value: 1 },
   { label: $t('page.product.update-package.full'), value: 2 }
+];
+
+export const memberNotificationLabels: Record<CustomRoute.routerSysFlagKey, string> = {
+  EMAIL: '邮箱通知',
+  SME: '短信通知',
+  VOICE: '语音通知'
+};
+
+export const MemberNotificationOptions = transformObjectToOption(memberNotificationLabels);
+
+export const notificationOptions = [
+  {
+    label: '成员通知',
+    value: 'MEMBER'
+  },
+  {
+    label: '邮箱通知',
+    value: 'EMAIL'
+  },
+  {
+    label: '短信通知',
+    value: 'SME'
+  },
+  {
+    label: '语音通知',
+    value: 'VOICE'
+  },
+  {
+    label: 'webhook',
+    value: 'WEBHOOK'
+  }
 ];

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useFullscreen } from '@vueuse/core';
+// import {useFullscreen} from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { useRouteStore } from '@/store/modules/route';
@@ -29,7 +29,7 @@ defineProps<Props>();
 const appStore = useAppStore();
 const themeStore = useThemeStore();
 const routeStore = useRouteStore();
-const { isFullscreen, toggle } = useFullscreen();
+// const {isFullscreen, toggle} = useFullscreen();
 const { menus } = useMixMenuContext();
 
 const headerMenus = computed(() => {
@@ -54,7 +54,7 @@ const headerMenus = computed(() => {
       <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
     </div>
     <div class="h-full flex-y-center justify-end">
-      <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
+      <!--      <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />-->
       <LangSwitch :lang="appStore.locale" :lang-options="appStore.localeOptions" @change-lang="appStore.changeLocale" />
       <ThemeSchemaSwitch
         :theme-schema="themeStore.themeScheme"

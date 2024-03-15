@@ -64,7 +64,7 @@ const deviceConditionOptions = ref([
   },
   {
     label: '单类设备',
-    value: 'SingleClass'
+    value: 'singleClass'
   }
 ]);
 // 时间条件类型下选项2使用的下拉
@@ -246,9 +246,9 @@ const expirationTimeOptions = ref([
 ]);
 
 // 月份范围选项
-const mouthRangeOptions = repeat(30, undefined).map((_, i) => ({
-  label: String(i),
-  value: i
+const mouthRangeOptions = repeat(31, undefined).map((_, i) => ({
+  label: String(i + 1),
+  value: i + 1
 }));
 const judgeItem = ref({
   ifType: null, // 第一条件类型
@@ -293,16 +293,16 @@ interface JudgeItem {
 const ifGroups: Array<Array<JudgeItem>> = reactive([]);
 
 // 给某个条件中增加条件
-const addIfGroupsSubItem = (ifIndex: any) => {
-  ifGroups[ifIndex].push(JSON.parse(JSON.stringify(judgeItem.value)));
+const addIfGroupsSubItem = (ifGroupIndex: any) => {
+  ifGroups[ifGroupIndex].push(JSON.parse(JSON.stringify(judgeItem.value)));
 };
 // 删除某个条进组中的某个条件
-const deleteIfGroupsSubItem = (ifIndex: any, index: any) => {
-  ifGroups[ifIndex].splice(index, 1);
+const deleteIfGroupsSubItem = (ifGroupIndex: any, ifIndex: any) => {
+  ifGroups[ifGroupIndex].splice(ifIndex, 1);
 };
 // 删除某个条件组
-const deleteIfGroupsItem = (index: any) => {
-  ifGroups.splice(index, 1);
+const deleteIfGroupsItem = (ifIndex: any) => {
+  ifGroups.splice(ifIndex, 1);
 };
 // 新增一个条件组
 const addIfGroupItem = () => {
@@ -336,85 +336,93 @@ onMounted(() => {
       <NFormItem label="如果:" class="w-100%">
         <NFlex vertical class="mt-1 w-100%">
           (满足以下任意一组条件即可触发)
-          <NFlex v-for="(ifItem, ifIndex) in ifGroups" :key="ifIndex">
+          <NFlex v-for="(ifGroupItem, ifGroupIndex) in ifGroups" :key="ifGroupIndex">
             <NCard class="flex-1">
-              <NFlex v-for="(item, index) in ifItem" :key="index" class="ifItem-class mb-6">
-                <n-tag v-if="index !== 0" type="success" class="tag-class">并且</n-tag>
+              <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-6">
+                <n-tag v-if="ifIndex !== 0" type="success" class="tag-class">并且</n-tag>
                 <!-- 选项1条件类型下拉-->
                 <n-select
-                  v-model:value="item.ifType"
+                  v-model:value="ifItem.ifType"
                   :options="ifTypeOptions"
                   class="ml-20 max-w-40"
                   placeholder="请选择执行条件"
                 />
-                <template v-if="item.ifType === '1'">
+                <template v-if="ifItem.ifType === '1'">
                   <!--  设备条件->选择类型下拉-->
                   <n-select
-                    v-model:value="item.condition"
+                    v-model:value="ifItem.condition"
                     :options="deviceConditionOptions"
                     class="max-w-40"
                     placeholder="请选择设备条件"
                   />
-                  <template v-if="item.condition === 'single'">
+                  <template v-if="ifItem.condition === 'single'">
                     <!--  设备条件下->单个设备->选择设备下拉-->
                     <n-select
-                      v-model:value="item.deviceId"
+                      v-model:value="ifItem.deviceId"
                       :options="singleDeviceOptions"
                       class="max-w-40"
                       placeholder="请选择单个设备"
                     />
                   </template>
-                  <template v-if="item.condition === 'singleClass'">
+                  <template v-if="ifItem.condition === 'singleClass'">
                     <!--  设备条件下->单类设备>选择设备类型下拉-->
                     <n-select
-                      v-model:value="item.deviceClassId"
+                      v-model:value="ifItem.deviceClassId"
                       :options="singleClassDeviceOptions"
                       class="max-w-40"
                       placeholder="请选择单类设备"
                     />
                   </template>
-                  <template v-if="item.deviceId || item.deviceClassId">
+                  <template v-if="ifItem.deviceId || ifItem.deviceClassId">
                     <!--            设备条件下->单个设备/单类设备->设备ID/设备类ID->选择设备状态-->
-                    <n-select v-model:value="item.deviceStatusValue" :options="deviceStatusOptions" class="max-w-40" />
-                    <template v-if="item.deviceStatusValue !== 'isOnline'">
+                    <n-select
+                      v-model:value="ifItem.deviceStatusValue"
+                      :options="deviceStatusOptions"
+                      class="max-w-40"
+                    />
+                    <template v-if="ifItem.deviceStatusValue !== 'isOnline'">
                       <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态不是上下线-> --->
-                      <template v-if="item.deviceStatusValue === 'waring'">
+                      <template v-if="ifItem.deviceStatusValue === 'waring'">
                         <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态是告警->输入参数 --->
-                        <n-input v-model:value="item.parameter" placeholder="参数，如：{'param1':1}" class="max-w-40" />
+                        <n-input
+                          v-model:value="ifItem.parameter"
+                          placeholder="参数，如：{'param1':1}"
+                          class="max-w-40"
+                        />
                       </template>
                       <template v-else>
                         <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态是不是告警->选择操作符 --->
-                        <n-select v-model:value="item.determine" :options="determineOptions" class="max-w-40" />
-                        <template v-if="item.determine === 'in'">
+                        <n-select v-model:value="ifItem.determine" :options="determineOptions" class="max-w-40" />
+                        <template v-if="ifItem.determine === 'in'">
                           <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态是不是告警->操作符是in(包含在)->输入范围值 --->
-                          <n-input v-model:value="item.rangeValue" placeholder="多个逗号隔开" class="max-w-40" />
+                          <n-input v-model:value="ifItem.rangeValue" placeholder="多个逗号隔开" class="max-w-40" />
                         </template>
-                        <template v-else-if="item.determine == 'between'">
+                        <template v-else-if="ifItem.determine == 'between'">
                           <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态是不是告警->操作符是between(介于)->输入最大/最小值 --->
-                          <n-input v-model:value="item.minValue" placeholder="最小值" class="max-w-40" />
-                          <n-input v-model:value="item.maxValue" placeholder="最大值" class="max-w-40" />
+                          <n-input v-model:value="ifItem.minValue" placeholder="最小值" class="max-w-40" />
+                          <n-input v-model:value="ifItem.maxValue" placeholder="最大值" class="max-w-40" />
                         </template>
                         <template v-else>
                           <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>设备状态是不是告警->操作符是除以上外->输入目标值 --->
-                          <n-input v-model:value="item.targetValue" placeholder="取值" class="max-w-40" />
+                          <n-input v-model:value="ifItem.targetValue" placeholder="取值" class="max-w-40" />
                         </template>
                       </template>
                     </template>
                   </template>
                 </template>
-                <template v-if="item.ifType === '2'">
+                <template v-if="ifItem.ifType === '2'">
                   <!--  时间条件->选择类型下拉-->
                   <n-select
-                    v-model:value="item.condition"
+                    v-model:value="ifItem.condition"
                     :options="timeConditionOptions"
                     class="max-w-40"
                     placeholder="请选择时间条件"
                   />
-                  <template v-if="item.condition === 'once'">
+                  <template v-if="ifItem.condition === 'once'">
                     <!--  时间条件下->单次->输入时间-->
                     <NFlex class="w-150" align="center">
                       <n-date-picker
-                        v-model:formatted-value="item.daytimeValue"
+                        v-model:formatted-value="ifItem.daytimeValue"
                         type="datetime"
                         value-format="yyyy-MM-dd HH:mm"
                         :time-picker-props="{ format: 'HH:mm' }"
@@ -429,50 +437,53 @@ onMounted(() => {
                       </NButton>
                       <span class="ml-4">过期时间</span>
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
                         class="max-w-40"
                       />
                     </NFlex>
                   </template>
-                  <template v-if="item.condition === 'repeat'">
+                  <template v-if="ifItem.condition === 'repeat'">
                     <!--  时间条件下->重复->选择周期-->
                     <n-select
-                      v-model:value="item.timeCycleValue"
+                      v-model:value="ifItem.timeCycleValue"
                       :options="cycleOptions"
                       class="max-w-40"
                       placeholder="请选择重复周期"
                     />
-                    <template v-if="item.timeCycleValue === 'hour'">
+                    <template v-if="ifItem.timeCycleValue === 'hour'">
                       <!--  时间条件下->重复->每小时->输入分钟区间-->
                       <n-input-number
-                        v-model:value="item.minuteRangeValue"
+                        v-model:value="ifItem.minuteRangeValue"
                         :show-button="false"
+                        max="59"
+                        min="0"
+                        step="1"
                         placeholder="请输入0-59的分钟区间"
                       />
                       <span class="ml-4">过期时间</span>
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
                         class="max-w-40"
                       />
                     </template>
-                    <template v-if="item.timeCycleValue === 'day'">
+                    <template v-if="ifItem.timeCycleValue === 'day'">
                       <!--  时间条件下->重复->每天->选择时分秒-->
-                      <n-time-picker v-model="item.timeValue" placeholder="请选择时分秒" />
+                      <n-time-picker v-model="ifItem.timeValue" placeholder="请选择时分秒" />
                       <span class="ml-4">过期时间</span>
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
                         class="max-w-40"
                       />
                     </template>
-                    <template v-if="item.timeCycleValue === 'week'">
+                    <template v-if="ifItem.timeCycleValue === 'week'">
                       <!--  时间条件下->重复->每周->选择星期和输入时分-->
-                      <n-checkbox-group v-model:value="item.weekTimeValue">
+                      <n-checkbox-group v-model:value="ifItem.weekTimeValue">
                         <n-space item-style="display: flex;">
                           <n-checkbox
                             v-for="(weekItem, weekIndex) in weekOptions"
@@ -482,35 +493,41 @@ onMounted(() => {
                           />
                         </n-space>
                       </n-checkbox-group>
-                      <n-time-picker v-model="item.timeValue" placeholder="请选择时分" />
+                      <n-time-picker v-model="ifItem.timeValue" placeholder="请选择时分" />
                       <span class="ml-4">过期时间</span>
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
                         class="max-w-40"
                       />
                     </template>
-                    <template v-if="item.timeCycleValue === 'mouth'">
+                    <template v-if="ifItem.timeCycleValue === 'month'">
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="mouthRangeOptions"
                         placeholder="请选择日期"
                         class="max-w-40"
                       />
-                      <n-time-picker v-model="item.timeValue" placeholder="请选择时分" />
+
+                      <n-time-picker
+                        v-model="ifItem.timeValue"
+                        placeholder="请选择时分"
+                        value-format="HH:mm"
+                        format="HH:mm"
+                      />
                       <span class="ml-4">过期时间</span>
                       <n-select
-                        v-model:value="item.expirationTimeValue"
+                        v-model:value="ifItem.expirationTimeValue"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
                         class="max-w-40"
                       />
                     </template>
                   </template>
-                  <template v-if="item.condition === 'range'">
+                  <template v-if="ifItem.condition === 'range'">
                     <!--  时间条件下->范围->选择星期和时间周期-->
-                    <n-checkbox-group v-model:value="item.weekTimeValue">
+                    <n-checkbox-group v-model:value="ifItem.weekTimeValue">
                       <n-space item-style="display: flex;">
                         <n-checkbox
                           v-for="(weekItem, weekIndex) in weekOptions"
@@ -520,25 +537,42 @@ onMounted(() => {
                         />
                       </n-space>
                     </n-checkbox-group>
-                    <n-time-picker v-model="item.timeValue" placeholder="请开始时分" />
+                    <n-time-picker
+                      v-model="ifItem.timeValue"
+                      placeholder="请选择开始时分"
+                      value-format="HH:mm"
+                      format="HH:mm"
+                    />
                     -
-                    <n-time-picker v-model="item.timeValue" placeholder="请结束时分" />
+                    <n-time-picker
+                      v-model="ifItem.timeValue"
+                      placeholder="请选择结束时分"
+                      value-format="HH:mm"
+                      format="HH:mm"
+                    />
                   </template>
                 </template>
-                <template v-if="item.ifType === '3'">
+                <template v-if="ifItem.ifType === '3'">
                   <!--            服务条件->选择类型下拉-->
-                  <n-select v-model:value="item.condition" :options="serviceConditionOptions" class="max-w-40" />
-                  <n-select v-model:value="item.weatherValue" :options="weatherOptions" class="max-w-40" />
+                  <n-select v-model:value="ifItem.condition" :options="serviceConditionOptions" class="max-w-40" />
+                  <n-select v-model:value="ifItem.weatherValue" :options="weatherOptions" class="max-w-40" />
                 </template>
-                <NButton v-if="index === 0" type="primary" class="w-30" @click="addIfGroupsSubItem(ifIndex)">
+                <NButton v-if="ifIndex === 0" type="primary" class="w-30" @click="addIfGroupsSubItem(ifGroupIndex)">
                   新增一个条件
                 </NButton>
-                <NButton v-if="index !== 0" type="error" class="w-30" @click="deleteIfGroupsSubItem(ifIndex, index)">
+                <NButton
+                  v-if="ifIndex !== 0"
+                  type="error"
+                  class="w-30"
+                  @click="deleteIfGroupsSubItem(ifGroupIndex, ifIndex)"
+                >
                   删除
                 </NButton>
               </NFlex>
             </NCard>
-            <NButton type="error" class="ml-4 w-30" @click="deleteIfGroupsItem(ifIndex)">删除组</NButton>
+            <NButton v-if="ifGroupIndex > 0" type="error" class="ml-4 w-30" @click="deleteIfGroupsItem(ifGroupIndex)">
+              删除组
+            </NButton>
           </NFlex>
           <NButton type="primary" class="w-30" @click="addIfGroupItem()">新增一个组</NButton>
         </NFlex>
@@ -554,7 +588,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.ifItem-class {
+.ifGroupItem-class {
   position: relative;
   .tag-class {
     position: absolute;

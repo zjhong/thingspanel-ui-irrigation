@@ -5,7 +5,7 @@ import { loginModuleRecord } from '@/constants/app';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useAuthStore } from '@/store/modules/auth';
-import { OtherAccount } from './components';
+// import { OtherAccount } from './components';
 
 defineOptions({
   name: 'PwdLogin'
@@ -45,10 +45,10 @@ async function handleSubmit() {
   await authStore.login(model.userName, model.password);
 }
 
-function handleLoginOtherAccount(param: { userName: string; password: string }) {
-  const { userName, password } = param;
-  authStore.login(userName, password);
-}
+// function handleLoginOtherAccount(param: { userName: string; password: string }) {
+//   const { userName, password } = param;
+//   authStore.login(userName, password);
+// }
 
 onMounted(() => {
   const is_remember_rath = localStorage.getItem('isRememberPath');
@@ -74,7 +74,8 @@ onMounted(() => {
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
         <NCheckbox>{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
-        <NButton quaternary @click="toggleLoginModule('reset-pwd')">
+        <!-- <NButton quaternary @click="toggleLoginModule('reset-pwd')"> -->
+        <NButton quaternary>
           {{ $t('page.login.pwdLogin.forgetPassword') }}
         </NButton>
       </div>
@@ -91,7 +92,7 @@ onMounted(() => {
         </NButton>
       </div>
     </NSpace>
-    <OtherAccount @login="handleLoginOtherAccount" />
+    <!-- <OtherAccount @login="handleLoginOtherAccount" /> -->
   </NForm>
 </template>
 

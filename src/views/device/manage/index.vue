@@ -84,14 +84,14 @@ const columns_to_show = [
     key: 'is_online',
     label: '在线状态',
     render: row => {
-      return row.is_online === 1 ? '在线' : '离线';
+      return row?.is_online === 1 ? '在线' : '离线';
     }
   },
   {
     key: 'warn_status',
     label: '告警',
     render: row => {
-      return row.warn_status === 'Y' ? '告警' : '未告警';
+      return row?.warn_status === 'Y' ? '告警' : '未告警';
     }
   },
   {
@@ -106,7 +106,7 @@ const columns_to_show = [
     key: 'access_way',
     label: '通过服务/协议',
     render: row => {
-      return row.access_way === 'A' ? '通过协议' : '通过服务';
+      return row?.access_way === 'A' ? '通过协议' : '通过服务';
     }
   }
 ];

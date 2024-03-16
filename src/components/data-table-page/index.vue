@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
 import type { VueElement } from 'vue';
 import { computed, defineProps, ref, watchEffect } from 'vue';
-import { NButton, NDataTable, NDatePicker, NInput, NSelect, NSpace } from 'naive-ui';
+import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
@@ -95,7 +95,7 @@ const generatedColumns = computed(() => {
         return {
           title: item.label,
           key: item.key,
-          render: row => item.render(row)
+          render: () => item.render()
         };
       }
       return {
@@ -110,11 +110,23 @@ const generatedColumns = computed(() => {
       key: 'actions',
       render: row => (
         <NSpace>
-          {tableActions.map(action => (
-            <NButton text size="small" onClick={() => action.callback(row)}>
-              {action.label}
-            </NButton>
-          ))}
+          {tableActions.map(action => {
+            if (action.label === '删除') {
+              return (
+                <NPopconfirm onPositiveClick={() => action.callback(row)}>
+                  {{
+                    trigger: () => <NButton>{action.label}</NButton>,
+                    default: () => '确认删除'
+                  }}
+                </NPopconfirm>
+              );
+            }
+            return (
+              <NButton text size="small" onClick={() => action.callback(row)}>
+                {action.label}
+              </NButton>
+            );
+          })}
         </NSpace>
       )
     });

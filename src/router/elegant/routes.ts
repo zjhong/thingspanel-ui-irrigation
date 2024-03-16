@@ -407,6 +407,44 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'irrigation',
+    path: '/irrigation',
+    component: 'layout.base',
+    meta: {
+      title: 'irrigation',
+      i18nKey: 'route.irrigation'
+    },
+    children: [
+      {
+        name: 'irrigation_group',
+        path: '/irrigation/group',
+        component: 'view.irrigation_group',
+        meta: {
+          title: 'irrigation_group',
+          i18nKey: 'route.irrigation_group'
+        }
+      },
+      {
+        name: 'irrigation_rotation',
+        path: '/irrigation/rotation',
+        component: 'view.irrigation_rotation',
+        meta: {
+          title: 'irrigation_rotation',
+          i18nKey: 'route.irrigation_rotation'
+        }
+      },
+      {
+        name: 'irrigation_time',
+        path: '/irrigation/time',
+        component: 'view.irrigation_time',
+        meta: {
+          title: 'irrigation_time',
+          i18nKey: 'route.irrigation_time'
+        }
+      }
+    ]
+  },
+  {
     name: 'login',
     path: '/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?',
     component: 'layout.blank$view.login',

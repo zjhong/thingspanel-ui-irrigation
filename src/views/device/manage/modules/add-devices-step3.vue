@@ -1,11 +1,10 @@
 <script setup lang="ts">
-
 const props = defineProps<{
   isSuccess: boolean;
-  closeCallback: () => void
-  backCallback: () => void
-}>()
-console.log(props)
+  closeCallback: () => void;
+  backCallback: () => void;
+}>();
+console.log(props);
 </script>
 
 <template>
@@ -22,6 +21,4 @@ console.log(props)
   </n-result>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

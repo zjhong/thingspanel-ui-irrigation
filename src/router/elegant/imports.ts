@@ -15,6 +15,9 @@ export const layouts: Record<RouteLayout, RouteComponent | (() => Promise<RouteC
 };
 
 export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<RouteComponent>)> = {
+  irrigation_group: () => import("@/views/Irrigation/group/index.vue"),
+  irrigation_rotation: () => import("@/views/Irrigation/rotation/index.vue"),
+  irrigation_time: () => import("@/views/Irrigation/time/index.vue"),
   403: () => import("@/views/_builtin/403/index.vue"),
   404: () => import("@/views/_builtin/404/index.vue"),
   500: () => import("@/views/_builtin/500/index.vue"),

@@ -615,6 +615,95 @@ declare namespace App {
             };
           };
         };
+        irrigation: {
+          name: string;
+          duration: string;
+          hour: string;
+          minute: string;
+          irrigationDuration: string;
+          capacity: string;
+          areaOrSpace: string;
+          diviceName: string;
+          controlType: string;
+          planStatus: string;
+          distribute: string;
+          log: string;
+          addIrrigationPlan: string;
+          time: {
+            device: string;
+            name: string;
+            planName: string;
+            repeatTime: string;
+            orderCode: string;
+            irrigationTime: string;
+            doorOpeing: string;
+            week: {
+              monday: string;
+              tuesday: string;
+              wednesday: string;
+              thursday: string;
+              friday: string;
+              saturday: string;
+              sunday: string;
+            };
+            log: {
+              name: string;
+              commandIssuanceTime: string;
+              instructionContent: string;
+              result: string;
+              operationType: string;
+              detail: string;
+            };
+          };
+          group: {
+            name: string;
+            controlModel: string;
+            startTime: string;
+            runDetail: string;
+            deviceName: string;
+            orderNumber: string;
+            addGroupPlane: string;
+            planName: string;
+            deviceType: string;
+            addDevice: string;
+            duration: string;
+            singleControl: string;
+            loopControl: string;
+            cycleNumber: string;
+            intervalDuration: string;
+            clickToAdd: string;
+            choosedDevice: string;
+            chooseDevices: string;
+            deviceCode: string;
+            log: {
+              planDetail: string;
+              runTime: string;
+              operationType: string;
+              runResult: string;
+              detail: string;
+            };
+            detail: {
+              commandIssuanceTime: string;
+              spaceOrArea: string;
+              orderContent: string;
+              result: string;
+              detail: string;
+              actionType: string;
+            };
+          };
+          rotation: {
+            addRotationPlane: string;
+            name: string;
+            waterPumpEquipment: string;
+            waterPumpDoorOpening: string;
+            waterPumpPressure: string;
+            rotationDuration: string;
+            addRotationDevice: string;
+            valveStatus: string;
+            pressure: string;
+            chooseDevice: string;
+          };
+        };
       };
       form: {
         required: string;

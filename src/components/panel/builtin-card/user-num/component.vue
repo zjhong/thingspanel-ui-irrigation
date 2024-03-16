@@ -1,16 +1,15 @@
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <div class="device flex-items-center flex-col flex-justify-center">
-    <div class="device-top w-full h-full flex flex-items-center flex-justify-between">
+  <div class="device flex-col flex-justify-center flex-items-center">
+    <div class="device-top h-full w-full flex flex-justify-between flex-items-center">
       <div class="left h-full flex-col">
         <span>用户总数</span>
         <span>7</span>
       </div>
       <SvgIcon local-icon="user-num" class="device-icon" />
     </div>
-    <div class="device-bottom w-full flex flex-items-center  flex-justify-between flex-content-start m-t3">
+    <div class="device-bottom m-t3 w-full flex flex-justify-between flex-content-start flex-items-center">
       <div class="device-bottom-state flex flex-items-center">
         <SvgIcon local-icon="day" class="device_bottom-icon" />
         <span>昨日新增 7</span>
@@ -28,7 +27,7 @@
   padding: 0px 70px;
 
   .device-top {
-    .left>span:nth-child(1) {
+    .left > span:nth-child(1) {
       margin-bottom: 8px;
       font-size: 14px;
       font-weight: bold;
@@ -37,7 +36,7 @@
       text-align: left;
     }
 
-    .left>span:nth-child(2) {
+    .left > span:nth-child(2) {
       font-size: 26px;
       font-weight: bold;
       line-height: 31.49px;
@@ -55,15 +54,15 @@
       position: relative;
     }
 
-    .device-bottom-state>svg:nth-child(1) {
+    .device-bottom-state > svg:nth-child(1) {
       font-size: 16px;
     }
 
-    .device-bottom-state>span:nth-child(2) {
+    .device-bottom-state > span:nth-child(2) {
       font-size: 14px;
       font-weight: 400;
       line-height: 18.48px;
-      color: #7A8487FF;
+      color: #7a8487ff;
       text-align: left;
       margin: 0 10px;
     }

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import * as echarts from 'echarts';
-let active = ref('3');
 
-const submit: (item: string) => void = (item) => {
+const active = ref('3');
+
+const submit: (item: string) => void = item => {
   active.value = item;
-}
+};
 
 interface WeatherItem {
   id: string;
@@ -52,9 +53,8 @@ const weatherList: WeatherItem[] = reactive([
     value2: '220',
     mark2: 'mm',
     text2: '雨量'
-  },
+  }
 ]);
-
 
 // 图表
 const foldLine = ref(null);
@@ -68,11 +68,14 @@ const init: () => void = () => {
     tooltip: {
       size: '20',
       trigger: 'axis', // 触发类型，可选为'item'、'axis'
-      formatter: function (params) {
+      formatter(params) {
         // params是一个包含当前数据信息的数组
-        const res = params.map(function (item) {
+        const res = params.map(item => {
           // item 是单个数据的信息对象
-          return '<span style="font-size: 14px;font-weight: 600; color:rgba(35, 43, 46, 1); ">' + item.seriesName + '<br/>' + item.data + 'mm' + '</span>';
+          return (
+            `<span style="font-size: 14px;font-weight: 600; color:rgba(35, 43, 46, 1); ">${item.seriesName}<br/>${item.data}mm` +
+            `</span>`
+          );
         });
         return res.join('<br/>'); // 使用换行符将多个数据项分隔开
       }
@@ -90,7 +93,39 @@ const init: () => void = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+      data: [
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+        '7',
+        '8',
+        '9',
+        '10',
+        '11',
+        '12',
+        '13',
+        '14',
+        '15',
+        '16',
+        '17',
+        '18',
+        '19',
+        '20',
+        '21',
+        '22',
+        '23',
+        '24',
+        '25',
+        '26',
+        '27',
+        '28',
+        '29',
+        '30',
+        '31'
+      ]
     },
     yAxis: {
       type: 'value'
@@ -100,19 +135,25 @@ const init: () => void = () => {
         name: '降雨量',
         type: 'line',
         stack: 'Total',
-        data: [50, 100, 120, 130, 150, 180, 200, 250, 290, 300, 240, 290, 300, 240, 220, 180, 160, 150, 180, 110, 190, 123, 150, 200, 210, 260, 220, 210, 200, 280, 300],
-        areaStyle: { // 设置阴影样式
+        data: [
+          50, 100, 120, 130, 150, 180, 200, 250, 290, 300, 240, 290, 300, 240, 220, 180, 160, 150, 180, 110, 190, 123,
+          150, 200, 210, 260, 220, 210, 200, 280, 300
+        ],
+        areaStyle: {
+          // 设置阴影样式
           color: new echarts.graphic.LinearGradient( // 使用线性渐变
-            0, 0, 0, 1, // 渐变方向（从左上角到右下角）
+            0,
+            0,
+            0,
+            1, // 渐变方向（从左上角到右下角）
             [
               { offset: 0, color: 'rgba(11, 132, 240, .1)' }, // 结束颜色（完全透明）
-              { offset: 1, color: 'rgba(255, 255, 255, 1)' }, // 起始颜色（透明度为0.8的灰色）
+              { offset: 1, color: 'rgba(255, 255, 255, 1)' } // 起始颜色（透明度为0.8的灰色）
             ]
           ),
           opacity: 1 // 设置阴影透明度（1表示完全不透明）
         }
-      },
-
+      }
     ]
   };
   const dom = document.getElementById('foldLine')!;
@@ -122,7 +163,7 @@ const init: () => void = () => {
   ro.observe(dom);
   // 监听窗口大小变化
   myecharts.setOption(option);
-}
+};
 onMounted(() => {
   init();
 });
@@ -134,20 +175,31 @@ onMounted(() => {
       <div class="header-title font-500">气象站数据</div>
       <SvgIcon local-icon="signal" class="more" />
     </header>
-    <div class="weather-card flex flex-items-center flex-justify-between">
-      <div :class="['weather-card-item', 'p-2', item.id === active ? 'weather-card-item-active' : '']"
-        v-for="item in weatherList" :key="item.id" @click="submit(item.id)">
+    <div class="weather-card flex flex-justify-between flex-items-center">
+      <div
+        v-for="item in weatherList"
+        :key="item.id"
+        class="weather-card-item p-2"
+        :class="[item.id === active ? 'weather-card-item-active' : '']"
+        @click="submit(item.id)"
+      >
         <div class="top m-t3 flex flex-items-center p-l4">
           <SvgIcon :local-icon="item.icons1" />
           <div class="right flex-col">
-            <div><span>{{ item.value1 }}</span><span>{{ item.mark1 }}</span></div>
+            <div>
+              <span>{{ item.value1 }}</span>
+              <span>{{ item.mark1 }}</span>
+            </div>
             <span>{{ item.text1 }}</span>
           </div>
         </div>
         <div class="top m-t3 flex flex-items-center p-l4">
           <SvgIcon :local-icon="item.icons2" />
           <div class="right flex-col">
-            <div><span>{{ item.value2 }}</span><span>{{ item.mark2 }}</span></div>
+            <div>
+              <span>{{ item.value2 }}</span>
+              <span>{{ item.mark2 }}</span>
+            </div>
             <span>{{ item.text2 }}</span>
           </div>
         </div>
@@ -164,7 +216,6 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 header {
@@ -213,7 +264,7 @@ header {
         margin-right: 26px;
       }
 
-      .right>div>span:nth-child(1) .right>div>span:nth-child(1) {
+      .right > div > span:nth-child(1) .right > div > span:nth-child(1) {
         font-size: 20px;
         font-weight: 500;
         line-height: 24.22px;
@@ -221,7 +272,7 @@ header {
         text-align: right;
       }
 
-      .right>div>span:nth-child(2) {
+      .right > div > span:nth-child(2) {
         font-size: 10px;
         font-weight: 400;
         line-height: 13.2px;
@@ -229,7 +280,7 @@ header {
         text-align: left;
       }
 
-      .right>span:nth-child(2) {
+      .right > span:nth-child(2) {
         margin-top: 4px;
         font-size: 13px;
         font-weight: 400;
@@ -239,16 +290,15 @@ header {
       }
     }
   }
-
 }
 
 .weather-card-item-active {
   background: rgba(50, 50, 153, 1) !important;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
 
-  .right>div>span:nth-child(1),
-  .right>div>span:nth-child(2),
-  .right>span:nth-child(2) {
+  .right > div > span:nth-child(1),
+  .right > div > span:nth-child(2),
+  .right > span:nth-child(2) {
     color: #fff !important;
   }
 }

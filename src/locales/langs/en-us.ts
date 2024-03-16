@@ -438,6 +438,95 @@ const local: App.I18n.Schema = {
           title: 'SME'
         }
       }
+    },
+    irrigation: {
+      name: 'Name',
+      duration: 'Duration',
+      hour: 'Hour',
+      minute: 'Minute',
+      irrigationDuration: 'Irrigation Duration',
+      capacity: 'Capacity',
+      areaOrSpace: 'AreaOrSpace',
+      diviceName: 'DiviceName',
+      controlType: 'ControlType',
+      planStatus: 'PlanStatus',
+      distribute: 'Distribute',
+      log: 'Log',
+      addIrrigationPlan: 'Add Irrigation Plan',
+      time: {
+        device: 'Device',
+        name: 'Irrigation Time',
+        planName: 'Plan Name',
+        repeatTime: 'Repeat Time',
+        orderCode: 'Order Code',
+        irrigationTime: 'Irrigation Time',
+        doorOpeing: 'Door Opening',
+        week: {
+          monday: 'monday',
+          tuesday: 'Tuesday',
+          wednesday: 'Wednesday',
+          thursday: 'Thursday',
+          friday: 'Friday',
+          saturday: 'Saturday',
+          sunday: 'Sunday'
+        },
+        log: {
+          name: 'Log',
+          commandIssuanceTime: 'Command Issuance Time',
+          instructionContent: 'Instruction Content',
+          result: 'Result',
+          operationType: 'Operation Type',
+          detail: 'Detail'
+        }
+      },
+      group: {
+        name: 'Group Irrigation',
+        controlModel: 'Control Model',
+        startTime: 'Start Time',
+        runDetail: 'Run Detail',
+        deviceName: 'Device Name',
+        orderNumber: 'Order Number',
+        addGroupPlane: 'AddGroup Plane',
+        planName: 'Plan Name',
+        deviceType: 'Device Type',
+        addDevice: 'Add Device',
+        duration: 'Irrigation Duration',
+        singleControl: 'Single Control',
+        loopControl: 'Loop Control',
+        cycleNumber: 'Cycle Number',
+        intervalDuration: 'Interval Duration',
+        clickToAdd: 'Click To Add',
+        choosedDevice: 'Choosed Device',
+        chooseDevices: 'Choose Devices',
+        deviceCode: 'Device Code',
+        log: {
+          planDetail: 'Plan Log',
+          runTime: 'Run Time',
+          operationType: 'Operation Type',
+          runResult: 'Run Result',
+          detail: 'Detail'
+        },
+        detail: {
+          commandIssuanceTime: 'Command Issuance Time',
+          spaceOrArea: 'SpaceOrArea',
+          orderContent: 'Order Content',
+          result: 'Result',
+          detail: 'Detail',
+          actionType: 'ActionType'
+        }
+      },
+      rotation: {
+        addRotationPlane: 'Add Rotation Plane',
+        name: 'Rotation Plan',
+        waterPumpEquipment: 'Water Pump Equipment',
+        waterPumpDoorOpening: 'Water Pump DoorOpening',
+        waterPumpPressure: 'Water Pump Pressure',
+        rotationDuration: 'Rotation Duration',
+        addRotationDevice: 'Add Rotation Device',
+        valveStatus: 'Valve Status',
+        pressure: 'Pressure',
+        chooseDevice: 'Choose Device'
+      }
     }
   },
   form: {

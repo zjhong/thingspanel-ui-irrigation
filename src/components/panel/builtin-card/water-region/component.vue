@@ -48,12 +48,12 @@ const airList: AirItem[] = reactive([
 </script>
 
 <template>
-  <div class=" flex flex-col-center ">
+  <div class="flex flex-col-center">
     <header class="w-full flex flex-justify-between flex-items-center">
       <div class="header-title font-500">浇灌区域</div>
       <SvgIcon local-icon="more" class="more" />
     </header>
-    <div class="row w-full flex flex-justify-between flex-items-center" v-for="(index) in 5" :key="index">
+    <div v-for="index in 5" :key="index" class="row w-full flex flex-justify-between flex-items-center">
       <div class="row-left flex flex-1 flex-justify-between">
         <div class="col-icon flex flex-justify-center flex-items-center">
           <SvgIcon local-icon="map-icon" class="text-8" />
@@ -76,8 +76,8 @@ const airList: AirItem[] = reactive([
         </div>
       </div>
       <div class="row-border"></div>
-      <div class="row-right flex flex-1  flex-justify-between">
-        <div class="col-weather flex-col-center" v-for="item in airList" :key="item.id">
+      <div class="row-right flex flex-1 flex-justify-between">
+        <div v-for="item in airList" :key="item.id" class="col-weather flex-col-center">
           <SvgIcon :local-icon="item.icons" class="col-weather-icon" />
           <span>{{ item.air }}</span>
           <span>{{ item.text }}</span>
@@ -122,7 +122,7 @@ header {
 .row {
   margin-top: 30px;
   padding-bottom: 30px;
-  border-bottom: 1px solid rgba($color: #7A8487FF, $alpha: .2);
+  border-bottom: 1px solid rgba($color: #7a8487ff, $alpha: 0.2);
 
   .row-left {
     .col-icon {
@@ -132,31 +132,31 @@ header {
       background-color: #ccc;
     }
 
-    .col-region>span:nth-child(1) {
+    .col-region > span:nth-child(1) {
       font-size: 16px;
-      color: #009BCFFF;
+      color: #009bcfff;
     }
 
-    .col-region>span:nth-child(2) {
+    .col-region > span:nth-child(2) {
       margin-top: 6px;
       font-size: 14px;
-      color: #7A8487FF;
+      color: #7a8487ff;
     }
 
-    .col-type>span:nth-child(1),
-    .col-size>span:nth-child(1),
-    .col-soil-type>span:nth-child(1) {
+    .col-type > span:nth-child(1),
+    .col-size > span:nth-child(1),
+    .col-soil-type > span:nth-child(1) {
       font-size: 14px;
-      color: #232B2EFF;
+      color: #232b2eff;
       font-weight: bold;
     }
 
-    .col-type>span:nth-child(2),
-    .col-size>span:nth-child(2),
-    .col-soil-type>span:nth-child(2) {
+    .col-type > span:nth-child(2),
+    .col-size > span:nth-child(2),
+    .col-soil-type > span:nth-child(2) {
       margin-top: 6px;
       font-size: 12px;
-      color: #7A8487FF;
+      color: #7a8487ff;
     }
   }
 
@@ -164,18 +164,18 @@ header {
     margin: 0 40px;
     width: 34px;
     transform: rotate(90deg);
-    border: 1px solid rgba($color: #7A8487FF, $alpha: .2);
+    border: 1px solid rgba($color: #7a8487ff, $alpha: 0.2);
   }
 
-  .col-weather>span:nth-child(2) {
+  .col-weather > span:nth-child(2) {
     margin: 3px 0 3px;
     font-size: 16px;
-    color: #232B2EFF;
+    color: #232b2eff;
   }
 
-  .col-weather>span:nth-child(3) {
+  .col-weather > span:nth-child(3) {
     font-size: 12px;
-    color: #7A8487FF;
+    color: #7a8487ff;
   }
 
   .col-weather-icon {

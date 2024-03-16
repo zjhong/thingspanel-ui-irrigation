@@ -61,6 +61,10 @@ declare module "@elegant-router/types" {
     "function_multi-tab": "/function/multi-tab";
     "function_tab": "/function/tab";
     "home": "/home";
+    "irrigation": "/irrigation";
+    "irrigation_group": "/irrigation/group";
+    "irrigation_rotation": "/irrigation/rotation";
+    "irrigation_time": "/irrigation/time";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
     "manage_menu": "/manage/menu";
@@ -154,6 +158,7 @@ declare module "@elegant-router/types" {
     | "device"
     | "function"
     | "home"
+    | "irrigation"
     | "login"
     | "manage"
     | "management"
@@ -182,6 +187,9 @@ declare module "@elegant-router/types" {
    */
   export type LastLevelRouteKey = Extract<
     RouteKey,
+    | "irrigation_group"
+    | "irrigation_rotation"
+    | "irrigation_time"
     | "403"
     | "404"
     | "500"

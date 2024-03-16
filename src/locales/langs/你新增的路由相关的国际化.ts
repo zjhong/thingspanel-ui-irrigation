@@ -58,7 +58,11 @@ export const czh_cn = {
   alarm: '告警',
   'alarm_notification-group': '通知组',
   'alarm_notification-record': '通知记录',
-  management_notification: '通知服务配置'
+  management_notification: '通知服务配置',
+  irrigation: '灌溉计划',
+  irrigation_time: '定时灌溉',
+  irrigation_group: '群灌计划',
+  irrigation_rotation: '轮灌计划'
 };
 
 export const cen = {
@@ -117,5 +121,9 @@ export const cen = {
   alarm: 'alarm',
   'alarm_notification-group': 'notification group',
   'alarm_notification-record': 'notification record',
-  management_notification: 'Notification service configuration'
+  management_notification: 'Notification service configuration',
+  irrigation: 'Irrigation',
+  irrigation_time: 'Irrigation Time',
+  irrigation_group: 'Irrigation Group',
+  irrigation_rotation: 'Irrigation Rotation'
 };

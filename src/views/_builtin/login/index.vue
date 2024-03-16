@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import type { Component } from 'vue';
 import { getColorPalette, mixColor } from '@sa/utils';
-import { $t } from '@/locales';
+// import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { loginModuleRecord } from '@/constants/app';
@@ -78,13 +78,13 @@ const bgColor = computed(() => {
     <WaveBg :theme-color="bgThemeColor" />
     <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
       <div class="w-300px sm:w-360px">
-        <header class="flex-y-center justify-between">
-          <SystemLogo class="text-64px text-primary <sm:text-48px" />
-          <NGradientText type="primary" :size="28">{{ $t('system.title') }}</NGradientText>
+        <header class="flex-y-center justify-center">
+          <SystemLogo class="text-128px text-primary <sm:text-64px" />
+          <!-- <NGradientText type="primary" :size="28">{{ $t('system.title') }}</NGradientText> -->
         </header>
-        <main class="pt-24px">
-          <h3 class="text-18px text-primary font-medium">{{ $t('activeModule.label' as any) }}</h3>
-          <div class="pt-24px">
+        <main>
+          <!-- <h3 class="text-18px text-primary font-medium">{{ $t('activeModule.label' as any) }}</h3> -->
+          <div>
             <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
               <component :is="activeModule.component" />
             </Transition>

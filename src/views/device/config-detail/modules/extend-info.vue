@@ -110,7 +110,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
 ]);
 
 onMounted(() => {
-  if (props.configInfo.additional_info && props.configInfo.additional_info === '{}') {
+  if (!props.configInfo.additional_info || props.configInfo.additional_info === '{}') {
     extendInfoList.value = [];
   } else {
     extendInfoList.value = JSON.parse(props.configInfo.additional_info);

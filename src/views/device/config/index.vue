@@ -37,7 +37,7 @@ onMounted(() => {
 
 <template>
   <div class="overflow-hidden">
-    <NCard>
+    <NCard title="设备配置列表">
       <NFlex justify="space-between">
         <NButton type="primary" @click="showModal()">+创建设备配置</NButton>
         <NFlex align="center">
@@ -57,47 +57,49 @@ onMounted(() => {
           <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
         </NFlex>
       </NFlex>
-      <div class="config-content h-full flex-col">
-        <div
-          v-for="(item, itemIndex) in deviceConfigList"
-          :key="itemIndex"
-          class="config-item"
-          @click="openDetail(item)"
-        >
-          <img
-            class="config-item-img"
-            src="https://img0.baidu.com/it/u=1010119301,1861323772&fm=253&fmt=auto&app=138&f=JPEG?w=535&h=500"
-            alt=""
-          />
-          <div class="config-item-title">
-            {{ item.name }}
-          </div>
-          <div class="config-item-statistics">
-            <div>{{ item.device_count }}个设备</div>
-            <div>
-              <template v-if="item.device_type === '1'">直连设备</template>
-              <template v-if="item.device_type === '2'">网关</template>
-              <template v-if="item.device_type === '3'">网关子设备</template>
+      <n-empty
+        v-if="deviceConfigList.length === 0"
+        size="huge"
+        description="暂无数据"
+        class="min-h-60 justify-center"
+      ></n-empty>
+      <template v-else>
+        <div class="config-content h-full flex-col">
+          <div
+            v-for="(item, itemIndex) in deviceConfigList"
+            :key="itemIndex"
+            class="config-item"
+            @click="openDetail(item)"
+          >
+            <img
+              class="config-item-img"
+              src="https://img0.baidu.com/it/u=1010119301,1861323772&fm=253&fmt=auto&app=138&f=JPEG?w=535&h=500"
+              alt=""
+            />
+            <div class="config-item-title">
+              {{ item.name }}
+            </div>
+            <div class="config-item-statistics">
+              <div>{{ item.device_count }}个设备</div>
+              <div>
+                <template v-if="item.device_type === '1'">直连设备</template>
+                <template v-if="item.device_type === '2'">网关</template>
+                <template v-if="item.device_type === '3'">网关子设备</template>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="pagination-box">
-        <!-- Data table to display device groups -->
-        <!-- Pagination component -->
-        <NPagination
-          v-model:page="queryData.page"
-          :page-size="queryData.page_size"
-          :item-count="dataTotal"
-          @update:page="getData"
-        />
-      </div>
-      <!--      <ConfigModal-->
-      <!--        :type="modalType"-->
-      <!--        :modalVisible="modalVisible"-->
-      <!--        @modalClose="modalClose"-->
-      <!--        @submitted="getData"-->
-      <!--      />-->
+        <div class="pagination-box">
+          <!-- Data table to display device groups -->
+          <!-- Pagination component -->
+          <NPagination
+            v-model:page="queryData.page"
+            :page-size="queryData.page_size"
+            :item-count="dataTotal"
+            @update:page="getData"
+          />
+        </div>
+      </template>
     </NCard>
   </div>
 </template>

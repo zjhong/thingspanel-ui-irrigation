@@ -1,11 +1,43 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
+const alarmList = ref([
+  {
+    name: '人来自动开灯',
+    description: '晚上7点后自动开灯',
+    status: true
+  },
+  {
+    name: '打开空调降温',
+    description: '气温28度后打开空调降温',
+    status: true
+  },
+  {
+    name: '燃气泄露检测',
+    description: '检测到燃气超标自动告警通知',
+    status: false
+  },
+  {
+    name: '关闭窗帘',
+    description: '执行晚安指令时自动关闭窗帘',
+    status: false
+  },
+  {
+    name: '油烟机启动',
+    description: '检测到燃气灶点火时自动开启油烟机',
+    status: true
+  }
+]);
+onMounted(() => {
+  alarmList.value = [];
+});
 </script>
 
 <template>
-  <div class="alarm-box">
-    <div v-for="item in 5" :key="item" class="alarm-item">
+  <n-empty v-if="alarmList.length === 0" size="huge" description="暂无数据"></n-empty>
+  <div v-else class="alarm-box">
+    <div v-for="(item, index) in alarmList" :key="index" class="alarm-item">
       <div class="item-name">
         <div>
           {{ item }}
@@ -13,8 +45,8 @@ import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as tra
         <n-switch />
       </div>
       <div class="item-desc">温度大于28度报警</div>
-      <div class="item-operate">
-        <NButton circle tertiary type="warning">
+      <NFlex justify="end">
+        <NButton circle tertiary type="info">
           <template #icon>
             <n-icon>
               <editIcon />
@@ -35,7 +67,7 @@ import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as tra
             </n-icon>
           </template>
         </NButton>
-      </div>
+      </NFlex>
     </div>
   </div>
 </template>

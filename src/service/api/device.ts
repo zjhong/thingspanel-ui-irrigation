@@ -86,6 +86,10 @@ export const deviceConfigInfo = async (params: any) => {
 export const deviceConfigDel = async (params: any) => {
   return await request.delete<Api.BaseApi.Data | any>(`device_config/${params.id}`);
 };
+/** 设备配置-连接凭证 */
+export const deviceConfigConnect = async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>(`device_config/connect`, { params });
+};
 /** 批量新设备配置关联的设备 */
 export const deviceConfigBatch = async (params: any) => {
   return await request.put<Api.BaseApi.Data | any>(`/device_config/batch`, params);
@@ -96,7 +100,7 @@ export const deleteDeviceGroupRelation = async (params: any) => {
   return await request.delete2<Api.BaseApi.Data>(`/device/group/relation`, params);
 };
 
-/** 获取设备列表 */
+/** 获取设备配置列表 */
 export const getDeviceConfigList = async (params: any) => {
   return await request.get<DeviceManagement.ConfigDatas>(`/device_config`, { params });
 };
@@ -106,4 +110,28 @@ export const deviceAdd = async (params: any) => {
 };
 export const devicCeonnectForm = async (params: any) => {
   return await request.get<any>(`/device/connect/form`, { params });
+};
+
+/** 获取数据处理列表 */
+export const getDataScriptList = async (params: any) => {
+  return await request.get<DeviceManagement.ConfigDatas | any>(`/data_script`, { params });
+};
+
+/** 创建数据处理 */
+export const dataScriptAdd = async (params: any) => {
+  return await request.post<Api.BaseApi.Data | any>(`/data_script`, params);
+};
+
+/** 更新数据处理 */
+export const dataScriptEdit = async (params: any) => {
+  return await request.put<Api.BaseApi.Data | any>(`/data_script`, params);
+};
+
+/** 调试数据处理 */
+export const dataScriptQuiz = async (params: any) => {
+  return await request.post<Api.BaseApi.Data | any>(`/data_script/quiz`, params);
+};
+/** 删除数据处理 */
+export const dataScriptDel = async (params: any) => {
+  return await request.delete<Api.BaseApi.Data | any>(`data_script/${params.id}`);
 };

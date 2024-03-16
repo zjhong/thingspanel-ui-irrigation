@@ -38,7 +38,7 @@ const bgColor = computed(() => {
 -->
     <NImage
       object-fit="cover"
-      style="min-width: 100%"
+      style="min-width: 100%; min-height: 100%"
       preview-disabled
       :src="url.origin + bgColor?.slice(1)"
       :img-props="{

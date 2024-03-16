@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { NButton, useMessage } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
-import { deviceConfigEdit } from '@/service/api/device';
+import { deviceConfigConnect, deviceConfigEdit } from '@/service/api/device';
 const message = useMessage();
 interface Emits {
   (e: 'upDateConfig'): void;
@@ -38,6 +38,7 @@ const getDict = async dictCode => {
   const res = await dictQuery(queryData);
   typeOptions.value = res.data || [];
 };
+const connectOptions = ref([] as any);
 onMounted(() => {
   if (props.configInfo.device_type === '1') {
     getDict('DRIECT_ATTACHED_PROTOCOL');
@@ -45,6 +46,7 @@ onMounted(() => {
     getDict('GATEWAY_PROTOCOL');
   }
   extendForm.value = props.configInfo;
+  connectOptions.value = deviceConfigConnect({ device_id: props.configInfo.id });
 });
 </script>
 
@@ -59,17 +61,16 @@ onMounted(() => {
           placeholder="请选择选择协议/服务"
           label-field="translation"
           value-field="dict_value"
-          :disabled="props.configInfo.device_type === '3'"
         ></NSelect>
       </NFormItem>
       <NFormItem label="认证类型" path="voucher_type">
         <NSelect
+          v-if="props.configInfo.device_conn_type === 'A'"
           v-model:value="extendForm.voucher_type"
           :options="typeOptions"
           placeholder="请选择认证类型"
           label-field="translation"
           value-field="dict_value"
-          disabled
         ></NSelect>
       </NFormItem>
       <NFlex justify="flex-end">

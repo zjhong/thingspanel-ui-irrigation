@@ -190,7 +190,7 @@ const topActions = [
   {
     element: () => (
       <n-dropdown options={dropOption} trigger="hover" onSelect={handleSelect}>
-        <n-button>添加设备</n-button>
+        <n-button type="primary">添加设备</n-button>
       </n-dropdown>
     )
   }

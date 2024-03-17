@@ -101,11 +101,11 @@ onMounted(getDevice); // Fetch device groups on component mount
           </template>
         </NInput>
       </NFlex>
-      <div class="mt-20">
+      <div class="mt-20px">
         <!-- Data table to display device groups -->
         <NDataTable :columns="columns" :data="data" :loading="loading"></NDataTable>
         <!-- Pagination component -->
-        <NPagination v-model:page="currentPage" :page-count="totalPages" @update:page="getDevice" />
+        <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
       </div>
     </NCard>
   </div>

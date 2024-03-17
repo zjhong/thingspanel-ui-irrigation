@@ -201,7 +201,7 @@ loadOptionsOnMount2();
 <template>
   <div class="flex flex-col gap-6 rounded-lg p-6 shadow">
     <!-- 搜索区域与操作按钮 -->
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="row flex items-end justify-between gap-4">
       <!-- 搜索输入和选择器 -->
       <div class="flex flex-1 flex-wrap items-end gap-4">
         <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
@@ -229,7 +229,7 @@ loadOptionsOnMount2();
               filterable
               :options="config.options"
               :placeholder="config.label"
-              class="input-style min-w-240px"
+              class="input-style"
               @search="
                 value => {
                   throttledLoadOptionsOnMount(value);
@@ -253,17 +253,17 @@ loadOptionsOnMount2();
               filterable
               :options="config.options"
               :multiple="config.multiple"
-              class="input-style min-w-240px"
+              class="input-style"
               @update:value="value => handleTreeSelectUpdate(value, config.key)"
             />
           </template>
         </div>
-        <NButton class="btn-style" @click="handleSearch">搜索</NButton>
-        <NButton class="btn-style" @click="handleReset">重置</NButton>
+        <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
+        <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
       </div>
       <!-- 新建与返回按钮 -->
     </div>
-    <div class="mb--6 flex items-center justify-between">
+    <div class="flex items-center justify-between">
       <div class="flex gap-2">
         <component :is="action.element" v-for="(action, index) in topActions" :key="index"></component>
       </div>
@@ -294,7 +294,7 @@ loadOptionsOnMount2();
     </div>
     <!-- 数据表格 -->
     <div v-if="isTableView" class="overflow-x-auto">
-      <NDataTable :columns="generatedColumns" :data="dataList" class="card-wrapper" />
+      <NDataTable :columns="generatedColumns" :data="dataList" class="w-full" />
     </div>
     <div v-else>
       <!-- 地图视图占位 -->
@@ -316,7 +316,7 @@ loadOptionsOnMount2();
 
 <style scoped>
 .input-style {
-  min-width: 120px;
+  min-width: 140px;
 }
 
 .btn-style {

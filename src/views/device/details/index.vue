@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import Telemetry from './models/telemetry.vue';
 import Join from './models/join.vue';
 import DeviceAnalysis from './models/device-analysis.vue';
@@ -12,7 +13,8 @@ import Logs from './models/logs.vue';
 import User from './models/user.vue';
 import Settings from './models/settings.vue';
 
-const id = '8092384329843';
+const { query } = useRoute();
+const { id } = query;
 const components = [
   { key: 'telemetry', name: '遥测', component: Telemetry },
   { key: 'join', name: '连接', component: Join },
@@ -35,7 +37,7 @@ const components = [
     <div>
       <n-tabs>
         <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.name">
-          <component :is="component.component" :id="id" />
+          <component :is="component.component" :id="id as string" />
         </n-tab-pane>
       </n-tabs>
     </div>

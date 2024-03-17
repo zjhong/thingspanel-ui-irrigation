@@ -16,6 +16,7 @@ import type { SearchConfig } from '@/components/data-table-page/index.vue';
 import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue';
 import AddDevicesStep2 from '@/views/device/manage/modules/add-devices-step2.vue';
 import AddDevicesStep3 from '@/views/device/manage/modules/add-devices-step3.vue';
+import { useRouterPush } from '@/hooks/common/router';
 
 const addKey = ref();
 const deviceNumber = ref();
@@ -120,11 +121,16 @@ const columns_to_show = [
     }
   }
 ];
+const { routerPushByKey } = useRouterPush();
 const actions = [
   {
     label: '详情',
-    callback: async row => {
-      console.log(row.id);
+    callback: row => {
+      routerPushByKey('device_details', {
+        query: {
+          id: row.id
+        }
+      });
     }
   },
   {

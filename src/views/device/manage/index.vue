@@ -246,13 +246,25 @@ function handleSelect(key: string | number) {
               :config-options="configOptions"
               :prev-callback="
                 () => {
-                  current += 1;
+                  current -= 1;
                 }
               "
             />
           </div>
           <div v-if="current === 2">
-            <AddDevicesStep2 :form-elements="formData" />
+            <AddDevicesStep2
+              :form-elements="formData"
+              :prev-callback="
+                () => {
+                  current -= 1;
+                }
+              "
+              :next-callback="
+                () => {
+                  current += 1;
+                }
+              "
+            />
             <!--            <n-button @click="current-=1">取消</n-button>-->
             <!--            <n-button @click="current+=1">完成</n-button>-->
           </div>

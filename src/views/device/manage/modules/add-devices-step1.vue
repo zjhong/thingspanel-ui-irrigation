@@ -56,6 +56,7 @@ function handleValidateClick(e: MouseEvent) {
           <n-select v-model:value="formValue.device_config_id" placeholder="选择设备配置" :options="configOptions" />
         </n-form-item>
         <n-form-item>
+          <!--          <n-button attr-type="button" @click="props.prevCallback">上一步</n-button>-->
           <n-button attr-type="button" @click="handleValidateClick">完成</n-button>
         </n-form-item>
       </n-form>

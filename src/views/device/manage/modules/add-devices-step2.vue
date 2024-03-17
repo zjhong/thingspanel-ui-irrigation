@@ -31,15 +31,17 @@ interface FormElement {
   array?: FormElement[]; // 仅 table 类型时有效，定义表格列的配置
 }
 
-const props = defineProps({
-  formElements: Array as () => FormElement[]
-});
-
+const props = defineProps<{
+  formElements: FormElement[];
+  prevCallback: () => void;
+  nextCallback: () => void;
+}>();
+const formElements: FormElement[] = (() => props.formElements)();
 const formData = reactive({});
 
 watchEffect(() => {
-  if (props.formElements && Array.isArray(props.formElements)) {
-    props.formElements.forEach(element => {
+  if (formElements && Array.isArray(formElements)) {
+    formElements.forEach(element => {
       if (element.type === 'table' && Array.isArray(element.array)) {
         element.array.forEach(subElement => {
           formData[subElement.dataKey] ??= '';

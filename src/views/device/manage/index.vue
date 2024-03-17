@@ -2,7 +2,13 @@
 import { ref } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
-import { devicCeonnectForm, deviceGroupTree, deviceList, getDeviceConfigList } from '@/service/api/device';
+import {
+  deleteDevice,
+  devicCeonnectForm,
+  deviceGroupTree,
+  deviceList,
+  getDeviceConfigList
+} from '@/service/api/device';
 import type { SearchConfig } from '@/components/data-table-page/index.vue';
 import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue';
 import AddDevicesStep2 from '@/views/device/manage/modules/add-devices-step2.vue';
@@ -14,7 +20,7 @@ const configOptions = ref();
 const deviceId = ref();
 const configId = ref();
 const formData = ref();
-
+const tablePageRef = ref();
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -113,14 +119,14 @@ const columns_to_show = [
 const actions = [
   {
     label: '详情',
-    callback: row => {
+    callback: async row => {
       console.log(row.id);
     }
   },
   {
     label: '删除',
-    callback: row => {
-      console.log(row.id);
+    callback: async row => {
+      await deleteDevice({ id: row?.id });
     }
   }
 ];
@@ -217,6 +223,7 @@ function handleSelect(key: string | number) {
 <template>
   <div>
     <data-table-page
+      :ref="tablePageRef"
       :fetch-data="deviceList"
       :columns-to-show="columns_to_show"
       :table-actions="actions"

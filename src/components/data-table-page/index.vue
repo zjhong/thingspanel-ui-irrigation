@@ -1,9 +1,10 @@
 <script lang="tsx" setup>
 import type { VueElement } from 'vue';
-import { computed, defineProps, ref, watchEffect } from 'vue';
+import { computed, defineProps, inject, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
+import { useLoading } from '@sa/hooks';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type SearchConfig =
   | {
@@ -26,6 +27,8 @@ export type SearchConfig =
       multiple: boolean;
       loadOptions?: () => Promise<TreeSelectOption[]>;
     };
+const state = inject('state');
+console.log(state);
 
 // 通过props从父组件接收参数
 const props = defineProps<{
@@ -41,11 +44,11 @@ const props = defineProps<{
   tableActions: Array<{
     // 表格行操作
     label: string; // 按钮文本
-    callback: (row: any) => void; // 点击回调
+    callback: any; // 点击回调
   }>;
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
 }>();
-
+const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
 const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
 const isTableView = ref(true); // 默认显示表格视图
@@ -58,6 +61,7 @@ const searchCriteria = ref({}); // 每页显示数量
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
   // 处理搜索条件，特别是将日期对象转换为字符串
+  startLoading();
   const processedSearchCriteria = Object.fromEntries(
     Object.entries(searchCriteria.value).map(([key, value]) => {
       if (value && Array.isArray(value)) {
@@ -81,6 +85,7 @@ const getData = async () => {
   } else {
     console.error('Error fetching data:', response.error);
   }
+  endLoading();
 };
 
 // 使用计算属性动态生成表格的列配置
@@ -113,7 +118,13 @@ const generatedColumns = computed(() => {
           {tableActions.map(action => {
             if (action.label === '删除') {
               return (
-                <NPopconfirm onPositiveClick={() => action.callback(row)}>
+                <NPopconfirm
+                  onPositiveClick={async () => {
+                    await action.callback(row);
+                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                    handleReset();
+                  }}
+                >
                   {{
                     trigger: () => (
                       <NButton text size="small">
@@ -294,7 +305,7 @@ loadOptionsOnMount2();
     </div>
     <!-- 数据表格 -->
     <div v-if="isTableView" class="overflow-x-auto">
-      <NDataTable :columns="generatedColumns" :data="dataList" class="w-full" />
+      <NDataTable :loading="loading" :columns="generatedColumns" :data="dataList" class="w-full" />
     </div>
     <div v-else>
       <!-- 地图视图占位 -->

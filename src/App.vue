@@ -23,7 +23,6 @@ const naiveDateLocale = computed(() => {
   return naiveDateLocales[appStore.locale];
 });
 const handleFullScreenChange = () => {
-  console.log(document.fullscreenElement, '3243434');
   if (!document.fullscreenElement) {
     appStore.toggleFullContent();
 

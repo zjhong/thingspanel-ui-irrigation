@@ -73,7 +73,6 @@ const editBoard = board => {
 
 // 删除看板
 const deleteBoard = async (id: string) => {
-  console.log(id, 'dsadsad');
   await DelBoard(id); // 假设DelBoard接收看板的id
   message.success('看板删除成功');
   await fetchBoards(); // 刷新看板列表
@@ -92,6 +91,10 @@ onMounted(fetchBoards);
     <NFlex class="h-full bg-#fff p-4" justify="justify-between">
       <div class="flex-1-hidden">
         <div class="mb-4 flex items-center justify-between">
+          <!-- 新建按钮 -->
+          <div>
+            <NButton @click="showModal = true">新建看板</NButton>
+          </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">
             <NInput
@@ -108,10 +111,6 @@ onMounted(fetchBoards);
 
             <NButton type="primary" @click="fetchBoards">搜索</NButton>
           </div>
-          <!-- 新建按钮 -->
-          <div>
-            <NButton @click="showModal = true">新建看板</NButton>
-          </div>
         </div>
         <!-- 看板列表 -->
         <NGrid x-gap="24" y-gap="16" :cols="24">
@@ -121,8 +120,8 @@ onMounted(fetchBoards);
             :span="6"
             @click="goRouter('visualization_panel-details', board.id as string)"
           >
-            <NCard>
-              <div>{{ board.name }}</div>
+            <NCard hoverable>
+              <div class="mb-8px text-16px font-600">{{ board.name }}</div>
               <!-- 使用NTooltip组件 -->
               <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
                 <template #trigger>
@@ -130,8 +129,8 @@ onMounted(fetchBoards);
                 </template>
                 {{ board.description }}
               </NTooltip>
-              <div class="flex justify-end gap-2">
-                <NButton circle strong secondary @click.stop="editBoard(board)">
+              <div class="mt-4 flex justify-end gap-2">
+                <NButton strong circle secondary @click.stop="editBoard(board)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>

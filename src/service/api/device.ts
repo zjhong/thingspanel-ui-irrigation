@@ -112,6 +112,9 @@ export const devicCeonnectForm = async (params: any) => {
   return await request.get<any>(`/device/connect/form`, { params });
 };
 
+export const deleteDevice = async (params: any) => {
+  return await request.delete<Api.BaseApi.Data | any>(`/device/${params.id}`);
+};
 /** 获取数据处理列表 */
 export const getDataScriptList = async (params: any) => {
   return await request.get<DeviceManagement.ConfigDatas | any>(`/data_script`, { params });

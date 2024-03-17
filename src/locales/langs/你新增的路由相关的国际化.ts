@@ -45,7 +45,7 @@ export const czh_cn = {
   device_config: '设备配置',
   'device_config-detail': '设备配置详情',
   'device_config-edit': '编辑设备',
-  'system-management-user': '系统管理(租户)',
+  'system-management-user': '系统管理',
   'system-management-user_system-log': '系统日志',
   visualization: '可视化',
   visualization_panel: '看板列表',

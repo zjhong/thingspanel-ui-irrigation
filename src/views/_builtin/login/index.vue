@@ -83,7 +83,7 @@ const bgColor = computed(() => {
       <div class="w-300px sm:w-360px">
         <header class="flex-col-center justify-center">
           <SystemLogo class="text-128px text-primary <sm:text-64px" />
-          <NGradientText class="mb-6 mt--8" type="primary" :size="28">{{ $t('system.title') }}</NGradientText>
+          <!-- <NGradientText class="mb-6 mt--8" type="primary" :size="28">{{ $t('system.title') }}</NGradientText> -->
         </header>
         <main>
           <!-- <h3 class="text-18px text-primary font-medium">{{ $t('activeModule.label' as any) }}</h3> -->

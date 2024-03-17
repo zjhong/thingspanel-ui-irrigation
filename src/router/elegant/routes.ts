@@ -863,6 +863,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'visualization_big-screen',
+        path: '/visualization/big-screen',
+        component: 'view.visualization_big-screen',
+        meta: {
+          title: 'visualization_big-screen',
+          i18nKey: 'route.visualization_big-screen'
+        }
+      },
+      {
         name: 'visualization_panel',
         path: '/visualization/panel',
         component: 'view.visualization_panel',

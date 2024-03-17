@@ -21,6 +21,7 @@ const deviceId = ref();
 const configId = ref();
 const formData = ref();
 const tablePageRef = ref();
+
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -112,7 +113,7 @@ const columns_to_show = [
     key: 'access_way',
     label: '通过服务/协议',
     render: row => {
-      return row?.access_way === 'A' ? '通过协议' : '通过服务';
+      return row?.access_way === 'B' ? '通过服务' : '通过协议';
     }
   }
 ];
@@ -203,6 +204,10 @@ const topActions = [
 ];
 const active = ref(false);
 const isSuccess = ref(false);
+
+const setIsSuccess = (flag: boolean) => {
+  isSuccess.value = flag;
+};
 const placement = ref<DrawerPlacement>('right');
 const current = ref<number>(1);
 const currentStatus = ref<StepsProps['status']>('process');
@@ -213,7 +218,13 @@ const activate = (place: DrawerPlacement, key: string | number) => {
   placement.value = place;
 };
 
-const completeAdd = () => {};
+const completeAdd = () => {
+  console.log(tablePageRef);
+};
+
+const completeHandAdd = () => {
+  tablePageRef.value?.handleReset();
+};
 
 function handleSelect(key: string | number) {
   activate('bottom', key);
@@ -223,7 +234,7 @@ function handleSelect(key: string | number) {
 <template>
   <div>
     <data-table-page
-      :ref="tablePageRef"
+      ref="tablePageRef"
       :fetch-data="deviceList"
       :columns-to-show="columns_to_show"
       :table-actions="actions"
@@ -231,7 +242,7 @@ function handleSelect(key: string | number) {
       :top-actions="topActions"
     />
 
-    <n-drawer v-model:show="active" :height="720" :placement="placement">
+    <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
         <n-steps :current="current" :status="currentStatus">
           <n-step title="创建设备" description="创建设备的基本信息" />
@@ -244,21 +255,18 @@ function handleSelect(key: string | number) {
             <AddDevicesStep1
               :set-id-callback="setUpId"
               :config-options="configOptions"
-              :prev-callback="
+              :next-callback="
                 () => {
-                  current -= 1;
+                  current += 1;
                 }
               "
             />
           </div>
           <div v-if="current === 2">
             <AddDevicesStep2
+              :set-is-success="setIsSuccess"
+              :device_id="deviceId"
               :form-elements="formData"
-              :prev-callback="
-                () => {
-                  current -= 1;
-                }
-              "
               :next-callback="
                 () => {
                   current += 1;

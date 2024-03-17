@@ -1,6 +1,6 @@
 <script lang="tsx" setup>
 import type { VueElement } from 'vue';
-import { computed, defineProps, inject, ref, watchEffect } from 'vue';
+import { computed, defineProps, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
@@ -27,8 +27,6 @@ export type SearchConfig =
       multiple: boolean;
       loadOptions?: () => Promise<TreeSelectOption[]>;
     };
-const state = inject('state');
-console.log(state);
 
 // 通过props从父组件接收参数
 const props = defineProps<{
@@ -176,7 +174,9 @@ const handleReset = () => {
   });
   handleSearch(); // 重置后重新获取数据
 };
-
+defineExpose({
+  handleReset
+});
 // 更新树形选择器的选项
 const handleTreeSelectUpdate = (value, key) => {
   searchCriteria.value[key] = value;

@@ -100,11 +100,20 @@ export const deleteDeviceGroupRelation = async (params: any) => {
   return await request.delete2<Api.BaseApi.Data>(`/device/group/relation`, params);
 };
 
+/** 获取设备连接信息 */
+export const getDeviceConnectInfo = async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>(`/device/connect/info`, { params });
+};
+
 /** 获取设备配置列表 */
 export const getDeviceConfigList = async (params: any) => {
   return await request.get<DeviceManagement.ConfigDatas>(`/device_config`, { params });
 };
 
+/** 更新设备凭证 */
+export const updateDeviceVoucher = async (params: any) => {
+  return await request.post<any>(`/device/update/voucher`, params);
+};
 export const deviceAdd = async (params: any) => {
   return await request.post<any>(`/device`, params);
 };

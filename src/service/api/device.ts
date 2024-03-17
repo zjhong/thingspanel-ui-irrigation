@@ -33,6 +33,11 @@ export const putDeviceGroup = async (params: { id: string; parent_id: string; na
   return await request.put<Api.BaseApi.Data>('/device/group', params);
 };
 
+/** 激活设备 */
+export const putDeviceActive = async (params: any) => {
+  return await request.put<Api.BaseApi.Data>('/device/active', params);
+};
+
 /** 删除设备分组 */
 export const deleteDeviceGroup = async (params: { id: string }) => {
   return await request.delete<Api.BaseApi.Data>(`/device/group/${params.id}`);

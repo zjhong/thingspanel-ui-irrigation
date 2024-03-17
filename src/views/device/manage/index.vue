@@ -9,7 +9,8 @@ import {
   devicCeonnectForm,
   deviceGroupTree,
   deviceList,
-  getDeviceConfigList
+  getDeviceConfigList,
+  putDeviceActive
 } from '@/service/api/device';
 import type { SearchConfig } from '@/components/data-table-page/index.vue';
 import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue';
@@ -220,8 +221,11 @@ const activate = (place: DrawerPlacement, key: string | number) => {
   placement.value = place;
 };
 
-const completeAdd = () => {
-  console.log(tablePageRef);
+const completeAdd = async () => {
+  const { error } = await putDeviceActive({ device_number: deviceNumber.value });
+  if (!error) {
+    active.value = true;
+  }
 };
 
 const completeHandAdd = () => {
@@ -236,8 +240,12 @@ watch(
   deviceNumber,
   _.debounce(async newDeviceNumber => {
     try {
-      await checkDevice({ deviceNumber: newDeviceNumber });
-      buttonDisabled.value = false;
+      const { data, error } = await checkDevice(newDeviceNumber);
+      if (!error && data && data.is_available) {
+        buttonDisabled.value = false;
+      } else {
+        buttonDisabled.value = true;
+      }
     } catch (error) {
       console.error(error);
     }
@@ -308,7 +316,7 @@ watch(
           </div>
         </n-card>
       </n-drawer-content>
-      <n-drawer-content v-if="addKey === 'number'" title="通过编号添加">
+      <n-drawer-content v-if="addKey === 'number'" class="flex-center pt-24px" title="通过编号添加">
         <n-h4 align-text>
           <n-li>
             <NText strong>输入设备编号立即完成设备添加</NText>
@@ -316,10 +324,10 @@ watch(
         </n-h4>
         <div class="mb-6">
           <n-input v-model:value="deviceNumber" placeholder="请输入设备编号" class="max-w-240px"></n-input>
-          {{ deviceNumber }}
+          {{ buttonDisabled ? '' : '设备编号可用' }}
         </div>
 
-        <n-button :disabled="buttonDisabled" @click="completeAdd">完成</n-button>
+        <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">完成</n-button>
       </n-drawer-content>
     </n-drawer>
   </div>

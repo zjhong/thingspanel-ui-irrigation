@@ -107,6 +107,7 @@ declare module "@elegant-router/types" {
     "test": "/test";
     "user-center": "/user-center";
     "visualization": "/visualization";
+    "visualization_big-screen": "/visualization/big-screen";
     "visualization_panel": "/visualization/panel";
     "visualization_panel-details": "/visualization/panel-details";
     "visualization_panel-preview": "/visualization/panel-preview";
@@ -251,6 +252,7 @@ declare module "@elegant-router/types" {
     | "system-management-user_system-log"
     | "test"
     | "user-center"
+    | "visualization_big-screen"
     | "visualization_panel-details"
     | "visualization_panel-preview"
     | "visualization_panel"

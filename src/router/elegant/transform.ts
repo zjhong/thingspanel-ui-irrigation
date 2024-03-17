@@ -242,7 +242,8 @@ const routeMap: RouteMap = {
   "visualization": "/visualization",
   "visualization_panel": "/visualization/panel",
   "visualization_panel-details": "/visualization/panel-details",
-  "visualization_panel-preview": "/visualization/panel-preview"
+  "visualization_panel-preview": "/visualization/panel-preview",
+  "visualization_big-screen": "/visualization/big-screen",
 };
 
 /**

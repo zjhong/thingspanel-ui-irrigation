@@ -121,6 +121,10 @@ export const devicCeonnectForm = async (params: any) => {
   return await request.get<any>(`/device/connect/form`, { params });
 };
 
+export const checkDevice = async (deviceNumber: { deviceNumber: any }) => {
+  const url = `/device/check/${deviceNumber}`;
+  return await request.get<any>(url);
+};
 export const deleteDevice = async (params: any) => {
   return await request.delete<Api.BaseApi.Data | any>(`/device/${params.id}`);
 };

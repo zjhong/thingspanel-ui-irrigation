@@ -1,8 +1,10 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
+import _ from 'lodash';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
 import {
+  checkDevice,
   deleteDevice,
   devicCeonnectForm,
   deviceGroupTree,
@@ -21,7 +23,7 @@ const deviceId = ref();
 const configId = ref();
 const formData = ref();
 const tablePageRef = ref();
-
+const buttonDisabled = ref(true);
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -229,6 +231,18 @@ const completeHandAdd = () => {
 function handleSelect(key: string | number) {
   activate('bottom', key);
 }
+
+watch(
+  deviceNumber,
+  _.debounce(async newDeviceNumber => {
+    try {
+      await checkDevice({ deviceNumber: newDeviceNumber });
+      buttonDisabled.value = false;
+    } catch (error) {
+      console.error(error);
+    }
+  }, 500)
+);
 </script>
 
 <template>
@@ -305,7 +319,7 @@ function handleSelect(key: string | number) {
           {{ deviceNumber }}
         </div>
 
-        <n-button :disabled="true" @click="completeAdd">完成</n-button>
+        <n-button :disabled="buttonDisabled" @click="completeAdd">完成</n-button>
       </n-drawer-content>
     </n-drawer>
   </div>

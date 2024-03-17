@@ -29,35 +29,16 @@ export function adapterOfFetchRouterList(data: Api.Route.Data): Api.Route.MenuRo
 /** 递归处理数据 */
 function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
   return data.map((item: any): ElegantRoute => {
-    let componentStr: string = '';
-    if (item.route_path) {
-      componentStr = item.route_path;
-    } else {
-      switch (item.param3) {
-        case 'basic':
-          componentStr = item.children?.length ? 'layout.base' : `layout.base$view.${item.element_code}`;
-          break;
-        case 'self':
-          componentStr = item.parent_id !== '0' ? `view.${item.element_code}` : `layout.base$view.${item.element_code}`;
-          break;
-        case 'multi':
-          componentStr = item.children?.length ? 'layout.multi' : `layout.multi$view.${item.element_code}`;
-          break;
-        case 'blank':
-          componentStr = item.children?.length ? 'layout.blank' : `layout.blank$view.${item.element_code}`;
-          break;
-        default:
-          componentStr = `view.${item.element_code}`;
-      }
+    if (item.route_path === 'layout.base' && item.children.length === 0) {
+      item.route_path += '$none';
     }
-    console.log(item.param1 && item.param1[0] === '/' ? item.param : (`/${item.param1}` as string));
     return {
       // id: item.id,
       // parentId: item.parent_id,
       name: item.element_code,
       // elementType: item.element_type,
       path: item.param1 && item.param1[0] === '/' ? item.param1 : (`/${item.param1}` as string),
-      component: componentStr,
+      component: item.route_path,
       // remark: item.remark,
       meta: {
         title: item.description,

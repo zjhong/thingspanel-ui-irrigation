@@ -115,7 +115,11 @@ const generatedColumns = computed(() => {
               return (
                 <NPopconfirm onPositiveClick={() => action.callback(row)}>
                   {{
-                    trigger: () => <NButton>{action.label}</NButton>,
+                    trigger: () => (
+                      <NButton text size="small">
+                        {action.label}
+                      </NButton>
+                    ),
                     default: () => '确认删除'
                   }}
                 </NPopconfirm>
@@ -202,11 +206,17 @@ loadOptionsOnMount2();
       <div class="flex flex-1 flex-wrap items-end gap-4">
         <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
           <template v-if="config.type === 'input'">
-            <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" class="input-style" />
+            <NInput
+              v-model:value="searchCriteria[config.key]"
+              size="small"
+              :placeholder="config.label"
+              class="input-style"
+            />
           </template>
           <template v-else-if="config.type === 'date-range'">
             <NDatePicker
               v-model:value="searchCriteria[config.key]"
+              size="small"
               type="daterange"
               :placeholder="config.label"
               class="input-style"
@@ -215,6 +225,7 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'select'">
             <NSelect
               v-model:value="searchCriteria[config.key]"
+              size="small"
               filterable
               :options="config.options"
               :placeholder="config.label"
@@ -229,6 +240,7 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'date'">
             <NDatePicker
               v-model:value="searchCriteria[config.key]"
+              size="small"
               type="date"
               :placeholder="config.label"
               class="input-style"
@@ -237,6 +249,7 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'tree-select'">
             <n-tree-select
               v-model:value="searchCriteria[config.key]"
+              size="small"
               filterable
               :options="config.options"
               :multiple="config.multiple"
@@ -303,7 +316,7 @@ loadOptionsOnMount2();
 
 <style scoped>
 .input-style {
-  margin: auto;
+  min-width: 120px;
 }
 
 .btn-style {

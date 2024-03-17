@@ -6,7 +6,7 @@ import { deviceAdd } from '@/service/api/device';
 
 const props = defineProps<{
   configOptions: any[];
-  prevCallback: () => void;
+  nextCallback: () => void;
   setIdCallback: (dId, cId) => void;
 }>();
 const formRef = ref<FormInst | null>(null);
@@ -29,11 +29,10 @@ function handleValidateClick(e: MouseEvent) {
   formRef.value?.validate(async errors => {
     if (!errors) {
       const res = await deviceAdd({ ...formValue.value, lable: formValue.value.lable.join(','), access_way: 'A' });
-
       const configId = formValue.value.device_config_id;
       const deviceId = res.data.id;
       props.setIdCallback(deviceId, configId);
-      props.prevCallback();
+      props.nextCallback();
     } else {
       console.log(errors);
       message.error('验证失败');
@@ -56,7 +55,7 @@ function handleValidateClick(e: MouseEvent) {
           <n-select v-model:value="formValue.device_config_id" placeholder="选择设备配置" :options="configOptions" />
         </n-form-item>
         <n-form-item>
-          <n-button attr-type="button" @click="handleValidateClick">完成</n-button>
+          <n-button type="primary" attr-type="button" @click="handleValidateClick">完成</n-button>
         </n-form-item>
       </n-form>
     </n-card>

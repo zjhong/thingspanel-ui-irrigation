@@ -61,26 +61,29 @@ const bgColor = computed(() => {
 
 <template>
   <div class="relative wh-full flex-center overflow-hidden" :style="{ backgroundColor: bgColor }">
-    <div class="i-flex-vertical">
-      <ThemeSchemaSwitch
-        :theme-schema="themeStore.themeScheme"
-        :show-tooltip="false"
-        class="absolute left-48px top-24px z-3 text-20px"
-        @switch="themeStore.toggleThemeScheme"
-      />
-      <LangSwitch
-        :lang="appStore.locale"
-        :lang-options="appStore.localeOptions"
-        :show-tooltip="false"
-        @change-lang="appStore.changeLocale"
-      />
+    <div class="absolute left-48px top-24px z-99">
+      <div class="flex-center">
+        <ThemeSchemaSwitch
+          :theme-schema="themeStore.themeScheme"
+          :show-tooltip="false"
+          @switch="themeStore.toggleThemeScheme"
+        />
+
+        <LangSwitch
+          :lang="appStore.locale"
+          :lang-options="appStore.localeOptions"
+          :show-tooltip="false"
+          @change-lang="appStore.changeLocale"
+        />
+      </div>
     </div>
-    <WaveBg :theme-color="bgThemeColor" />
+
+    <!--    <WaveBg :theme-color="bgThemeColor" />-->
     <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
       <div class="w-300px sm:w-360px">
-        <header class="flex-y-center justify-center">
+        <header class="flex-col-center justify-center">
           <SystemLogo class="text-128px text-primary <sm:text-64px" />
-          <!-- <NGradientText type="primary" :size="28">{{ $t('system.title') }}</NGradientText> -->
+          <!-- <NGradientText class="mb-6 mt--8" type="primary" :size="28">{{ $t('system.title') }}</NGradientText> -->
         </header>
         <main>
           <!-- <h3 class="text-18px text-primary font-medium">{{ $t('activeModule.label' as any) }}</h3> -->

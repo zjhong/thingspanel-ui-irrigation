@@ -29,13 +29,26 @@ export function adapterOfFetchRouterList(data: Api.Route.Data): Api.Route.MenuRo
 /** 递归处理数据 */
 function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
   return data.map((item: any): ElegantRoute => {
+    if (!item.parent_id) {
+      if (!item.route_path.includes('$')) {
+        if (item.route_path === 'layout.base') {
+          item.route_path += '$home';
+        } else {
+          item.route_path = `layout.base$${item.route_path}`;
+        }
+      }
+    }
+    if (item.route_path === 'layout.base' && item.children.length === 0) {
+      console.log(item);
+      item.route_path += '$home';
+    }
     return {
       // id: item.id,
       // parentId: item.parent_id,
-      name: item.element_code,
+      name: item.element_code.trim().replace(/\s/g, '_'),
       // elementType: item.element_type,
       path: item.param1 && item.param1[0] === '/' ? item.param1 : (`/${item.param1}` as string),
-      component: item.route_path,
+      component: item.route_path.trim().replace(/\s/g, '_'),
       // remark: item.remark,
       meta: {
         title: item.description,

@@ -37,7 +37,7 @@ const clearFormData = () => {
 const setupData = v => {
   boards.value = v;
 };
-// 获取看板列表
+// 获取大屏列表
 const fetchBoards = async () => {
   const { data } = await getBoardList({ page: currentPage.value, page_size: pageSize.value, name: nameSearch.value });
   if (data && data.list) {
@@ -49,17 +49,17 @@ const fetchBoards = async () => {
 // 提交表单
 const submitForm = async () => {
   if (!formData.name) {
-    message.error('看板名称不能为空');
+    message.error('大屏名称不能为空');
     return;
   }
 
   if (isEditMode.value) {
-    await PutBoard(formData); // 编辑看板
+    await PutBoard(formData); // 编辑大屏
   } else {
-    await PostBoard(formData); // 新建看板
+    await PostBoard(formData); // 新建大屏
   }
 
-  message.success(isEditMode.value ? '看板更新成功' : '看板创建成功');
+  message.success(isEditMode.value ? '大屏更新成功' : '大屏创建成功');
   showModal.value = false;
   clearFormData();
   await fetchBoards();
@@ -71,11 +71,12 @@ const editBoard = board => {
   showModal.value = true;
 };
 
-// 删除看板
+// 删除大屏
 const deleteBoard = async (id: string) => {
-  await DelBoard(id); // 假设DelBoard接收看板的id
-  message.success('看板删除成功');
-  await fetchBoards(); // 刷新看板列表
+  console.log(id, 'dsadsad');
+  await DelBoard(id); // 假设DelBoard接收大屏的id
+  message.success('大屏删除成功');
+  await fetchBoards(); // 刷新大屏列表
 };
 
 // 页面跳转
@@ -91,10 +92,6 @@ onMounted(fetchBoards);
     <NFlex class="h-full bg-#fff p-4" justify="justify-between">
       <div class="flex-1-hidden">
         <div class="mb-4 flex items-center justify-between">
-          <!-- 新建按钮 -->
-          <div>
-            <NButton @click="showModal = true">新建看板</NButton>
-          </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">
             <NInput
@@ -111,8 +108,12 @@ onMounted(fetchBoards);
 
             <NButton type="primary" @click="fetchBoards">搜索</NButton>
           </div>
+          <!-- 新建按钮 -->
+          <div>
+            <NButton @click="showModal = true">新建大屏</NButton>
+          </div>
         </div>
-        <!-- 看板列表 -->
+        <!-- 大屏列表 -->
         <NGrid x-gap="24" y-gap="16" :cols="24">
           <NGridItem
             v-for="board in boards"
@@ -120,8 +121,8 @@ onMounted(fetchBoards);
             :span="6"
             @click="goRouter('visualization_panel-details', board.id as string)"
           >
-            <NCard hoverable>
-              <div class="mb-8px text-16px font-600">{{ board.name }}</div>
+            <NCard>
+              <div>{{ board.name }}</div>
               <!-- 使用NTooltip组件 -->
               <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
                 <template #trigger>
@@ -129,8 +130,8 @@ onMounted(fetchBoards);
                 </template>
                 {{ board.description }}
               </NTooltip>
-              <div class="mt-4 flex justify-end gap-2">
-                <NButton strong circle secondary @click.stop="editBoard(board)">
+              <div class="flex justify-end gap-2">
+                <NButton circle strong secondary @click.stop="editBoard(board)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>
@@ -145,7 +146,7 @@ onMounted(fetchBoards);
           </NGridItem>
         </NGrid>
       </div>
-      <!-- 看板列表后面添加分页器 -->
+      <!-- 大屏列表后面添加分页器 -->
       <div class="mt-4 h-60px w-full">
         <NFlex justify="end">
           <NPagination
@@ -157,21 +158,12 @@ onMounted(fetchBoards);
         </NFlex>
       </div>
     </NFlex>
-    <!-- 新建和编辑看板的模态框 -->
-    <NModal v-model:show="showModal" :title="isEditMode ? '编辑看板' : '新建看板'" class="w-600px">
+    <!-- 新建和编辑大屏的模态框 -->
+    <NModal v-model:show="showModal" :title="isEditMode ? '编辑大屏' : '新建大屏'" class="w-600px">
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
-          <NFormItem label="看板名称" path="name">
-            <NInput v-model:value="formData.name" placeholder="请输入看板名称" />
-          </NFormItem>
-          <NFormItem label="是否首页">
-            <NSelect
-              v-model:value="formData.home_flag"
-              :options="[
-                { label: '是', value: 'Y' },
-                { label: '否', value: 'N' }
-              ]"
-            />
+          <NFormItem label="大屏名称" path="name">
+            <NInput v-model:value="formData.name" placeholder="请输入大屏名称" />
           </NFormItem>
           <NFormItem label="描述">
             <NInput v-model:value="formData.description" type="textarea" placeholder="请输入描述" />

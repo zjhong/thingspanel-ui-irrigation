@@ -140,8 +140,6 @@ onMounted(async () => {
       class="table-class"
     />
     <div class="pagination-box">
-      <!-- Data table to display device groups -->
-      <!-- Pagination component -->
       <NPagination
         v-model:page="queryData.page"
         :page-size="queryData.page_size"

@@ -18,7 +18,12 @@ export function transformElegantRoutesToVueRoutes(
   layouts: Record<string, RouteComponent | (() => Promise<RouteComponent>)>,
   views: Record<string, RouteComponent | (() => Promise<RouteComponent>)>
 ) {
-  return routes.flatMap(route => transformElegantRouteToVueRoute(route, layouts, views));
+
+
+  return routes.flatMap(route => {
+
+    return transformElegantRouteToVueRoute(route, layouts, views)
+  });
 }
 
 /**
@@ -36,6 +41,7 @@ function transformElegantRouteToVueRoute(
   const VIEW_PREFIX = 'view.';
   const ROUTE_DEGREE_SPLITTER = '_';
   const FIRST_LEVEL_ROUTE_COMPONENT_SPLIT = '$';
+  console.log(route)
 
   function isLayout(component: string) {
     return component.startsWith(LAYOUT_PREFIX);
@@ -54,6 +60,7 @@ function transformElegantRouteToVueRoute(
   }
 
   function isFirstLevelRoute(item: ElegantConstRoute) {
+    console.log(item.name)
     return !item.name.includes(ROUTE_DEGREE_SPLITTER);
   }
 
@@ -63,7 +70,7 @@ function transformElegantRouteToVueRoute(
 
   function getSingleLevelRouteComponent(component: string) {
     const [layout, view] = component.split(FIRST_LEVEL_ROUTE_COMPONENT_SPLIT);
-
+    if (!view) console.log(layout, "432432434")
     return {
       layout: getLayoutName(layout),
       view: getViewName(view)
@@ -235,7 +242,8 @@ const routeMap: RouteMap = {
   "visualization": "/visualization",
   "visualization_panel": "/visualization/panel",
   "visualization_panel-details": "/visualization/panel-details",
-  "visualization_panel-preview": "/visualization/panel-preview"
+  "visualization_panel-preview": "/visualization/panel-preview",
+  "visualization_big-screen": "/visualization/big-screen",
 };
 
 /**

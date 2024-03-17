@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineProps, reactive, watchEffect } from 'vue';
+import { defineProps, onMounted, reactive, ref, watchEffect } from 'vue';
 import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
+import { getDeviceConnectInfo, updateDeviceVoucher } from '@/service/api/device';
 
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
@@ -31,12 +32,22 @@ interface FormElement {
   array?: FormElement[]; // 仅 table 类型时有效，定义表格列的配置
 }
 
-const props = defineProps({
-  formElements: Array as () => FormElement[]
-});
+const props = defineProps<{
+  formElements: FormElement[];
+  nextCallback: () => void;
+  device_id: string;
+  setIsSuccess: (flag: boolean) => void;
+}>();
 
 const formData = reactive({});
+const connectInfo = ref<object>({});
+const feachConnectInfo = async () => {
+  const res = await getDeviceConnectInfo({ device_id: props.device_id });
+  connectInfo.value = res.data;
+  console.log(res);
+};
 
+onMounted(feachConnectInfo);
 watchEffect(() => {
   if (props.formElements && Array.isArray(props.formElements)) {
     props.formElements.forEach(element => {
@@ -51,46 +62,69 @@ watchEffect(() => {
   }
 });
 
-const handleSubmit = () => {
-  console.log('Form Data:', formData);
+const handleSubmit = async () => {
+  const res = await updateDeviceVoucher({
+    device_id: props.device_id,
+    voucher: JSON.stringify(formData)
+  });
+  console.log('Form Data:', formData, res);
+  if (!res.error) {
+    props.setIsSuccess(true);
+    props.nextCallback();
+  } else {
+    props.setIsSuccess(false);
+    props.nextCallback();
+  }
 };
 </script>
 
 <template>
   <NForm>
-    <template v-for="element in formElements" :key="element.dataKey">
-      <div v-if="element.type === 'input'" class="form-item">
-        <NFormItem :label="element.label">
-          <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
-        </NFormItem>
-      </div>
-      <div v-if="element.type === 'select'" class="form-item">
-        <NFormItem :label="element.label">
-          <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
-        </NFormItem>
-      </div>
-      <div v-if="element.type === 'table'">
-        <div class="table-label">{{ element.label }}</div>
-        <div class="table-content">
-          <template v-for="subElement in element.array" :key="subElement.dataKey">
-            <div v-if="subElement.type === 'input'" class="table-item">
-              <NFormItem :label="subElement.label">
-                <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
-              </NFormItem>
-            </div>
-            <div v-if="subElement.type === 'select'" class="table-item">
-              <NFormItem :label="subElement.label">
-                <NSelect
-                  v-model:value="formData[subElement.dataKey]"
-                  :options="subElement.options as SelectMixedOption[]"
-                />
-              </NFormItem>
-            </div>
-          </template>
+    <n-scrollbar style="max-height: 360px">
+      <template v-for="element in formElements" :key="element.dataKey">
+        <div v-if="element.type === 'input'" class="form-item">
+          <NFormItem :label="element.label">
+            <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
+          </NFormItem>
         </div>
-      </div>
-    </template>
-    <NButton type="primary" @click="handleSubmit">提交</NButton>
+        <div v-if="element.type === 'select'" class="form-item">
+          <NFormItem :label="element.label">
+            <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
+          </NFormItem>
+        </div>
+        <div v-if="element.type === 'table'">
+          <div class="table-label">{{ element.label }}</div>
+          <div class="table-content">
+            <template v-for="subElement in element.array" :key="subElement.dataKey">
+              <div v-if="subElement.type === 'input'" class="table-item">
+                <NFormItem :label="subElement.label">
+                  <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
+                </NFormItem>
+              </div>
+              <div v-if="subElement.type === 'select'" class="table-item">
+                <NFormItem :label="subElement.label">
+                  <NSelect
+                    v-model:value="formData[subElement.dataKey]"
+                    :options="subElement.options as SelectMixedOption[]"
+                  />
+                </NFormItem>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <NCard title="连接信息">
+        <NDescriptions :column="1">
+          <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
+            <span class="font-600">{{ value }}</span>
+          </NDescriptionsItem>
+        </NDescriptions>
+      </NCard>
+    </n-scrollbar>
+    <div class="mt-4 w-full flex-center">
+      <NButton type="primary" @click="handleSubmit">提交</NButton>
+    </div>
   </NForm>
 </template>
 

@@ -4,6 +4,7 @@ import { computed, defineProps, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
+import { useLoading } from '@sa/hooks';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type SearchConfig =
   | {
@@ -41,11 +42,11 @@ const props = defineProps<{
   tableActions: Array<{
     // 表格行操作
     label: string; // 按钮文本
-    callback: (row: any) => void; // 点击回调
+    callback: any; // 点击回调
   }>;
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
 }>();
-
+const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
 const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
 const isTableView = ref(true); // 默认显示表格视图
@@ -58,6 +59,7 @@ const searchCriteria = ref({}); // 每页显示数量
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
   // 处理搜索条件，特别是将日期对象转换为字符串
+  startLoading();
   const processedSearchCriteria = Object.fromEntries(
     Object.entries(searchCriteria.value).map(([key, value]) => {
       if (value && Array.isArray(value)) {
@@ -81,6 +83,7 @@ const getData = async () => {
   } else {
     console.error('Error fetching data:', response.error);
   }
+  endLoading();
 };
 
 // 使用计算属性动态生成表格的列配置
@@ -113,9 +116,19 @@ const generatedColumns = computed(() => {
           {tableActions.map(action => {
             if (action.label === '删除') {
               return (
-                <NPopconfirm onPositiveClick={() => action.callback(row)}>
+                <NPopconfirm
+                  onPositiveClick={async () => {
+                    await action.callback(row);
+                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                    handleReset();
+                  }}
+                >
                   {{
-                    trigger: () => <NButton>{action.label}</NButton>,
+                    trigger: () => (
+                      <NButton text size="small">
+                        {action.label}
+                      </NButton>
+                    ),
                     default: () => '确认删除'
                   }}
                 </NPopconfirm>
@@ -161,7 +174,9 @@ const handleReset = () => {
   });
   handleSearch(); // 重置后重新获取数据
 };
-
+defineExpose({
+  handleReset
+});
 // 更新树形选择器的选项
 const handleTreeSelectUpdate = (value, key) => {
   searchCriteria.value[key] = value;
@@ -197,16 +212,22 @@ loadOptionsOnMount2();
 <template>
   <div class="flex flex-col gap-6 rounded-lg p-6 shadow">
     <!-- 搜索区域与操作按钮 -->
-    <div class="flex flex-wrap items-end justify-between gap-4">
+    <div class="row flex items-end justify-between gap-4">
       <!-- 搜索输入和选择器 -->
       <div class="flex flex-1 flex-wrap items-end gap-4">
         <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
           <template v-if="config.type === 'input'">
-            <NInput v-model:value="searchCriteria[config.key]" :placeholder="config.label" class="input-style" />
+            <NInput
+              v-model:value="searchCriteria[config.key]"
+              size="small"
+              :placeholder="config.label"
+              class="input-style"
+            />
           </template>
           <template v-else-if="config.type === 'date-range'">
             <NDatePicker
               v-model:value="searchCriteria[config.key]"
+              size="small"
               type="daterange"
               :placeholder="config.label"
               class="input-style"
@@ -215,10 +236,11 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'select'">
             <NSelect
               v-model:value="searchCriteria[config.key]"
+              size="small"
               filterable
               :options="config.options"
               :placeholder="config.label"
-              class="input-style min-w-240px"
+              class="input-style"
               @search="
                 value => {
                   throttledLoadOptionsOnMount(value);
@@ -229,6 +251,7 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'date'">
             <NDatePicker
               v-model:value="searchCriteria[config.key]"
+              size="small"
               type="date"
               :placeholder="config.label"
               class="input-style"
@@ -237,20 +260,21 @@ loadOptionsOnMount2();
           <template v-else-if="config.type === 'tree-select'">
             <n-tree-select
               v-model:value="searchCriteria[config.key]"
+              size="small"
               filterable
               :options="config.options"
               :multiple="config.multiple"
-              class="input-style min-w-240px"
+              class="input-style"
               @update:value="value => handleTreeSelectUpdate(value, config.key)"
             />
           </template>
         </div>
-        <NButton class="btn-style" @click="handleSearch">搜索</NButton>
-        <NButton class="btn-style" @click="handleReset">重置</NButton>
+        <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
+        <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
       </div>
       <!-- 新建与返回按钮 -->
     </div>
-    <div class="mb--6 flex items-center justify-between">
+    <div class="flex items-center justify-between">
       <div class="flex gap-2">
         <component :is="action.element" v-for="(action, index) in topActions" :key="index"></component>
       </div>
@@ -281,7 +305,7 @@ loadOptionsOnMount2();
     </div>
     <!-- 数据表格 -->
     <div v-if="isTableView" class="overflow-x-auto">
-      <NDataTable :columns="generatedColumns" :data="dataList" class="card-wrapper" />
+      <NDataTable :loading="loading" :columns="generatedColumns" :data="dataList" class="w-full" />
     </div>
     <div v-else>
       <!-- 地图视图占位 -->
@@ -303,7 +327,7 @@ loadOptionsOnMount2();
 
 <style scoped>
 .input-style {
-  margin: auto;
+  min-width: 140px;
 }
 
 .btn-style {

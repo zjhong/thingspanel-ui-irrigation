@@ -1,8 +1,16 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
+import _ from 'lodash';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
-import { devicCeonnectForm, deviceGroupTree, deviceList, getDeviceConfigList } from '@/service/api/device';
+import {
+  checkDevice,
+  deleteDevice,
+  devicCeonnectForm,
+  deviceGroupTree,
+  deviceList,
+  getDeviceConfigList
+} from '@/service/api/device';
 import type { SearchConfig } from '@/components/data-table-page/index.vue';
 import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue';
 import AddDevicesStep2 from '@/views/device/manage/modules/add-devices-step2.vue';
@@ -14,7 +22,8 @@ const configOptions = ref();
 const deviceId = ref();
 const configId = ref();
 const formData = ref();
-
+const tablePageRef = ref();
+const buttonDisabled = ref(true);
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -106,21 +115,21 @@ const columns_to_show = [
     key: 'access_way',
     label: '通过服务/协议',
     render: row => {
-      return row?.access_way === 'A' ? '通过协议' : '通过服务';
+      return row?.access_way === 'B' ? '通过服务' : '通过协议';
     }
   }
 ];
 const actions = [
   {
     label: '详情',
-    callback: row => {
+    callback: async row => {
       console.log(row.id);
     }
   },
   {
     label: '删除',
-    callback: row => {
-      console.log(row.id);
+    callback: async row => {
+      await deleteDevice({ id: row?.id });
     }
   }
 ];
@@ -190,13 +199,17 @@ const topActions = [
   {
     element: () => (
       <n-dropdown options={dropOption} trigger="hover" onSelect={handleSelect}>
-        <n-button>添加设备</n-button>
+        <n-button type="primary">添加设备</n-button>
       </n-dropdown>
     )
   }
 ];
 const active = ref(false);
 const isSuccess = ref(false);
+
+const setIsSuccess = (flag: boolean) => {
+  isSuccess.value = flag;
+};
 const placement = ref<DrawerPlacement>('right');
 const current = ref<number>(1);
 const currentStatus = ref<StepsProps['status']>('process');
@@ -207,16 +220,35 @@ const activate = (place: DrawerPlacement, key: string | number) => {
   placement.value = place;
 };
 
-const completeAdd = () => {};
+const completeAdd = () => {
+  console.log(tablePageRef);
+};
+
+const completeHandAdd = () => {
+  tablePageRef.value?.handleReset();
+};
 
 function handleSelect(key: string | number) {
   activate('bottom', key);
 }
+
+watch(
+  deviceNumber,
+  _.debounce(async newDeviceNumber => {
+    try {
+      await checkDevice({ deviceNumber: newDeviceNumber });
+      buttonDisabled.value = false;
+    } catch (error) {
+      console.error(error);
+    }
+  }, 500)
+);
 </script>
 
 <template>
   <div>
     <data-table-page
+      ref="tablePageRef"
       :fetch-data="deviceList"
       :columns-to-show="columns_to_show"
       :table-actions="actions"
@@ -224,7 +256,7 @@ function handleSelect(key: string | number) {
       :top-actions="topActions"
     />
 
-    <n-drawer v-model:show="active" :height="720" :placement="placement">
+    <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
         <n-steps :current="current" :status="currentStatus">
           <n-step title="创建设备" description="创建设备的基本信息" />
@@ -237,7 +269,7 @@ function handleSelect(key: string | number) {
             <AddDevicesStep1
               :set-id-callback="setUpId"
               :config-options="configOptions"
-              :prev-callback="
+              :next-callback="
                 () => {
                   current += 1;
                 }
@@ -245,7 +277,16 @@ function handleSelect(key: string | number) {
             />
           </div>
           <div v-if="current === 2">
-            <AddDevicesStep2 :form-elements="formData" />
+            <AddDevicesStep2
+              :set-is-success="setIsSuccess"
+              :device_id="deviceId"
+              :form-elements="formData"
+              :next-callback="
+                () => {
+                  current += 1;
+                }
+              "
+            />
             <!--            <n-button @click="current-=1">取消</n-button>-->
             <!--            <n-button @click="current+=1">完成</n-button>-->
           </div>
@@ -278,7 +319,7 @@ function handleSelect(key: string | number) {
           {{ deviceNumber }}
         </div>
 
-        <n-button :disabled="true" @click="completeAdd">完成</n-button>
+        <n-button :disabled="buttonDisabled" @click="completeAdd">完成</n-button>
       </n-drawer-content>
     </n-drawer>
   </div>

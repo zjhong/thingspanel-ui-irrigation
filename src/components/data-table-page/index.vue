@@ -5,6 +5,7 @@ import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace 
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
+import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type SearchConfig =
   | {
@@ -307,9 +308,9 @@ loadOptionsOnMount2();
     <div v-if="isTableView" class="overflow-x-auto">
       <NDataTable :loading="loading" :columns="generatedColumns" :data="dataList" class="w-full" />
     </div>
-    <div v-else>
+    <div v-else class="h-525px">
       <!-- 地图视图占位 -->
-      <div class="map-placeholder">地图视图占位</div>
+      <TencentMap :devices="dataList" />
     </div>
 
     <n-pagination

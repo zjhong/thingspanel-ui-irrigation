@@ -269,7 +269,6 @@ watch(
       :search-configs="searchConfigs"
       :top-actions="topActions"
     />
-
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
         <n-steps :current="current" :status="currentStatus">
@@ -277,7 +276,6 @@ watch(
           <n-step title="配置设备端" description="根据系统提供的连接配置参数配置设备" />
           <n-step title="配置设备完成" description="如果配置成功，则完成配置" />
         </n-steps>
-
         <n-card class="mt-6" bordered border>
           <div v-if="current === 1">
             <AddDevicesStep1
@@ -304,7 +302,6 @@ watch(
             <!--            <n-button @click="current-=1">取消</n-button>-->
             <!--            <n-button @click="current+=1">完成</n-button>-->
           </div>
-
           <div v-if="current === 3">
             <AddDevicesStep3
               :is-success="isSuccess"

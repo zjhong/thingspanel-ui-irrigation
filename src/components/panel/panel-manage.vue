@@ -1,6 +1,7 @@
 <script lang="tsx" setup>
 import { onMounted, reactive, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
+import { router } from '@/router';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
 import { PutBoard, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
@@ -16,9 +17,6 @@ const fetchBroad = async () => {
     panelDate.value = data;
     if (data.config) {
       const configJson = JSON.parse(data.config);
-      console.log(configJson, 'rewrere');
-      console.log(typeof configJson, 'rewrere');
-
       layout.value = [...configJson, ...layout.value];
     }
   }
@@ -74,7 +72,7 @@ onMounted(fetchBroad);
       class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10"
     >
       <div>
-        <NButton>
+        <NButton @click="router.go(-1)">
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           返回
         </NButton>
@@ -84,11 +82,11 @@ onMounted(fetchBroad);
           <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
           添加组件
         </NButton>
-        <NButton>
-          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />
-        </NButton>
+        <!--        <NButton>-->
+        <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
+        <!--        </NButton>-->
         <NDivider vertical />
-        <NButton>取消</NButton>
+        <!--        <NButton>取消</NButton>-->
         <NButton @click="savePanel">保存</NButton>
         <FullScreen
           :full="isFullscreen"

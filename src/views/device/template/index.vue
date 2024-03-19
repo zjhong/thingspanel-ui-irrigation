@@ -72,27 +72,36 @@ const handleRemove = async (id: string) => {
 </script>
 
 <template>
-  <div class="container">
-    <NCard title="设备模板列表" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 16px">
-        <NButton type="primary" @click="handleAddTemplate">添加设备模板</NButton>
-        <div class="flex gap-16px">
-          <NInput v-model:value="queryParams.name" placeholder="请输入模板名称" />
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+  <div class="h-full w-full">
+    <NFlex class="h-full bg-#fff p-4" justify="justify-between">
+      <div class="flex-1-hidden">
+        <div class="mb-4 flex items-center justify-between">
+          <!-- 新建按钮 -->
+          <div>
+            <NButton @click="handleAddTemplate">添加设备模板</NButton>
+          </div>
+          <!-- 搜索部分 -->
+          <div class="flex items-center gap-2">
+            <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
+            <NButton type="primary" @click="handleQuery">搜索</NButton>
+          </div>
         </div>
-      </div>
-      <div class="card flex">
-        <template v-for="item in deviceTemplateList" :key="item.name">
-          <div class="card-box gap-16px">
-            <n-card :title="item.name" hoverable>
+        <NGrid x-gap="24" y-gap="16" :cols="24">
+          <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
+            <NCard hoverable>
+              <div class="flex justify-between">
+                <div class="text-16px font-600">
+                  {{ item.name }}
+                </div>
+              </div>
               <template v-for="tag in (item.label || '').split(',')" :key="tag">
                 <div style="display: inline-block; margin: 0px 8px 8px 0px">
                   <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
                 </div>
               </template>
 
-              <div class="flex justify-end gap-2">
-                <NButton circle strong secondary @click.stop="handleEdit(item.id)">
+              <div class="mt-4 flex justify-end gap-2">
+                <NButton strong circle secondary @click.stop="handleEdit(item.id)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>
@@ -103,37 +112,22 @@ const handleRemove = async (id: string) => {
                   </template>
                 </NButton>
               </div>
-            </n-card>
-          </div>
-        </template>
+            </NCard>
+          </NGridItem>
+        </NGrid>
+        <div class="pagination-box">
+          <NPagination v-model:page="pagination.page" :item-count="dataTotal" @update:page="getData" />
+        </div>
       </div>
-      <div class="pagination-box">
-        <NPagination v-model:page="pagination.page" :item-count="dataTotal" @update:page="getData" />
-      </div>
-    </NCard>
-    <TemplateModal v-model:visible="visible" :type="modalType" :edit-data="editData" @get-table-data="getData" />
+      <TemplateModal v-model:visible="visible" :type="modalType" :edit-data="editData" @get-table-data="getData" />
+    </NFlex>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.container {
-  width: 100%;
-
-  .card {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .card-box {
-    width: 23%;
-    margin-bottom: 16px;
-    margin-right: 16px;
-  }
-
-  .pagination-box {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-  }
+.pagination-box {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

@@ -6,7 +6,7 @@ import { fetchHomeData } from '@/service/api';
 
 const layout = ref<ICardView[]>([]);
 const isError = ref<boolean>(false);
-const active = ref<boolean>(false);
+const active = ref<boolean>(true);
 
 const getLayout = async () => {
   const { data, error } = await fetchHomeData({});
@@ -31,14 +31,13 @@ onMounted(getLayout);
           :disabled="active"
           @click="
             () => {
-              router.push('/');
-              active = true;
+              router.go(0);
             }
           "
         >
           <n-countdown
             v-if="active"
-            :duration="15000"
+            :duration="60000"
             :render="props => props.seconds + 's'"
             :active="active"
             @finish="active = false"

@@ -6,7 +6,7 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'region-num',
+  title: '区域总数',
   w: 475,
   h: 165
 } as ICardDefine;

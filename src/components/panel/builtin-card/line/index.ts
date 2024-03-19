@@ -6,5 +6,5 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'line'
+  title: '租户数量（折线图）'
 } as ICardDefine;

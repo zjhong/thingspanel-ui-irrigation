@@ -6,7 +6,7 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'weather-station',
+  title: '气象站',
   w: 619,
   h: 498
 } as ICardDefine;

@@ -53,6 +53,7 @@ declare module "@elegant-router/types" {
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
+    "device_template": "/device/template";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -217,6 +218,7 @@ declare module "@elegant-router/types" {
     | "device_grouping-details"
     | "device_grouping"
     | "device_manage"
+    | "device_template"
     | "function_hide-child_one"
     | "function_hide-child_three"
     | "function_hide-child_two"

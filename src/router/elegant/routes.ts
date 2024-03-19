@@ -310,6 +310,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'device_manage',
           i18nKey: 'route.device_manage'
         }
+      },
+      {
+        name: 'device_template',
+        path: '/device/template',
+        component: 'view.device_template',
+        meta: {
+          title: 'device_template',
+          i18nKey: 'route.device_template'
+        }
       }
     ]
   },

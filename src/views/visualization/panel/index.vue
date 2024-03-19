@@ -121,7 +121,17 @@ onMounted(fetchBoards);
             @click="goRouter('visualization_panel-details', board.id as string)"
           >
             <NCard hoverable>
-              <div class="mb-8px text-16px font-600">{{ board.name }}</div>
+              <div class="flex justify-between">
+                <div class="text-16px font-600">
+                  {{ board.name }}
+                </div>
+                <div
+                  v-if="board.home_flag === 'Y'"
+                  class="mr--4 mt--2 h-24px w-24px border border-red-4 rounded-50 text-center text-12px text-red font-600"
+                >
+                  首
+                </div>
+              </div>
               <!-- 使用NTooltip组件 -->
               <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
                 <template #trigger>

@@ -230,6 +230,7 @@ const routeMap: RouteMap = {
   "rule-engine": "/rule-engine",
   "system-management-user": "/system-management-user",
   "system-management-user_system-log": "/system-management-user/system-log",
+  "tenant-homepage": "/tenant-homepage",
   "test": "/test",
   "user-center": "/user-center",
   "visualization": "/visualization",

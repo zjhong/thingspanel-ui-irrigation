@@ -835,6 +835,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'tenant-homepage',
+    path: '/tenant-homepage',
+    component: 'layout.base$view.tenant-homepage',
+    meta: {
+      title: 'tenant-homepage',
+      i18nKey: 'route.tenant-homepage'
+    }
+  },
+  {
     name: 'test',
     path: '/test',
     component: 'layout.base$view.test',

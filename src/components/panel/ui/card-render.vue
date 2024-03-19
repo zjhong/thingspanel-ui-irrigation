@@ -8,6 +8,7 @@ const props = defineProps<{
   colNum: number;
   defaultCardCol: number;
   rowHeight: number;
+  isPreview?: boolean;
 }>();
 
 const countSpace = (data: ICardView[], y: number) => {
@@ -86,6 +87,7 @@ const removeLayout = (i: number) => {
       <GridItem
         v-for="item in layout"
         :key="item.i"
+        :static="isPreview"
         v-bind="gridItemProps"
         :min-h="2"
         :x="item.x"
@@ -96,12 +98,14 @@ const removeLayout = (i: number) => {
       >
         <div class="relative h-full w-full">
           <NIcon
+            v-if="!isPreview"
             class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
             @click="emit('edit', item)"
           >
             <SvgIcon icon="uil:setting" class="text-base" />
           </NIcon>
           <NPopconfirm
+            v-if="!isPreview"
             :show-icon="false"
             :negative-button-props="{ size: 'tiny' }"
             :positive-button-props="{ size: 'tiny' }"
@@ -116,7 +120,7 @@ const removeLayout = (i: number) => {
             </template>
             <span>确认删除看板。</span>
           </NPopconfirm>
-          <CardItem :data="item.data!" />
+          <CardItem :data="item.data!" :view="isPreview" />
         </div>
       </GridItem>
     </template>

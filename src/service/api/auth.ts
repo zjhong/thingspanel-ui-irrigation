@@ -53,3 +53,10 @@ export const delUser = async (id: string) => {
   const data = await request.delete<Api.BaseApi.Data>(`/user/${id}`);
   return data;
 };
+
+export const fetchHomeData = async (params: any) => {
+  const data = await request.get<{ config: string } | null>('/board/home', {
+    params
+  });
+  return data;
+};

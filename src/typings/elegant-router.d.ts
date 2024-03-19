@@ -104,6 +104,7 @@ declare module "@elegant-router/types" {
     "rule-engine": "/rule-engine";
     "system-management-user": "/system-management-user";
     "system-management-user_system-log": "/system-management-user/system-log";
+    "tenant-homepage": "/tenant-homepage";
     "test": "/test";
     "user-center": "/user-center";
     "visualization": "/visualization";
@@ -168,6 +169,7 @@ declare module "@elegant-router/types" {
     | "product"
     | "rule-engine"
     | "system-management-user"
+    | "tenant-homepage"
     | "test"
     | "user-center"
     | "visualization"
@@ -250,6 +252,7 @@ declare module "@elegant-router/types" {
     | "product_update-package"
     | "rule-engine"
     | "system-management-user_system-log"
+    | "tenant-homepage"
     | "test"
     | "user-center"
     | "visualization_big-screen"

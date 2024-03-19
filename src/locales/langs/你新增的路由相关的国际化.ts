@@ -63,7 +63,8 @@ export const czh_cn = {
   irrigation: '灌溉计划',
   irrigation_time: '定时灌溉',
   irrigation_group: '群灌计划',
-  irrigation_rotation: '轮灌计划'
+  irrigation_rotation: '轮灌计划',
+  'tenant-homepage': '首页'
 };
 
 export const cen = {
@@ -127,5 +128,6 @@ export const cen = {
   irrigation: 'Irrigation',
   irrigation_time: 'Irrigation Time',
   irrigation_group: 'Irrigation Group',
-  irrigation_rotation: 'Irrigation Rotation'
+  irrigation_rotation: 'Irrigation Rotation',
+  'tenant-homepage': 'home'
 };

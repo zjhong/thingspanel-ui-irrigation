@@ -164,7 +164,7 @@ const MAX_COUNT = 10;
 ### 目录说明
 
 ```
-soybean-admin
+ThingsPanel
 ├── .vscode                        //vscode插件和设置
 │   ├── extensions.json            //vscode推荐的插件
 │   ├── launch.json                //debug配置文件(debug Vue 和 TS)

@@ -13,6 +13,7 @@ const { load } = useScriptTag(TENCENT_MAP_SDK_URL);
 const domRef = ref<HTMLDivElement | null>(null);
 let map: any = null;
 let multiMarker: any = null;
+let infoWindow: any = null;
 const showMarker = (markerArr, bounds) => {
   // 判断标注点是否在范围内
   markerArr.forEach(item => {
@@ -27,7 +28,6 @@ const showMarker = (markerArr, bounds) => {
   });
 };
 let ignoreMapClick = false;
-let infoWindow;
 
 async function renderMap(devices) {
   await load(true);
@@ -91,7 +91,8 @@ async function renderMap(devices) {
   infoWindow = new TMap.InfoWindow({
     map,
     position: new TMap.LatLng(39.984104, 116.307503),
-    offset: { x: 0, y: -32 } // 设置信息窗相对position偏移像素
+    offset: { x: 0, y: -32 }, // 设置信息窗相对position偏移像素
+    enableCustom: true
   });
   infoWindow.close();
   // 监听地图的点击事件
@@ -118,6 +119,7 @@ async function renderMap(devices) {
     // 挂载这个实例，并获取它的 HTML
     const html = app.mount(document.createElement('div')).$el.outerHTML;
     // 设置infoWindow
+
     infoWindow.open(); // 打开信息窗
     infoWindow.setPosition(evt.geometry.position); // 设置信息窗位置
     infoWindow.setContent(html); // 设置信息窗内容

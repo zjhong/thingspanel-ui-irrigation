@@ -44,6 +44,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "device_grouping-details": () => import("@/views/device/grouping-details/index.vue"),
   device_grouping: () => import("@/views/device/grouping/index.vue"),
   device_manage: () => import("@/views/device/manage/index.vue"),
+  device_template: () => import("@/views/device/template/index.vue"),
   "function_hide-child_one": () => import("@/views/function/hide-child/one/index.vue"),
   "function_hide-child_three": () => import("@/views/function/hide-child/three/index.vue"),
   "function_hide-child_two": () => import("@/views/function/hide-child/two/index.vue"),

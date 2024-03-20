@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-
+import { useRouter } from "vue-router";
 defineOptions({
   name: 'UserAvatar'
 });
@@ -14,7 +14,7 @@ defineOptions({
 const authStore = useAuthStore();
 const { routerPushByKey, toLogin } = useRouterPush();
 const { SvgIconVNode } = useSvgIconRender(SvgIcon);
-
+const router = useRouter();
 function loginOrRegister() {
   toLogin();
 }
@@ -66,8 +66,11 @@ function logout() {
 }
 
 function handleDropdown(key: DropdownKey) {
-  if (key === 'logout') {
+  if (key === "logout") {
     logout();
+  } else if (key === "user-center") {
+    console.log("个人中心");
+    router.push("/personal-center");
   } else {
     routerPushByKey(key);
   }

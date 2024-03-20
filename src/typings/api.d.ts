@@ -81,6 +81,7 @@ declare namespace Api {
       /** 用户角色类型 */
       roles?: string[];
       authority: string;
+      [key:string] :any;
     }
   }
   /**

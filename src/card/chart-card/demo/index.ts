@@ -11,9 +11,10 @@ export default {
   configForm: defineAsyncComponent(() => import('./card-config.vue')),
   preset: {
     dataSource: {
-      origin: 'system',
+      origin: 'device',
       sourceNum: 1,
-      systemSource: [{}]
+      systemSource: [{}],
+      deviceSource: [{}]
     },
     config: {
       name: '123'

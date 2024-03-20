@@ -127,6 +127,14 @@ onMounted(() => {
 onUpdated(() => {
   deviceCount.value = state.data.dataSource.deviceSource.length;
 });
+
+onMounted(() => {
+  deviceCount.value = state.data.dataSource.deviceSource.length;
+  getDeviceList();
+});
+onUpdated(() => {
+  deviceCount.value = state.data.dataSource.deviceSource.length;
+});
 </script>
 
 <template>

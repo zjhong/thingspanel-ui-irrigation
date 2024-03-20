@@ -21,3 +21,11 @@ export const PutBoard = async (params: any) => {
 export const DelBoard = async (params: string) => {
   return await request.delete<any>(`/board/${params}`);
 };
+
+export const deviceList = async (params: any) => {
+  return await request.get<any>(`/board/${params}`);
+};
+
+export const deviceMetricsList = async (params: any) => {
+  return await request.get<any>(`/board/${params}`);
+};

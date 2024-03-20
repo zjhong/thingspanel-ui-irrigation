@@ -42,7 +42,6 @@ watch(props, pr => {
   }
 });
 const selectCard = (item: ICardDefine) => {
-  console.log(0);
   state.curCardData = {
     cardId: item.id,
     type: item.type,
@@ -71,72 +70,96 @@ const selectCard = (item: ICardDefine) => {
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
-    <div class="flex">
-      <div class="flex-1">
+    <div class="h-[calc(100vh_-_150px)] flex">
+      <div class="mr-2 h-full flex-center flex-1 justify-center">
         <div v-if="!state.curCardData?.cardId" class="mt-32">
           <NEmpty description="请选择要添加的卡片"></NEmpty>
         </div>
-        <div :class="!data ? 'mr-10' : ''">
-          <div
-            v-if="state.curCardData?.cardId"
-            class="mt-2 h-[230px] flex items-center justify-center overflow-y-auto rounded bg-[#f6f9f8] dark:bg-[#101014]"
-          >
-            <div class="w-[300px]">
-              <CardItem :data="state.curCardData as any" />
-            </div>
-          </div>
-          <div class="pt-5">
-            <div class="h-[calc(100vh_-_450px)]">
-              <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
-            </div>
-            <div
-              class="flex justify-center justify-center border-t border-t border-gray-200 pt-3 space-x-5 dark:border-gray-200/10"
-            >
-              <NButton @click="emit('update:open', false)">取消</NButton>
-              <NButton type="primary" @click="save">添加卡片</NButton>
-            </div>
+
+        <div
+          v-if="state.curCardData?.cardId"
+          class="mr-4 mt-2 h-full w-full flex flex-col justify-center bg-[#f6f9f8] dark:bg-[#101014]"
+        >
+          <div id="panel_view" class="w-full overflow-x-auto p-4">
+            <CardItem :data="state.curCardData as any" />
           </div>
         </div>
       </div>
+      <div class="m-0 h-full w-400px p-0">
+        <n-split direction="vertical">
+          <template #1>
+            <NTabs type="line" animated class="h-full">
+              <NTabPane
+                v-for="item1 in [
+                  { tab: '系统', type: 'builtin' },
+                  { tab: '设备', type: 'device' },
+                  { tab: '插件', type: 'plugin' },
+                  { tab: '图表', type: 'chart' }
+                ]"
+                :key="item1.type"
+                class="h-full"
+                :name="item1.type"
+                :tab="item1.tab"
+              >
+                <n-scrollbar style="height: 100%">
+                  <n-grid :x-gap="10" :y-gap="10" :cols="2">
+                    <n-gi v-for="item in PanelCards[item1.type]" :key="item.id">
+                      <div
+                        class="w-195px cursor-pointer overflow-hidden border rounded p-2px duration-200"
+                        :style="
+                          item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
+                        "
+                        @mousedown.prevent=""
+                        @click="selectCard(item)"
+                      >
+                        <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
+                        <div class="h-120px w-full">
+                          <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                        </div>
+                      </div>
+                    </n-gi>
+                  </n-grid>
+                </n-scrollbar>
+              </NTabPane>
+            </NTabs>
+            <div style="height: 8px"></div>
+          </template>
+          <template #2>
+            <div class="mt-4 h-full flex-col justify-start">
+              <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
+            </div>
+          </template>
+        </n-split>
+      </div>
+    </div>
 
-      <div v-if="!data" class="w-[400px]">
-        <NTabs type="line" animated>
-          <NTabPane name="builtin" tab="系统">
-            <NGrid x-gap="10" y-gap="10" :cols="2">
-              <NGridItem v-for="item in PanelCards.builtin" :key="item.id">
-                <div
-                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
-                  @mousedown.prevent=""
-                  @click="selectCard(item)"
-                >
-                  <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
-                  <div>
-                    <img :src="item.poster" alt="" class="w-full object-cover" />
-                  </div>
-                </div>
-              </NGridItem>
-            </NGrid>
-          </NTabPane>
-          <NTabPane name="device" tab="设备"></NTabPane>
-          <NTabPane name="plugin" tab="插件"></NTabPane>
-          <NTabPane name="chart" tab="图表">
-            <NGrid x-gap="10" y-gap="10" :cols="2">
-              <NGridItem v-for="item in PanelCards.chart" :key="item.id">
-                <div
-                  class="cursor-pointer overflow-hidden border border-gray-200 rounded duration-200 dark:border-gray-200/10"
-                  @mousedown.prevent=""
-                  @click="selectCard(item)"
-                >
-                  <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
-                  <div>
-                    <img :src="item.poster" alt="" class="w-full object-cover" />
-                  </div>
-                </div>
-              </NGridItem>
-            </NGrid>
-          </NTabPane>
-        </NTabs>
+    <div class="mt-4 flex flex-center border-t">
+      <div class="mt-4">
+        <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
+        <NButton type="primary" @click="save">添加卡片</NButton>
       </div>
     </div>
   </NModal>
 </template>
+
+<style scoped>
+/* 滚动条的宽度 */
+#panel_view::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* 滚动条的轨道 */
+#panel_view::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* 滚动条的滑块 */
+#panel_view::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* 滚动条的滑块：鼠标悬停 */
+#panel_view::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+</style>

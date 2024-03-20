@@ -15,9 +15,18 @@ export interface ICardData {
     origin: 'system' | 'device';
     sourceNum?: number; // 不填写即为 1-任意多个，如需固定数量，填写整数
     systemSource?: { type?: number; name?: string }[];
-    deviceSource?: { device?: string; norm?: string; name?: string }[];
+    deviceSource?: {
+      deviceId?: string;
+      deviceMetrics?: string;
+      name?: string;
+      metricsId?: string;
+      metricsName?: string;
+      metricsOptions?: any[];
+      metricsShow: boolean;
+    }[];
   };
 }
+
 export interface ICardView {
   x: number;
   y: number;
@@ -28,26 +37,31 @@ export interface ICardView {
 }
 
 export interface ICardDefine {
-  component: any;
+  component: any; // 卡片组件，一般就是 ./component.vue
   remoteId?: string;
-  id: string;
-  title: string;
-  poster: string; // 示例图
-  type: 'builtin' | 'device' | 'plugin' | 'chart';
+  id: string; // 卡片唯一标识，按照card_type_cardName命名不会错
+  title: string; // 卡片标题，英文，后期作为国际化key
+  poster: string; // 示例图 尺寸193*120
+  type: 'builtin' | 'device' | 'plugin' | 'chart'; // 卡片类型
   // 不存在就是all
   scene?: 'mobile' | 'pc' | 'all';
-  configForm?: any;
+  configForm?: any; // 卡片配置文件，一般就是 card-config.vue
   // 初始化设置参数（可选）
   preset?: {
     config?: object;
     dataSource?: ICardData['dataSource'];
     basicSettings?: ICardData['basicSettings'];
+    iCardViewDefault?: {
+      w?: number; // 卡片初始占几行，尽量配一下
+      h?: number; // 卡片初始大几列，尽量配一下
+    };
   };
 }
 
 export interface ICardFormIns {
   setCard: (card?: ICardData | null) => void;
 }
+
 export interface IConfigCtx {
   config: Record<string, any>;
   view?: boolean; // 预览模式

@@ -14,6 +14,10 @@ export default class Device {
   }
 }
 
+export const statisticBatch = async (params: any) => {
+  return await request.post<any>('/kv/statistic/batch', { params });
+};
+
 /** 获取设备分组 */
 export const getDeviceGroup = async (params: any) => {
   return await request.get<any>('/device/group', { params });

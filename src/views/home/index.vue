@@ -48,15 +48,7 @@ onMounted(getLayout);
     </n-result>
   </div>
 
-  <CardRender
-    v-else
-    ref="cr"
-    v-model:layout="layout"
-    :is-preview="true"
-    :col-num="12"
-    :default-card-col="4"
-    :row-height="65"
-  />
+  <CardRender v-else v-model:layout="layout" :is-preview="true" :col-num="12" :default-card-col="4" :row-height="65" />
 </template>
 
 <style scoped></style>

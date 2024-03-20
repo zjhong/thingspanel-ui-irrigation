@@ -93,7 +93,7 @@ const deviceSelectChange = async (v, item) => {
   console.log(v);
   const res = await deviceMetricsList(v);
   console.log(res.data);
-  item.metricsOptions = res.data;
+  item.metricsOptions = res?.data || [];
 };
 const metricsOptionRender = (info, item) => {
   return (

@@ -32,4 +32,5 @@ yarn.lock
 env.config.ts
 settings.json
 vite.config.ts.timestamp-*-*.mjs
-vite.config.ts.timestamp-1234567890123-abcdefg.mjs
+.env
+.env*

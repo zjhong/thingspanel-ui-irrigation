@@ -2,13 +2,13 @@
 import type { ICardData } from '@/components/panel/card';
 import LineChart from '../modules/line-chart.vue';
 
-defineProps<{
+const props = defineProps<{
   card: ICardData;
 }>();
 </script>
 
 <template>
   <NCard :bordered="false" class="card-wrapper">
-    <LineChart />
+    <LineChart :card="props.card" />
   </NCard>
 </template>

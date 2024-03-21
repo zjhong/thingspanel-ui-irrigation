@@ -2,7 +2,7 @@
   "name": "tp-tenant",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.15.3",
+  "packageManager": "pnpm@8.15.4",
   "description": "ThingsPanel",
   "author": {
     "name": "ThingsPanle"
@@ -72,6 +72,7 @@
     "vditor": "3.9.6",
     "vue": "3.4.19",
     "vue-draggable-plus": "0.3.5",
+    "vue-echarts": "^6.6.9",
     "vue-i18n": "9.9.1",
     "vue-router": "4.2.5",
     "vue3-drr-grid-layout": "^1.9.7",

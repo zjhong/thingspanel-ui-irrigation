@@ -77,7 +77,7 @@ const deviceCountUpdate = v => {
   state.data.dataSource.deviceCount = v;
   if (state.data.dataSource.deviceSource.length < v) {
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i <= v; i++) {
+    for (let i = 0; i <= v - state.data.dataSource.deviceSource.length; i++) {
       state.data.dataSource.deviceSource.push({});
     }
   }

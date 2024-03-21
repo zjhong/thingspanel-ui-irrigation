@@ -1,5 +1,10 @@
 import { defineStore } from 'pinia';
 import { fetchThemeSetting } from '@/service/api/setting';
+import { localStg } from '@/utils/storage';
+import { createServiceConfig } from '~/env.config';
+
+const { otherBaseURL } = createServiceConfig(import.meta.env);
+const url = new URL(otherBaseURL.demo);
 
 type SysSetting = Omit<Api.GeneralSetting.ThemeSetting, 'id'>;
 export const useSysSettingStore = defineStore('sys-setting', {
@@ -18,6 +23,11 @@ export const useSysSettingStore = defineStore('sys-setting', {
         const list: Api.GeneralSetting.ThemeSetting[] = data.list;
         if (list.length) {
           const setting: Api.GeneralSetting.ThemeSetting = list[0];
+          setting.logo_background = setting.logo_background ? url.origin + setting.logo_background.slice(1) : '';
+          setting.logo_loading = setting.logo_loading ? url.origin + setting.logo_loading.slice(1) : '';
+          setting.logo_cache = setting.logo_cache ? url.origin + setting.logo_cache.slice(1) : '';
+          setting.home_background = setting.home_background ? url.origin + setting.home_background.slice(1) : '';
+          localStg.set('logoLoading', setting.logo_loading);
           Object.assign(this.$state, setting);
         }
       }

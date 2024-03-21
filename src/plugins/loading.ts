@@ -6,6 +6,7 @@ import systemLogo from '@/assets/svg-icon/logo.svg?raw';
 
 export function setupLoading() {
   const themeColor = localStg.get('themeColor') || '#646cff';
+  const logoLoading = localStg.get('logoLoading') || '';
 
   const { r, g, b } = getRgbOfColor(themeColor);
 
@@ -18,7 +19,9 @@ export function setupLoading() {
     'right-0 bottom-0 animate-delay-1500'
   ];
 
-  const logoWithClass = systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
+  const logoWithClass = logoLoading
+    ? `<img src="${logoLoading}">`
+    : systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
 
   const dot = loadingClasses
     .map(item => {

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
 import * as echarts from 'echarts';
 import { tenant } from '@/service/api';
+import { $t } from '@/locales';
 const numberAnimationInstRef = ref<NumberAnimationInst | null>(null);
 
 // 获取 echats 要渲染的dom
@@ -37,14 +38,20 @@ const init: () => void = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['2月', '3月', '4月', '5月', '6月']
+      data: [
+        $t('dashboard_panel.cardName.date.february'),
+        $t('dashboard_panel.cardName.date.march'),
+        $t('dashboard_panel.cardName.date.april'),
+        $t('dashboard_panel.cardName.date.may'),
+        $t('dashboard_panel.cardName.date.june')
+      ]
     },
     yAxis: {
       type: 'value'
     },
     series: [
       {
-        name: '租户',
+        name: $t('dashboard_panel.cardName.tenant'),
         type: 'line',
         stack: 'Total',
         data: user_list_month
@@ -98,16 +105,16 @@ getData();
 <template>
   <div>
     <div class="header">
-      租户数量
+      {{ $t('dashboard_panel.cardName.tenantNumLine') }}
       <n-number-animation ref="numberAnimationInstRef" :to="tenantNum" />
     </div>
     <div class="content-data">
       <div class="content-data-item">
-        <span>昨日新增</span>
+        <span>{{ $t('dashboard_panel.cardName.yesterdayAdd') }}</span>
         <n-number-animation ref="numberAnimationInstRef" :to="user_added_yesterday" />
       </div>
       <div class="content-data-item">
-        <span>上月新增</span>
+        <span>{{ $t('dashboard_panel.cardName.lastMonthAdd') }}</span>
         <n-number-animation ref="numberAnimationInstRef" :to="user_added_month" />
       </div>
     </div>

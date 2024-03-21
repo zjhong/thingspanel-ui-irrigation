@@ -6,5 +6,5 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'line'
+  title: 'dashboard_panel.cardName.tenantNumLine'
 } as ICardDefine;

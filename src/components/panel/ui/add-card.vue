@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
+import { $t } from '~/src/locales';
 
 const props = defineProps<{
   open: boolean;
@@ -137,7 +138,7 @@ onMounted(() => {
                         @mousedown.prevent=""
                         @click="selectCard(item)"
                       >
-                        <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ item.title }}</div>
+                        <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
                         <div class="h-120px w-full">
                           <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                         </div>

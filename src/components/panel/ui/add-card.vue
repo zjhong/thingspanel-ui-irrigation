@@ -1,9 +1,22 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
 
+const props = defineProps<{
+  open: boolean;
+  data?: ICardData | null;
+}>();
 const formRef = ref<ICardFormIns>();
+
+const tabValue = ref('builtin');
+
+const tabList = [
+  { tab: '系统', type: 'builtin' },
+  { tab: '设备', type: 'device' },
+  { tab: '插件', type: 'plugin' },
+  { tab: '图表', type: 'chart' }
+];
 const state = reactive({
   curCardData: null as null | Record<string, any>
 });
@@ -14,13 +27,25 @@ const emit = defineEmits<{
 }>();
 const save = () => {
   emit('update:open', false);
+
+  if (state && state.curCardData && state.curCardData.dataSource && state.curCardData.dataSource.deviceSource) {
+    state.curCardData.dataSource.deviceSource = state.curCardData.dataSource.deviceSource.filter(
+      item => Object.keys(item).length > 0
+    );
+    if (
+      state.curCardData.dataSource.deviceCount > 1 &&
+      state.curCardData.dataSource.deviceSource.length > state.curCardData.dataSource.deviceCount
+    ) {
+      state.curCardData.dataSource.deviceSource.splice(state.curCardData.dataSource.deviceCount);
+    }
+    if (state.curCardData.dataSource.deviceSource.length === 0) {
+      state.curCardData.dataSource.deviceSource = [{}];
+    }
+  }
+
   emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
 
-const props = defineProps<{
-  open: boolean;
-  data?: ICardData | null;
-}>();
 const copy = (data: object) => JSON.parse(JSON.stringify(data));
 watch(props, pr => {
   if (pr.open) {
@@ -58,6 +83,10 @@ const selectCard = (item: ICardDefine) => {
   formRef.value?.setCard(state.curCardData as any);
   console.log(2);
 };
+
+onMounted(() => {
+  tabValue.value = props?.data?.type || 'builtin';
+});
 </script>
 
 <template>
@@ -66,7 +95,7 @@ const selectCard = (item: ICardDefine) => {
     preset="dialog"
     title="配置"
     size="huge"
-    :style="{ maxWidth: '1200px', width: !data ? 'calc(100vw - 100px)' : '700px', minHeight: 'calc(100vh - 100px)' }"
+    :style="{ maxWidth: '1200px', width: 'calc(100vw - 100px)', minHeight: 'calc(100vh - 100px)' }"
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
@@ -80,7 +109,7 @@ const selectCard = (item: ICardDefine) => {
           v-if="state.curCardData?.cardId"
           class="mr-4 mt-2 h-full w-full flex flex-col justify-center bg-[#f6f9f8] dark:bg-[#101014]"
         >
-          <div id="panel_view" class="w-full overflow-x-auto p-4">
+          <div id="panel_view" class="w-full overflow-y-auto p-4">
             <CardItem :data="state.curCardData as any" />
           </div>
         </div>
@@ -88,19 +117,15 @@ const selectCard = (item: ICardDefine) => {
       <div class="m-0 h-full w-400px p-0">
         <n-split direction="vertical">
           <template #1>
-            <NTabs type="line" animated class="h-full">
-              <NTabPane
-                v-for="item1 in [
-                  { tab: '系统', type: 'builtin' },
-                  { tab: '设备', type: 'device' },
-                  { tab: '插件', type: 'plugin' },
-                  { tab: '图表', type: 'chart' }
-                ]"
-                :key="item1.type"
-                class="h-full"
-                :name="item1.type"
-                :tab="item1.tab"
-              >
+            <NTabs
+              type="line"
+              default-value="builtin"
+              :value="tabValue"
+              animated
+              class="h-full"
+              @update:value="value => (tabValue = value)"
+            >
+              <NTabPane v-for="item1 in tabList" :key="item1.type" class="h-full" :name="item1.type" :tab="item1.tab">
                 <n-scrollbar style="height: 100%">
                   <n-grid :x-gap="10" :y-gap="10" :cols="2">
                     <n-gi v-for="item in PanelCards[item1.type]" :key="item.id">
@@ -136,7 +161,7 @@ const selectCard = (item: ICardDefine) => {
     <div class="mt-4 flex flex-center border-t">
       <div class="mt-4">
         <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
-        <NButton type="primary" @click="save">添加卡片</NButton>
+        <NButton type="primary" @click="save">{{ data ? '编辑卡片' : '添加卡片' }}</NButton>
       </div>
     </div>
   </NModal>

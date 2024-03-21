@@ -72,7 +72,9 @@ defineExpose({
 // deviceMetricsList;
 const deviceOption = ref<SelectOption[]>();
 const deviceCount = ref();
+
 const deviceCountUpdate = v => {
+  state.data.dataSource.deviceCount = v;
   if (state.data.dataSource.deviceSource.length < v) {
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i <= v; i++) {
@@ -120,20 +122,19 @@ const metricsOptionRender = (info, item) => {
     </n-card>
   );
 };
-onMounted(() => {
-  deviceCount.value = state.data.dataSource.deviceSource.length;
-  getDeviceList();
-});
+
 onUpdated(() => {
-  deviceCount.value = state.data.dataSource.deviceSource.length;
+  deviceCount.value = state?.data?.dataSource?.deviceSource?.length || 1;
+  if (state.data.type === 'chart') {
+    getDeviceList();
+  }
 });
 
 onMounted(() => {
-  deviceCount.value = state.data.dataSource.deviceSource.length;
-  getDeviceList();
-});
-onUpdated(() => {
-  deviceCount.value = state.data.dataSource.deviceSource.length;
+  deviceCount.value = state?.data?.dataSource?.deviceSource?.length || 1;
+  if (state.data.type === 'chart') {
+    getDeviceList();
+  }
 });
 </script>
 

@@ -1,11 +1,11 @@
 export interface ICardData {
-  type: ICardDefine['type'];
-  cardId: string;
+  type?: ICardDefine['type'];
+  cardId?: string;
   // 组件自定义配置
   config?: Record<string, any>;
-  title: string;
+  title?: string;
   // 基础配置
-  basicSettings: {
+  basicSettings?: {
     showTitle?: boolean;
     title?: string;
   };

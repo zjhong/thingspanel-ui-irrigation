@@ -83,7 +83,8 @@ const option = ref({
 
 watchEffect(() => {
   option.value.series =
-    props.card?.dataSource?.deviceSource?.map((i, index) => {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.card?.dataSource?.deviceSource?.slice(0, props.card?.dataSource?.deviceCount || 1).map((i, index) => {
       let str: any = '';
       str = i?.metricsId || '-';
       str += i?.metricsName || '-';
@@ -125,6 +126,6 @@ watchEffect(() => {
 
 <style scoped>
 .chart {
-  height: 300px;
+  min-height: 300px;
 }
 </style>

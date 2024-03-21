@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
+import { $t } from '@/locales';
+
 const active: any = ref('0');
 const submit: (item: any) => void = item => {
   active.value = item.id;
@@ -19,49 +21,49 @@ const weatherList: WeatherItem[] = reactive([
     id: '0',
     temperature: '26°',
     humidity: '54%',
-    text: 'Mon',
+    text: $t('dashboard_panel.cardName.week.mon'),
     icons: 'sunlight'
   },
   {
     id: '1',
     temperature: '24°',
     humidity: '43%',
-    text: 'Tue',
+    text: $t('dashboard_panel.cardName.week.tue'),
     icons: 'cloudy'
   },
   {
     id: '2',
     temperature: '26°',
     humidity: '65%',
-    text: 'Wed',
+    text: $t('dashboard_panel.cardName.week.wed'),
     icons: 'rain'
   },
   {
     id: '3',
     temperature: '26°',
     humidity: '72%',
-    text: 'Thur',
+    text: $t('dashboard_panel.cardName.week.thur'),
     icons: 'snow'
   },
   {
     id: '4',
     temperature: '25°',
     humidity: '58%',
-    text: 'Fri',
+    text: $t('dashboard_panel.cardName.week.fri'),
     icons: 'yin'
   },
   {
     id: '5',
     temperature: '24°',
     humidity: '64%',
-    text: 'Sat',
+    text: $t('dashboard_panel.cardName.week.sat'),
     icons: 'sunlight'
   },
   {
     id: '6',
     temperature: '24°',
     humidity: '64%',
-    text: 'Sat',
+    text: $t('dashboard_panel.cardName.week.sun'),
     icons: 'cloudy'
   }
 ]);
@@ -70,7 +72,7 @@ const weatherList: WeatherItem[] = reactive([
 <template>
   <div class="flex flex-col-center">
     <header class="w-full flex flex-justify-between flex-items-center">
-      <div class="header-title font-500">最近七天天气概况</div>
+      <div class="header-title font-500">{{ $t('dashboard_panel.cardName.sevenDayWeather') }}</div>
     </header>
     <div class="weather h-full w-full flex flex-justify-between flex-items-center">
       <div

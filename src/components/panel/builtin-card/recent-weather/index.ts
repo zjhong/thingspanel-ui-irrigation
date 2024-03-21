@@ -6,7 +6,7 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'recent-weather',
+  title: 'dashboard_panel.cardName.weatherOverview',
   w: 619,
   h: 233
 } as ICardDefine;

@@ -1,10 +1,12 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { $t } from '@/locales';
+</script>
 
 <template>
   <div class="device flex-col flex-justify-center flex-items-center">
     <div class="device-top h-full w-full flex flex-justify-between flex-items-center">
       <div class="left h-full flex-col">
-        <span>设备总数</span>
+        <span>{{ $t('dashboard_panel.cardName.deviceNum') }}</span>
         <span>7</span>
       </div>
       <SvgIcon local-icon="device" class="device-icon" />
@@ -12,15 +14,15 @@
     <div class="device-bottom m-t3 w-full flex flex-justify-between flex-content-start flex-items-center">
       <div class="device-bottom-state flex flex-items-center">
         <SvgIcon local-icon="on-line" class="device_bottom-icon" />
-        <span>在线 7</span>
+        <span>{{ $t('dashboard_panel.cardName.onLine') }} 7</span>
       </div>
       <div class="device-bottom-state flex flex-items-center">
         <SvgIcon local-icon="offline" class="device_bottom-icon" />
-        <span>离线 0</span>
+        <span>{{ $t('dashboard_panel.cardName.offline') }} 0</span>
       </div>
       <div class="device-bottom-state flex flex-items-center">
         <SvgIcon local-icon="online-rate1" class="device_bottom-icon" />
-        <span>在线率 100%</span>
+        <span>{{ $t('dashboard_panel.cardName.onlineRate') }} 100%</span>
         <SvgIcon local-icon="online-rate2" class="device_bottom-icon" />
       </div>
     </div>

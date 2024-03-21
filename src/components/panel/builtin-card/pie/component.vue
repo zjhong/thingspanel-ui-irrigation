@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
 import * as echarts from 'echarts';
 import { totalNumber } from '@/service/api';
+import { $t } from '@/locales';
 const numberAnimationInstRef = ref<NumberAnimationInst | null>(null);
 
 // 设备总数
@@ -24,7 +25,7 @@ const getData: () => void = async () => {
       notActiveNum.value = deviceNum.value - activeNum.value;
       // 计算激活率
       const rate = activeNum.value === 0 || deviceNum.value === 0 ? 0 : (activeNum.value / deviceNum.value) * 100;
-      activeRateNum.value = Number(rate.toFixed(4)); // 转换为数字并保留四位小数
+      activeRateNum.value = Number(rate.toFixed(2)); // 转换为数字并保留四位小数
     } else {
       console.error('Data does not contain the required properties or they are not numbers.');
     }
@@ -79,8 +80,8 @@ const init: () => void = () => {
           borderWidth: 1 // 设置边框宽度
         },
         data: [
-          { value: 10000, name: '已激活' },
-          { value: 5005, name: '未激活' }
+          { value: 10000, name: $t('dashboard_panel.cardName.active') },
+          { value: 5005, name: $t('dashboard_panel.cardName.notActive') }
         ],
         emphasis: {
           itemStyle: {
@@ -127,20 +128,20 @@ onMounted(() => {
 <template>
   <div>
     <div class="header">
-      设备总数
+      {{ $t('dashboard_panel.cardName.deviceNumPie') }}
       <n-number-animation ref="numberAnimationInstRef" :to="deviceNum" />
     </div>
     <div class="content-data">
       <div>
-        <span>已激活</span>
+        <span>{{ $t('dashboard_panel.cardName.active') }}</span>
         <n-number-animation ref="numberAnimationInstRef" :to="activeNum" />
       </div>
       <div>
-        <span>未激活</span>
+        <span>{{ $t('dashboard_panel.cardName.notActive') }}</span>
         <n-number-animation ref="numberAnimationInstRef" :to="notActiveNum" />
       </div>
       <div>
-        <span>激活率</span>
+        <span>{{ $t('dashboard_panel.cardName.activationRate') }}</span>
         <span>{{ activeRateNum }}%</span>
       </div>
     </div>

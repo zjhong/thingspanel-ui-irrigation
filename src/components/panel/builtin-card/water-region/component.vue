@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
+import { $t } from '@/locales';
+
 interface AirItem {
   id: string;
   icons: string;
@@ -12,37 +14,37 @@ const airList: AirItem[] = reactive([
     id: '1',
     icons: 'air-humidity',
     air: '102%',
-    text: '土壤湿度'
+    text: $t('dashboard_panel.cardName.soilMoisture')
   },
   {
     id: '2',
     icons: 'air-temperature',
     air: '20.5°C',
-    text: '土壤温度'
+    text: $t('dashboard_panel.cardName.temperature')
   },
   {
     id: '3',
     icons: 'air-conductivity',
     air: '14%',
-    text: '导电率'
+    text: $t('dashboard_panel.cardName.Conductivity')
   },
   {
     id: '4',
     icons: 'contain-potassium',
     air: '102%',
-    text: '含钾量'
+    text: $t('dashboard_panel.cardName.potassiumContent')
   },
   {
     id: '5',
     icons: 'contain-phosphorus',
     air: '20.5°C',
-    text: '含磷量'
+    text: $t('dashboard_panel.cardName.phosphorusContent')
   },
   {
     id: '6',
     icons: 'contain-nitrogen',
     air: '14%',
-    text: '含氮量'
+    text: $t('dashboard_panel.cardName.nitrogenContent')
   }
 ]);
 </script>
@@ -50,7 +52,7 @@ const airList: AirItem[] = reactive([
 <template>
   <div class="flex flex-col-center">
     <header class="w-full flex flex-justify-between flex-items-center">
-      <div class="header-title font-500">浇灌区域</div>
+      <div class="header-title font-500">{{ $t('dashboard_panel.cardName.irrigationArea') }}</div>
       <SvgIcon local-icon="more" class="more" />
     </header>
     <div v-for="index in 5" :key="index" class="row w-full flex flex-justify-between flex-items-center">
@@ -59,20 +61,20 @@ const airList: AirItem[] = reactive([
           <SvgIcon local-icon="map-icon" class="text-8" />
         </div>
         <div class="col-region flex-col-center">
-          <span>区域名称</span>
-          <span>玉米</span>
+          <span>{{ $t('dashboard_panel.cardName.areaName') }}</span>
+          <span>{{ $t('dashboard_panel.cardName.corn') }}</span>
         </div>
         <div class="col-type flex-col-center">
-          <span>喷灌沟灌</span>
-          <span>灌溉类型</span>
+          <span>{{ $t('dashboard_panel.cardName.SprinklerIrrigationDitchIrrigation') }}</span>
+          <span>{{ $t('dashboard_panel.cardName.irrigationTypes') }}</span>
         </div>
         <div class="col-size flex-col-center">
-          <span>100公顷</span>
-          <span>区域面积</span>
+          <span>100 {{ $t('dashboard_panel.cardName.hectare') }}</span>
+          <span>{{ $t('dashboard_panel.cardName.regionalArea') }}</span>
         </div>
         <div class="col-soil-type flex-col-center">
-          <span>沙壤土</span>
-          <span>土壤类型</span>
+          <span>{{ $t('dashboard_panel.cardName.sandyLoamSoil') }}</span>
+          <span>{{ $t('dashboard_panel.cardName.soil') }}</span>
         </div>
       </div>
       <div class="row-border"></div>

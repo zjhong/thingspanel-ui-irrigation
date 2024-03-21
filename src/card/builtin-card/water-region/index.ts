@@ -6,7 +6,7 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: 'water-region',
+  title: 'dashboard_panel.cardName.irrigationArea',
   w: 1000,
   h: 755
 } as ICardDefine;

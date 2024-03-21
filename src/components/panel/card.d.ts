@@ -15,6 +15,7 @@ export interface ICardData {
     origin: 'system' | 'device';
     sourceNum?: number; // 不填写即为 1-任意多个，如需固定数量，填写整数
     systemSource?: { type?: number; name?: string }[];
+    deviceCount?: number;
     deviceSource?: {
       deviceId?: string;
       deviceMetrics?: string;

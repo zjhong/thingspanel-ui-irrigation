@@ -97,7 +97,7 @@ onMounted(() => {
     preset="dialog"
     title="配置"
     size="huge"
-    :style="{ maxWidth: '1200px', width: 'calc(100vw - 100px)', minHeight: 'calc(100vh - 100px)' }"
+    :style="{ width: 'calc(100vw - 200px)', minHeight: 'calc(100vh - 100px)' }"
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
@@ -116,7 +116,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="m-0 h-full w-400px p-0">
+      <div class="m-0 h-full w-500px p-0">
         <n-split direction="vertical">
           <template #1>
             <NTabs
@@ -132,7 +132,7 @@ onMounted(() => {
                   <n-grid :x-gap="10" :y-gap="10" :cols="2">
                     <n-gi v-for="item in PanelCards[item1.type]" :key="item.id">
                       <div
-                        class="w-195px cursor-pointer overflow-hidden border rounded p-2px duration-200"
+                        class="w-240px cursor-pointer overflow-hidden border rounded p-2px duration-200"
                         :style="
                           item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
                         "
@@ -140,7 +140,7 @@ onMounted(() => {
                         @click="selectCard(item)"
                       >
                         <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
-                        <div class="h-120px w-full">
+                        <div class="h-148px w-full">
                           <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                         </div>
                       </div>

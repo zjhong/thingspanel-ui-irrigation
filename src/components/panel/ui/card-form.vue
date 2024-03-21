@@ -142,7 +142,7 @@ onMounted(() => {
   <div>
     <NTabs v-if="state.selectCard" v-model:value="state.tab" type="line" animated>
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
-        <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
+        <div :class="`${mobile ? '' : 'h-[calc(100vh_-_570px)] '} overflow-y-auto py-5`">
           <NForm>
             <NFormItem label="数据源类型">
               <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
@@ -176,7 +176,7 @@ onMounted(() => {
                 添加
               </NButton>
             </div>
-            <div v-if="state.data.dataSource?.origin === 'device'" class="h-full">
+            <div v-if="state.data.dataSource?.origin === 'device'">
               <n-input-number
                 v-model:value="deviceCount"
                 :min="1"

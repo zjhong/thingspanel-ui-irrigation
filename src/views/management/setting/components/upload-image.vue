@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { getCurrentInstance, ref, watch } from 'vue';
 // eslint-disable-next-line import/order
 import { createServiceConfig } from '~/env.config';
-// eslint-disable-next-line import/order
 import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
+import { getFileName } from '@/utils/common/tool';
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 defineOptions({ name: 'UploadFile' });
 
+const { proxy } = getCurrentInstance() as any;
 export interface Props {
-  /** 按钮文字 */
-  text: string;
+  modelValue: string;
   /** 选取文件的类型 */
   accept: string;
   /** 上传的文件类型 */
@@ -20,19 +20,41 @@ export interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  text: '',
+  modelValue: '',
   accept: 'image/png, image/jpeg, image/jpg, image/gif',
   fileType: () => ['png', 'jpeg', 'jpg', 'gif']
 });
 
 interface Emits {
-  (e: 'update:value', val: string): void;
+  (e: 'update:modelValue', val: string): void;
   (e: 'success', file: UploadFileInfo): void;
 }
 
 const emit = defineEmits<Emits>();
 
-async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileInfo[] }) {
+const fileList = ref<UploadFileInfo[]>([]);
+
+watch(
+  () => props.modelValue,
+  newVal => {
+    let list: UploadFileInfo[] = [];
+    if (newVal) {
+      list.push({
+        id: getFileName(newVal).split('.')[0],
+        name: getFileName(newVal),
+        url: url.value.origin + newVal.slice(1),
+        status: 'finished'
+      });
+    } else {
+      list = [];
+    }
+    proxy.$nextTick(() => {
+      fileList.value = list;
+    });
+  }
+);
+
+async function beforeUpload(data: { file: UploadFileInfo }) {
   let isImg: boolean = false;
   if (props.fileType.length) {
     let fileExtension = '';
@@ -57,17 +79,23 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
 function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) {
   const response = JSON.parse((event?.target as XMLHttpRequest).response);
   window.$message?.success(response.message);
-  emit('update:value', response.data.path);
+  emit('update:modelValue', response.data.path);
   emit('success', file);
 }
 
 function handleError({ event }: { event?: ProgressEvent }) {
   window.$message?.error((event?.target as XMLHttpRequest).response || '文件上传失败，请重试');
 }
+
+function handleRemove() {
+  emit('update:modelValue', '');
+  return true;
+}
 </script>
 
 <template>
   <NUpload
+    v-model:file-list="fileList"
     :action="url + '/file/up'"
     :headers="{
       'x-token': localStg.get('token') || ''
@@ -75,12 +103,12 @@ function handleError({ event }: { event?: ProgressEvent }) {
     :data="{
       type: 'image'
     }"
+    list-type="image-card"
     :accept="accept"
-    :show-file-list="false"
+    :max="1"
     @before-upload="beforeUpload"
     @finish="handleFinish"
+    @remove="handleRemove"
     @error="handleError"
-  >
-    <NButton type="primary">{{ text }}</NButton>
-  </NUpload>
+  ></NUpload>
 </template>

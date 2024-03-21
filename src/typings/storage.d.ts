@@ -30,5 +30,7 @@ declare namespace StorageType {
     overrideThemeFlag: string;
     /** The global tabs */
     globalTabs: App.Global.Tab[];
+    /** loading logo */
+    logoLoading: string;
   }
 }

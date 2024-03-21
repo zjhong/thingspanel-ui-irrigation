@@ -82,7 +82,7 @@ const bgColor = computed(() => {
     <NCard :bordered="false" class="relative z-4 w-auto rd-12px">
       <div class="w-300px sm:w-360px">
         <header class="flex-col-center justify-center">
-          <SystemLogo class="text-128px text-primary <sm:text-64px" />
+          <SystemLogo width="80" class="text-60px text-primary <sm:text-64px" />
           <!-- <NGradientText class="mb-6 mt--8" type="primary" :size="28">{{ $t('system.title') }}</NGradientText> -->
         </header>
         <main>

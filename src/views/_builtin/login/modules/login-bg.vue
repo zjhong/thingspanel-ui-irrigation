@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 // import { getColorPalette } from '@/utils'
 // import { CornerBottom, CornerTop } from './components'
-// eslint-disable-next-line import/order
-import { createServiceConfig } from '~/env.config';
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-const url = ref(new URL(otherBaseURL.demo));
 type SysSetting = Omit<Api.GeneralSetting.ThemeSetting, 'id'>;
 interface Props {
   /** 主题颜色 */
@@ -40,7 +36,7 @@ const bgColor = computed(() => {
       object-fit="cover"
       style="min-width: 100%; min-height: 100%"
       preview-disabled
-      :src="url.origin + bgColor?.slice(1)"
+      :src="bgColor"
       :img-props="{
         style: {
           minWidth: '100%'

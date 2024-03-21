@@ -34,10 +34,11 @@ const save = () => {
       item => Object.keys(item).length > 0
     );
     if (
-      state.curCardData.dataSource.deviceCount > 1 &&
+      state.curCardData.dataSource.deviceCount >= 1 &&
       state.curCardData.dataSource.deviceSource.length > state.curCardData.dataSource.deviceCount
     ) {
       state.curCardData.dataSource.deviceSource.splice(state.curCardData.dataSource.deviceCount);
+      console.log(state.curCardData.dataSource.deviceCount, ':', state.curCardData.dataSource.deviceSource);
     }
     if (state.curCardData.dataSource.deviceSource.length === 0) {
       state.curCardData.dataSource.deviceSource = [{}];

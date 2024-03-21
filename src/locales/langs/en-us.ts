@@ -165,7 +165,7 @@ const local: App.I18n.Schema = {
     component_table: 'Table',
     ...cen,
     'alarm_warning-message': '',
-    device_template: '',
+    device_template: 'device template',
     'personal-center': ''
   },
   page: {

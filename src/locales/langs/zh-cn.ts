@@ -164,7 +164,7 @@ const local: App.I18n.Schema = {
     component_card: '卡片',
     component_table: '表格',
     ...czh_cn,
-    device_template: '',
+    device_template: '设备模板',
     'personal-center': ''
   },
   page: {

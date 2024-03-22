@@ -6,11 +6,7 @@ export default {
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-<<<<<<< HEAD
-  title: '气象站',
-=======
   title: 'dashboard_panel.cardName.weatherStation',
->>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
   w: 619,
   h: 498
 } as ICardDefine;

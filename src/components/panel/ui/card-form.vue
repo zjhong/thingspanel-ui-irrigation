@@ -4,7 +4,7 @@ import type { SelectOption } from 'naive-ui';
 import { usePanelStore } from '@/store/modules/panel';
 import ConfigCtx from '@/components/panel/ui/config-ctx.vue';
 import type { ICardData, ICardDefine } from '@/components/panel/card';
-import { deviceList, deviceMetricsList } from '@/service/api';
+import { deviceListForPanel, deviceMetricsList } from '@/service/api';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
@@ -77,7 +77,7 @@ const deviceCountUpdate = v => {
   state.data.dataSource.deviceCount = v;
   if (state.data.dataSource.deviceSource.length < v) {
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i <= v; i++) {
+    for (let i = 0; i <= v - state.data.dataSource.deviceSource.length + 1; i++) {
       state.data.dataSource.deviceSource.push({});
     }
   }
@@ -87,7 +87,7 @@ const updateDropdownShow = (show: boolean, item) => {
 };
 
 const getDeviceList = async () => {
-  const res = await deviceList({});
+  const res = await deviceListForPanel({});
   deviceOption.value = res.data;
 };
 
@@ -142,7 +142,7 @@ onMounted(() => {
   <div>
     <NTabs v-if="state.selectCard" v-model:value="state.tab" type="line" animated>
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
-        <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
+        <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
             <NFormItem label="数据源类型">
               <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
@@ -176,7 +176,7 @@ onMounted(() => {
                 添加
               </NButton>
             </div>
-            <div v-if="state.data.dataSource?.origin === 'device'" class="h-full">
+            <div v-if="state.data.dataSource?.origin === 'device'">
               <n-input-number
                 v-model:value="deviceCount"
                 :min="1"
@@ -209,6 +209,7 @@ onMounted(() => {
                   :render-option="info => metricsOptionRender(info, item)"
                   @update:show="show => updateDropdownShow(show, item)"
                 ></NSelect>
+                <NInput style="max-width: 140px" />
               </div>
             </div>
           </NForm>

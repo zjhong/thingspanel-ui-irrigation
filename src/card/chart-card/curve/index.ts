@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
-import poster from '@/components/panel/chart-card/demo/poster.jpg';
 import type { ICardDefine } from '@/components/panel/card';
+import poster from './poster.png';
 
 export default {
   id: 'chart-curve',

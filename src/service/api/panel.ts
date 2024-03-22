@@ -20,7 +20,7 @@ export const DelBoard = async (params: string) => {
   return await request.delete<any>(`/board/${params}`);
 };
 
-export const deviceList = async (params: any) => {
+export const deviceListForPanel = async (params: any) => {
   return await request.get<any>('/device/tenant/list', params);
 };
 

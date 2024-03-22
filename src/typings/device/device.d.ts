@@ -60,6 +60,47 @@ declare namespace DeviceManagement {
     total: number;
   }
 
+  interface DeviceDetail {
+    id: string;
+    name: string;
+    voucher: string; // 凭证
+    tenant_id: string;
+    is_enabled: string; // 启用/禁用 enabled-启用 disabled-禁用 默认禁用，激活后默认启用
+    activate_flag: string; // 激活标志 inactive-未激活 active-已激活
+    created_at: string;
+    update_at: string;
+    device_number: string; // 设备编号
+    product_id: string; // 产品id
+    parent_id: string; // 网关id
+    lable: string; // 标签 单标签，英文逗号隔开
+    location: string; // 地理位置
+    sub_device_addr: string; // 子设备地址
+    current_version: string; // 固件版本
+    additional_info: string; // 附件信息 json字符串
+    protocol_config: string; // 协议插件设备配置 协议插件相关的设备配置
+    remark1: string;
+    remark2: string;
+    remark3: string;
+    device_config_id: string; // 设备配置id
+    batch_number: string; // 批次号
+    activate_at: string; // 激活时间
+    is_online: number; // 是否在线
+  }
+
+  interface telemetryData {
+    device_id: string;
+    key: string;
+    tenant_id: string;
+    ts: string;
+    value: number;
+    unit: string;
+    name: string;
+  }
+
+  interface telemetryCurrent {
+    data: telemetryData[];
+  }
+
   interface ConfigData {
     id: string;
     name: string;

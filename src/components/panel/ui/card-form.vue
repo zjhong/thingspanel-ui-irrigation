@@ -4,7 +4,7 @@ import type { SelectOption } from 'naive-ui';
 import { usePanelStore } from '@/store/modules/panel';
 import ConfigCtx from '@/components/panel/ui/config-ctx.vue';
 import type { ICardData, ICardDefine } from '@/components/panel/card';
-import { deviceList, deviceMetricsList } from '@/service/api';
+import { deviceListForPanel, deviceMetricsList } from '@/service/api';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
@@ -87,7 +87,7 @@ const updateDropdownShow = (show: boolean, item) => {
 };
 
 const getDeviceList = async () => {
-  const res = await deviceList({});
+  const res = await deviceListForPanel({});
   deviceOption.value = res.data;
 };
 

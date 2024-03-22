@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
+import { useMessage } from 'naive-ui';
 import { InformationCircleSharp } from '@vicons/ionicons5';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
@@ -10,9 +11,7 @@ const props = defineProps<{
   data?: ICardData | null;
 }>();
 const formRef = ref<ICardFormIns>();
-
 const tabValue = ref('builtin');
-
 const tabList = [
   { tab: '系统', type: 'builtin' },
   { tab: '设备', type: 'device' },
@@ -27,7 +26,44 @@ const emit = defineEmits<{
   (e: 'update:open', value: boolean): void;
   (e: 'save', value: any): void;
 }>();
+
+const copy = (data: object) => JSON.parse(JSON.stringify(data));
+const selectCard = (item: ICardDefine) => {
+  state.curCardData = {
+    cardId: item.id,
+    type: item.type,
+    title: item.title,
+    config: item.preset?.config || {},
+    basicSettings: item.preset?.basicSettings || {},
+    dataSource: item.preset?.dataSource || {
+      origin: 'system',
+      systemSource: [{}],
+      deviceSource: [{}]
+    }
+  };
+  formRef.value?.setCard(state.curCardData as any);
+};
+const message = useMessage();
+const widths = ref(['flex-[44]', 'flex-[54]', 'flex-[2]']);
+const count = ref<number>(2);
+const changeWidths = () => {
+  if (count.value === 1) {
+    widths.value = ['flex-[2]', 'flex-[44]', 'flex-[54]'];
+    count.value = 2;
+  } else {
+    widths.value = ['flex-[44]', 'flex-[54]', 'flex-[2]'];
+    count.value = 1;
+  }
+};
+
 const save = () => {
+  if (!state?.curCardData?.cardId) {
+    message.destroyAll();
+    message.warning('请先选一个卡片');
+    return;
+  }
+  count.value = 2;
+  changeWidths();
   emit('update:open', false);
 
   if (state && state.curCardData && state.curCardData.dataSource && state.curCardData.dataSource.deviceSource) {
@@ -48,8 +84,6 @@ const save = () => {
 
   emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
-
-const copy = (data: object) => JSON.parse(JSON.stringify(data));
 watch(props, pr => {
   if (pr.open) {
     if (pr.data) {
@@ -69,38 +103,10 @@ watch(props, pr => {
     }, 30);
   }
 });
-const selectCard = (item: ICardDefine) => {
-  state.curCardData = {
-    cardId: item.id,
-    type: item.type,
-    title: item.title,
-    config: item.preset?.config || {},
-    basicSettings: item.preset?.basicSettings || {},
-    dataSource: item.preset?.dataSource || {
-      origin: 'system',
-      systemSource: [{}],
-      deviceSource: [{}]
-    }
-  };
-  console.log(1);
-  formRef.value?.setCard(state.curCardData as any);
-  console.log(2);
-};
 
 onMounted(() => {
   tabValue.value = props?.data?.type || 'builtin';
 });
-const widths = ref(['flex-[44]', 'flex-[54]', 'flex-[2]']);
-const count = ref<number>(1);
-const changeWidths = () => {
-  if (count.value === 1) {
-    widths.value = ['flex-[2]', 'flex-[44]', 'flex-[54]'];
-    count.value = 2;
-  } else {
-    widths.value = ['flex-[44]', 'flex-[54]', 'flex-[2]'];
-    count.value = 1;
-  }
-};
 </script>
 
 <template>
@@ -110,8 +116,20 @@ const changeWidths = () => {
     title="配置"
     size="huge"
     :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
-    @close="emit('update:open', false)"
-    @mask-click="emit('update:open', false)"
+    @close="
+      () => {
+        count = 2;
+        changeWidths();
+        emit('update:open', false);
+      }
+    "
+    @mask-click="
+      () => {
+        count = 2;
+        changeWidths();
+        emit('update:open', false);
+      }
+    "
   >
     <div class="h-[calc(100vh_-_170px)] w-full flex">
       <div
@@ -183,6 +201,10 @@ const changeWidths = () => {
         "
         @mouseenter="
           () => {
+            if (!state?.curCardData?.cardId) {
+              message.destroyAll();
+              return message.warning('请先选一个卡片');
+            }
             count = 1;
             changeWidths();
           }
@@ -198,7 +220,18 @@ const changeWidths = () => {
     </div>
     <div class="h-60px flex flex-center border-t">
       <div>
-        <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
+        <NButton
+          class="mr-4"
+          @click="
+            () => {
+              count = 2;
+              changeWidths();
+              emit('update:open', false);
+            }
+          "
+        >
+          取消
+        </NButton>
         <NButton class="mr-4" type="primary" @click="save">确认</NButton>
       </div>
     </div>

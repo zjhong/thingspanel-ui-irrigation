@@ -81,7 +81,7 @@ declare namespace Api {
       /** 用户角色类型 */
       roles?: string[];
       authority: string;
-      [key:string] :any;
+      [key: string]: any;
     }
   }
   /**
@@ -305,7 +305,7 @@ declare namespace Api {
       /** 设备类型 */
       device_type: string | number;
       /** 协议类型 */
-      protocol_type: string | number;
+      protocol_type: string;
       /** 介绍 */
       description: string | null;
       /** HTTP服务地址 */

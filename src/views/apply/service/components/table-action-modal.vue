@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { serviceManagementDeviceTypeOptions, serviceManagementProtocolTypeOptions } from '@/constants/business';
+import { serviceManagementDeviceTypeOptions } from '@/constants/business';
 import { deepClone } from '@/utils/common/tool';
 import { addProtocolPlugin, editProtocolPlugin } from '@/service/api';
 import { createRequiredFormRule } from '@/utils/form/rule';
@@ -179,7 +179,8 @@ watch(
           <NSelect v-model:value="formModel.device_type" :options="serviceManagementDeviceTypeOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" label="协议类型" path="protocol_type">
-          <NSelect v-model:value="formModel.protocol_type" :options="serviceManagementProtocolTypeOptions" />
+          <NInput v-model:value="formModel.protocol_type" />
+          <!-- <NSelect v-model:value="formModel.protocol_type" :options="serviceManagementProtocolTypeOptions" /> -->
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" label="接入地址" path="access_address">
           <NInput v-model:value="formModel.access_address" placeholder="" />

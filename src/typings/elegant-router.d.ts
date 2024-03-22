@@ -28,6 +28,7 @@ declare module "@elegant-router/types" {
     "alarm": "/alarm";
     "alarm_notification-group": "/alarm/notification-group";
     "alarm_notification-record": "/alarm/notification-record";
+    "alarm_warning-message": "/alarm/warning-message";
     "apply": "/apply";
     "apply_service": "/apply/service";
     "automation": "/automation";
@@ -85,6 +86,7 @@ declare module "@elegant-router/types" {
     "multi-menu_second": "/multi-menu/second";
     "multi-menu_second_child": "/multi-menu/second/child";
     "multi-menu_second_child_home": "/multi-menu/second/child/home";
+    "personal-center": "/personal-center";
     "plugin": "/plugin";
     "plugin_charts": "/plugin/charts";
     "plugin_charts_antv": "/plugin/charts/antv";
@@ -165,6 +167,7 @@ declare module "@elegant-router/types" {
     | "manage"
     | "management"
     | "multi-menu"
+    | "personal-center"
     | "plugin"
     | "product"
     | "rule-engine"
@@ -199,6 +202,7 @@ declare module "@elegant-router/types" {
     | "about"
     | "alarm_notification-group"
     | "alarm_notification-record"
+    | "alarm_warning-message"
     | "apply_service"
     | "automation_linkage-edit"
     | "automation_scene-linkage"
@@ -237,6 +241,7 @@ declare module "@elegant-router/types" {
     | "management_user"
     | "multi-menu_first_child"
     | "multi-menu_second_child_home"
+    | "personal-center"
     | "plugin_charts_antv"
     | "plugin_charts_echarts"
     | "plugin_copy"

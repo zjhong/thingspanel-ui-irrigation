@@ -53,7 +53,13 @@ export const deviceList = async (params: any) => {
   return await request.get<DeviceManagement.DeviceDatas | any>(`/device`, { params });
 };
 
-/** 获取设备列表 */
+/** 获取设备详情 */
+export const deviceDetail = async (id: any) => {
+  const url = `/device/detail/${id}`;
+  return await request.get<DeviceManagement.DeviceDetail | any>(url);
+};
+
+/** 获取设备分组关系 */
 export const deviceGroupRelation = async (params: any) => {
   return await request.post<Api.BaseApi.Data>(`/device/group/relation`, params);
 };
@@ -155,4 +161,11 @@ export const dataScriptQuiz = async (params: any) => {
 /** 删除数据处理 */
 export const dataScriptDel = async (params: any) => {
   return await request.delete<Api.BaseApi.Data | any>(`data_script/${params.id}`);
+};
+
+/** 设备遥测当前值查询 * */
+
+export const telemetryDataCurrent = async (id: any) => {
+  const url = `/telemetry/datas/current/${id}`;
+  return await request.get<DeviceManagement.telemetryCurrent | any>(url);
 };

@@ -4,7 +4,7 @@ import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { serviceManagementDeviceTypeLabels, serviceManagementProtocolTypeLabels } from '@/constants/business';
+import { serviceManagementDeviceTypeLabels } from '@/constants/business';
 import { delProtocolPlugin, fetchProtocolPluginList } from '@/service/api';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
@@ -73,13 +73,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'protocol_type',
     title: '协议类型',
-    align: 'left',
-    render: row => {
-      if (row.protocol_type) {
-        return <span>{serviceManagementProtocolTypeLabels[row.protocol_type]}</span>;
-      }
-      return <span></span>;
-    }
+    align: 'left'
   },
   {
     key: 'access_address',

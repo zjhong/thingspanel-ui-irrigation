@@ -727,6 +727,76 @@ declare namespace App {
         pin: string;
         unpin: string;
       };
+      dashboard_panel: {
+        addKanBan: string;
+        cardName: {
+          date: {
+            january: string;
+            february: string;
+            march: string;
+            april: string;
+            may: string;
+            june: string;
+            july: string;
+            august: string;
+            september: string;
+            october: string;
+            november: string;
+            december: string;
+          };
+          week: {
+            mon: string;
+            tue: string;
+            wed: string;
+            thur: string;
+            fri: string;
+            sat: string;
+            sun: string;
+          };
+          bugNum: string;
+          deviceNum: string;
+          userNum: string;
+          regionNum: string;
+          tenantNumLine: string;
+          deviceNumPie: string;
+          weatherOverview: string;
+          irrigationArea: string;
+          weatherStation: string;
+          tenant: string;
+          onLine: string;
+          offline: string;
+          onlineRate: string;
+          yesterdayAdd: string;
+          lastMonthAdd: string;
+          active: string;
+          notActive: string;
+          activationRate: string;
+          sevenDayWeather: string;
+          spaceNum: string;
+          thisMonth: string;
+          areaName: string;
+          corn: string;
+          SprinklerIrrigationDitchIrrigation: string;
+          irrigationTypes: string;
+          hectare: string;
+          regionalArea: string;
+          sandyLoamSoil: string;
+          soil: string;
+          soilMoisture: string;
+          temperature: string;
+          Conductivity: string;
+          potassiumContent: string;
+          phosphorusContent: string;
+          nitrogenContent: string;
+          weatherStationData: string;
+          historyData: string;
+          windSpeed: string;
+          windDirection: string;
+          humidity: string;
+          pressure: string;
+          rainfall: string;
+        };
+      };
     };
 
     type GetI18nKey<T extends Record<string, unknown>, K extends keyof T = keyof T> = K extends string

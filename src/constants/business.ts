@@ -68,7 +68,8 @@ export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 
 /** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
 export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
-  1: '网关'
+  1: '直连设备',
+  2: '网关设备'
 };
 
 export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);

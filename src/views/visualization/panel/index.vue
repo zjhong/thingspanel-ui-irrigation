@@ -3,7 +3,7 @@ import { onMounted, reactive, ref } from 'vue';
 // import {useRouter} from 'vue-router';
 import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, useMessage } from 'naive-ui';
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
-import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api';
+import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api/index';
 import { useRouterPush } from '@/hooks/common/router';
 
 const { routerPushByKey } = useRouterPush();

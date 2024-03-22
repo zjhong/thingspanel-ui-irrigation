@@ -25,10 +25,13 @@ declare module 'vue' {
     FullScreen: typeof import('./../components/common/full-screen.vue')['default']
     GaodeMap: typeof import('./../components/data-table-page/modules/gaode-map.vue')['default']
     IconAntDesignReloadOutlined: typeof import('~icons/ant-design/reload-outlined')['default']
+<<<<<<< HEAD
     IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     IconLocalLogo: typeof import('~icons/local/logo')['default']
     'IconMaterialSymbols:contractEditOutline': typeof import('~icons/material-symbols/contract-edit-outline')['default']
     'IconMaterialSymbols:deleteOutline': typeof import('~icons/material-symbols/delete-outline')['default']
+=======
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     IconSelect: typeof import('./../components/custom/icon-select.vue')['default']
     ImageVerify: typeof import('./../components/custom/image-verify.vue')['default']
     JsonToForm: typeof import('./../components/json-to-form/index.vue')['default']
@@ -42,23 +45,30 @@ declare module 'vue' {
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCheckbox: typeof import('naive-ui')['NCheckbox']
-    NCheckboxGroup: typeof import('naive-ui')['NCheckboxGroup']
     NColorPicker: typeof import('naive-ui')['NColorPicker']
     NCountdown: typeof import('naive-ui')['NCountdown']
     NDataTable: typeof import('naive-ui')['NDataTable']
+<<<<<<< HEAD
     NDatePicker: typeof import('naive-ui')['NDatePicker']
+=======
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NDrawer: typeof import('naive-ui')['NDrawer']
     NDrawerContent: typeof import('naive-ui')['NDrawerContent']
     NDropdown: typeof import('naive-ui')['NDropdown']
+<<<<<<< HEAD
     NEmpty: typeof import('naive-ui')['NEmpty']
     NFlex: typeof import('naive-ui')['NFlex']
+=======
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     NForm: typeof import('naive-ui')['NForm']
-    NFormItem: typeof import('naive-ui')['NFormItem']
     NFormItemGridItem: typeof import('naive-ui')['NFormItemGridItem']
     NGrid: typeof import('naive-ui')['NGrid']
+<<<<<<< HEAD
     NGridItem: typeof import('naive-ui')['NGridItem']
+=======
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     NIcon: typeof import('naive-ui')['NIcon']
     NImage: typeof import('naive-ui')['NImage']
     NInput: typeof import('naive-ui')['NInput']
@@ -70,6 +80,7 @@ declare module 'vue' {
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NModal: typeof import('naive-ui')['NModal']
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
+<<<<<<< HEAD
     NPagination: typeof import('naive-ui')['NPagination']
     NPopconfirm: typeof import('naive-ui')['NPopconfirm']
     NPopover: typeof import('naive-ui')['NPopover']
@@ -79,14 +90,23 @@ declare module 'vue' {
     NSelect: typeof import('naive-ui')['NSelect']
     NSpace: typeof import('naive-ui')['NSpace']
     NSpin: typeof import('naive-ui')['NSpin']
+=======
+    NPopconfirm: typeof import('naive-ui')['NPopconfirm']
+    NResult: typeof import('naive-ui')['NResult']
+    NSelect: typeof import('naive-ui')['NSelect']
+    NSpace: typeof import('naive-ui')['NSpace']
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     NSwitch: typeof import('naive-ui')['NSwitch']
     NTab: typeof import('naive-ui')['NTab']
-    NTabPane: typeof import('naive-ui')['NTabPane']
     NTabs: typeof import('naive-ui')['NTabs']
+<<<<<<< HEAD
     NTimePicker: typeof import('naive-ui')['NTimePicker']
     NTooltip: typeof import('naive-ui')['NTooltip']
     NTreeSelect: typeof import('naive-ui')['NTreeSelect']
     NUpload: typeof import('naive-ui')['NUpload']
+=======
+    NTooltip: typeof import('naive-ui')['NTooltip']
+>>>>>>> 34978ce13f9a54869388a77a92ec65d4492001ec
     PanelManage: typeof import('./../components/panel/panel-manage.vue')['default']
     PinToggler: typeof import('./../components/common/pin-toggler.vue')['default']
     ReloadButton: typeof import('./../components/common/reload-button.vue')['default']

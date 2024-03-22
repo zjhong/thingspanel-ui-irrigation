@@ -163,7 +163,10 @@ const local: App.I18n.Schema = {
     component_button: 'Button',
     component_card: 'Card',
     component_table: 'Table',
-    ...cen
+    ...cen,
+    'alarm_warning-message': '',
+    device_template: 'device template',
+    'personal-center': ''
   },
   page: {
     product: productLocaleEn,
@@ -570,6 +573,76 @@ const local: App.I18n.Schema = {
     expand: 'Expand Menu',
     pin: 'Pin',
     unpin: 'Unpin'
+  },
+  dashboard_panel: {
+    addKanBan: 'NewKanban',
+    cardName: {
+      date: {
+        january: 'January',
+        february: 'February',
+        march: 'March',
+        april: 'April',
+        may: 'May',
+        june: 'June',
+        july: 'July',
+        august: 'August',
+        september: 'September',
+        october: 'October',
+        november: 'November',
+        december: 'December'
+      },
+      week: {
+        mon: 'Mon',
+        tue: 'Tue',
+        wed: 'Wed',
+        thur: 'Thur',
+        fri: 'Fri',
+        sat: 'Sat',
+        sun: 'Sun'
+      },
+      bugNum: 'WarnNum',
+      deviceNum: 'DeviceNum',
+      userNum: 'UserNum',
+      regionNum: 'RegionNum',
+      tenantNumLine: 'TenantNumLine',
+      deviceNumPie: 'DeviceNumPie',
+      weatherOverview: 'WeatherOverview',
+      irrigationArea: 'IrrigationArea',
+      weatherStation: 'WeatherStation',
+      tenant: 'Tenant',
+      onLine: 'OnLine',
+      offline: 'Offline',
+      onlineRate: 'OnlineRate',
+      yesterdayAdd: 'YesterdayAdd',
+      lastMonthAdd: 'LastMonthAdd',
+      thisMonth: 'thisMonth',
+      active: 'Active',
+      notActive: 'NotActive',
+      activationRate: 'ActivationRate',
+      sevenDayWeather: 'weatherOverview',
+      spaceNum: 'SpaceNum',
+      areaName: 'AreaName',
+      corn: 'Corn',
+      SprinklerIrrigationDitchIrrigation: 'SprinklerIrrigationDitchIrrigation',
+      irrigationTypes: 'IrrigationTypes',
+      hectare: 'Hectare',
+      regionalArea: 'RegionalArea',
+      sandyLoamSoil: 'SandyLoamSoil',
+      soil: 'Soil',
+      soilMoisture: 'SoilMoisture',
+      temperature: 'Temperature',
+      Conductivity: 'Conductivity',
+      potassiumContent: 'PotassiumContent',
+      phosphorusContent: 'PhosphorusContent',
+      nitrogenContent: 'NitrogenContent',
+      weatherStationData: 'WeatherStationData',
+      historyData: 'HistoryData',
+      windSpeed: 'WindSpeed',
+      windDirection: 'WindDirection',
+      humidity: 'Humidity',
+      pressure: 'Pressure',
+      rainfall: 'Rainfall'
+    }
   }
 };
 

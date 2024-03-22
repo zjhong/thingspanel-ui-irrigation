@@ -73,6 +73,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'alarm_notification-record',
           i18nKey: 'route.alarm_notification-record'
         }
+      },
+      {
+        name: 'alarm_warning-message',
+        path: '/alarm/warning-message',
+        component: 'view.alarm_warning-message',
+        meta: {
+          title: 'alarm_warning-message',
+          i18nKey: 'route.alarm_warning-message'
+        }
       }
     ]
   },
@@ -654,6 +663,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         ]
       }
     ]
+  },
+  {
+    name: 'personal-center',
+    path: '/personal-center',
+    component: 'layout.base$view.personal-center',
+    meta: {
+      title: 'personal-center',
+      i18nKey: 'route.personal-center'
+    }
   },
   {
     name: 'plugin',

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watch } from 'vue';
+import { InformationCircleSharp } from '@vicons/ionicons5';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
 import { $t } from '~/src/locales';
@@ -89,6 +90,17 @@ const selectCard = (item: ICardDefine) => {
 onMounted(() => {
   tabValue.value = props?.data?.type || 'builtin';
 });
+const widths = ref(['flex-[44]', 'flex-[54]', 'flex-[2]']);
+const count = ref<number>(1);
+const changeWidths = () => {
+  if (count.value === 1) {
+    widths.value = ['flex-[2]', 'flex-[44]', 'flex-[54]'];
+    count.value = 2;
+  } else {
+    widths.value = ['flex-[44]', 'flex-[54]', 'flex-[2]'];
+    count.value = 1;
+  }
+};
 </script>
 
 <template>
@@ -97,16 +109,61 @@ onMounted(() => {
     preset="dialog"
     title="配置"
     size="huge"
-    :style="{ width: 'calc(100vw - 200px)', minHeight: 'calc(100vh - 100px)' }"
+    :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
-    <div class="h-[calc(100vh_-_150px)] flex">
-      <div class="mr-2 h-full flex-center flex-1 justify-center">
+    <div class="h-[calc(100vh_-_170px)] w-full flex">
+      <div
+        :class="'relative h-full flex flex-col p-4 overflow-hidden  ' + widths[0]"
+        :style="
+          count === 2
+            ? 'background-color: #f0f0f0;opacity:0.4;box-shadow: 10px 0 15px rgba(0, 0, 0, 0.3);transition: all 0.3s ease;'
+            : ''
+        "
+        @mouseenter="
+          () => {
+            count = 2;
+            changeWidths();
+          }
+        "
+      >
+        <NTabs
+          type="line"
+          default-value="builtin"
+          :value="tabValue"
+          animated
+          class="h-full"
+          @update:value="value => (tabValue = value)"
+        >
+          <NTabPane v-for="item1 in tabList" :key="item1.type" class="h-full" :name="item1.type" :tab="item1.tab">
+            <n-scrollbar style="height: 100%; padding: 4px">
+              <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
+                <n-gi v-for="item in PanelCards[item1.type]" :key="item.id" class="min-w-240px">
+                  <div
+                    class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
+                    :style="item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'"
+                    @mousedown.prevent=""
+                    @click="selectCard(item)"
+                  >
+                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                    <div class="h-148px w-full">
+                      <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                    </div>
+                  </div>
+                </n-gi>
+              </n-grid>
+            </n-scrollbar>
+          </NTabPane>
+        </NTabs>
+        <n-float-button v-if="count === 2" position="absolute" :left="4" top="42%" width="20" shape="square">
+          <spna class="text-12px text-primary-600">移入展开卡片</spna>
+        </n-float-button>
+      </div>
+      <div :class="'h-full flex-center justify-center border-r bg-[#f6f9f8] p-2 overflow-hidden ' + widths[1]">
         <div v-if="!state.curCardData?.cardId" class="mt-32">
           <NEmpty description="请选择要添加的卡片"></NEmpty>
         </div>
-
         <div
           v-if="state.curCardData?.cardId"
           class="mr-4 mt-2 h-full w-full flex flex-col justify-center bg-[#f6f9f8] dark:bg-[#101014]"
@@ -116,55 +173,40 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="m-0 h-full w-500px p-0">
-        <n-split direction="vertical">
-          <template #1>
-            <NTabs
-              type="line"
-              default-value="builtin"
-              :value="tabValue"
-              animated
-              class="h-full"
-              @update:value="value => (tabValue = value)"
-            >
-              <NTabPane v-for="item1 in tabList" :key="item1.type" class="h-full" :name="item1.type" :tab="item1.tab">
-                <n-scrollbar style="height: 100%">
-                  <n-grid :x-gap="10" :y-gap="10" :cols="2">
-                    <n-gi v-for="item in PanelCards[item1.type]" :key="item.id">
-                      <div
-                        class="w-240px cursor-pointer overflow-hidden border rounded p-2px duration-200"
-                        :style="
-                          item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
-                        "
-                        @mousedown.prevent=""
-                        @click="selectCard(item)"
-                      >
-                        <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
-                        <div class="h-148px w-full">
-                          <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
-                        </div>
-                      </div>
-                    </n-gi>
-                  </n-grid>
-                </n-scrollbar>
-              </NTabPane>
-            </NTabs>
-            <div style="height: 8px"></div>
-          </template>
-          <template #2>
-            <div class="mt-4 h-full flex-col justify-start">
-              <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
-            </div>
-          </template>
-        </n-split>
+
+      <div
+        :class="'relative h-full overflow-hidden p-4 ' + widths[2]"
+        :style="
+          count === 1
+            ? 'background-color: #f0f0f0;opacity:0.4;box-shadow: -10px 0 15px rgba(0, 0, 0, 0.3);transition: all 0.3s ease;'
+            : ''
+        "
+        @mouseenter="
+          () => {
+            count = 1;
+            changeWidths();
+          }
+        "
+      >
+        <div class="mt-4 h-full flex-col justify-start">
+          <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
+        </div>
+        <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
+          <spna class="text-12px text-primary-600">移入展开配置</spna>
+        </n-float-button>
       </div>
     </div>
-
-    <div class="mt-4 flex flex-center border-t">
-      <div class="mt-4">
+    <div class="h-60px flex flex-center border-t">
+      <div>
         <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
-        <NButton type="primary" @click="save">{{ data ? '编辑卡片' : '添加卡片' }}</NButton>
+        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
       </div>
+    </div>
+    <div v-if="count === 1" class="absolute bottom-0 right-0 h-60px flex flex-center">
+      <n-icon size="24">
+        <InformationCircleSharp class="color-red" />
+      </n-icon>
+      <span>您可以移入右侧配置区进入配置，也可以确认后稍后配置</span>
     </div>
   </NModal>
 </template>

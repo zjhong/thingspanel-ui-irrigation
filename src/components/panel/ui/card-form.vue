@@ -142,7 +142,7 @@ onMounted(() => {
   <div>
     <NTabs v-if="state.selectCard" v-model:value="state.tab" type="line" animated>
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
-        <div :class="`${mobile ? '' : 'h-[calc(100vh_-_570px)] '} overflow-y-auto py-5`">
+        <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
             <NFormItem label="数据源类型">
               <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
@@ -209,6 +209,7 @@ onMounted(() => {
                   :render-option="info => metricsOptionRender(info, item)"
                   @update:show="show => updateDropdownShow(show, item)"
                 ></NSelect>
+                <NInput style="max-width: 140px" />
               </div>
             </div>
           </NForm>

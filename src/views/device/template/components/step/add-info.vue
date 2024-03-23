@@ -1,21 +1,28 @@
 <script setup lang="tsx">
-import { ref, reactive } from "vue"
+import { ref, reactive, defineEmits, watch } from "vue"
+import type { UploadFileInfo } from 'naive-ui';
+import { localStg } from '@/utils/storage';
+import { createServiceConfig } from '~/env.config';
+
 
 interface AddFrom {
   name: string;
   templateTage: string[];
-  templateVersion: string;
+  version: string;
   author: string;
-  content: string;
+  remark: string;
+  path: string;
+  lable: string;
 }
 
-const addFrom: AddFrom = reactive({
-  name: '',
-  templateTage: ['标签1', '标签2', '内容长标签'],
-  templateVersion: '',
-  author: '',
-  content: '',
+const props = defineProps({
+  modelValue: {
+    type: Object as () => AddFrom,
+    required: true,
+  },
 });
+
+const addFrom: any = reactive(props.modelValue)
 
 type Rule = {
   required: boolean;
@@ -31,9 +38,15 @@ const fromRules: Rules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入 inputValue'
+    message: '请输入模板名称'
   }
 }
+const emit = defineEmits(['update:modelValue']);
+
+watch(addFrom, (newValue) => {
+  console.log(newValue, '监听');
+  emit('update:modelValue', newValue);
+}, { deep: true });
 
 // addTags
 let tageFlag = ref<boolean>(false)
@@ -50,15 +63,26 @@ const tagBlur: () => void = () => {
     tageFlag.value = false
   }
 }
-const tagsClose: () => void = () => {
-  console.log('删除标签');
-
+const tagsClose: (index: number) => void = (index) => {
+  addFrom.templateTage.splice(index, 1)
 }
 
 // upload
-// const customRequest: () => void = () => {
-//   console.log('上传');
-// }
+const { otherBaseURL } = createServiceConfig(import.meta.env);
+const url: any = ref(new URL(otherBaseURL.demo));
+let pngPath: any = ref('')
+
+const customRequest = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
+  if (!event || !event.target) return;
+
+  const xhr = event.target as XMLHttpRequest;
+  const response = JSON.parse(xhr.response);
+  addFrom.path = response.data.path
+
+  const relativePath = response.data.path.replace(/^\.\//, '');
+  pngPath.value = url.value.origin + '/' + relativePath;
+  console.log(pngPath.value, file);
+};
 </script>
 
 <template>
@@ -68,44 +92,46 @@ const tagsClose: () => void = () => {
       <n-form-item label="模板名称" path="name">
         <n-input v-model:value.trim="addFrom.name" placeholder="请输入模板名称" />
       </n-form-item>
-      <n-form-item label="模板标签">
-        <n-tag size="small" class="tag" closable @close="tagsClose" v-for="(item, index) in addFrom.templateTage"
+      <n-form-item label="模板标签" class="tag-item">
+        <n-tag size="small" class="tag" closable @close="tagsClose(index)" v-for="(item, index) in addFrom.templateTage"
           :key="index">
           {{ item }}
         </n-tag>
-        <n-tag size="small" class="tag addTage" closable @click="addTags" v-if="!tageFlag">
+        <n-tag size="small" class="tag addTage" @click="addTags" v-if="!tageFlag">
           添加标签
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
           </template>
         </n-tag>
-        <n-input v-model:value.trim="addTageText" @blur="tagBlur" placeholder="请输入作者名称" autofocus v-else />
+        <n-input class="tag-ipt" v-model:value.trim="addTageText" @blur="tagBlur" placeholder="请输入标签名称" autofocus
+          v-else />
       </n-form-item>
       <n-form-item label="作者名称">
         <n-input v-model:value.trim="addFrom.author" placeholder="请输入作者名称" />
       </n-form-item>
       <n-form-item label="模板版本">
-        <n-input v-model:value.trim="addFrom.templateVersion" placeholder="请输入模板版本" />
+        <n-input v-model:value.trim="addFrom.version" placeholder="请输入模板版本" />
       </n-form-item>
       <n-form-item label="说明">
-        <n-input v-model:value.trim="addFrom.content" type="textarea" placeholder="请输入说明" />
+        <n-input v-model:value.trim="addFrom.remark" type="textarea" placeholder="请输入说明" />
       </n-form-item>
     </n-form>
-    <!-- <n-upload action="https://www.mocky.io/v2/5e4bafc63100007100d8b70f" :default-file-list="fileList"
-      :custom-request="customRequest" class="upload">
+    <n-upload :action="url + '/file/up'" :headers="{ 'x-token': localStg.get('token') || '' }" :data="{ type: 'image' }"
+      class="upload" @finish="customRequest" :show-file-list="false" accept='image/png, image/jpeg, image/jpg, image/gif'>
       <n-upload-dragger>
-        <n-icon size="35" :depth="3">
+        <img :src="pngPath" class="slt" v-if="pngPath && pngPath !== ''" />
+        <n-icon size="35" :depth="3" v-else>
           <SvgIcon local-icon="picture" class="more" />
         </n-icon>
       </n-upload-dragger>
       <n-button-group>
         <n-upload-trigger #="{ handleClick }" abstract>
-          <n-button @click.stop="handleClick" class="m-t3" style="pointer-events: auto;">
-            上传
+          <n-button @click.stop="handleClick" class="m-t4 upload-btn">
+            选择封面
           </n-button>
         </n-upload-trigger>
       </n-button-group>
-    </n-upload> -->
+    </n-upload>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -114,6 +140,20 @@ const tagsClose: () => void = () => {
   height: 150px;
   pointer-events: none;
   margin-right: 100px;
+  position: relative;
+
+  .n-upload-dragger {
+    width: 200px;
+    height: 150px;
+  }
+
+  .slt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 150px;
+  }
 }
 
 :deep(.n-button-group) {
@@ -124,17 +164,38 @@ const tagsClose: () => void = () => {
 .tag {
   min-width: max-content;
   padding-left: .5rem;
-  max-width: 7rem;
-  height: 1.5rem;
-  border-radius: 1rem;
+  max-width: 1rem;
+  height: 2.3rem;
+  border-radius: .6rem;
   margin-right: .4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 5px;
+}
+
+.tag-ipt {
+  width: 10rem;
+  height: 2.3rem;
+}
+
+.tag-item {
+  :deep(.n-form-item-blank) {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
 }
 
 .addTage {
   cursor: pointer;
+  padding-right: 1rem;
 }
 
 .addFrom {
   min-width: 700px;
+}
+
+.upload-btn {
+  pointer-events: auto;
 }
 </style>

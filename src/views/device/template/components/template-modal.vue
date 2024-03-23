@@ -1,14 +1,37 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, reactive } from 'vue';
 import { initTemplateInfoData, templateInfoData } from '../utils';
 import AddInfo from "./step/add-info.vue";
+import { addTemplat } from '@/service/api/system-data'
 // import { $t } from '@/locales';
 let stepCurrent = ref<number>(1)
+interface AddFrom {
+  name: string;
+  templateTage: string[];
+  version: string;
+  author: string;
+  remark: string;
+  path: string;
+  lable: string;
+}
 
-const next: () => void = () => {
+const addFrom: AddFrom = reactive({
+  name: '',
+  templateTage: [],
+  version: '',
+  author: '',
+  remark: '',
+  path: '',
+  lable: ''
+});
+
+// 新增设备模板
+const next: () => void = async () => {
   if (stepCurrent.value <= 4) {
-    stepCurrent.value = stepCurrent.value + 1
-
+    // stepCurrent.value = stepCurrent.value + 1
+    addFrom.lable = addFrom.templateTage.join(',')
+    const response = await addTemplat(addFrom)
+    console.log(addFrom, response, '打印数据');
   } else {
     window.$message?.warning('没有下一步了，可以进行发布了');
   }
@@ -17,7 +40,6 @@ const next: () => void = () => {
 const Back: () => void = () => {
   if (stepCurrent.value > 1) {
     stepCurrent.value = stepCurrent.value - 1
-
   } else {
     window.$message?.warning('到头了，不可以在点了');
   }
@@ -74,7 +96,7 @@ defineOptions({ name: 'TableActionModal' });
       <n-step title="web图表配置" description="绑定相对应的图表" />
       <n-step title="发布" description="发布到应用商店" />
     </n-steps>
-    <AddInfo></AddInfo>
+    <AddInfo v-model="addFrom"></AddInfo>
     <n-button @click="modalVisible = false">取消</n-button>
     <n-button @click="Back">上一步</n-button>
     <n-button @click="next">下一步</n-button>

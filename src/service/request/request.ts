@@ -3,6 +3,7 @@ import { localStg } from '@/utils/storage';
 import { createProxyPattern, createServiceConfig } from '~/env.config';
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
+console.log(import.meta.env);
 
 const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
 

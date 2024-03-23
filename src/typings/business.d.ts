@@ -134,3 +134,8 @@ declare namespace UserManagement {
    */
   type UserStatusKey = NonNullable<User['status']>;
 }
+
+// 设备信息
+declare namespace AddDeviceModel {
+  interface Device extends Api.device.addDeviceModel {}
+}

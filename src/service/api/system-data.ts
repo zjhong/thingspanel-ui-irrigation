@@ -13,6 +13,42 @@ export const tenant = async () => {
 };
 /** 新增设备模板信息*/
 export const addTemplat = async (params: any): Promise<any> => {
-  const data = await request.post("/device/templat", params);
+  const data = await request.post("/device/template", params);
+  return data;
+};
+
+/** 获取遥测数据 */
+export const telemetryApi = async (params: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    "/device/model/telemetry",
+    { params },
+  );
+  return data;
+};
+
+/** 获取属性数据 */
+export const attributesApi = async (params: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    "/device/model/attributes",
+    { params },
+  );
+  return data;
+};
+
+/** 获取事件数据 */
+export const eventsApi = async (params: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    "/device/model/events",
+    { params },
+  );
+  return data;
+};
+
+/** 获取命令数据 */
+export const commandsApi = async (params: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    "/device/model/commands",
+    { params },
+  );
   return data;
 };

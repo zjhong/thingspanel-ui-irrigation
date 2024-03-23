@@ -488,6 +488,24 @@ declare namespace Api {
   }
 
   /** 设备管理 */
+  namespace device{
+    interface addDeviceModel {
+      additional_info: string;
+      created_at: string;
+      data_identifier: string;
+      data_name: string;
+      data_type: string;
+      description: string;
+      device_template_id: string;
+      id: string;
+      read_write_flag: string;
+      remark: string;
+      tenant_id: string;
+      unit: string;
+      updated_at: string;
+      [property: string]: any;
+    }
+  }
 
   /** 告警 */
   namespace Alarm {

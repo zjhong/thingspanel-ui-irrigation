@@ -1,52 +1,30 @@
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, ref } from 'vue';
 import { initTemplateInfoData, templateInfoData } from '../utils';
 import AddInfo from "./step/add-info.vue";
-import { addTemplat } from '@/service/api/system-data'
+import ModelDefinition from "./step/model-definition.vue";
+
 // import { $t } from '@/locales';
 let stepCurrent = ref<number>(1)
-interface AddFrom {
-  name: string;
-  templateTage: string[];
-  version: string;
-  author: string;
-  remark: string;
-  path: string;
-  lable: string;
-}
+let DeviceTemplateId = ref<string>('')
 
-const addFrom: AddFrom = reactive({
-  name: '',
-  templateTage: [],
-  version: '',
-  author: '',
-  remark: '',
-  path: '',
-  lable: ''
+const componentsList: { id: number; components: any }[] = [
+  { id: 1, components: AddInfo },
+  { id: 2, components: ModelDefinition }
+];
+const SwitchComponents = computed<any>(() => {
+  return componentsList.find(item => item.id === stepCurrent.value)?.components
 });
-
-// 新增设备模板
-const next: () => void = async () => {
-  if (stepCurrent.value <= 4) {
-    // stepCurrent.value = stepCurrent.value + 1
-    addFrom.lable = addFrom.templateTage.join(',')
-    const response = await addTemplat(addFrom)
-    console.log(addFrom, response, '打印数据');
-  } else {
-    window.$message?.warning('没有下一步了，可以进行发布了');
-  }
-}
-
-const Back: () => void = () => {
-  if (stepCurrent.value > 1) {
-    stepCurrent.value = stepCurrent.value - 1
-  } else {
-    window.$message?.warning('到头了，不可以在点了');
-  }
-}
-const release: () => void = () => {
-  console.log('准备发布了');
-}
+// const Back: () => void = () => {
+//   if (stepCurrent.value > 1) {
+//     stepCurrent.value = stepCurrent.value - 1
+//   } else {
+//     window.$message?.warning('到头了，不可以在点了');
+//   }
+// }
+// const release: () => void = () => {
+//   console.log('准备发布了');
+// }
 
 export interface Props {
   visible: boolean;
@@ -96,11 +74,13 @@ defineOptions({ name: 'TableActionModal' });
       <n-step title="web图表配置" description="绑定相对应的图表" />
       <n-step title="发布" description="发布到应用商店" />
     </n-steps>
-    <AddInfo v-model="addFrom"></AddInfo>
-    <n-button @click="modalVisible = false">取消</n-button>
-    <n-button @click="Back">上一步</n-button>
-    <n-button @click="next">下一步</n-button>
-    <n-button @click="release">发布</n-button>
+    <component :is="SwitchComponents" v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible" v-model:DeviceTemplateId="DeviceTemplateId"></component>
+    <!-- <AddInfo v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></AddInfo>
+    <ModelDefinition v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></ModelDefinition> -->
+    <!-- <n-button @click="modalVisible = false">取消</n-button>
+    <n-button @click="Back">上一步</n-button> -->
+    <!-- <n-button @click="next">下一步</n-button>
+    <n-button @click="release">发布</n-button> -->
   </NModal>
 </template>
 

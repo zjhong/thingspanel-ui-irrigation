@@ -1,9 +1,27 @@
 <script setup lang="tsx">
-import { ref, reactive, defineEmits, watch } from "vue"
+import { ref, reactive } from "vue"
 import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { createServiceConfig } from '~/env.config';
+import { addTemplat } from '@/service/api/system-data'
 
+const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
+defineProps({
+  stepCurrent: {
+    type: Number,
+    required: true,
+  },
+  modalVisible: {
+    type: Boolean,
+    required: true
+  },
+  DeviceTemplateId: {
+    type: String,
+    required: true
+  }
+});
+
+const formRef: any = ref(null)
 
 interface AddFrom {
   name: string;
@@ -15,14 +33,15 @@ interface AddFrom {
   lable: string;
 }
 
-const props = defineProps({
-  modelValue: {
-    type: Object as () => AddFrom,
-    required: true,
-  },
+const addFrom: AddFrom = reactive({
+  name: '',
+  templateTage: [],
+  version: '',
+  author: '',
+  remark: '',
+  path: '',
+  lable: ''
 });
-
-const addFrom: any = reactive(props.modelValue)
 
 type Rule = {
   required: boolean;
@@ -41,24 +60,17 @@ const fromRules: Rules = {
     message: '请输入模板名称'
   }
 }
-const emit = defineEmits(['update:modelValue']);
 
-watch(addFrom, (newValue) => {
-  console.log(newValue, '监听');
-  emit('update:modelValue', newValue);
-}, { deep: true });
 
 // addTags
 let tageFlag = ref<boolean>(false)
 let addTageText = ref<string>('')
 const addTags: () => void = () => {
   tageFlag.value = true
-  console.log('点击了添加');
 }
 const tagBlur: () => void = () => {
   if (addTageText.value !== '') {
     addFrom.templateTage.push(addTageText.value)
-    console.log(addFrom.templateTage, '点击了添加');
     addTageText.value = ''
     tageFlag.value = false
   }
@@ -79,15 +91,32 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
   const response = JSON.parse(xhr.response);
   addFrom.path = response.data.path
 
+
   const relativePath = response.data.path.replace(/^\.\//, '');
   pngPath.value = url.value.origin + '/' + relativePath;
   console.log(pngPath.value, file);
 };
+
+
+// 新增设备模板
+const next: () => void = async () => {
+  await formRef.value?.validate()
+  console.log(await formRef.value?.validate(), '校验');
+  addFrom.lable = addFrom.templateTage.join(',')
+  const response = await addTemplat(addFrom)
+  emit('update:stepCurrent', 2)
+  emit('update:DeviceTemplateId', response.data.id)
+  console.log(addFrom, response, '打印数据');
+}
+// 取消
+const cancellation: () => void = () => {
+  emit('update:modalVisible', false)
+}
 </script>
 
 <template>
   <div class="flex flex-justify-between">
-    <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100"
+    <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100" ref="formRef"
       require-mark-placement="right-hanging" class="addFrom">
       <n-form-item label="模板名称" path="name">
         <n-input v-model:value.trim="addFrom.name" placeholder="请输入模板名称" />
@@ -132,6 +161,10 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
         </n-upload-trigger>
       </n-button-group>
     </n-upload>
+  </div>
+  <div>
+    <n-button @click="cancellation">取消</n-button>
+    <n-button @click="next">下一步</n-button>
   </div>
 </template>
 <style lang="scss" scoped>

@@ -72,6 +72,7 @@ defineOptions({ name: 'TableActionModal' });
       <n-step title="模板信息" description="添加设备的基本信息" />
       <n-step title="模型定义" description="根据系统提供的模型来配置参数以及设备类型" />
       <n-step title="web图表配置" description="绑定相对应的图表" />
+      <n-step title="App图表配置" description="编辑该设备模板的App详情页" />
       <n-step title="发布" description="发布到应用商店" />
     </n-steps>
     <component :is="SwitchComponents" v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"

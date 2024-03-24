@@ -7,7 +7,7 @@ defineProps<{
 <template>
   <div>
     <p>设备id：{{ id }}</p>
-    <p>device-analysis 设备解析</p>
+    <p>device-analysis 字设备</p>
   </div>
 </template>
 

@@ -6,8 +6,7 @@ defineProps<{
 
 <template>
   <div>
-    <p>设备id：{{ id }}</p>
-    <p><span>logs 日志</span></p>
+    <n-empty description="暂无数据"></n-empty>
   </div>
 </template>
 

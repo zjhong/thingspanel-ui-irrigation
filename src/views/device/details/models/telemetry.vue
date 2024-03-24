@@ -53,11 +53,11 @@ const columns = [
   { title: '指令', key: 'data' },
   { title: '操作类型', key: 'operation_type' },
   { title: '操作用户', key: 'user_id' },
-  { title: '操作时间', key: 'created_at' },
+  { title: '操作时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
   { title: '发送结果', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') }
 ];
 const columns2 = [
-  { title: '时间', key: 'time' },
+  { title: '时间', key: 'time', render: row => dayjs(row.time).format('YYYY-MM-DD HH:mm:ss') },
   { title: '数据标识符', key: 'identifier' },
   { title: '值', key: 'value' }
 ];

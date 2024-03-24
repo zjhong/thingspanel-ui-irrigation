@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import DistributionAndTable from '@/views/device/details/models/public/distribution-and-table.vue';
 import { commandDataPub, getCommandDataSetLogs } from '@/service/api';
 
@@ -9,7 +10,7 @@ defineProps<{
 const columns = [
   { title: '命名名称', key: 'id' },
   { title: '命令标识符', key: 'identify' },
-  { title: '命令下发时间', key: 'created_at' },
+  { title: '命令下发时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
   { title: '状态', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') },
   { title: '命令参数', key: 'data' }
 ];

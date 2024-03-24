@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import DistributionAndTable from '@/views/device/details/models/public/distribution-and-table.vue';
 import { attributeDataPub, getAttributeDataSetLogs } from '@/service/api';
 
@@ -7,7 +8,7 @@ defineProps<{
 }>();
 
 const columns = [
-  { title: '属性下发时间', key: 'created_at' },
+  { title: '属性下发时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
   { title: '消息id', key: 'message_id' },
   { title: '发送内容', key: 'data' },
   { title: '操作类型', key: 'operation_type', render: row => (row.status === 1 ? '手动操作' : '自动触发') },

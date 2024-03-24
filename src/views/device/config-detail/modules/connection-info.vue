@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { NButton, useMessage } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
-import { deviceConfigConnect, deviceConfigEdit } from '@/service/api/device';
+import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
 const message = useMessage();
 interface Emits {
   (e: 'upDateConfig'): void;
@@ -39,14 +39,38 @@ const getDict = async dictCode => {
   typeOptions.value = res.data || [];
 };
 const connectOptions = ref([] as any);
+
+const getVoucherType = async data => {
+  const res = await deviceConfigVoucherType({ device_type: props.configInfo.device_type, protocol_type: data });
+  if (res.data) {
+    const keyData = Object.keys(res.data) || [];
+    // eslint-disable-next-line array-callback-return
+    keyData.map(item => {
+      const itemData = {
+        label: item,
+        value: item
+      };
+      connectOptions.value.push(itemData);
+    });
+  }
+};
+const getConfigForm = async data => {
+  const res = await protocolPluginConfigForm({ device_type: props.configInfo.device_type, protocol_type: data });
+  console.log(res.data);
+};
+const choseProtocolType = async data => {
+  extendForm.value.voucher_type = null;
+  connectOptions.value = [];
+  await getVoucherType(data);
+  await getConfigForm(data);
+};
 onMounted(() => {
   if (props.configInfo.device_type === '1') {
     getDict('DRIECT_ATTACHED_PROTOCOL');
-  } else if (props.configInfo.device_type === '2') {
+  } else {
     getDict('GATEWAY_PROTOCOL');
   }
   extendForm.value = props.configInfo;
-  connectOptions.value = deviceConfigConnect({ device_id: props.configInfo.id });
 });
 </script>
 
@@ -61,16 +85,15 @@ onMounted(() => {
           placeholder="请选择选择协议/服务"
           label-field="translation"
           value-field="dict_value"
+          @change="choseProtocolType"
         ></NSelect>
       </NFormItem>
       <NFormItem label="认证类型" path="voucher_type">
         <NSelect
-          v-if="props.configInfo.device_conn_type === 'A'"
+          v-if="props.configInfo.device_type !== 1"
           v-model:value="extendForm.voucher_type"
-          :options="typeOptions"
+          :options="connectOptions"
           placeholder="请选择认证类型"
-          label-field="translation"
-          value-field="dict_value"
         ></NSelect>
       </NFormItem>
       <NFlex justify="flex-end">

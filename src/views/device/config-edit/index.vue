@@ -8,18 +8,13 @@ import { deviceConfigAdd, deviceConfigEdit, deviceConfigInfo, deviceTemplate } f
 
 const route = useRoute();
 const message = useMessage();
-const configId = ref(route.query.id || '');
-interface Props {
-  modalType?: string;
-}
-const props = withDefaults(defineProps<Props>(), {
-  modalType: 'add'
-});
+const configId = ref(route.query.id || null);
 const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
 
 function defaultConfigForm() {
   return {
+    id: null,
     additional_info: null,
     description: null,
     device_conn_type: null,
@@ -81,18 +76,19 @@ const handleClose = () => {
 // 提交表单
 const handleSubmit = async () => {
   await configFormRef?.value?.validate();
-  if (props.modalType === 'add') {
+  if (!configId.value) {
     const res = await deviceConfigAdd(configForm.value);
     if (!res.error) {
       message.success('新增成功');
+      handleClose();
     }
   } else {
     const res = await deviceConfigEdit(configForm.value);
     if (!res.error) {
       message.success('修改成功');
+      handleClose();
     }
   }
-  handleClose();
 };
 const getConfig = async () => {
   const res = await deviceConfigInfo({ id: configId.value });
@@ -153,14 +149,14 @@ onMounted(async () => {
             </n-space>
           </n-radio-group>
         </NFormItem>
-        <NFormItem label="设备连接方式" path="device_conn_type">
-          <n-radio-group v-model:value="configForm.device_conn_type" name="device_conn_type">
-            <n-space>
-              <n-radio value="A">设备连接平台</n-radio>
-              <n-radio value="B">平台连接设备</n-radio>
-            </n-space>
-          </n-radio-group>
-        </NFormItem>
+        <!--        <NFormItem label="设备连接方式" path="device_conn_type">-->
+        <!--          <n-radio-group v-model:value="configForm.device_conn_type" name="device_conn_type">-->
+        <!--            <n-space>-->
+        <!--              <n-radio value="A">设备连接平台</n-radio>-->
+        <!--              <n-radio value="B">平台连接设备</n-radio>-->
+        <!--            </n-space>-->
+        <!--          </n-radio-group>-->
+        <!--        </NFormItem>-->
         <NFlex justify="flex-end">
           <NButton type="primary" @click="handleSubmit">确定</NButton>
         </NFlex>

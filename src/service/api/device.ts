@@ -97,9 +97,13 @@ export const deviceConfigInfo = async (params: any) => {
 export const deviceConfigDel = async (params: any) => {
   return await request.delete<Api.BaseApi.Data | any>(`device_config/${params.id}`);
 };
-/** 设备配置-连接凭证 */
-export const deviceConfigConnect = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`device_config/connect`, { params });
+/** 设备配置-凭证类型下拉 */
+export const deviceConfigVoucherType = async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>(`/device_config/voucher_type`, { params });
+};
+/** 设备配置-获取设备配置表单 */
+export const protocolPluginConfigForm = async (params: any) => {
+  return await request.get<Api.BaseApi.Data | any>(`/protocol_plugin/config_form`, { params });
 };
 /** 批量新设备配置关联的设备 */
 export const deviceConfigBatch = async (params: any) => {

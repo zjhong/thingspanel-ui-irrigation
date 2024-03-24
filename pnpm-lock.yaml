@@ -50,6 +50,12 @@ importers:
       clipboard:
         specifier: 2.0.11
         version: 2.0.11
+      codemirror:
+        specifier: ^5.65.16
+        version: 5.65.16
+      codemirror-editor-vue3:
+        specifier: ^2.4.1
+        version: 2.4.1(codemirror@5.65.16)(diff-match-patch@1.0.5)(vue@3.4.19)
       colord:
         specifier: 2.9.3
         version: 2.9.3
@@ -65,6 +71,9 @@ importers:
       form-data:
         specifier: 4.0.0
         version: 4.0.0
+      highlight.js:
+        specifier: ^11.9.0
+        version: 11.9.0
       lodash-es:
         specifier: 4.17.21
         version: 4.17.21
@@ -5007,6 +5016,22 @@ packages:
     resolution: {integrity: sha512-3Pe/CF1Nn94hyhIYpjtiLhdCoEoz0DqQ+988E9gmeEdQZlojxnOb74wctFyuwWQHzqyf9X7C7MG8juUpqBJT8w==}
     engines: {node: '>=0.8'}
     dev: true
+
+  /codemirror-editor-vue3@2.4.1(codemirror@5.65.16)(diff-match-patch@1.0.5)(vue@3.4.19):
+    resolution: {integrity: sha512-XcyLUShIq22D05ySLfXGwLZqYt/HDJk11z1aAc3N/J76dEcXPd1xrUrw+v3pl+fjc8QfTjBzMSU8nKTVccJnUQ==}
+    peerDependencies:
+      codemirror: ^5.x
+      diff-match-patch: ^1.0.5
+      vue: ^3.x
+    dependencies:
+      codemirror: 5.65.16
+      diff-match-patch: 1.0.5
+      vue: 3.4.19(typescript@5.3.3)
+    dev: false
+
+  /codemirror@5.65.16:
+    resolution: {integrity: sha512-br21LjYmSlVL0vFCPWPfhzUCT34FM/pAdK7rRIZwa0rrtrIdotvP4Oh4GUHsu2E3IrQMCfRkL/fN3ytMNxVQvg==}
+    dev: false
 
   /collection-visit@1.0.0:
     resolution: {integrity: sha512-lNkKvzEeMBBjUGHZ+q6z9pSJla0KWAQPvtzhEV9+iGyQYG+pBpl7xKDhxoNSOZH2hhv0v5k0y2yAM4o4SjoSkw==}

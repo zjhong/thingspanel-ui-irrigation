@@ -2,16 +2,16 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { NButton } from 'naive-ui';
-import { router } from '@/router';
 import { deviceConfigInfo } from '@/service/api/device';
 import SettingInfo from '@/views/device/config-detail/modules/setting-info.vue';
 import DataHandle from '@/views/device/config-detail/modules/data-handle.vue';
+import { useRouterPush } from '@/hooks/common/router';
 import AssociatedDevices from './modules/associated-devices.vue';
 import ExtendInfo from './modules/extend-info.vue';
 import AttributeInfo from './modules/attribute-info.vue';
 import ConnectionInfo from './modules/connection-info.vue';
 import AlarmInfo from './modules/alarm-info.vue';
-
+const { routerPushByKey } = useRouterPush();
 const route = useRoute();
 const configId = ref(route.query.id || ('' as any));
 
@@ -29,7 +29,7 @@ const configForm = ref({
   voucher_type: null
 });
 const editConfig = () => {
-  router.push({ name: 'device_config-edit', query: { id: configId.value } });
+  routerPushByKey('device_config-edit', { query: { id: configId.value } });
 };
 const getConfig = async () => {
   const res = await deviceConfigInfo({ id: configId.value });
@@ -50,8 +50,7 @@ onMounted(async () => {
       <template #header-extra>
         <NButton type="primary" @click="editConfig">编辑</NButton>
       </template>
-      <!--      <NFlex vertical>-->
-      <div>
+      <div class="mb-4">
         设备接入类型：
         <template v-if="configForm.device_type === '1'">直连设备</template>
         <template v-if="configForm.device_type === '2'">网关</template>

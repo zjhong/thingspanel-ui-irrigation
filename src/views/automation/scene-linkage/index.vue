@@ -1,16 +1,30 @@
 <script lang="tsx" setup>
 import { type Ref, onMounted, ref } from 'vue';
-import { type DataTableColumns, NButton, NFlex, NPagination, useDialog, useMessage } from 'naive-ui';
+import {
+  type DataTableColumns,
+  NButton,
+  NCard,
+  NFlex,
+  NGrid,
+  NGridItem,
+  NPagination,
+  useDialog,
+  useMessage
+} from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
 import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
-import { router } from '@/router';
+import type { LastLevelRouteKey } from '@elegant-router/types';
+import { useRouterPush } from '@/hooks/common/router';
 const dialog = useDialog();
 const message = useMessage();
+const { routerPushByKey } = useRouterPush();
+
 const showModal = () => {
-  router.push({ name: 'automation_linkage-edit' });
+  routerPushByKey('automation_linkage-edit');
 };
-const openDetail = () => {
-  router.push({ name: 'automation_linkage-edit' });
+// 页面跳转
+const goRouter = (name: LastLevelRouteKey, id: string) => {
+  routerPushByKey(name, { query: { id } });
 };
 const queryData = ref({
   page: 1,
@@ -19,26 +33,32 @@ const queryData = ref({
 });
 const sceneLinkageList = ref([
   {
+    id: '12312512312',
     name: '人来自动开灯',
     description: '晚上7点后自动开灯',
     status: true
   },
   {
+    id: '3w4535',
     name: '打开空调降温',
     description: '气温28度后打开空调降温',
     status: true
   },
   {
+    id: '45645asedf',
     name: '燃气泄露检测',
     description: '检测到燃气超标自动告警通知',
     status: false
   },
   {
+    id: 'asdadsa',
+
     name: '关闭窗帘',
     description: '执行晚安指令时自动关闭窗帘',
     status: false
   },
   {
+    id: 'gsefds' as string,
     name: '油烟机启动',
     description: '检测到燃气灶点火时自动开启油烟机',
     status: true
@@ -55,14 +75,14 @@ const getData = async () => {
 const handleQuery = async () => {
   // sceneLinkageList.value = [];
 };
-const deleteLink = (index: any) => {
+const deleteLink = () => {
   dialog.warning({
     title: '提示',
     content: '请确认是否删除该自动化配置？',
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: () => {
-      sceneLinkageList.value.splice(index, 1);
+      // sceneLinkageList.value.splice(index, 1);
       message.success('操作成功');
     }
   });
@@ -105,11 +125,11 @@ onMounted(() => {});
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="场景联动列表">
-      <NFlex justify="space-between">
+  <div class="h-full w-full">
+    <NCard :bordered="false">
+      <NFlex justify="space-between" class="mb-4">
         <NButton type="primary" @click="showModal()">+新增联动规则</NButton>
-        <NFlex align="center">
+        <NFlex align="center" justify="flex-end" :wrap="false">
           <NInput
             v-model:value="queryData.name"
             placeholder="请输入场景联动名称"
@@ -133,48 +153,65 @@ onMounted(() => {});
         class="min-h-60 justify-center"
       ></n-empty>
       <template v-else>
-        <div class="config-content h-full flex-col">
-          <div v-for="(item, index) in sceneLinkageList" :key="index" class="scene-item">
-            <div class="item-name">
-              <div>
-                {{ item.name }}
-              </div>
-              <n-switch v-model:value="item.status" />
-            </div>
-            <div class="item-desc">{{ item.description }}</div>
-            <div class="item-operate">
-              <NButton tertiary circle type="warning" @click="openDetail">
-                <template #icon>
-                  <n-icon>
-                    <editIcon />
-                  </n-icon>
-                </template>
-              </NButton>
-              <NButton circle tertiary type="info" @click="openLog">
-                <template #icon>
-                  <n-icon>
-                    <copyIcon />
-                  </n-icon>
-                </template>
-              </NButton>
-              <NButton circle tertiary type="error" @click="deleteLink(index)">
-                <template #icon>
-                  <n-icon>
-                    <trashIcon />
-                  </n-icon>
-                </template>
-              </NButton>
-            </div>
-          </div>
-        </div>
-        <div class="pagination-box">
+        <NGrid x-gap="24" y-gap="16" :cols="24">
+          <NGridItem v-for="item in sceneLinkageList" :key="item.id" :span="6">
+            <NCard hoverable>
+              <NFlex justify="space-between" align="center" class="mb-4">
+                <div class="text-16px font-600">
+                  {{ item.name }}
+                </div>
+                <n-switch v-model:value="item.status" />
+              </NFlex>
+              <div>{{ item.description }}</div>
+              <NFlex justify="flex-end" class="mt-4">
+                <NTooltip trigger="hover">
+                  <template #trigger>
+                    <NButton tertiary circle type="warning" @click="goRouter('automation_linkage-edit', item.id)">
+                      <template #icon>
+                        <n-icon>
+                          <editIcon />
+                        </n-icon>
+                      </template>
+                    </NButton>
+                  </template>
+                  编辑
+                </NTooltip>
+                <NTooltip trigger="hover">
+                  <template #trigger>
+                    <NButton circle tertiary type="info" @click="openLog">
+                      <template #icon>
+                        <n-icon>
+                          <copyIcon />
+                        </n-icon>
+                      </template>
+                    </NButton>
+                  </template>
+                  日志
+                </NTooltip>
+                <NTooltip trigger="hover">
+                  <template #trigger>
+                    <NButton circle tertiary type="error" @click="deleteLink()">
+                      <template #icon>
+                        <n-icon>
+                          <trashIcon />
+                        </n-icon>
+                      </template>
+                    </NButton>
+                  </template>
+                  删除
+                </NTooltip>
+              </NFlex>
+            </NCard>
+          </NGridItem>
+        </NGrid>
+        <NFlex justify="flex-end" class="mt-4">
           <NPagination
             v-model:page="queryData.page"
             :page-size="queryData.page_size"
             :item-count="dataTotal"
             @update:page="getData"
           />
-        </div>
+        </NFlex>
       </template>
     </NCard>
     <n-modal v-model:show="showLog" :style="bodyStyle" preset="card" title="日志" size="huge" :bordered="false">

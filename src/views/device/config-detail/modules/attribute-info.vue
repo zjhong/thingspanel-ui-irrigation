@@ -4,6 +4,8 @@ import { h, onMounted, ref } from 'vue';
 import type { DataTableColumns } from 'naive-ui';
 import { NButton, NFlex, NPagination, useMessage } from 'naive-ui';
 import { deviceConfigEdit, deviceTemplate, deviceTemplateDetail } from '@/service/api/device';
+import { useRouterPush } from '@/hooks/common/router';
+const { routerPushByKey } = useRouterPush();
 
 const message = useMessage();
 // eslint-disable-next-line vue/valid-define-emits
@@ -113,6 +115,9 @@ const openPopover = () => {
   plugQuery.value.name = templateDetail.value.name;
   getTableData();
 };
+const toTemplate = () => {
+  routerPushByKey('device_template');
+};
 // watch(
 //     () => props.configInfo,
 //     (newValue) => {
@@ -130,7 +135,7 @@ onMounted(async () => {
 <template>
   <div class="attribute-box">
     <NFlex align="center">
-      <div class="m-b-10">绑定设备模板</div>
+      <div>绑定设备模板</div>
       <n-popover :show="showPopover" placement="bottom-start" trigger="manual" @clickoutside="showPopover = false">
         <template #trigger>
           <NInput
@@ -155,7 +160,7 @@ onMounted(async () => {
           </div>
         </div>
       </n-popover>
-      <div class="to-create">没有找到？去创建</div>
+      <div class="to-create" @click="toTemplate">没有找到？去创建</div>
     </NFlex>
   </div>
 </template>

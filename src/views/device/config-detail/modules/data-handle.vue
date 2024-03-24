@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { type FormInst, NButton, useDialog, useMessage } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
-import { dataScriptAdd, dataScriptDel, dataScriptEdit, getDataScriptList } from '@/service/api/device';
+import Codemirror from 'codemirror-editor-vue3';
+import 'codemirror/mode/javascript/javascript.js';
+import { dataScriptAdd, dataScriptDel, dataScriptEdit, dataScriptQuiz, getDataScriptList } from '@/service/api/device';
 const message = useMessage();
 const dialog = useDialog();
 
@@ -37,10 +39,11 @@ const scripTypeOpt = ref([
 function defaultConfigForm() {
   return {
     id: null,
-    content: null,
+    content: '',
     description: null,
     device_config_id: null,
     enable_flag: 'Y',
+    analog_input: null,
     last_analog_input: null,
     name: null,
     remark: null,
@@ -56,6 +59,11 @@ const configFormRules = ref({
   enable_flag: {
     required: true,
     message: '请选择',
+    trigger: 'change'
+  },
+  script_type: {
+    required: true,
+    message: '请选择处理类型',
     trigger: 'change'
   }
 });
@@ -144,7 +152,33 @@ const deleteData = async (item: any) => {
     }
   });
 };
-const doQuiz = async () => {};
+const doQuiz = async () => {
+  const postData = {
+    content: '',
+    analog_input: '',
+    topic: ''
+  };
+  await dataScriptQuiz(postData);
+};
+
+const cmRef = ref();
+const cmOptions = {
+  mode: 'text/javascript',
+  lineNumbers: false
+};
+const onChange = (val, cm) => {
+  console.log(val);
+  console.log(cm.getValue());
+};
+
+const onInput = val => {
+  console.log(val);
+};
+
+const onReady = cm => {
+  console.log(cm.focus());
+};
+
 onMounted(() => {
   queryDataScriptList();
 });
@@ -203,16 +237,26 @@ onMounted(() => {
         <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" />
       </NFormItem>
       <NFormItem label="解析脚本" path="content">
-        <NInput v-model:value="configForm.content" type="textarea" placeholder="请输入解析脚本" />
+        <Codemirror
+          ref="cmRef"
+          v-model:value="configForm.content"
+          :options="cmOptions"
+          border
+          height="200"
+          @change="onChange"
+          @input="onInput"
+          @ready="onReady"
+        ></Codemirror>
+        <!--        <NInput v-model:value="configForm.content" type="textarea" placeholder="请输入解析脚本" />-->
       </NFormItem>
       <NFormItem label="是否启用" path="enable_flag">
         <NSwitch v-model:value="configForm.enable_flag" checked-value="Y" unchecked-value="N" />
       </NFormItem>
-      <NFormItem label="模拟输入" path="last_analog_input">
-        <NInput v-model:value="configForm.last_analog_input" type="textarea" disabled />
+      <NFormItem label="模拟输入" path="analog_input">
+        <NInput v-model:value="configForm.analog_input" type="textarea" />
       </NFormItem>
-      <NFormItem label="调试运行结果" path="name">
-        <NInput v-model:value="configForm.last_analog_input" type="textarea" disabled />
+      <NFormItem label="调试运行结果" path="last_analog_input">
+        <NInput v-model:value="configForm.last_analog_input" type="textarea" />
       </NFormItem>
       <NButton type="primary" @click="doQuiz">调试</NButton>
     </NForm>

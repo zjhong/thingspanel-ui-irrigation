@@ -1,12 +1,14 @@
 <script lang="tsx" setup>
 import { onMounted, ref } from 'vue';
-import { NButton, NFlex, NPagination } from 'naive-ui';
+import { NButton, NCard, NFlex, NGrid, NGridItem, NPagination } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
-import { router } from '@/router';
+import type { LastLevelRouteKey } from '@elegant-router/types';
 import { deviceConfig } from '@/service/api/device';
+import { useRouterPush } from '@/hooks/common/router';
+const { routerPushByKey } = useRouterPush();
 
 const showModal = () => {
-  router.push({ name: 'device_config-edit' });
+  routerPushByKey('device_config-edit');
 };
 const queryData = ref({
   page: 1,
@@ -23,11 +25,13 @@ const getData = async () => {
   }
 };
 const handleQuery = async () => {
+  queryData.value.page = 1;
   deviceConfigList.value = [];
   await getData();
 };
-const openDetail = (item: any) => {
-  router.push({ name: 'device_config-detail', query: { id: item.id } });
+// 页面跳转
+const goRouter = (name: LastLevelRouteKey, id: string) => {
+  routerPushByKey(name, { query: { id } });
 };
 
 onMounted(() => {
@@ -36,17 +40,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="设备配置列表">
-      <NFlex justify="space-between">
+  <div class="h-full w-full">
+    <NCard :bordered="false">
+      <NFlex justify="space-between" class="mb-4">
         <NButton type="primary" @click="showModal()">+创建设备配置</NButton>
-        <NFlex align="center">
+        <NFlex align="center" justify="flex-end" :wrap="false">
           <NInput
             v-model:value="queryData.name"
             placeholder="请输入配置名称"
-            class="search-input"
             type="text"
             clearable
+            @clear="handleQuery"
+            @keydown.enter="handleQuery"
           >
             <template #prefix>
               <NIcon>
@@ -64,41 +69,36 @@ onMounted(() => {
         class="min-h-60 justify-center"
       ></n-empty>
       <template v-else>
-        <div class="config-content h-full flex-col">
-          <div
-            v-for="(item, itemIndex) in deviceConfigList"
-            :key="itemIndex"
-            class="config-item"
-            @click="openDetail(item)"
+        <NGrid x-gap="24" y-gap="16" :cols="24">
+          <NGridItem
+            v-for="item in deviceConfigList"
+            :key="item.id"
+            :span="6"
+            @click="goRouter('device_config-detail', item.id)"
           >
-            <img
-              class="config-item-img"
-              src="https://img0.baidu.com/it/u=1010119301,1861323772&fm=253&fmt=auto&app=138&f=JPEG?w=535&h=500"
-              alt=""
-            />
-            <div class="config-item-title">
-              {{ item.name }}
-            </div>
-            <div class="config-item-statistics">
-              <div>{{ item.device_count }}个设备</div>
-              <div>
-                <template v-if="item.device_type === '1'">直连设备</template>
-                <template v-if="item.device_type === '2'">网关</template>
-                <template v-if="item.device_type === '3'">网关子设备</template>
+            <NCard hoverable>
+              <div class="text-16px font-600">
+                {{ item.name }}
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="pagination-box">
-          <!-- Data table to display device groups -->
-          <!-- Pagination component -->
+              <NFlex justify="space-between" align="center" class="mt-4">
+                <div>{{ item.device_count }}个设备</div>
+                <div>
+                  <template v-if="item.device_type === '1'">直连设备</template>
+                  <template v-if="item.device_type === '2'">网关</template>
+                  <template v-if="item.device_type === '3'">网关子设备</template>
+                </div>
+              </NFlex>
+            </NCard>
+          </NGridItem>
+        </NGrid>
+        <NFlex justify="end" class="mt-4">
           <NPagination
             v-model:page="queryData.page"
             :page-size="queryData.page_size"
             :item-count="dataTotal"
             @update:page="getData"
           />
-        </div>
+        </NFlex>
       </template>
     </NCard>
   </div>
@@ -124,36 +124,6 @@ onMounted(() => {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     border-radius: 12px;
-    .config-item-img {
-      width: 80px;
-      height: 60px;
-    }
-    .config-item-title {
-      margin: 10px 0;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    .config-item-statistics {
-      display: flex;
-      flex-flow: row;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-    }
   }
-  .config-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  /* 去除每行尾多余的边距 */
-  .config-item:nth-child(4n) {
-    margin-right: 0;
-  }
-}
-.pagination-box {
-  display: flex;
-  justify-content: flex-end;
-}
-.search-input {
-  width: 180px;
 }
 </style>

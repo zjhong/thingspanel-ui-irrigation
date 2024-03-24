@@ -118,7 +118,7 @@ let addFrom: any = reactive({
   data_name: '',
   data_identifier: '',
   description: '',
-  additional_info: ''
+  params: ''
 })
 
 // 监听一下父组件传递过来的编辑数据
@@ -129,8 +129,8 @@ watch(objItem, (newVal) => {
       device_template_id: DeviceTemplateId,
       ...newVal
     })
-    eventsData = reactive(JSON.parse(newVal.additional_info))
-    console.log(JSON.parse(newVal.additional_info), '父级');
+    eventsData = reactive(JSON.parse(newVal.params))
+    console.log(JSON.parse(newVal.params), '父级');
 
   } else {
     addFrom = reactive({
@@ -138,7 +138,7 @@ watch(objItem, (newVal) => {
       data_name: '',
       data_identifier: '',
       description: '',
-      additional_info: ''
+      params: ''
     })
   }
 }, { deep: true, immediate: true });
@@ -191,7 +191,7 @@ const addParams: () => void = () => {
 // 确定按钮
 const submit: () => void = async () => {
   await formRef.value?.validate()
-  addFrom.additional_info = JSON.stringify(eventsData)
+  addFrom.params = JSON.stringify(eventsData)
   if (props.objItem.id) {
     const response: any = await putEvents(addFrom)
     if (response.data) {

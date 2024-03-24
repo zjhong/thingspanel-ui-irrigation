@@ -2,7 +2,7 @@
   "name": "tp-tenant",
   "type": "module",
   "version": "0.1.0",
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@8.15.5",
   "description": "ThingsPanel",
   "author": {
     "name": "ThingsPanle"

@@ -169,3 +169,42 @@ export const telemetryDataCurrent = async (id: any) => {
   const url = `/telemetry/datas/current/${id}`;
   return await request.get<DeviceManagement.telemetryCurrent | any>(url);
 };
+/** 设备遥测当前值查询 * */
+
+export const getTelemetryLogList = async (params: any) => {
+  return await request.get<any>(`/telemetry/datas/set/logs`, { params });
+};
+/** 调试数据处理 */
+export const telemetryDataPub = async (params: any) => {
+  return await request.post<any>(`/telemetry/datas/pub`, params);
+};
+
+/** 属性下发记录查询（分页） */
+export const getAttributeDataSetLogs = async (params: any) => {
+  return await request.get<any>(`/attribute/datas/set/logs`, { params });
+};
+
+/** 下发属性 */
+export const attributeDataPub = async (params: any) => {
+  return await request.post<any>(`/attribute/datas/pub`, params);
+};
+
+/** 属性下发记录查询（分页） */
+export const getEventDataSet = async (params: any) => {
+  return await request.get<any>(`/event/datas`, { params });
+};
+
+/** 属性下发记录查询（分页） */
+export const getCommandDataSetLogs = async (params: any) => {
+  return await request.get<any>(`/command/datas/set/logs`, { params });
+};
+
+/** 下发命令 */
+export const commandDataPub = async (params: any) => {
+  return await request.post<any>(`/command/datas/pub`, params);
+};
+/** 命令标识符下拉菜单 */
+export const commandDataById = async (id: any) => {
+  const url = `/command/datas/${id}`;
+  return await request.get<DeviceManagement.telemetryCurrent | any>(url);
+};

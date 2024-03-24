@@ -5,10 +5,11 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <p>设备id：{{ id }}</p>
-    <p><span>logs 日志</span></p>
-  </div>
+  <NCard>
+    <div class="h-500px flex-center flex-col">
+      <n-empty description="暂无数据"></n-empty>
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

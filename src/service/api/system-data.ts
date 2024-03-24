@@ -52,3 +52,83 @@ export const commandsApi = async (params: any) => {
   );
   return data;
 };
+
+/** 新增遥测数据*/
+export const addTelemetry = async (params: any): Promise<any> => {
+  const data = await request.post("/device/model/telemetry", params);
+  return data;
+};
+
+/** 删除遥测数据*/
+export const delTelemetry = async (id: string) => {
+  const data = await request.delete<Api.BaseApi.Data>(
+    `/device/model/telemetry/${id}`,
+  );
+  return data;
+};
+
+/** 删除属性数据*/
+export const delAttributes = async (id: string) => {
+  const data = await request.delete<Api.BaseApi.Data>(
+    `/device/model/attributes/${id}`,
+  );
+  return data;
+};
+
+/** 删除事件数据*/
+export const delEvents = async (id: string) => {
+  const data = await request.delete<Api.BaseApi.Data>(
+    `/device/model/events/${id}`,
+  );
+  return data;
+};
+
+/** 删除命令数据*/
+export const delCommands = async (id: string) => {
+  const data = await request.delete<Api.BaseApi.Data>(
+    `/device/model/commands/${id}`,
+  );
+  return data;
+};
+
+/** 编辑遥测数据*/
+export const putTelemetry = async (params: any): Promise<any> => {
+  const data = await request.put("/device/model/telemetry", params);
+  return data;
+};
+
+/** 新增属性数据*/
+export const addAttributes = async (params: any): Promise<any> => {
+  const data = await request.post("/device/model/attributes", params);
+  return data;
+};
+
+/** 编辑属性数据*/
+export const putAttributes = async (params: any): Promise<any> => {
+  const data = await request.put("/device/model/attributes", params);
+  return data;
+};
+
+/** 新增事件数据*/
+export const addEvents = async (params: any): Promise<any> => {
+  const data = await request.post("/device/model/events", params);
+  return data;
+};
+
+/** 编辑事件数据*/
+export const putEvents= async (params: any): Promise<any> => {
+  const data = await request.put("/device/model/events", params);
+  return data;
+};
+
+/** 新增命令数据*/
+export const addCommands = async (params: any): Promise<any> => {
+  const data = await request.post("/device/model/commands", params);
+  return data;
+};
+
+/** 编辑命令数据*/
+export const putCommands = async (params: any): Promise<any> => {
+  const data = await request.put("/device/model/commands", params);
+  return data;
+};

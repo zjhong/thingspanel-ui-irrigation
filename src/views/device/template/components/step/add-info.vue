@@ -162,9 +162,9 @@ const cancellation: () => void = () => {
       </n-button-group>
     </n-upload>
   </div>
-  <div>
-    <n-button @click="cancellation">取消</n-button>
+  <div class="box1 m-t2">
     <n-button @click="next">下一步</n-button>
+    <n-button @click="cancellation" class="m-r3">取消</n-button>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -230,5 +230,10 @@ const cancellation: () => void = () => {
 
 .upload-btn {
   pointer-events: auto;
+}
+
+.box1 {
+  display: flex;
+  flex-direction: row-reverse;
 }
 </style>

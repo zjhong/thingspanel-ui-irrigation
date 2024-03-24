@@ -13,12 +13,12 @@ export const test: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
     align: "center",
   },
   {
-    key: "read_write_flag",
+    key: "data_type",
     title: "读写标志",
     align: "center",
   },
   {
-    key: "data_type",
+    key: "read_write_flag",
     title: "数据类型",
     align: "center",
   },
@@ -46,12 +46,12 @@ export const attribute: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
     align: "center",
   },
   {
-    key: "read_write_flag",
+    key: "data_type",
     title: "读写标志",
     align: "center",
   },
   {
-    key: "data_type",
+    key: "read_write_flag",
     title: "数据类型",
     align: "center",
   },

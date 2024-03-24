@@ -74,7 +74,8 @@ defineOptions({ name: 'TableActionModal' });
       <n-step title="web图表配置" description="绑定相对应的图表" />
       <n-step title="发布" description="发布到应用商店" />
     </n-steps>
-    <component :is="SwitchComponents" v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible" v-model:DeviceTemplateId="DeviceTemplateId"></component>
+    <component :is="SwitchComponents" v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"
+      v-model:DeviceTemplateId="DeviceTemplateId"></component>
     <!-- <AddInfo v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></AddInfo>
     <ModelDefinition v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></ModelDefinition> -->
     <!-- <n-button @click="modalVisible = false">取消</n-button>

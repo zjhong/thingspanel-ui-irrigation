@@ -60,7 +60,7 @@ onMounted(() => {
       </div>
       <n-divider title-placement="left"></n-divider>
       <div>
-        <n-tabs>
+        <n-tabs type="line">
           <n-tab-pane
             v-for="component in components.filter(
               i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id
@@ -69,7 +69,11 @@ onMounted(() => {
             :tab="component.name"
             :name="component.name"
           >
-            <component :is="component.component" :id="id as string" />
+            <component
+              :is="component.component"
+              :id="id as string"
+              :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
+            />
           </n-tab-pane>
         </n-tabs>
       </div>

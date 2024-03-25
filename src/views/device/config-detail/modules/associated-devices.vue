@@ -11,6 +11,7 @@ const message = useMessage();
 interface Props {
   deviceConfigId?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   deviceConfigId: ''
 });
@@ -21,7 +22,7 @@ const associatedForm = ref(defaultAssociatedForm());
 function defaultAssociatedForm() {
   return {
     device_ids: null,
-    deviceConfigId: ''
+    device_config_id: ''
   };
 }
 
@@ -41,7 +42,7 @@ const addDevice = () => {
 const modalClose = () => {};
 const handleSubmit = async () => {
   await associatedFormRef?.value?.validate();
-  associatedForm.value.deviceConfigId = props.deviceConfigId;
+  associatedForm.value.device_config_id = props.deviceConfigId;
   const res = await deviceConfigBatch(associatedForm.value);
   if (!res.error) {
     message.success('新增成功');
@@ -112,14 +113,15 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   }
 ]);
 const queryData = ref({
-  deviceConfigId: '',
+  device_config_id: props.deviceConfigId,
   page: 1,
   page_size: 10
 });
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
-  queryData.value.deviceConfigId = props.deviceConfigId;
+  console.log(props.deviceConfigId, '432432432434');
+  queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
@@ -191,6 +193,7 @@ onMounted(async () => {
   display: flex;
   justify-content: flex-end;
 }
+
 .table-class {
   margin: 10px;
   height: 50%;

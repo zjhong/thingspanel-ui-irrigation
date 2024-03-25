@@ -11,6 +11,7 @@ import ExtendInfo from './modules/extend-info.vue';
 import AttributeInfo from './modules/attribute-info.vue';
 import ConnectionInfo from './modules/connection-info.vue';
 import AlarmInfo from './modules/alarm-info.vue';
+
 const { routerPushByKey } = useRouterPush();
 const route = useRoute();
 const configId = ref(route.query.id || ('' as any));
@@ -58,7 +59,7 @@ onMounted(async () => {
       </div>
       <n-tabs animated type="line">
         <n-tab-pane name="关联设备" tab="关联设备">
-          <AssociatedDevices :device_config_id="configId" />
+          <AssociatedDevices :device-config-id="configId" />
         </n-tab-pane>
         <n-tab-pane name="属性与功能" tab="属性与功能">
           <AttributeInfo :config-info="configForm" @up-date-config="getConfig" />

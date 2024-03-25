@@ -4,10 +4,12 @@ import { deviceConfigInfo } from '@/service/api';
 import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置调整
 const props = defineProps<{
   id: string;
+  deviceConfigId: string;
 }>();
 const latitude = ref('');
 const longitude = ref('');
 const isShow = ref(false);
+
 const onPositionSelected = position => {
   latitude.value = position.lat.toString();
   longitude.value = position.lng.toString();
@@ -18,7 +20,7 @@ const openMapAndGetPosition = () => {
   isShow.value = true;
 };
 const getConfigInfo = async () => {
-  const res = deviceConfigInfo({ id: props.id });
+  const res = deviceConfigInfo({ id: props.deviceConfigId });
   console.log(res);
 };
 onMounted(getConfigInfo);

@@ -842,6 +842,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'space-management',
+    path: '/space-management',
+    component: 'layout.base$view.space-management',
+    meta: {
+      title: 'space-management',
+      i18nKey: 'route.space-management'
+    }
+  },
+  {
     name: 'system-management-user',
     path: '/system-management-user',
     component: 'layout.base',
@@ -850,6 +859,15 @@ export const generatedRoutes: GeneratedRoute[] = [
       i18nKey: 'route.system-management-user'
     },
     children: [
+      {
+        name: 'system-management-user_equipment-map',
+        path: '/system-management-user/equipment-map',
+        component: 'view.system-management-user_equipment-map',
+        meta: {
+          title: 'system-management-user_equipment-map',
+          i18nKey: 'route.system-management-user_equipment-map'
+        }
+      },
       {
         name: 'system-management-user_system-log',
         path: '/system-management-user/system-log',

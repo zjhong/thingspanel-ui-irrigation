@@ -4,12 +4,12 @@
  * @Author: zhaoqi
  * @Date: 2024-03-17 16:22:54
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-20 19:48:53
+ * @LastEditTime: 2024-03-24 16:04:26
 -->
 <script setup lang="tsx">
 import { reactive, ref } from "vue";
 import type { Ref } from "vue";
-import { NButton, NSpace,useMessage } from "naive-ui";
+import { NButton, NSpace, useMessage } from "naive-ui";
 import dayjs from "dayjs";
 import type {
   DataTableColumns,
@@ -89,7 +89,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: "alarm_time",
     title: "告警时间",
     align: "center",
-    width:"200",
+    width: "200",
     render(row: {
       id: string;
       name: string;
@@ -161,7 +161,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           <NButton
             type="primary"
             size={"small"}
-            onClick={() => handleEditPwd(row.id)}
+            onClick={() => handleEditPwd(row)}
           >
             详情
           </NButton>
@@ -193,17 +193,15 @@ const paramsData = ref({
 async function disposeData() {
   loading.value = true;
   const { data } = await processingOperation(paramsData.value);
-  if (data){
+  if (data) {
     loading.value = false;
-    message.success("操作成功")
-  } else{
+    message.success("操作成功");
+  } else {
     message.error("操作失败");
     loading.value = false;
   }
 }
-function handleEditPwd(rowId: string) {
-  console.log(1111);
-}
+
 function handleEditTable(rowId: string, type: string) {
   console.log(1111);
   paramsData.value.id = rowId;
@@ -233,10 +231,10 @@ const batchData = ref({
 async function batchProcessings() {
   const { data } = await batchProcessing(batchData.value);
   console.log(data);
-  if(!data){
+  if (!data) {
     loading.value = false;
-    message.success("批量操作成功")
-  }else{
+    message.success("批量操作成功");
+  } else {
     message.error("批量操作失败");
     loading.value = false;
   }
@@ -281,7 +279,7 @@ async function list() {
 
 function pickerChange() {
   listData.value.StartTime = dayjs(range.value[0]).format(
-    "YYYY-MM-DD HH:mm:ss",
+    "YYYY-MM-DD HH:mm:ss"
   );
 
   listData.value.EndTime = dayjs(range.value[1]).format("YYYY-MM-DD HH:mm:ss");
@@ -289,7 +287,7 @@ function pickerChange() {
   list();
 }
 function alarmLevelChang(e) {
-  listData.value.alarmLevel=e
+  listData.value.alarmLevel = e;
   list();
 }
 function processingResultBlur() {
@@ -297,6 +295,12 @@ function processingResultBlur() {
   list();
 }
 list();
+const particulars = ref(false);
+const particularsText = ref("");
+function handleEditPwd(row) {
+  particularsText.value = row.content;
+  particulars.value = true;
+}
 </script>
 
 <template>
@@ -356,8 +360,33 @@ list();
           <n-button @click="handleIgnore">批量忽略</n-button>
         </n-space>
       </n-space>
+      <NModal
+        v-model:show="particulars"
+        preset="card"
+        title="详情"
+        class="w-800px"
+      >
+        <div class="pop-up">
+          <div>告警内容:</div>
+          <div class="pop-up-content">
+            {{ particularsText }}
+          </div>
+        </div>
+      </NModal>
     </NCard>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.pop-up {
+  display: flex;
+}
+.pop-up-content {
+  margin-left: 15px;
+  width: 90%;
+  height: 200px;
+  padding: 10px;
+  border: 1px solid rgb(215, 213, 213);
+  border-radius: 10px;
+}
+</style>

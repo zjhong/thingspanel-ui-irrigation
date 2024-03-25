@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref,} from 'vue';
 import { $t } from '@/locales';
 import { initTemplateInfoData, templateInfoData } from '../utils';
 import AddInfo from './step/add-info.vue';
 import ModelDefinition from './step/model-definition.vue';
 
-// import { $t } from '@/locales';
+
 const stepCurrent = ref<number>(1);
 const DeviceTemplateId = ref<string>('');
 
@@ -26,6 +26,7 @@ const SwitchComponents = computed<any>(() => {
 // const release: () => void = () => {
 //   console.log('准备发布了');
 // }
+// 提供数据或方法
 
 export interface Props {
   visible: boolean;
@@ -72,26 +73,16 @@ defineOptions({ name: 'TableActionModal' });
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-60%">
     <n-steps :current="stepCurrent" status="process">
       <n-step :title="$t('device_template.templateInfo')" :description="$t('device_template.addDeviceInfo')" />
-      <n-step
-        :title="$t('device_template.modelDefinition')"
-        :description="$t('device_template.deviceParameterDescribe')"
-      />
-      <n-step
-        :title="$t('device_template.webChartConfiguration')"
-        :description="$t('device_template.bindTheCorrespondingChart')"
-      />
-      <n-step
-        :title="$t('device_template.appChartConfiguration')"
-        :description="$t('device_template.editAppDetailsPage')"
-      />
+      <n-step :title="$t('device_template.modelDefinition')"
+        :description="$t('device_template.deviceParameterDescribe')" />
+      <n-step :title="$t('device_template.webChartConfiguration')"
+        :description="$t('device_template.bindTheCorrespondingChart')" />
+      <n-step :title="$t('device_template.appChartConfiguration')"
+        :description="$t('device_template.editAppDetailsPage')" />
       <n-step :title="$t('device_template.release')" :description="$t('device_template.releaseAppStore')" />
     </n-steps>
-    <component
-      :is="SwitchComponents"
-      v-model:stepCurrent="stepCurrent"
-      v-model:modalVisible="modalVisible"
-      v-model:DeviceTemplateId="DeviceTemplateId"
-    ></component>
+    <component :is="SwitchComponents" v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"
+      v-model:DeviceTemplateId="DeviceTemplateId"></component>
     <!--
  <AddInfo v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></AddInfo>
     <ModelDefinition v-model:stepCurrent="stepCurrent" v-model:modalVisible="modalVisible"></ModelDefinition>

@@ -132,3 +132,12 @@ export const putCommands = async (params: any): Promise<any> => {
   const data = await request.put("/device/model/commands", params);
   return data;
 };
+
+/** 获取遥测数据 */
+export const  gitTelemetry= async (params: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    "/device/model/telemetry",
+    { params },
+  );
+  return data;
+};

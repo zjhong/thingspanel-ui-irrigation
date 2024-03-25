@@ -1,10 +1,23 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
+import { useDeviceDataStore } from '@/store/modules/device/index';
 import { localStg } from '@/utils/storage';
-import { addTemplat } from '@/service/api/system-data';
+import { addTemplat, gitTelemetry } from '@/service/api/system-data';
 import { $t } from '@/locales';
 import { createServiceConfig } from '~/env.config';
+
+const counterStore = useDeviceDataStore()
+const edit: () => void = async () => {
+  if (counterStore.executeFlag !== '') {
+    const response: any = await gitTelemetry({
+      page:1,
+      page_size:10,
+      device_template_id:counterStore.executeFlag.value
+    })
+    console.log(response, '哎嘿，获取不到吧，就是让你获取不到');
+  }
+}
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
 defineProps({
@@ -19,7 +32,7 @@ defineProps({
   DeviceTemplateId: {
     type: String,
     required: true
-  }
+  },
 });
 
 const formRef: any = ref(null);
@@ -43,6 +56,8 @@ const addFrom: AddFrom = reactive({
   path: '',
   lable: ''
 });
+
+edit()
 
 type Rule = {
   required: boolean;
@@ -104,7 +119,7 @@ const next: () => void = async () => {
   emit('update:stepCurrent', 2);
   emit('update:DeviceTemplateId', response.data.id);
 };
-// 取消
+
 const cancellation: () => void = () => {
   emit('update:modalVisible', false);
 };
@@ -112,27 +127,14 @@ const cancellation: () => void = () => {
 
 <template>
   <div class="flex flex-justify-between">
-    <n-form
-      ref="formRef"
-      :model="addFrom"
-      :rules="fromRules"
-      label-placement="left"
-      label-width="100"
-      require-mark-placement="right-hanging"
-      class="addFrom"
-    >
+    <n-form ref="formRef" :model="addFrom" :rules="fromRules" label-placement="left" label-width="100"
+      require-mark-placement="right-hanging" class="addFrom">
       <n-form-item :label="$t('device_template.templateName')" path="name">
         <n-input v-model:value.trim="addFrom.name" :placeholder="$t('device_template.enterTemplateName')" />
       </n-form-item>
       <n-form-item :label="$t('device_template.templateTage')" class="tag-item">
-        <n-tag
-          v-for="(item, index) in addFrom.templateTage"
-          :key="index"
-          size="small"
-          class="tag"
-          closable
-          @close="tagsClose(index)"
-        >
+        <n-tag v-for="(item, index) in addFrom.templateTage" :key="index" size="small" class="tag" closable
+          @close="tagsClose(index)">
           {{ item }}
         </n-tag>
         <n-tag v-if="!tageFlag" size="small" class="tag addTage" @click="addTags">
@@ -141,14 +143,8 @@ const cancellation: () => void = () => {
             <SvgIcon local-icon="add" class="more" />
           </template>
         </n-tag>
-        <n-input
-          v-else
-          v-model:value.trim="addTageText"
-          class="tag-ipt"
-          placeholder="请输入标签名称"
-          autofocus
-          @blur="tagBlur"
-        />
+        <n-input v-else v-model:value.trim="addTageText" class="tag-ipt" placeholder="请输入标签名称" autofocus
+          @blur="tagBlur" />
       </n-form-item>
       <n-form-item :label="$t('device_template.authorName')">
         <n-input v-model:value.trim="addFrom.author" :placeholder="$t('device_template.enterAuthorName')" />
@@ -157,22 +153,12 @@ const cancellation: () => void = () => {
         <n-input v-model:value.trim="addFrom.version" :placeholder="$t('device_template.entertemplateVersion')" />
       </n-form-item>
       <n-form-item :label="$t('device_template.illustrate')">
-        <n-input
-          v-model:value.trim="addFrom.remark"
-          type="textarea"
-          :placeholder="$t('device_template.enterIllustrate')"
-        />
+        <n-input v-model:value.trim="addFrom.remark" type="textarea"
+          :placeholder="$t('device_template.enterIllustrate')" />
       </n-form-item>
     </n-form>
-    <n-upload
-      :action="url + '/file/up'"
-      :headers="{ 'x-token': localStg.get('token') || '' }"
-      :data="{ type: 'image' }"
-      class="upload"
-      :show-file-list="false"
-      accept="image/png, image/jpeg, image/jpg, image/gif"
-      @finish="customRequest"
-    >
+    <n-upload :action="url + '/file/up'" :headers="{ 'x-token': localStg.get('token') || '' }" :data="{ type: 'image' }"
+      class="upload" :show-file-list="false" accept="image/png, image/jpeg, image/jpg, image/gif" @finish="customRequest">
       <n-upload-dragger>
         <img v-if="pngPath && pngPath !== ''" :src="pngPath" class="slt" />
         <n-icon v-else size="35" :depth="3">

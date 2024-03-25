@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { computed, reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
+import { useDeviceDataStore } from '@/store/modules/device/index';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
@@ -19,6 +20,8 @@ import AddEditTest from './add-edit-test.vue';
 import AddEditAttributes from './add-edit-attributes.vue';
 import AddEditEvents from './add-edit-events.vue';
 import AddEditCommands from './add-edit-commands.vue';
+
+const counterStore = useDeviceDataStore()
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -127,6 +130,8 @@ const next: () => void = async () => {
 };
 // 下一步
 const back: () => void = async () => {
+  console.log(counterStore, '使用pinia');
+  counterStore.executeEdit(DeviceTemplateId)
   emit('update:stepCurrent', 1);
 };
 // 取消
@@ -327,13 +332,8 @@ getTableData();
           </template>
           {{ $t('device_template.add') }}
         </NButton>
-        <n-data-table
-          :columns="item.col"
-          :data="item.data"
-          :loading="loading"
-          :pagination="pagination"
-          class="m-t9 flex-1-hidden"
-        />
+        <n-data-table :columns="item.col" :data="item.data" :loading="loading" :pagination="pagination"
+          class="m-t9 flex-1-hidden" />
       </n-tab-pane>
     </n-tabs>
   </div>
@@ -342,20 +342,11 @@ getTableData();
     <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>
     <NButton class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</NButton>
   </div>
-  <NModal
-    v-model:show="addAndEditModalVisible"
-    preset="card"
-    :title="addAndEditTitle"
+  <NModal v-model:show="addAndEditModalVisible" preset="card" :title="addAndEditTitle"
     :class="[tabsCurrent === 'events' || tabsCurrent === 'command' ? 'w-50%' : 'w-30%']"
-    @after-leave="cloneaddAndEditVisible"
-  >
-    <component
-      :is="SwitchCom"
-      v-model:addAndEditModalVisible="addAndEditModalVisible"
-      v-model:DeviceTemplateId="DeviceTemplateId"
-      v-model:objItem="objItem"
-      @determine="determine"
-    ></component>
+    @after-leave="cloneaddAndEditVisible">
+    <component :is="SwitchCom" v-model:addAndEditModalVisible="addAndEditModalVisible"
+      v-model:DeviceTemplateId="DeviceTemplateId" v-model:objItem="objItem" @determine="determine"></component>
   </NModal>
 </template>
 

@@ -122,16 +122,17 @@ const columns_to_show = [
   }
 ];
 const { routerPushByKey } = useRouterPush();
+const goDeviceDetails = row => {
+  routerPushByKey('device_details', {
+    query: {
+      id: row.id
+    }
+  });
+};
 const actions = [
   {
     label: '详情',
-    callback: row => {
-      routerPushByKey('device_details', {
-        query: {
-          id: row.id
-        }
-      });
-    }
+    callback: goDeviceDetails
   },
   {
     label: '删除',
@@ -268,6 +269,7 @@ watch(
       :table-actions="actions"
       :search-configs="searchConfigs"
       :top-actions="topActions"
+      :row-click="goDeviceDetails"
     />
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">

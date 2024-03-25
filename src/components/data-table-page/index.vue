@@ -46,6 +46,7 @@ const props = defineProps<{
     callback: any; // 点击回调
   }>;
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
+  rowClick?: (row: any) => void; // 表格行点击回调
 }>();
 const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
@@ -193,7 +194,17 @@ const loadOptionsOnMount = async pattern => {
     }
   }
 };
-
+const rowProps = row => {
+  if (props && props.rowClick) {
+    return {
+      style: 'cursor: pointer;',
+      onClick: () => {
+        props.rowClick && props.rowClick(row);
+      }
+    };
+  }
+  return {};
+};
 const loadOptionsOnMount2 = async () => {
   for (const config of searchConfigs) {
     if (config.type === 'tree-select' && config.loadOptions) {
@@ -211,119 +222,128 @@ loadOptionsOnMount2();
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 rounded-lg p-6 shadow">
-    <!-- 搜索区域与操作按钮 -->
-    <div class="row flex items-end justify-between gap-4">
-      <!-- 搜索输入和选择器 -->
-      <div class="flex flex-1 flex-wrap items-end gap-4">
-        <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
-          <template v-if="config.type === 'input'">
-            <NInput
-              v-model:value="searchCriteria[config.key]"
-              size="small"
-              :placeholder="config.label"
-              class="input-style"
-            />
-          </template>
-          <template v-else-if="config.type === 'date-range'">
-            <NDatePicker
-              v-model:value="searchCriteria[config.key]"
-              size="small"
-              type="daterange"
-              :placeholder="config.label"
-              class="input-style"
-            />
-          </template>
-          <template v-else-if="config.type === 'select'">
-            <NSelect
-              v-model:value="searchCriteria[config.key]"
-              size="small"
-              filterable
-              :options="config.options"
-              :placeholder="config.label"
-              class="input-style"
-              @search="
-                value => {
-                  throttledLoadOptionsOnMount(value);
-                }
-              "
-            />
-          </template>
-          <template v-else-if="config.type === 'date'">
-            <NDatePicker
-              v-model:value="searchCriteria[config.key]"
-              size="small"
-              type="date"
-              :placeholder="config.label"
-              class="input-style"
-            />
-          </template>
-          <template v-else-if="config.type === 'tree-select'">
-            <n-tree-select
-              v-model:value="searchCriteria[config.key]"
-              size="small"
-              filterable
-              :options="config.options"
-              :multiple="config.multiple"
-              class="input-style"
-              @update:value="value => handleTreeSelectUpdate(value, config.key)"
-            />
-          </template>
+  <n-card>
+    <div class="flex flex-col gap-6 rounded-lg">
+      <!-- 搜索区域与操作按钮 -->
+      <div class="row flex items-end justify-between gap-4">
+        <!-- 搜索输入和选择器 -->
+        <div class="flex flex-1 flex-wrap items-end gap-4">
+          <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
+            <template v-if="config.type === 'input'">
+              <NInput
+                v-model:value="searchCriteria[config.key]"
+                size="small"
+                :placeholder="config.label"
+                class="input-style"
+              />
+            </template>
+            <template v-else-if="config.type === 'date-range'">
+              <NDatePicker
+                v-model:value="searchCriteria[config.key]"
+                size="small"
+                type="daterange"
+                :placeholder="config.label"
+                class="input-style"
+              />
+            </template>
+            <template v-else-if="config.type === 'select'">
+              <NSelect
+                v-model:value="searchCriteria[config.key]"
+                size="small"
+                filterable
+                :options="config.options"
+                :placeholder="config.label"
+                class="input-style"
+                @search="
+                  value => {
+                    throttledLoadOptionsOnMount(value);
+                  }
+                "
+              />
+            </template>
+            <template v-else-if="config.type === 'date'">
+              <NDatePicker
+                v-model:value="searchCriteria[config.key]"
+                size="small"
+                type="date"
+                :placeholder="config.label"
+                class="input-style"
+              />
+            </template>
+            <template v-else-if="config.type === 'tree-select'">
+              <n-tree-select
+                v-model:value="searchCriteria[config.key]"
+                size="small"
+                filterable
+                :options="config.options"
+                :multiple="config.multiple"
+                class="input-style"
+                @update:value="value => handleTreeSelectUpdate(value, config.key)"
+              />
+            </template>
+          </div>
+          <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
+          <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
         </div>
-        <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
-        <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
+        <!-- 新建与返回按钮 -->
       </div>
-      <!-- 新建与返回按钮 -->
-    </div>
-    <div class="flex items-center justify-between">
-      <div class="flex gap-2">
-        <component :is="action.element" v-for="(action, index) in topActions" :key="index"></component>
+      <div class="h-2px w-full bg-[#f6f9f8]"></div>
+      <div class="flex items-center justify-between">
+        <div class="flex gap-2">
+          <component :is="action.element" v-for="(action, index) in topActions" :key="index"></component>
+        </div>
+        <!-- 组件内部的表操作 -->
+        <div>
+          <NButton quaternary @click="isTableView = true">
+            <template #icon>
+              <n-icon text style="font-size: 24px">
+                <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px" />
+              </n-icon>
+            </template>
+          </NButton>
+          <NButton quaternary @click="isTableView = false">
+            <template #icon>
+              <n-icon text style="font-size: 24px">
+                <icon-material-symbols:map-rounded class="text-24px" />
+              </n-icon>
+            </template>
+          </NButton>
+          <NButton quaternary @click="getData">
+            <template #icon>
+              <n-icon text style="font-size: 24px">
+                <icon-material-symbols:refresh class="text-24px" />
+              </n-icon>
+            </template>
+          </NButton>
+        </div>
       </div>
-      <!-- 组件内部的表操作 -->
-      <div>
-        <NButton quaternary @click="isTableView = true">
-          <template #icon>
-            <n-icon text style="font-size: 24px">
-              <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px" />
-            </n-icon>
-          </template>
-        </NButton>
-        <NButton quaternary @click="isTableView = false">
-          <template #icon>
-            <n-icon text style="font-size: 24px">
-              <icon-material-symbols:map-rounded class="text-24px" />
-            </n-icon>
-          </template>
-        </NButton>
-        <NButton quaternary @click="getData">
-          <template #icon>
-            <n-icon text style="font-size: 24px">
-              <icon-material-symbols:refresh class="text-24px" />
-            </n-icon>
-          </template>
-        </NButton>
+      <!-- 数据表格 -->
+      <div v-if="isTableView" class="overflow-x-auto">
+        <NDataTable
+          :row-props="rowProps"
+          :loading="loading"
+          :columns="generatedColumns"
+          :data="dataList"
+          class="w-full"
+        />
       </div>
-    </div>
-    <!-- 数据表格 -->
-    <div v-if="isTableView" class="overflow-x-auto">
-      <NDataTable :loading="loading" :columns="generatedColumns" :data="dataList" class="w-full" />
-    </div>
-    <div v-else class="h-525px">
-      <!-- 地图视图占位 -->
-      <TencentMap :devices="dataList" />
-    </div>
+      <div v-else class="h-525px">
+        <!-- 地图视图占位 -->
+        <TencentMap :devices="dataList" />
+      </div>
 
-    <n-pagination
-      v-model:page="currentPage"
-      v-model:page-size="pageSize"
-      class="justify-end"
-      :item-count="total"
-      :page-size-options="[10, 20, 30, 40]"
-      show-size-picker
-      @update:page="onUpdatePage"
-      @update:page-size="onUpdatePageSize"
-    />
-  </div>
+      <n-pagination
+        v-model:page="currentPage"
+        v-model:page-size="pageSize"
+        class="justify-end"
+        :item-count="total"
+        :page-size-options="[10, 20, 30, 40]"
+        show-size-picker
+        @update:page="onUpdatePage"
+        @update:page-size="onUpdatePageSize"
+      />
+    </div>
+  </n-card>
 </template>
 
 <style scoped>

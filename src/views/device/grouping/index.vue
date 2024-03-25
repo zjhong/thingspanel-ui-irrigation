@@ -103,7 +103,21 @@ onMounted(getDevice); // Fetch device groups on component mount
       </NFlex>
       <div class="mt-20px">
         <!-- Data table to display device groups -->
-        <NDataTable :columns="columns" :data="data" :loading="loading"></NDataTable>
+        <NDataTable
+          :row-props="
+            row => {
+              return {
+                style: 'cursor: pointer;',
+                onClick: () => {
+                  viewDetails(row.id);
+                }
+              };
+            }
+          "
+          :columns="columns"
+          :data="data"
+          :loading="loading"
+        ></NDataTable>
         <!-- Pagination component -->
         <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
       </div>

@@ -39,37 +39,41 @@ onMounted(() => {
 
 <template>
   <div>
-    <div>
-      <NH3>{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
+    <n-card>
+      <div>
+        <NH3>{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
 
-      <n-descriptions label-placement="left" :column="6">
-        <n-descriptions-item label="设备编号：">
-          {{ deviceDataStore?.deviceData?.device_number || '--' }}
-        </n-descriptions-item>
-        <n-descriptions-item label="设备配置：">
-          {{ deviceDataStore?.deviceData?.protocol_config || '--' }}
-        </n-descriptions-item>
-        <n-descriptions-item label=" 状态：">
-          {{ deviceDataStore?.deviceData?.is_online === 1 ? '在线' : '离线' }}
-        </n-descriptions-item>
-        <n-descriptions-item label="告警:">{{ deviceDataStore?.deviceData?.remark1 || '无告警' }}</n-descriptions-item>
-      </n-descriptions>
-    </div>
-    <n-divider title-placement="left"></n-divider>
-    <div>
-      <n-tabs>
-        <n-tab-pane
-          v-for="component in components.filter(
-            i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id
-          )"
-          :key="component.key"
-          :tab="component.name"
-          :name="component.name"
-        >
-          <component :is="component.component" :id="id as string" />
-        </n-tab-pane>
-      </n-tabs>
-    </div>
+        <n-descriptions label-placement="left" :column="6">
+          <n-descriptions-item label="设备编号：">
+            {{ deviceDataStore?.deviceData?.device_number || '--' }}
+          </n-descriptions-item>
+          <n-descriptions-item label="设备配置：">
+            {{ deviceDataStore?.deviceData?.protocol_config || '--' }}
+          </n-descriptions-item>
+          <n-descriptions-item label=" 状态：">
+            {{ deviceDataStore?.deviceData?.is_online === 1 ? '在线' : '离线' }}
+          </n-descriptions-item>
+          <n-descriptions-item label="告警:">
+            {{ deviceDataStore?.deviceData?.remark1 || '无告警' }}
+          </n-descriptions-item>
+        </n-descriptions>
+      </div>
+      <n-divider title-placement="left"></n-divider>
+      <div>
+        <n-tabs>
+          <n-tab-pane
+            v-for="component in components.filter(
+              i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id
+            )"
+            :key="component.key"
+            :tab="component.name"
+            :name="component.name"
+          >
+            <component :is="component.component" :id="id as string" />
+          </n-tab-pane>
+        </n-tabs>
+      </div>
+    </n-card>
   </div>
 </template>
 

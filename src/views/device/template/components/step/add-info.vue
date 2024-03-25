@@ -3,7 +3,8 @@ import { ref, reactive } from "vue"
 import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { createServiceConfig } from '~/env.config';
-import { addTemplat } from '@/service/api/system-data'
+import { addTemplat } from '@/service/api/system-data';
+import { $t } from "@/locales";
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
 defineProps({
@@ -57,7 +58,7 @@ const fromRules: Rules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入模板名称'
+    message: $t('device_template.enterTemplateName')
   }
 }
 
@@ -101,12 +102,10 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
 // 新增设备模板
 const next: () => void = async () => {
   await formRef.value?.validate()
-  console.log(await formRef.value?.validate(), '校验');
   addFrom.lable = addFrom.templateTage.join(',')
   const response = await addTemplat(addFrom)
   emit('update:stepCurrent', 2)
   emit('update:DeviceTemplateId', response.data.id)
-  console.log(addFrom, response, '打印数据');
 }
 // 取消
 const cancellation: () => void = () => {
@@ -118,16 +117,16 @@ const cancellation: () => void = () => {
   <div class="flex flex-justify-between">
     <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100" ref="formRef"
       require-mark-placement="right-hanging" class="addFrom">
-      <n-form-item label="模板名称" path="name">
-        <n-input v-model:value.trim="addFrom.name" placeholder="请输入模板名称" />
+      <n-form-item :label="$t('device_template.templateName')" path="name">
+        <n-input v-model:value.trim="addFrom.name" :placeholder="$t('device_template.enterTemplateName')" />
       </n-form-item>
-      <n-form-item label="模板标签" class="tag-item">
+      <n-form-item :label="$t('device_template.templateTage')" class="tag-item">
         <n-tag size="small" class="tag" closable @close="tagsClose(index)" v-for="(item, index) in addFrom.templateTage"
           :key="index">
           {{ item }}
         </n-tag>
         <n-tag size="small" class="tag addTage" @click="addTags" v-if="!tageFlag">
-          添加标签
+          {{ $t('device_template.addTage') }}
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
           </template>
@@ -135,14 +134,15 @@ const cancellation: () => void = () => {
         <n-input class="tag-ipt" v-model:value.trim="addTageText" @blur="tagBlur" placeholder="请输入标签名称" autofocus
           v-else />
       </n-form-item>
-      <n-form-item label="作者名称">
-        <n-input v-model:value.trim="addFrom.author" placeholder="请输入作者名称" />
+      <n-form-item :label="$t('device_template.authorName')">
+        <n-input v-model:value.trim="addFrom.author" :placeholder="$t('device_template.enterAuthorName')" />
       </n-form-item>
-      <n-form-item label="模板版本">
-        <n-input v-model:value.trim="addFrom.version" placeholder="请输入模板版本" />
+      <n-form-item :label="$t('device_template.templateVersion')">
+        <n-input v-model:value.trim="addFrom.version" :placeholder="$t('device_template.entertemplateVersion')" />
       </n-form-item>
-      <n-form-item label="说明">
-        <n-input v-model:value.trim="addFrom.remark" type="textarea" placeholder="请输入说明" />
+      <n-form-item :label="$t('device_template.illustrate')">
+        <n-input v-model:value.trim="addFrom.remark" type="textarea"
+          :placeholder="$t('device_template.enterIllustrate')" />
       </n-form-item>
     </n-form>
     <n-upload :action="url + '/file/up'" :headers="{ 'x-token': localStg.get('token') || '' }" :data="{ type: 'image' }"
@@ -156,15 +156,15 @@ const cancellation: () => void = () => {
       <n-button-group>
         <n-upload-trigger #="{ handleClick }" abstract>
           <n-button @click.stop="handleClick" class="m-t4 upload-btn">
-            选择封面
+            {{ $t('device_template.selectCover') }}
           </n-button>
         </n-upload-trigger>
       </n-button-group>
     </n-upload>
   </div>
   <div class="box1 m-t2">
-    <n-button @click="next">下一步</n-button>
-    <n-button @click="cancellation" class="m-r3">取消</n-button>
+    <n-button @click="next">{{ $t('device_template.nextStep') }}</n-button>
+    <n-button @click="cancellation" class="m-r3">{{ $t('device_template.cancellation') }}</n-button>
   </div>
 </template>
 <style lang="scss" scoped>

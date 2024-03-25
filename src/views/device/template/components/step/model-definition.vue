@@ -32,16 +32,15 @@ const props = defineProps({
 const DeviceTemplateId = ref<string>(props.DeviceTemplateId)
 let tabsCurrent: any = ref('telemetry')
 let addAndEditModalVisible = ref<boolean>(false)
-let addAndEditTitle = ref<string>('新增/编辑遥测')
+let addAndEditTitle = ref<string>($t('device_template.addAndEditTelemetry'))
 
 const comList: { id: string; components: any, title: string }[] = [
-  { id: 'telemetry', components: AddEditTest, title: '新增/编辑遥测' },
-  { id: 'attributes', components: AddEditAttributes, title: '新增/编辑属性' },
-  { id: 'events', components: AddEditEvents, title: '新增/编辑事件' },
-  { id: 'command', components: AddEditCommands, title: '新增/编辑命令' },
+  { id: 'telemetry', components: AddEditTest, title: $t('device_template.addAndEditTelemetry') },
+  { id: 'attributes', components: AddEditAttributes, title: $t('device_template.addAndEditAttributes') },
+  { id: 'events', components: AddEditEvents, title: $t('device_template.addAndEditEvents') },
+  { id: 'command', components: AddEditCommands, title: $t('device_template.addAndEditCommand') },
 ];
 const SwitchCom = computed<any>(() => {
-  console.log('我被触发了');
   return comList.find(item => {
     if (item.id === tabsCurrent.value) {
       const objItem: any = item
@@ -67,7 +66,7 @@ const columnsList: any = reactive([
     },
     data: [{ "data_name": "测试" }],
     name: 'telemetry',
-    text: '遥测',
+    text: $t('device_template.telemetry'),
     col: [
       ...test.value,
       {
@@ -103,7 +102,7 @@ const columnsList: any = reactive([
     },
     data: [],
     name: 'attributes',
-    text: '属性',
+    text: $t('device_template.attributes'),
     col: [
       ...attribute.value,
       {
@@ -139,7 +138,7 @@ const columnsList: any = reactive([
     },
     data: [],
     name: 'events',
-    text: '事件',
+    text: $t('device_template.events'),
     col: [
       ...events.value,
       {
@@ -175,7 +174,7 @@ const columnsList: any = reactive([
     },
     data: [],
     name: 'command',
-    text: '命令',
+    text: $t('device_template.command'),
     col: [
       ...command.value,
       {
@@ -279,17 +278,13 @@ const determine: () => void = () => {
 // 删除
 const del: (id: string) => void = async (id) => {
   if (tabsCurrent.value === 'telemetry') {
-    const response = await delTelemetry(id)
-    console.log(response, '点击了删除')
+    await delTelemetry(id)
   } else if (tabsCurrent.value === 'attributes') {
-    const response = await delAttributes(id)
-    console.log(response, '点击了删除')
+    await delAttributes(id)
   } else if (tabsCurrent.value === 'events') {
-    const response = await delEvents(id)
-    console.log(response, '点击了删除')
+    await delEvents(id)
   } else {
-    const response = await delCommands(id)
-    console.log(response, '点击了删除')
+    await delCommands(id)
   }
   getTableData(tabsCurrent.value);
 }
@@ -299,7 +294,6 @@ const next: () => void = async () => {
 }
 // 下一步
 const back: () => void = async () => {
-  console.log('新增物模');
   emit('update:stepCurrent', 1)
 }
 // 取消
@@ -319,7 +313,7 @@ getTableData()
         <n-button @click="item.addBtn" class="addBtn">
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
-          </template>新增
+          </template>{{ $t('device_template.add') }}
         </n-button>
         <n-data-table :columns="item.col" :data="item.data" :loading="loading" :pagination="pagination"
           class="flex-1-hidden m-t9" />
@@ -327,9 +321,9 @@ getTableData()
     </n-tabs>
   </div>
   <div class="box1 m-t2">
-    <n-button @click="next">下一步</n-button>
-    <n-button @click="back" class="m-r3">上一步</n-button>
-    <n-button @click="cancellation" class="m-r3">取消</n-button>
+    <n-button @click="next">{{ $t('device_template.nextStep') }}</n-button>
+    <n-button @click="back" class="m-r3">{{ $t('device_template.back') }}</n-button>
+    <n-button @click="cancellation" class="m-r3">{{ $t('device_template.cancellation') }}</n-button>
   </div>
   <NModal v-model:show="addAndEditModalVisible" preset="card" :title="addAndEditTitle"
     :class="[tabsCurrent === 'events' || tabsCurrent === 'command' ? 'w-50%' : 'w-30%']"

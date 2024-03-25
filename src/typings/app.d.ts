@@ -797,6 +797,42 @@ declare namespace App {
           rainfall: string;
         };
       };
+      device_template: {
+        templateInfo: string;
+        editTemplateInfo: string;
+        addDeviceInfo: string;
+        modelDefinition: string;
+        deviceParameterDescribe: string;
+        webChartConfiguration: string;
+        bindTheCorrespondingChart: string;
+        appChartConfiguration: string;
+        editAppDetailsPage: string;
+        release: string;
+        releaseAppStore: string;
+        enterTemplateName: string;
+        templateName: string;
+        templateTage: string;
+        authorName: string;
+        enterAuthorName: string;
+        templateVersion: string;
+        entertemplateVersion: string;
+        illustrate: string;
+        enterIllustrate: string;
+        selectCover: string;
+        nextStep: string;
+        cancellation: string;
+        addTage: string;
+        back: string;
+        add: string;
+        telemetry: string;
+        attributes: string;
+        events: string;
+        command: string;
+        addAndEditTelemetry: string;
+        addAndEditAttributes: string;
+        addAndEditEvents: string;
+        addAndEditCommand: string;
+      };
     };
 
     type GetI18nKey<T extends Record<string, unknown>, K extends keyof T = keyof T> = K extends string

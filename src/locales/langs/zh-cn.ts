@@ -642,6 +642,42 @@ const local: App.I18n.Schema = {
       pressure: '气压',
       rainfall: '雨量'
     }
+  },
+  device_template: {
+    templateInfo: '模板信息',
+    editTemplateInfo: '修改模板信息',
+    addDeviceInfo: '添加设备的基本信息',
+    modelDefinition: '模型定义',
+    deviceParameterDescribe: '根据系统提供的模型来配置参数以及设备类型',
+    webChartConfiguration: 'web图表配置',
+    bindTheCorrespondingChart: '绑定相对应的图表',
+    appChartConfiguration: 'App图表配置',
+    editAppDetailsPage: '编辑该设备模板的App详情页',
+    release: '发布',
+    releaseAppStore: '发布到应用商店',
+    enterTemplateName: '请输入模板名称',
+    templateName: '模板名称',
+    templateTage: '模板标签',
+    authorName: '作者名称',
+    enterAuthorName: '请输入作者名称',
+    templateVersion: '模板版本',
+    entertemplateVersion: '请输入模板版本',
+    illustrate: '说明',
+    enterIllustrate: '请输入说明',
+    selectCover: '选择封面',
+    nextStep: '下一步',
+    back: '上一步',
+    cancellation: '取消',
+    addTage: '添加标签',
+    add: '新增',
+    telemetry: '遥测',
+    attributes: '属性',
+    events: '事件',
+    command: '命令',
+    addAndEditTelemetry: '新增/编辑遥测',
+    addAndEditAttributes: '新增/编辑属性',
+    addAndEditEvents: '新增/编辑事件',
+    addAndEditCommand: '新增/编辑命令'
   }
 };
 

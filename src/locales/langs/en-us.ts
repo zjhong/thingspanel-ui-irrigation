@@ -643,6 +643,42 @@ const local: App.I18n.Schema = {
       pressure: 'Pressure',
       rainfall: 'Rainfall'
     }
+  },
+  device_template: {
+    templateInfo: 'TemplateInfo',
+    editTemplateInfo: 'EditTemplateInfo',
+    addDeviceInfo: 'AddDeviceInfo',
+    modelDefinition: 'ModelDefinition',
+    deviceParameterDescribe: 'DeviceParameterDescribe',
+    webChartConfiguration: 'WebChartConfiguration',
+    bindTheCorrespondingChart: 'BindTheCorrespondingChart',
+    appChartConfiguration: 'AppChartConfiguration',
+    editAppDetailsPage: 'EditAppDetailsPage',
+    release: 'Release',
+    releaseAppStore: 'ReleaseAppStore',
+    enterTemplateName: 'EnterTemplateName',
+    templateName: 'TemplateName',
+    templateTage: 'TemplateTage',
+    authorName: 'AuthorName',
+    enterAuthorName: 'EnterAuthorName',
+    templateVersion: 'TemplateVersion',
+    entertemplateVersion: 'EntertemplateVersion',
+    illustrate: 'Illustrate',
+    enterIllustrate: 'EnterIllustrate',
+    selectCover: 'SelectCover',
+    nextStep: 'NextStep',
+    cancellation: 'Cancellation',
+    addTage: 'AddTage',
+    back: 'Back',
+    add: 'Add',
+    telemetry: 'Telemetry',
+    attributes: 'Attributes',
+    events: 'Events',
+    command: 'Command',
+    addAndEditTelemetry: 'AddAndEditTelemetry',
+    addAndEditAttributes: 'AddAndEditAttributes',
+    addAndEditEvents: 'AddAndEditEvents',
+    addAndEditCommand: 'AddAndEditCommand'
   }
 };
 

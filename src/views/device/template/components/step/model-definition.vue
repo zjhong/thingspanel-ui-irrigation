@@ -1,15 +1,24 @@
 <script setup lang="tsx">
-import { ref, reactive, computed } from "vue"
+import { computed, reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
-import { test, attribute, events, command } from "./tableList";
+import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { NButton, NSpace, NPopconfirm } from 'naive-ui';
-import { $t } from "@/locales";
-import { telemetryApi, attributesApi, eventsApi, commandsApi, delTelemetry, delAttributes, delEvents, delCommands } from '@/service/api/system-data'
-import AddEditTest from './add-edit-test.vue'
-import AddEditAttributes from './add-edit-attributes.vue'
-import AddEditEvents from './add-edit-events.vue'
-import AddEditCommands from './add-edit-commands.vue'
+import { $t } from '@/locales';
+import {
+  attributesApi,
+  commandsApi,
+  delAttributes,
+  delCommands,
+  delEvents,
+  delTelemetry,
+  eventsApi,
+  telemetryApi
+} from '@/service/api/system-data';
+import { attribute, command, events, test } from './tableList';
+import AddEditTest from './add-edit-test.vue';
+import AddEditAttributes from './add-edit-attributes.vue';
+import AddEditEvents from './add-edit-events.vue';
+import AddEditCommands from './add-edit-commands.vue';
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -17,7 +26,7 @@ const { loading, startLoading, endLoading } = useLoading(false);
 const props = defineProps({
   stepCurrent: {
     type: Number,
-    required: true,
+    required: true
   },
   modalVisible: {
     type: Boolean,
@@ -25,49 +34,116 @@ const props = defineProps({
   },
   DeviceTemplateId: {
     type: String,
-    required: true,
+    required: true
   }
 });
 
-const DeviceTemplateId = ref<string>(props.DeviceTemplateId)
-let tabsCurrent: any = ref('telemetry')
-let addAndEditModalVisible = ref<boolean>(false)
-let addAndEditTitle = ref<string>('新增/编辑遥测')
+const DeviceTemplateId = ref<string>(props.DeviceTemplateId);
+const tabsCurrent: any = ref('telemetry');
+const addAndEditModalVisible = ref<boolean>(false);
+const addAndEditTitle = ref<string>($t('device_template.addAndEditTelemetry'));
 
-const comList: { id: string; components: any, title: string }[] = [
-  { id: 'telemetry', components: AddEditTest, title: '新增/编辑遥测' },
-  { id: 'attributes', components: AddEditAttributes, title: '新增/编辑属性' },
-  { id: 'events', components: AddEditEvents, title: '新增/编辑事件' },
-  { id: 'command', components: AddEditCommands, title: '新增/编辑命令' },
+const comList: { id: string; components: any; title: string }[] = [
+  { id: 'telemetry', components: AddEditTest, title: $t('device_template.addAndEditTelemetry') },
+  { id: 'attributes', components: AddEditAttributes, title: $t('device_template.addAndEditAttributes') },
+  { id: 'events', components: AddEditEvents, title: $t('device_template.addAndEditEvents') },
+  { id: 'command', components: AddEditCommands, title: $t('device_template.addAndEditCommand') }
 ];
 const SwitchCom = computed<any>(() => {
-  console.log('我被触发了');
+  // eslint-disable-next-line array-callback-return,consistent-return
   return comList.find(item => {
     if (item.id === tabsCurrent.value) {
-      const objItem: any = item
-      addAndEditTitle.value = objItem.title
-      return objItem
+      const objItem: any = item;
+      addAndEditTitle.value = objItem.title;
+      return objItem;
     }
-  })?.components
+  })?.components;
 });
-
-
-
 
 const queryParams: any = reactive({
   page: 1,
   page_size: 10,
-  device_template_id: props.DeviceTemplateId,
+  device_template_id: props.DeviceTemplateId
 });
 
+const checkedTabs: (value: string | number) => void = value => {
+  tabsCurrent.value = value;
+  console.log(value, '切换标签了');
+};
+
+// 分页参数
+const pagination: PaginationProps = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  pageSizes: [10, 15, 20, 25, 30],
+  onChange: (page: number) => {
+    pagination.page = page;
+    queryParams.page = page;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getTableData();
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    queryParams.page = 1;
+    queryParams.page_size = pageSize;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getTableData();
+  }
+});
+
+// 编辑
+let objItem = reactive<object>({});
+const edit: (row: any) => void = row => {
+  addAndEditModalVisible.value = true;
+  objItem = row;
+  console.log(row, '点击了编辑');
+};
+
+// 新增或者编辑成功后的回调函数
+const determine: () => void = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  getTableData(tabsCurrent.value);
+};
+
+// 删除
+const del: (id: string) => void = async id => {
+  if (tabsCurrent.value === 'telemetry') {
+    await delTelemetry(id);
+  } else if (tabsCurrent.value === 'attributes') {
+    await delAttributes(id);
+  } else if (tabsCurrent.value === 'events') {
+    await delEvents(id);
+  } else {
+    await delCommands(id);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  getTableData(tabsCurrent.value);
+};
+// 上一步
+const next: () => void = async () => {
+  console.log('新增物模');
+};
+// 下一步
+const back: () => void = async () => {
+  emit('update:stepCurrent', 1);
+};
+// 取消
+const cancellation: () => void = () => {
+  emit('update:modalVisible', false);
+};
+const cloneaddAndEditVisible: () => void = () => {
+  objItem = {};
+};
 const columnsList: any = reactive([
   {
     addBtn: () => {
-      addAndEditModalVisible.value = true
+      addAndEditModalVisible.value = true;
     },
-    data: [{ "data_name": "测试" }],
+    data: [{ data_name: '测试' }],
     name: 'telemetry',
-    text: '遥测',
+    text: $t('device_template.telemetry'),
     col: [
       ...test.value,
       {
@@ -99,11 +175,11 @@ const columnsList: any = reactive([
   },
   {
     addBtn: () => {
-      addAndEditModalVisible.value = true
+      addAndEditModalVisible.value = true;
     },
     data: [],
     name: 'attributes',
-    text: '属性',
+    text: $t('device_template.attributes'),
     col: [
       ...attribute.value,
       {
@@ -135,11 +211,11 @@ const columnsList: any = reactive([
   },
   {
     addBtn: () => {
-      addAndEditModalVisible.value = true
+      addAndEditModalVisible.value = true;
     },
     data: [],
     name: 'events',
-    text: '事件',
+    text: $t('device_template.events'),
     col: [
       ...events.value,
       {
@@ -171,11 +247,11 @@ const columnsList: any = reactive([
   },
   {
     addBtn: () => {
-      addAndEditModalVisible.value = true
+      addAndEditModalVisible.value = true;
     },
     data: [],
     name: 'command',
-    text: '命令',
+    text: $t('device_template.command'),
     col: [
       ...command.value,
       {
@@ -186,9 +262,11 @@ const columnsList: any = reactive([
         render: row => {
           return (
             <NSpace justify={'center'}>
+              {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
               <NButton quaternary type="primary" size={'small'} onClick={() => edit(row)}>
                 {$t('common.edit')}
               </NButton>
+              {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
               <NPopconfirm onPositiveClick={() => del(row.id)}>
                 {{
                   default: () => $t('common.confirmDelete'),
@@ -205,137 +283,79 @@ const columnsList: any = reactive([
       }
     ]
   }
-])
-
-
-const checkedTabs: (value: string | number) => void = (value) => {
-  tabsCurrent.value = value
-  console.log(value, '切换标签了')
-}
-const getTableData: (value?: string) => void = async (value) => {
+]);
+const getTableData: (value?: string) => void = async value => {
   startLoading();
   if (value) {
     if (value === 'telemetry') {
-      const { data: data0 }: any = await telemetryApi(queryParams)
-      columnsList[0].data = data0?.list ?? []
+      const { data: data0 }: any = await telemetryApi(queryParams);
+      columnsList[0].data = data0?.list ?? [];
     } else if (value === 'attributes') {
-      const { data: data1 }: any = await attributesApi(queryParams)
-      columnsList[1].data = data1?.list ?? []
+      const { data: data1 }: any = await attributesApi(queryParams);
+      columnsList[1].data = data1?.list ?? [];
     } else if (value === 'events') {
-      const { data: data2 }: any = await eventsApi(queryParams)
-      columnsList[2].data = data2?.list ?? []
+      const { data: data2 }: any = await eventsApi(queryParams);
+      columnsList[2].data = data2?.list ?? [];
     } else {
-      const { data: data3 }: any = await commandsApi(queryParams)
-      columnsList[3].data = data3?.list ?? []
+      const { data: data3 }: any = await commandsApi(queryParams);
+      columnsList[3].data = data3?.list ?? [];
     }
-    endLoading()
+    endLoading();
   } else {
-    const { data: data0 }: any = await telemetryApi(queryParams)
-    columnsList[0].data = data0?.list ?? []
-    const { data: data1 }: any = await attributesApi(queryParams)
-    columnsList[1].data = data1?.list ?? []
-    const { data: data2 }: any = await eventsApi(queryParams)
-    columnsList[2].data = data2?.list ?? []
-    const { data: data3 }: any = await commandsApi(queryParams)
-    columnsList[3].data = data3?.list ?? []
+    const { data: data0 }: any = await telemetryApi(queryParams);
+    columnsList[0].data = data0?.list ?? [];
+    const { data: data1 }: any = await attributesApi(queryParams);
+    columnsList[1].data = data1?.list ?? [];
+    const { data: data2 }: any = await eventsApi(queryParams);
+    columnsList[2].data = data2?.list ?? [];
+    const { data: data3 }: any = await commandsApi(queryParams);
+    columnsList[3].data = data3?.list ?? [];
     console.log(data0, data1, data2, data3, '请求到了遥远的数据');
-    endLoading()
+    endLoading();
   }
-}
-
-// 分页参数
-const pagination: PaginationProps = reactive({
-  page: 1,
-  pageSize: 10,
-  showSizePicker: true,
-  pageSizes: [10, 15, 20, 25, 30],
-  onChange: (page: number) => {
-    pagination.page = page;
-    queryParams.page = page;
-    getTableData();
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    pagination.pageSize = pageSize;
-    pagination.page = 1;
-    queryParams.page = 1;
-    queryParams.page_size = pageSize;
-    getTableData();
-  }
-});
-
-// 编辑
-let objItem = reactive<object>({})
-const edit: (row: Object) => void = (row) => {
-  addAndEditModalVisible.value = true
-  objItem = row
-  console.log(row, '点击了编辑')
-}
-
-// 新增或者编辑成功后的回调函数
-const determine: () => void = () => {
-  getTableData(tabsCurrent.value);
-}
-
-// 删除
-const del: (id: string) => void = async (id) => {
-  if (tabsCurrent.value === 'telemetry') {
-    const response = await delTelemetry(id)
-    console.log(response, '点击了删除')
-  } else if (tabsCurrent.value === 'attributes') {
-    const response = await delAttributes(id)
-    console.log(response, '点击了删除')
-  } else if (tabsCurrent.value === 'events') {
-    const response = await delEvents(id)
-    console.log(response, '点击了删除')
-  } else {
-    const response = await delCommands(id)
-    console.log(response, '点击了删除')
-  }
-  getTableData(tabsCurrent.value);
-}
-// 上一步
-const next: () => void = async () => {
-  console.log('新增物模');
-}
-// 下一步
-const back: () => void = async () => {
-  console.log('新增物模');
-  emit('update:stepCurrent', 1)
-}
-// 取消
-const cancellation: () => void = () => {
-  emit('update:modalVisible', false)
-}
-const cloneaddAndEditVisible: () => void = () => {
-  objItem = {}
-}
-getTableData()
+};
+getTableData();
 </script>
 
 <template>
   <div>
     <n-tabs type="line" animated @update:value="checkedTabs">
-      <n-tab-pane :name="item.name" :tab="item.text" v-for="item in columnsList" :key="item.name">
-        <n-button @click="item.addBtn" class="addBtn">
+      <n-tab-pane v-for="item in columnsList" :key="item.name" :name="item.name" :tab="item.text">
+        <NButton class="addBtn" @click="item.addBtn">
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
-          </template>新增
-        </n-button>
-        <n-data-table :columns="item.col" :data="item.data" :loading="loading" :pagination="pagination"
-          class="flex-1-hidden m-t9" />
+          </template>
+          {{ $t('device_template.add') }}
+        </NButton>
+        <n-data-table
+          :columns="item.col"
+          :data="item.data"
+          :loading="loading"
+          :pagination="pagination"
+          class="m-t9 flex-1-hidden"
+        />
       </n-tab-pane>
     </n-tabs>
   </div>
   <div class="box1 m-t2">
-    <n-button @click="next">下一步</n-button>
-    <n-button @click="back" class="m-r3">上一步</n-button>
-    <n-button @click="cancellation" class="m-r3">取消</n-button>
+    <NButton @click="next">{{ $t('device_template.nextStep') }}</NButton>
+    <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>
+    <NButton class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</NButton>
   </div>
-  <NModal v-model:show="addAndEditModalVisible" preset="card" :title="addAndEditTitle"
+  <NModal
+    v-model:show="addAndEditModalVisible"
+    preset="card"
+    :title="addAndEditTitle"
     :class="[tabsCurrent === 'events' || tabsCurrent === 'command' ? 'w-50%' : 'w-30%']"
-    @afterLeave="cloneaddAndEditVisible">
-    <component :is="SwitchCom" v-model:addAndEditModalVisible="addAndEditModalVisible"
-      v-model:DeviceTemplateId="DeviceTemplateId" v-model:objItem="objItem" @determine="determine"></component>
+    @after-leave="cloneaddAndEditVisible"
+  >
+    <component
+      :is="SwitchCom"
+      v-model:addAndEditModalVisible="addAndEditModalVisible"
+      v-model:DeviceTemplateId="DeviceTemplateId"
+      v-model:objItem="objItem"
+      @determine="determine"
+    ></component>
   </NModal>
 </template>
 
@@ -343,7 +363,7 @@ getTableData()
 .addBtn {
   position: absolute;
   right: 0;
-  top: .5rem;
+  top: 0.5rem;
 }
 
 .box1 {

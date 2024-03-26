@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { computed, ref,} from 'vue';
+import { computed, ref, } from 'vue';
 import { $t } from '@/locales';
 import { initTemplateInfoData, templateInfoData } from '../utils';
 import AddInfo from './step/add-info.vue';
 import ModelDefinition from './step/model-definition.vue';
+import ChartConfig from './step/chart-config.vue';
+import { useDeviceDataStore } from '@/store/modules/device/index';
 
-
+const counterStore = useDeviceDataStore()
 const stepCurrent = ref<number>(1);
 const DeviceTemplateId = ref<string>('');
 
 const componentsList: { id: number; components: any }[] = [
   { id: 1, components: AddInfo },
-  { id: 2, components: ModelDefinition }
+  { id: 2, components: ModelDefinition },
+  { id: 3, components: ChartConfig }
 ];
 const SwitchComponents = computed<any>(() => {
   return componentsList.find(item => item.id === stepCurrent.value)?.components;
@@ -66,11 +69,16 @@ const title = computed(() => {
   return titles[props.type];
 });
 
+// 兄弟组件进行上一步的时候互相传递的id
+const modelPopUpclosed: () => void = () => {
+  counterStore.executeEdit('')
+}
+
 defineOptions({ name: 'TableActionModal' });
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-60%">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-60%" @after-leave="modelPopUpclosed">
     <n-steps :current="stepCurrent" status="process">
       <n-step :title="$t('device_template.templateInfo')" :description="$t('device_template.addDeviceInfo')" />
       <n-step :title="$t('device_template.modelDefinition')"

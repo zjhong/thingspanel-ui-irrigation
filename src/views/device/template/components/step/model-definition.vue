@@ -21,10 +21,11 @@ import AddEditAttributes from './add-edit-attributes.vue';
 import AddEditEvents from './add-edit-events.vue';
 import AddEditCommands from './add-edit-commands.vue';
 
-const counterStore = useDeviceDataStore()
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const { loading, startLoading, endLoading } = useLoading(false);
+const counterStore = useDeviceDataStore()
+
 
 const props = defineProps({
   stepCurrent: {
@@ -41,7 +42,7 @@ const props = defineProps({
   }
 });
 
-const DeviceTemplateId = ref<string>(props.DeviceTemplateId);
+let DeviceTemplateId = ref<string>(props.DeviceTemplateId);
 const tabsCurrent: any = ref('telemetry');
 const addAndEditModalVisible = ref<boolean>(false);
 const addAndEditTitle = ref<string>($t('device_template.addAndEditTelemetry'));
@@ -126,7 +127,7 @@ const del: (id: string) => void = async id => {
 };
 // 上一步
 const next: () => void = async () => {
-  console.log('新增物模');
+  emit('update:stepCurrent', 3);
 };
 // 下一步
 const back: () => void = async () => {
@@ -289,6 +290,7 @@ const columnsList: any = reactive([
     ]
   }
 ]);
+
 const getTableData: (value?: string) => void = async value => {
   startLoading();
   if (value) {
@@ -319,6 +321,13 @@ const getTableData: (value?: string) => void = async value => {
     endLoading();
   }
 };
+// 判断一下是不是进行了下一步，是就改变一下id
+const backEdit: () => void = async () => {
+  if (counterStore.executeFlag !== '') {
+    DeviceTemplateId = counterStore.executeFlag
+  }
+}
+backEdit()
 getTableData();
 </script>
 

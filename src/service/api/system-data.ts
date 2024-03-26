@@ -16,6 +16,22 @@ export const addTemplat = async (params: any): Promise<any> => {
   const data = await request.post("/device/template", params);
   return data;
 };
+/** 更新模型详情数据 */
+export const putTemplat = async (params: any) => {
+  const data = await request.put<Api.BaseApi.Data | null>(
+    `/device/template`,
+    params,
+  );
+  return data;
+};
+
+/** 获取物模型详情数据 */
+export const getTemplat = async (id: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(
+    `/device/template/detail/${id}`,
+  );
+  return data;
+};
 
 /** 获取遥测数据 */
 export const telemetryApi = async (params: any) => {
@@ -116,7 +132,7 @@ export const addEvents = async (params: any): Promise<any> => {
 };
 
 /** 编辑事件数据*/
-export const putEvents= async (params: any): Promise<any> => {
+export const putEvents = async (params: any): Promise<any> => {
   const data = await request.put("/device/model/events", params);
   return data;
 };
@@ -130,14 +146,5 @@ export const addCommands = async (params: any): Promise<any> => {
 /** 编辑命令数据*/
 export const putCommands = async (params: any): Promise<any> => {
   const data = await request.put("/device/model/commands", params);
-  return data;
-};
-
-/** 获取遥测数据 */
-export const  gitTelemetry= async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/telemetry",
-    { params },
-  );
   return data;
 };

@@ -1,15 +1,16 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { useDeviceDataStore } from '@/store/modules/device/index';
 import { localStg } from '@/utils/storage';
 import { addTemplat, getTemplat, putTemplat } from '@/service/api/system-data';
 import { $t } from '@/locales';
 import { createServiceConfig } from '~/env.config';
-const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
-const counterStore = useDeviceDataStore()
 
-defineProps({
+const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
+const counterStore = useDeviceDataStore();
+
+const props = defineProps({
   stepCurrent: {
     type: Number,
     required: true
@@ -21,9 +22,9 @@ defineProps({
   DeviceTemplateId: {
     type: String,
     required: true
-  },
+  }
 });
-
+const DeviceTemplateId = ref(props.DeviceTemplateId);
 const formRef: any = ref(null);
 
 interface AddFrom {
@@ -37,7 +38,7 @@ interface AddFrom {
   id?: string;
 }
 
-let addFrom: AddFrom = reactive({
+const addFrom: AddFrom = reactive({
   name: '',
   templateTage: [],
   version: '',
@@ -46,24 +47,6 @@ let addFrom: AddFrom = reactive({
   path: '',
   lable: ''
 });
-
-const edit: () => void = async () => {
-  if (counterStore.executeFlag !== '') {
-    const response: any = await getTemplat(counterStore.executeFlag.value)
-    const data = response.data;
-    ({
-      name: addFrom.name,
-      id: addFrom.id,
-      path: addFrom.path,
-      description: addFrom.description,
-      version: addFrom.version,
-      author: addFrom.author,
-    } = data);
-    addFrom.templateTage = data.lable.split(',')
-    console.log(addFrom, '哎嘿，获取不到吧，就是让你获取不到');
-  }
-}
-edit()
 
 type Rule = {
   required: boolean;
@@ -102,7 +85,7 @@ const tagsClose: (index: number) => void = index => {
 
 // upload
 const { otherBaseURL } = createServiceConfig(import.meta.env);
-const url: any = ref(new URL(otherBaseURL.demo));
+const url: any = ref(otherBaseURL.demo);
 const pngPath: any = ref('');
 
 const customRequest = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
@@ -110,10 +93,12 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
 
   const xhr = event.target as XMLHttpRequest;
   const response = JSON.parse(xhr.response);
-  addFrom.path = response.data.path;
 
+  console.log(response.data.path, 'response');
+  addFrom.path = response.data.path;
+  console.log(addFrom.path, 'addFrom.path');
   const relativePath = response.data.path.replace(/^\.\//, '');
-  pngPath.value = `${url.value.origin}/${relativePath}`;
+  pngPath.value = `${url.value.replace('api/v1', '') + relativePath}`;
   console.log(pngPath.value, file);
 };
 
@@ -125,7 +110,7 @@ const next: () => void = async () => {
     const response: any = await putTemplat(addFrom);
     emit('update:stepCurrent', 2);
     emit('update:DeviceTemplateId', response.data.id);
-    counterStore.executeEdit('')
+    counterStore.executeEdit('');
   } else {
     addFrom.lable = addFrom.templateTage.join(',');
     const response: any = await addTemplat(addFrom);
@@ -137,18 +122,60 @@ const next: () => void = async () => {
 const cancellation: () => void = () => {
   emit('update:modalVisible', false);
 };
+
+watchEffect(async () => {
+  DeviceTemplateId.value = props.DeviceTemplateId;
+  console.log(DeviceTemplateId.value, 'DeviceTemplateId.value');
+  if (DeviceTemplateId.value) {
+    const { data, error } = await getTemplat(DeviceTemplateId.value);
+    if (!error) {
+      if (data) {
+        addFrom.name = data.name;
+        addFrom.id = data.id;
+        addFrom.path = data.path;
+        addFrom.description = data.description;
+        addFrom.version = data.version;
+        addFrom.author = data.author;
+        addFrom.templateTage = data.lable?.split(',') || [];
+        pngPath.value = `${url.value.replace('api/v1', '') + data.path}`;
+      }
+    }
+  } else {
+    addFrom.name = '';
+    addFrom.name = '';
+    addFrom.id = '';
+    addFrom.path = '';
+    addFrom.description = '';
+    addFrom.version = '';
+    addFrom.author = '';
+    addFrom.templateTage = [];
+  }
+});
 </script>
 
 <template>
   <div class="flex flex-justify-between">
-    <n-form ref="formRef" :model="addFrom" :rules="fromRules" label-placement="left" label-width="100"
-      require-mark-placement="right-hanging" class="addFrom">
+    <n-form
+      ref="formRef"
+      :model="addFrom"
+      :rules="fromRules"
+      label-placement="left"
+      label-width="100"
+      require-mark-placement="right-hanging"
+      class="addFrom"
+    >
       <n-form-item :label="$t('device_template.templateName')" path="name">
         <n-input v-model:value.trim="addFrom.name" :placeholder="$t('device_template.enterTemplateName')" />
       </n-form-item>
       <n-form-item :label="$t('device_template.templateTage')" class="tag-item">
-        <n-tag v-for="(item, index) in addFrom.templateTage" :key="index" size="small" class="tag" closable
-          @close="tagsClose(index)">
+        <n-tag
+          v-for="(item, index) in addFrom.templateTage"
+          :key="index"
+          size="small"
+          class="tag"
+          closable
+          @close="tagsClose(index)"
+        >
           {{ item }}
         </n-tag>
         <n-tag v-if="!tageFlag" size="small" class="tag addTage" @click="addTags">
@@ -157,8 +184,14 @@ const cancellation: () => void = () => {
             <SvgIcon local-icon="add" class="more" />
           </template>
         </n-tag>
-        <n-input v-else v-model:value.trim="addTageText" class="tag-ipt" placeholder="请输入标签名称" autofocus
-          @blur="tagBlur" />
+        <n-input
+          v-else
+          v-model:value.trim="addTageText"
+          class="tag-ipt"
+          placeholder="请输入标签名称"
+          autofocus
+          @blur="tagBlur"
+        />
       </n-form-item>
       <n-form-item :label="$t('device_template.authorName')">
         <n-input v-model:value.trim="addFrom.author" :placeholder="$t('device_template.enterAuthorName')" />
@@ -167,12 +200,22 @@ const cancellation: () => void = () => {
         <n-input v-model:value.trim="addFrom.version" :placeholder="$t('device_template.entertemplateVersion')" />
       </n-form-item>
       <n-form-item :label="$t('device_template.illustrate')">
-        <n-input v-model:value.trim="addFrom.description" type="textarea"
-          :placeholder="$t('device_template.enterIllustrate')" />
+        <n-input
+          v-model:value.trim="addFrom.description"
+          type="textarea"
+          :placeholder="$t('device_template.enterIllustrate')"
+        />
       </n-form-item>
     </n-form>
-    <n-upload :action="url + '/file/up'" :headers="{ 'x-token': localStg.get('token') || '' }" :data="{ type: 'image' }"
-      class="upload" :show-file-list="false" accept="image/png, image/jpeg, image/jpg, image/gif" @finish="customRequest">
+    <n-upload
+      :action="url + '/file/up'"
+      :headers="{ 'x-token': localStg.get('token') || '' }"
+      :data="{ type: 'image' }"
+      class="upload"
+      :show-file-list="false"
+      accept="image/png, image/jpeg, image/jpg, image/gif"
+      @finish="customRequest"
+    >
       <n-upload-dragger>
         <img v-if="pngPath && pngPath !== ''" :src="pngPath" class="slt" />
         <n-icon v-else size="35" :depth="3">

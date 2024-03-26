@@ -18,13 +18,13 @@ export const addTemplat = async (params: any): Promise<any> => {
 };
 /** 更新模型详情数据 */
 export const putTemplat = async (params: any) => {
-  const data = await request.put<Api.BaseApi.Data | null>(`/device/template`, params);
+  const data = await request.put<any>(`/device/template`, params);
   return data;
 };
 
 /** 获取物模型详情数据 */
 export const getTemplat = async (id: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(`/device/template/detail/${id}`);
+  const data = await request.get<any>(`/device/template/detail/${id}`);
   return data;
 };
 

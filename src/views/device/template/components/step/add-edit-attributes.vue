@@ -1,15 +1,19 @@
-
 <script setup lang="tsx">
+<<<<<<< HEAD
 import { ref, reactive, watch } from "vue"
 import { addAttributes, putAttributes } from '@/service/api/system-data'
 import { $t } from "@/locales";
+=======
+import { reactive, ref, watch } from 'vue';
+import { addAttributes, putAttributes } from '@/service/api/system-data';
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
 
 const emit = defineEmits(['update:addAndEditModalVisible', 'update:objItem', 'determine']);
 
 const props = defineProps({
   addAndEditModalVisible: {
     type: Boolean,
-    required: true,
+    required: true
   },
   DeviceTemplateId: {
     type: String,
@@ -22,10 +26,10 @@ const props = defineProps({
 });
 
 // 提交表单
-const formRef: any = ref(null)
-const DeviceTemplateId = ref<string>(props.DeviceTemplateId)
+const formRef: any = ref(null);
+const DeviceTemplateId = ref<string>(props.DeviceTemplateId);
 
-let addFrom: any = reactive({})
+let addFrom: any = reactive({});
 
 type Rule = {
   required: boolean;
@@ -53,73 +57,111 @@ const fromRules: Rules = {
   read_write_flag: {
     required: true,
     trigger: ['blur', 'input'],
+<<<<<<< HEAD
     message: $t('device_template.table_header.pleaseEnterTheAttributeType')
   },
 }
+=======
+    message: '请输入属性类型'
+  }
+};
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
 
-let objItem = reactive<any>(props.objItem)
+const objItem = reactive<any>(props.objItem);
 
 // 监听一下父组件传递过来的编辑数据
-watch(objItem, (newVal) => {
-  console.log('objItem changed', newVal.id);
-  if (objItem.id) {
-    addFrom = reactive({
-      device_template_id: DeviceTemplateId,
-      ...newVal
-    })
-  } else {
-    addFrom = reactive({
-      device_template_id: DeviceTemplateId,
-      data_name: '',
-      data_identifier: '',
-      read_write_flag: 'String',
-      unit: '',
-      description: ''
-    })
-  }
-}, { deep: true, immediate: true });
+watch(
+  objItem,
+  newVal => {
+    console.log('objItem changed', newVal.id);
+    if (objItem.id) {
+      addFrom = reactive({
+        device_template_id: DeviceTemplateId,
+        ...newVal
+      });
+    } else {
+      addFrom = reactive({
+        device_template_id: DeviceTemplateId,
+        data_name: '',
+        data_identifier: '',
+        read_write_flag: 'String',
+        unit: '',
+        description: ''
+      });
+    }
+  },
+  { deep: true, immediate: true }
+);
 
-const generalOptions: any = reactive(['String', 'Number', 'Boolean'].map(
-  (v) => ({
+const generalOptions: any = reactive(
+  ['String', 'Number', 'Boolean'].map(v => ({
     label: v,
     value: v
-  })
-))
+  }))
+);
 
 // 确定按钮
 const submit: () => void = async () => {
-  await formRef.value?.validate()
+  await formRef.value?.validate();
   if (props.objItem.id) {
-    const response: any = await putAttributes(addFrom)
+    const response: any = await putAttributes(addFrom);
     if (response.data) {
+<<<<<<< HEAD
       emit('update:objItem', {})
       emit('update:addAndEditModalVisible', false)
       emit('determine')
+=======
+      emit('update:objItem', {});
+      emit('update:addAndEditModalVisible', false);
+      emit('determine');
+      window.$message?.success('编辑成功');
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
     }
     console.log(response, '提交');
   } else {
-    const response: any = await addAttributes(addFrom)
+    const response: any = await addAttributes(addFrom);
     if (response.data) {
+<<<<<<< HEAD
       emit('update:objItem', {})
       emit('update:addAndEditModalVisible', false)
       emit('determine')
+=======
+      emit('update:objItem', {});
+      emit('update:addAndEditModalVisible', false);
+      emit('determine');
+      window.$message?.success('新增成功');
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
     }
   }
-}
+};
 
 // 取消按钮
 const clear: () => void = () => {
-  emit('update:objItem', {})
-  emit('update:addAndEditModalVisible', false)
+  emit('update:objItem', {});
+  emit('update:addAndEditModalVisible', false);
   console.log(props.objItem, '取消');
-}
+};
 </script>
 
 <template>
+<<<<<<< HEAD
   <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100" ref="formRef"
     require-mark-placement="right-hanging" class="addFrom">
     <n-form-item :label=" $t('device_template.table_header.attributeName')" path="data_name">
       <n-input v-model:value.trim="addFrom.data_name" :placeholder=" $t('device_template.table_header.pleaseEnterTheAttributeName')" />
+=======
+  <n-form
+    ref="formRef"
+    :model="addFrom"
+    :rules="fromRules"
+    label-placement="left"
+    label-width="100"
+    require-mark-placement="right-hanging"
+    class="addFrom"
+  >
+    <n-form-item label="属性名称" path="data_name">
+      <n-input v-model:value.trim="addFrom.data_name" placeholder="请输入属性名称" />
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.attributeIdentifier')" path="data_identifier">
       <n-input v-model:value.trim="addFrom.data_identifier" :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeIdentifier')" />
@@ -135,11 +177,15 @@ const clear: () => void = () => {
     </n-form-item>
   </n-form>
   <div class="box1">
+<<<<<<< HEAD
     <n-button @click="clear" class="m-r3">{{$t('device_template.cancellation')}}</n-button>
     <n-button @click="submit">{{$t('device_template.confirm')}}</n-button>
+=======
+    <n-button class="m-r3" @click="clear">取消</n-button>
+    <n-button @click="submit">确定</n-button>
+>>>>>>> b82c39a58e08b5c01937811e2f1dd8b5ec2cd487
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 .box1 {

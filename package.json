@@ -15,7 +15,10 @@
   "bugs": {
     "url": "https://github.com/ThingsPanel/thingspanel-ui/issues"
   },
-  "keywords": ["Soybean Admin", "ThingsPanel"],
+  "keywords": [
+    "Soybean Admin",
+    "ThingsPanel"
+  ],
   "scripts": {
     "build": "npm run typecheck && cross-env VITE_SERVICE_ENV=prod vite build",
     "build:dev": "npm run typecheck && cross-env VITE_SERVICE_ENV=dev vite build",
@@ -39,6 +42,7 @@
     "update-pkg": "sa update-pkg"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@antv/data-set": "0.11.8",
     "@antv/g2": "4.2.10",
     "@better-scroll/core": "2.5.1",

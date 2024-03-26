@@ -1,49 +1,40 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
-import { deleteDeviceTemplate, deviceTemplate, getDeviceTemplateDetail } from '@/service/api/device-template-model';
+import { CalendarEdit20Regular, Delete20Regular } from '@vicons/fluent';
+import { deleteDeviceTemplate, deviceTemplate } from '@/service/api/device-template-model';
 import TemplateModal from './components/template-modal.vue';
-import { templateInfoData } from './utils';
 import { useBoolean, useLoading } from '~/packages/hooks/src';
 
-const { startLoading, endLoading } = useLoading(false);
+const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
-const queryParams = reactive({
+const pagination: PaginationProps = reactive({
   page: 1,
+  pageSize: 20,
+  pageCount: 1,
+  showSizePicker: true
+});
+const queryParams = reactive({
   page_size: 12,
   name: ''
 });
 const modalType = ref<'add' | 'edit'>('add');
 const deviceTemplateList = ref([] as any[]);
-const editData = ref<Api.Alarm.NotificationGroupList | null>(null);
-const dataTotal = ref(0);
-
-const pagination: PaginationProps = reactive({
-  page: 1,
-  pageSize: 20,
-  showSizePicker: true,
-  pageSizes: [10, 15, 20, 25, 30],
-  onChange: (page: number) => {
-    pagination.page = page;
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    pagination.pageSize = pageSize;
-    pagination.page = 1;
-  }
-});
-
+const templateId = ref<string>('');
 const getData = async () => {
   startLoading();
-  const res = await deviceTemplate(queryParams);
+  const res = await deviceTemplate({ page: pagination.page as number, ...queryParams });
   if (!res.error) {
     deviceTemplateList.value = res.data.list;
-    dataTotal.value = res.data.total;
+    // eslint-disable-next-line require-atomic-updates
+    pagination.pageCount = Math.ceil(res.data.total / 12);
   }
   endLoading();
 };
 
 const handleQuery = async () => {
   deviceTemplateList.value = [];
+  pagination.page = 1;
   await getData();
 };
 
@@ -52,75 +43,94 @@ getData();
 function handleAddTemplate() {
   openModal();
   modalType.value = 'add';
+  templateId.value = '';
 }
 
 const handleEdit = async (id: string) => {
   openModal();
   modalType.value = 'edit';
-  const res = await getDeviceTemplateDetail(id);
-  if (res?.data) {
-    editData.value = res.data;
-    templateInfoData.value = res.data;
-  }
+  templateId.value = id;
 };
 
 const handleRemove = async (id: string) => {
-  await deleteDeviceTemplate(id);
-  window.$message?.info('已删除当前模板');
-  getData();
+  const { error } = await deleteDeviceTemplate(id);
+  if (!error) {
+    window.$message?.info('已删除当前模板');
+    await getData();
+  }
 };
 </script>
 
 <template>
   <div class="h-full w-full">
-    <NFlex class="h-full bg-#fff p-4" justify="justify-between">
-      <div class="flex-1-hidden">
-        <div class="mb-4 flex items-center justify-between">
-          <!-- 新建按钮 -->
-          <div>
-            <NButton @click="handleAddTemplate">添加设备模板</NButton>
+    <NCard>
+      <NFlex class="h-full p-4" justify="justify-between">
+        <div class="flex-1-hidden">
+          <div class="mb-4 flex items-center justify-between">
+            <!-- 新建按钮 -->
+            <div>
+              <NButton @click="handleAddTemplate">添加设备模板</NButton>
+            </div>
+            <!-- 搜索部分 -->
+            <div class="flex items-center gap-2">
+              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
+              <NButton type="primary" @click="handleQuery">搜索</NButton>
+            </div>
           </div>
-          <!-- 搜索部分 -->
-          <div class="flex items-center gap-2">
-            <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
-            <NButton type="primary" @click="handleQuery">搜索</NButton>
-          </div>
-        </div>
-        <NGrid x-gap="24" y-gap="16" :cols="24">
-          <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
-            <NCard hoverable>
-              <div class="flex justify-between">
-                <div class="text-16px font-600">
-                  {{ item.name }}
-                </div>
-              </div>
-              <template v-for="tag in (item.label || '').split(',')" :key="tag">
-                <div style="display: inline-block; margin: 0px 8px 8px 0px">
-                  <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
-                </div>
-              </template>
 
-              <div class="mt-4 flex justify-end gap-2">
-                <NButton strong circle secondary @click.stop="handleEdit(item.id)">
-                  <template #icon>
-                    <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+          <n-spin size="small" :show="loading">
+            <NGrid x-gap="24" y-gap="16" :cols="24">
+              <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
+                <NCard hoverable>
+                  <div class="flex justify-between">
+                    <div class="text-16px font-600">
+                      {{ item.name }}
+                    </div>
+                  </div>
+                  <template v-for="tag in (item.label || '').split(',')" :key="tag">
+                    <div style="display: inline-block; margin: 0px 8px 8px 0px">
+                      <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
+                    </div>
                   </template>
-                </NButton>
-                <NButton strong secondary circle @click.stop="handleRemove(item.id)">
-                  <template #icon>
-                    <icon-material-symbols:delete-outline class="text-24px text-red" />
-                  </template>
-                </NButton>
-              </div>
-            </NCard>
-          </NGridItem>
-        </NGrid>
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="dataTotal" @update:page="getData" />
+
+                  <div class="mt-4 flex justify-end gap-2">
+                    <NButton strong circle secondary @click.stop="handleEdit(item.id)">
+                      <template #icon>
+                        <CalendarEdit20Regular class="text-24px text-primary" />
+                      </template>
+                    </NButton>
+                    <NButton strong secondary circle @click.stop="handleRemove(item.id)">
+                      <template #icon>
+                        <Delete20Regular class="text-24px text-primary" />
+                      </template>
+                    </NButton>
+                  </div>
+                </NCard>
+              </NGridItem>
+            </NGrid>
+          </n-spin>
+          <div class="pagination-box">
+            <NPagination
+              v-model:page="pagination.page"
+              :page-count="pagination.pageCount"
+              @update:page="
+                page => {
+                  pagination.page = page;
+                  getData();
+                }
+              "
+            />
+          </div>
         </div>
-      </div>
-      <TemplateModal v-model:visible="visible" :type="modalType" :edit-data="editData" @get-table-data="getData" />
-    </NFlex>
+
+        <TemplateModal
+          v-model:visible="visible"
+          :type="modalType"
+          :template-id="templateId"
+          :get-table-data="getData"
+        />
+      </NFlex>
+    </NCard>
   </div>
 </template>
 

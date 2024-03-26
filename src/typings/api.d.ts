@@ -7,6 +7,7 @@ declare namespace Api {
   namespace BaseApi {
     /** 后端返回的路由数据类型 */
     interface Data {
+      name: string;
       code: number;
       message: string;
     }
@@ -81,6 +82,7 @@ declare namespace Api {
       /** 用户角色类型 */
       roles?: string[];
       authority: string;
+
       [key: string]: any;
     }
   }
@@ -488,7 +490,7 @@ declare namespace Api {
   }
 
   /** 设备管理 */
-  namespace device{
+  namespace device {
     interface addDeviceModel {
       additional_info: string;
       created_at: string;
@@ -503,6 +505,7 @@ declare namespace Api {
       tenant_id: string;
       unit: string;
       updated_at: string;
+
       [property: string]: any;
     }
   }

@@ -2,7 +2,7 @@
 declare namespace App {
   /** Theme namespace */
   namespace Theme {
-    type ColorPaletteNumber = import('@sa/color-palette').ColorPaletteNumber;
+    type ColorPaletteNumber = import("@sa/color-palette").ColorPaletteNumber;
 
     /** Theme token */
     type ThemeToken = {
@@ -127,12 +127,13 @@ declare namespace App {
 
   /** Global namespace */
   namespace Global {
-    type VNode = import('vue').VNode;
-    type RouteLocationNormalizedLoaded = import('vue-router').RouteLocationNormalizedLoaded;
-    type RouteKey = import('@elegant-router/types').RouteKey;
-    type RouteMap = import('@elegant-router/types').RouteMap;
-    type RoutePath = import('@elegant-router/types').RoutePath;
-    type LastLevelRouteKey = import('@elegant-router/types').LastLevelRouteKey;
+    type VNode = import("vue").VNode;
+    type RouteLocationNormalizedLoaded =
+      import("vue-router").RouteLocationNormalizedLoaded;
+    type RouteKey = import("@elegant-router/types").RouteKey;
+    type RouteMap = import("@elegant-router/types").RouteMap;
+    type RoutePath = import("@elegant-router/types").RoutePath;
+    type LastLevelRouteKey = import("@elegant-router/types").LastLevelRouteKey;
 
     /** The global header props */
     interface HeaderProps {
@@ -166,13 +167,18 @@ declare namespace App {
       children?: Menu[];
     }
 
-    type Breadcrumb = Omit<Menu, 'children'> & {
+    type Breadcrumb = Omit<Menu, "children"> & {
       options?: Breadcrumb[];
     };
 
     /** Tab route */
-    type TabRoute = Pick<RouteLocationNormalizedLoaded, 'name' | 'path' | 'meta'> &
-      Partial<Pick<RouteLocationNormalizedLoaded, 'fullPath' | 'query' | 'matched'>>;
+    type TabRoute = Pick<
+      RouteLocationNormalizedLoaded,
+      "name" | "path" | "meta"
+    > &
+      Partial<
+        Pick<RouteLocationNormalizedLoaded, "fullPath" | "query" | "matched">
+      >;
 
     /** The global tab */
     type Tab = {
@@ -217,10 +223,15 @@ declare namespace App {
     };
 
     /** Form rule */
-    type FormRule = import('naive-ui').FormItemRule;
+    type FormRule = import("naive-ui").FormItemRule;
 
     /** The global dropdown key */
-    type DropdownKey = 'closeCurrent' | 'closeOther' | 'closeLeft' | 'closeRight' | 'closeAll';
+    type DropdownKey =
+      | "closeCurrent"
+      | "closeOther"
+      | "closeLeft"
+      | "closeRight"
+      | "closeAll";
   }
 
   /**
@@ -229,16 +240,16 @@ declare namespace App {
    * Locales type
    */
   namespace I18n {
-    type RouteKey = import('@elegant-router/types').RouteKey;
+    type RouteKey = import("@elegant-router/types").RouteKey;
 
-    type LangType = 'en-US' | 'zh-CN';
+    type LangType = "en-US" | "zh-CN";
 
     type LangOption = {
       label: string;
       key: LangType;
     };
 
-    type I18nRouteKey = Exclude<RouteKey, 'root' | 'not-found'>;
+    type I18nRouteKey = Exclude<RouteKey, "root" | "not-found">;
 
     type FormMsg = {
       required: string;
@@ -293,15 +304,24 @@ declare namespace App {
       };
       theme: {
         themeSchema: { title: string } & Record<UnionKey.ThemeScheme, string>;
-        layoutMode: { title: string } & Record<UnionKey.ThemeLayoutMode, string>;
+        layoutMode: { title: string } & Record<
+          UnionKey.ThemeLayoutMode,
+          string
+        >;
         themeColor: {
           title: string;
           followPrimary: string;
         } & Theme.ThemeColor;
-        scrollMode: { title: string } & Record<UnionKey.ThemeScrollMode, string>;
+        scrollMode: { title: string } & Record<
+          UnionKey.ThemeScrollMode,
+          string
+        >;
         page: {
           animate: string;
-          mode: { title: string } & Record<UnionKey.ThemePageAnimateMode, string>;
+          mode: { title: string } & Record<
+            UnionKey.ThemePageAnimateMode,
+            string
+          >;
         };
         fixedHeaderAndTab: string;
         header: {
@@ -824,6 +844,7 @@ declare namespace App {
         addTage: string;
         back: string;
         add: string;
+        confirm: string;
         telemetry: string;
         attributes: string;
         events: string;
@@ -832,10 +853,52 @@ declare namespace App {
         addAndEditAttributes: string;
         addAndEditEvents: string;
         addAndEditCommand: string;
+        table_header: {
+          dataName: string;
+          dataIdentifier: string;
+          readAndWriteSign: string;
+          dataType: string;
+          unit: string;
+          description: string;
+          attributeName: string;
+          attributeIdentifier: string;
+          eventName: string;
+          eventIdentifier: string;
+          eventParameters: string;
+          commandName: string;
+          commandIdentifier: string;
+          commandParameters: string;
+          pleaseEnterADataName: string;
+          pleaseEnterTheDataIdentifier: string;
+          pleaseEnterTheDataType: string;
+          pleaseEnterTheUnit: string;
+          PleaseEnterADescription: string;
+          pleaseEnterTheAttributeName: string;
+          pleaseEnterTheAttributeIdentifier: string;
+          pleaseEnterTheAttributeType: string;
+          attributeType: string;
+          addEditParameters: string;
+          parameterName: string;
+          PleaseEnterTheParameterName: string;
+          ParameterIdentifier: string;
+          PleaseEnterTheParameterIdentifier: string;
+          ParameterType: string;
+          PleaseSelectParameterType: string;
+          singleControlTask: string;
+          addParameters: string;
+          commandDescription: string;
+          pleaseEnterACommandDescription: string;
+          pleaseEnterTheCommandName: string;
+          pleaseEnterTheCommandIdentifier: string;
+          PleaseEnterTheCommandType: string;
+        };
       };
     };
 
-    type GetI18nKey<T extends Record<string, unknown>, K extends keyof T = keyof T> = K extends string
+    type GetI18nKey<
+      T extends Record<string, unknown>,
+      K extends keyof T = keyof T,
+    > = K extends string
       ? T[K] extends Record<string, unknown>
         ? `${K}.${GetI18nKey<T[K]>}`
         : K
@@ -843,36 +906,57 @@ declare namespace App {
 
     type I18nKey = GetI18nKey<Schema>;
 
-    type TranslateOptions<Locales extends string> = import('vue-i18n').TranslateOptions<Locales>;
+    type TranslateOptions<Locales extends string> =
+      import("vue-i18n").TranslateOptions<Locales>;
 
     interface $T {
       (key: I18nKey): string;
 
-      (key: I18nKey, plural: number, options?: TranslateOptions<LangType>): string;
+      (
+        key: I18nKey,
+        plural: number,
+        options?: TranslateOptions<LangType>,
+      ): string;
 
-      (key: I18nKey, defaultMsg: string, options?: TranslateOptions<I18nKey>): string;
+      (
+        key: I18nKey,
+        defaultMsg: string,
+        options?: TranslateOptions<I18nKey>,
+      ): string;
 
-      (key: I18nKey, list: unknown[], options?: TranslateOptions<I18nKey>): string;
+      (
+        key: I18nKey,
+        list: unknown[],
+        options?: TranslateOptions<I18nKey>,
+      ): string;
 
       (key: I18nKey, list: unknown[], plural: number): string;
 
       (key: I18nKey, list: unknown[], defaultMsg: string): string;
 
-      (key: I18nKey, named: Record<string, unknown>, options?: TranslateOptions<LangType>): string;
+      (
+        key: I18nKey,
+        named: Record<string, unknown>,
+        options?: TranslateOptions<LangType>,
+      ): string;
 
       (key: I18nKey, named: Record<string, unknown>, plural: number): string;
 
-      (key: I18nKey, named: Record<string, unknown>, defaultMsg: string): string;
+      (
+        key: I18nKey,
+        named: Record<string, unknown>,
+        defaultMsg: string,
+      ): string;
     }
   }
 
   /** Service namespace */
   namespace Service {
     /** The backend service env type */
-    type EnvType = 'dev' | 'test' | 'prod';
+    type EnvType = "dev" | "test" | "prod";
 
     /** Other baseURL key */
-    type OtherBaseURLKey = 'demo' | 'mock';
+    type OtherBaseURLKey = "demo" | "mock";
 
     /** The backend service config */
     interface ServiceConfig<T extends OtherBaseURLKey = OtherBaseURLKey> {
@@ -911,7 +995,7 @@ declare namespace App {
      * - http: 请求成功，响应的http状态码非200的错误
      * - backend: 请求成功，响应的http状态码为200，由后端定义的业务错误
      */
-    type RequestErrorType = 'axios' | 'http' | 'backend';
+    type RequestErrorType = "axios" | "http" | "backend";
 
     /** 请求错误 */
     interface RequestError {
@@ -966,7 +1050,10 @@ declare namespace App {
     type RequestResult<T = any> = SuccessResult<T> | FailedResult;
 
     /** 多个请求数据结果 */
-    type MultiRequestResult<T extends any[]> = T extends [infer First, ...infer Rest]
+    type MultiRequestResult<T extends any[]> = T extends [
+      infer First,
+      ...infer Rest,
+    ]
       ? [First] extends [any]
         ? Rest extends any[]
           ? [Service.RequestResult<First>, ...MultiRequestResult<Rest>]

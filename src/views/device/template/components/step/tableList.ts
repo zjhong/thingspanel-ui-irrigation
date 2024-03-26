@@ -1,35 +1,36 @@
 import { ref, Ref } from "vue";
 import type { DataTableColumns } from "naive-ui";
+import { $t } from "@/locales";
 
 export const test: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   {
     key: "data_name",
-    title: "数据名称",
+    title: $t("device_template.table_header.dataName"),
     align: "center",
   },
   {
     key: "data_identifier",
-    title: "数据标识符",
+    title: $t("device_template.table_header.dataIdentifier"),
     align: "center",
   },
   {
     key: "data_type",
-    title: "读写标志",
+    title: $t("device_template.table_header.readAndWriteSign"),
     align: "center",
   },
   {
     key: "read_write_flag",
-    title: "数据类型",
+    title: $t("device_template.table_header.dataType"),
     align: "center",
   },
   {
     key: "unit",
-    title: "单位",
+    title: $t("device_template.table_header.unit"),
     align: "center",
   },
   {
     key: "description",
-    title: "描述",
+    title: $t("device_template.table_header.description"),
     align: "center",
   },
 ]);
@@ -37,32 +38,32 @@ export const test: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
 export const attribute: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   {
     key: "data_name",
-    title: "属性名称",
+    title: $t("device_template.table_header.attributeName"),
     align: "center",
   },
   {
     key: "data_identifier",
-    title: "属性标识符",
+    title: $t("device_template.table_header.attributeIdentifier"),
     align: "center",
   },
   {
     key: "data_type",
-    title: "读写标志",
+    title: $t("device_template.table_header.readAndWriteSign"),
     align: "center",
   },
   {
     key: "read_write_flag",
-    title: "数据类型",
+    title: $t("device_template.table_header.dataType"),
     align: "center",
   },
   {
     key: "unit",
-    title: "单位",
+    title: $t("device_template.table_header.unit"),
     align: "center",
   },
   {
     key: "description",
-    title: "描述",
+    title: $t("device_template.table_header.description"),
     align: "center",
   },
 ]);
@@ -70,22 +71,22 @@ export const attribute: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
 export const events: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   {
     key: "data_name",
-    title: "事件名称",
+    title: $t("device_template.table_header.eventName"),
     align: "center",
   },
   {
     key: "data_identifier",
-    title: "事件标识符",
+    title: $t("device_template.table_header.eventIdentifier"),
     align: "center",
   },
   {
     key: "data_type",
-    title: "事件参数",
+    title: $t("device_template.table_header.eventParameters"),
     align: "center",
   },
   {
     key: "description",
-    title: "描述",
+    title: $t("device_template.table_header.description"),
     align: "center",
   },
 ]);
@@ -93,22 +94,22 @@ export const events: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
 export const command: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   {
     key: "data_name",
-    title: "命令名称",
+    title: $t("device_template.table_header.commandName"),
     align: "center",
   },
   {
     key: "data_identifier",
-    title: "命令标识符",
+    title: $t("device_template.table_header.commandIdentifier"),
     align: "center",
   },
   {
     key: "data_type",
-    title: "命令参数",
+    title: $t("device_template.table_header.commandParameters"),
     align: "center",
   },
   {
     key: "description",
-    title: "描述",
+    title: $t("device_template.table_header.description"),
     align: "center",
   },
 ]);

@@ -303,8 +303,8 @@ const parameterSubmit: () => void = async () => {
       </n-form-item>
     </n-form>
     <div class="box2">
-      <n-button @click="addParameter = false" class="m-r3">取消</n-button>
-      <n-button @click="parameterSubmit">确定</n-button>
+      <n-button @click="addParameter = false" class="m-r3">{{$t('device_template.cancellation')}}</n-button>
+      <n-button @click="parameterSubmit">{{$t('device_template.confirm')}}</n-button>
     </div>
   </NModal>
 </template>

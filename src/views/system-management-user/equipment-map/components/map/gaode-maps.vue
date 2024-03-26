@@ -7,24 +7,12 @@
         placeholder="请输入关键字..."
         class="input-with-select"
       />
-      <n-button type="primary" @click="sweepAway">清除选点</n-button>
     </div>
     <div id="container" style="height: 300px"></div>
   </div>
 </template>
 <script>
-window._AMapSecurityConfig = {
-  securityJsCode: "2483a3a12b79b9428d87e1bcac19c446",
-};
-import {
-  computed,
-  watch,
-  reactive,
-  toRefs,
-  onMounted,
-  ref,
-  nextTick,
-} from "vue";
+import { watch, reactive, toRefs, onMounted } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 export default {
   // isMarkerShow 是否使用标记点
@@ -85,13 +73,13 @@ export default {
               // 将创建的点标记添加到已有的地图实例：
               state.map.add(marker);
               //每次新建多边形前先把之前的删掉，避免覆盖。
-              if (state.lnglatArr.length > 1) {
-                state.map.remove(polygon);
-              }
+            //   if (state.lnglatArr.length > 1) {
+            //     state.map.remove(polygon);
+            //   }
               polygon = new AMap.Polygon({
                 path: state.lnglatArr, //多边形坐标
                 strokeColor: "#A0CFF6", //线颜色
-                strokeWeight: 1,
+                // strokeWeight: 1,
                 strokeOpacity: 1, //线透明度
                 fillOpacity: 0.4, //填充透明度
                 fillColor: "#1791fc", //填充颜色
@@ -100,7 +88,7 @@ export default {
               state.map.add(polygon); //生成多边形
             }
             state.map.on("click", showInfoClick); //点击划图
-            state.map.setFitView(); //根据地图上添加的覆盖物分布情况，自动缩放地图到合适的视野级别
+            // state.map.setFitView(); //根据地图上添加的覆盖物分布情况，自动缩放地图到合适的视野级别
 
             // 第一次不打标记 &&  isMarkerShow：组件是否使用标记点
             if (type[0] !== state.dimension[0] && props.isMarkerShow) {
@@ -142,7 +130,7 @@ export default {
           methods.mapInit(state.dimension);
         }
       },
-      { immediate: true },
+      { immediate: true }
     );
     onMounted(() => {});
     return { ...methods, ...toRefs(state) };

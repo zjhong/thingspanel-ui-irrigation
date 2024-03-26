@@ -1,10 +1,10 @@
 <script setup lang="tsx">
-import { ref, defineEmits } from 'vue';
+import { defineEmits, ref } from 'vue';
 import { useDeviceDataStore } from '@/store/modules/device/index';
 import { $t } from '@/locales';
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
-const counterStore = useDeviceDataStore()
+const counterStore = useDeviceDataStore();
 
 const props = defineProps({
   // 当前的步骤
@@ -23,27 +23,24 @@ const props = defineProps({
     required: true
   }
 });
-let DeviceTemplateId = ref<string>(props.DeviceTemplateId);
+const DeviceTemplateId = ref<string>(props.DeviceTemplateId);
 
 console.log(props, counterStore, '参数');
 
-
-
 // 取消
 const cancellation: () => void = () => {
-  console.log('点击了取消');
-  emit('update:modalVisible')
-}
+  emit('update:modalVisible');
+};
 // 上一步
 const back: () => void = () => {
   console.log('点击了上一步');
-  counterStore.executeEdit(DeviceTemplateId)
+  counterStore.executeEdit(DeviceTemplateId);
   emit('update:stepCurrent', 2);
-}
+};
 // 下一步
 const next: () => void = () => {
   console.log('点击了下一步');
-}
+};
 </script>
 
 <template>

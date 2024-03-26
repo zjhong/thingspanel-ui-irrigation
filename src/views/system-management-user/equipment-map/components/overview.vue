@@ -4,10 +4,10 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 11:36:02
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-23 13:09:16
+ * @LastEditTime: 2024-03-26 11:09:58
 -->
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 import * as echarts from "echarts";
 import { $t } from "@/locales";
 // 图表
@@ -72,7 +72,7 @@ const init: () => void = () => {
             [
               { offset: 0, color: "rgba(11, 132, 240, .1)" }, // 结束颜色（完全透明）
               { offset: 1, color: "rgba(255, 255, 255, 1)" }, // 起始颜色（透明度为0.8的灰色）
-            ],
+            ]
           ),
           opacity: 1, // 设置阴影透明度（1表示完全不透明）
         },

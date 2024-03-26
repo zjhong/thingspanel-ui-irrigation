@@ -13,23 +13,18 @@ export const tenant = async () => {
 };
 /** 新增设备模板信息*/
 export const addTemplat = async (params: any): Promise<any> => {
-  const data = await request.post("/device/template", params);
+  const data = await request.post('/device/template', params);
   return data;
 };
 /** 更新模型详情数据 */
 export const putTemplat = async (params: any) => {
-  const data = await request.put<Api.BaseApi.Data | null>(
-    `/device/template`,
-    params,
-  );
+  const data = await request.put<Api.BaseApi.Data | null>(`/device/template`, params);
   return data;
 };
 
 /** 获取物模型详情数据 */
 export const getTemplat = async (id: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    `/device/template/detail/${id}`,
-  );
+  const data = await request.get<Api.BaseApi.Data | null>(`/device/template/detail/${id}`);
   return data;
 };
 

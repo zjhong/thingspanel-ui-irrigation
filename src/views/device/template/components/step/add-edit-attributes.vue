@@ -2,6 +2,7 @@
 <script setup lang="tsx">
 import { ref, reactive, watch } from "vue"
 import { addAttributes, putAttributes } from '@/service/api/system-data'
+import { $t } from "@/locales";
 
 const emit = defineEmits(['update:addAndEditModalVisible', 'update:objItem', 'determine']);
 
@@ -19,8 +20,6 @@ const props = defineProps({
     required: true
   }
 });
-
-console.log(props.objItem, '测试');
 
 // 提交表单
 const formRef: any = ref(null)
@@ -44,17 +43,17 @@ const fromRules: Rules = {
   data_name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入属性名称'
+    message:$t('device_template.table_header.pleaseEnterTheAttributeName')
   },
   data_identifier: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入属性标识符'
+    message: $t('device_template.table_header.pleaseEnterTheAttributeIdentifier')
   },
   read_write_flag: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入属性类型'
+    message: $t('device_template.table_header.pleaseEnterTheAttributeType')
   },
 }
 
@@ -96,7 +95,6 @@ const submit: () => void = async () => {
       emit('update:objItem', {})
       emit('update:addAndEditModalVisible', false)
       emit('determine')
-      window.$message?.success('编辑成功')
     }
     console.log(response, '提交');
   } else {
@@ -105,9 +103,7 @@ const submit: () => void = async () => {
       emit('update:objItem', {})
       emit('update:addAndEditModalVisible', false)
       emit('determine')
-      window.$message?.success('新增成功')
     }
-    console.log(response, '提交');
   }
 }
 
@@ -122,25 +118,25 @@ const clear: () => void = () => {
 <template>
   <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100" ref="formRef"
     require-mark-placement="right-hanging" class="addFrom">
-    <n-form-item label="属性名称" path="data_name">
-      <n-input v-model:value.trim="addFrom.data_name" placeholder="请输入属性名称" />
+    <n-form-item :label=" $t('device_template.table_header.attributeName')" path="data_name">
+      <n-input v-model:value.trim="addFrom.data_name" :placeholder=" $t('device_template.table_header.pleaseEnterTheAttributeName')" />
     </n-form-item>
-    <n-form-item label="属性标识符" path="data_identifier">
-      <n-input v-model:value.trim="addFrom.data_identifier" placeholder="请输入属性标识符" />
+    <n-form-item :label="$t('device_template.table_header.attributeIdentifier')" path="data_identifier">
+      <n-input v-model:value.trim="addFrom.data_identifier" :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeIdentifier')" />
     </n-form-item>
-    <n-form-item label="属性类型" path="read_write_flag">
-      <n-select v-model:value="addFrom.read_write_flag" :options="generalOptions" placeholder="请选择属性类型" />
+    <n-form-item :label="$t('device_template.table_header.attributeType')" path="read_write_flag">
+      <n-select v-model:value="addFrom.read_write_flag" :options="generalOptions" :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeType')" />
     </n-form-item>
-    <n-form-item label="单位">
-      <n-input v-model:value.trim="addFrom.unit" placeholder="请输入单位" />
+    <n-form-item :label="$t('device_template.table_header.unit')">
+      <n-input v-model:value.trim="addFrom.unit" :placeholder="$t('device_template.table_header.pleaseEnterTheUnit')" />
     </n-form-item>
-    <n-form-item label="描述">
-      <n-input v-model:value.trim="addFrom.description" placeholder="请输入描述" type="textarea" />
+    <n-form-item :label="$t('device_template.table_header.description')">
+      <n-input v-model:value.trim="addFrom.description" :placeholder="$t('device_template.table_header.PleaseEnterADescription')" type="textarea" />
     </n-form-item>
   </n-form>
   <div class="box1">
-    <n-button @click="clear" class="m-r3">取消</n-button>
-    <n-button @click="submit">确定</n-button>
+    <n-button @click="clear" class="m-r3">{{$t('device_template.cancellation')}}</n-button>
+    <n-button @click="submit">{{$t('device_template.confirm')}}</n-button>
   </div>
 </template>
 

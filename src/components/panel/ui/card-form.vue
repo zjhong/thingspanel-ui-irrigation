@@ -180,7 +180,7 @@ onMounted(() => {
               <n-input-number
                 v-model:value="deviceCount"
                 :min="1"
-                :max="9"
+                :max="state.data.dataSource.sourceNum || 9"
                 class="m-b-2 w-360px"
                 @update:value="deviceCountUpdate"
               >

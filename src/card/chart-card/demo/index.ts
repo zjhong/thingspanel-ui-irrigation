@@ -13,7 +13,8 @@ export default {
     dataSource: {
       origin: 'system',
       sourceNum: 1,
-      systemSource: [{}]
+      systemSource: [{}],
+      deviceSource: [{}]
     },
     config: {
       name: '123'

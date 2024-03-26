@@ -4,15 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 13:13:50
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-26 00:34:21
--->
-<!--
- * @Descripttion:
- * @version:
- * @Author: zhaoqi
- * @Date: 2024-03-23 11:36:02
- * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-24 15:13:13
+ * @LastEditTime: 2024-03-26 10:54:24
 -->
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
@@ -25,7 +17,14 @@ import addAreaPage from "./add-area.vue";
 
 const message = useMessage();
 const { formRef } = useNaiveForm();
-
+const former = ref({
+  mapLocal: "",
+  mapAddress: "",
+  longitude: "", //地图纬度信息
+  latitude: "", //地图经度信息
+  scope: "",
+  dimension: [121.50861, 31.25141],
+});
 type spaceSpaceForm = {
   name: string;
   spaces_id: string;
@@ -62,26 +61,19 @@ const rules = {
 
 function getLocation(e) {
   console.log("8888888地图", e);
-  spaceForm.locationText =
-    "经度:" +
-    e.location.lng +
-    " " +
-    " " +
-    " " +
-    " " +
-    " " +
-    " " +
-    "维度:" +
-    e.location.lat;
+  spaceForm.location = e.location.lng;
+  spaceForm.dimensionality = e.location.lat;
 }
 function oNscope(val) {
   console.log("地图val", val);
   const scope: any = [];
   let data: any = "";
-  val.map((item, index) => {
+   val.map((item) => {
     data = item.lat + "," + item.lng;
-    scope.push(data);
+    return scope.push(data);
+    
   });
+  
   spaceForm.scope = JSON.stringify(scope);
   console.log("spaceForm.scope", spaceForm.scope);
 }
@@ -133,14 +125,7 @@ function handleReset(e) {
     }
   });
 }
-const former = ref({
-  mapLocal: "",
-  mapAddress: "",
-  longitude: "", //地图纬度信息
-  latitude: "", //地图经度信息
-  scope: "",
-  dimension: [121.50861, 31.25141],
-});
+
 const getChildList = ref();
 function locationChange(e) {
   former.value.dimension[0] = e;
@@ -149,11 +134,19 @@ function dimensionalityChange(e) {
   former.value.dimension[1] = e;
   getChildList.value.mapInit(former.value.dimension);
 }
+function addChang() {
+  spaceForm.location = "";
+  spaceForm.dimensionality = "";
+  spaceForm.name = "";
+  spaceForm.sort = "";
+  spaceForm.scope = "";
+  spaceForm.description = "";
+}
 </script>
 
 <template>
   <n-card title="空间管理">
-    <n-tabs type="line" animated>
+    <n-tabs type="line" animated @click="addChang">
       <n-tab-pane name="oasis" tab="添加空间">
         <n-scrollbar style="max-height: 550px">
           <NSpace class="w-full pt-4" :size="24" justify="center">

@@ -1,12 +1,11 @@
 <script setup lang="tsx">
 import { reactive, ref } from "vue";
 import type { Ref } from "vue";
-import { NButton, NPopconfirm, NSpace, NTag } from "naive-ui";
+import { NButton, NPopconfirm, NSpace } from "naive-ui";
 import type { DataTableColumns, PaginationProps } from "naive-ui";
 import {
   dataServiceFlagLabels,
   dataServiceSignModeLabels,
-  dataServiceStatusLabels,
   dataServiceStatusOptions,
 } from "@/constants/business";
 import { fetchDataServiceList } from "@/service/api_demo/management";
@@ -14,16 +13,11 @@ import type { ModalType } from "./components/table-action-modal.vue";
 import TableActionModal from "./components/table-action-modal.vue";
 import SecretKeyModal from "./components/secret-key-modal.vue";
 import { useBoolean, useLoading } from "~/packages/hooks";
-import {
-  areaDetail,
-  areasList,
-  deleteArea,
-  spacesList,
-} from "@/service/api/equipment-map";
+import { areasList, deleteArea, spacesList } from "@/service/api/equipment-map";
 import { router } from "@/router";
 
 const { loading, startLoading, endLoading } = useLoading(false);
-const { bool: visible, setTrue: openModal } = useBoolean();
+const { bool: visible } = useBoolean();
 const { bool: secretKeyVisible, setTrue: openSecretKeyModal } = useBoolean();
 
 const queryParams = reactive({
@@ -38,36 +32,40 @@ function setTableData(data: DataService.Data[]) {
 }
 
 const params = reactive({
-  limit: 2,
+  limit: 100,
 });
 
-const spaces = ref([{ name: "" }]);
+const spaces = ref([{ name: "", id: "" }]);
 //区域详情列表
-const detailOne = ref([]);
+const detailOne: any = ref([]);
 
-const detailTwo = ref([]);
+const detailTwo: any = ref([]);
 //获取空间列表
 async function getSpacesList() {
   const { data } = (await spacesList(params)) as any;
   spaces.value = data.rows;
-  console.log(8888888, data.rows);
+  console.log("获取空间列表", spaces.value);
+  getAreaList();
 }
-async function getAreaList(params: string, index) {
-  const { data } = (await areasList(params)) as any;
-  // detailOne.value = data.rows
-  data.rows.forEach((item) => {
-    getAreaDetail(item.id, index);
+function getAreaList() {
+  let dataList = { limit: 100, space_id: "" };
+  spaces.value.map((item) => {
+    console.log(item.id);
+    dataList.space_id = item.id;
+    const { data } = areasList(dataList) as any;
+    console.log("获取区域列表", data);
+    return data
   });
 }
 
-async function getAreaDetail(id: any, index: number) {
-  const { data } = (await areaDetail(id)) as any;
-  if (index === 0) {
-    detailOne.value.push(data);
-  } else {
-    detailTwo.value.push(data);
-  }
-}
+// async function getAreaDetail(id: any, index: number) {
+//   const { data } = (await areaDetail(id)) as any;
+//   if (index === 0) {
+//     detailOne.value.push(data);
+//   } else {
+//     detailTwo.value.push(data);
+//   }
+// }
 async function getTableData() {
   startLoading();
   const { data } = (await fetchDataServiceList()) as any;
@@ -206,29 +204,7 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
 
 const modalType = ref<ModalType>("add");
 
-function setModalType(type: ModalType) {
-  modalType.value = type;
-}
-
 const editData = ref<DataService.Data | null>(null);
-
-function setEditData(data: DataService.Data | null) {
-  editData.value = data;
-}
-
-function handleAddTable() {
-  openModal();
-  setModalType("add");
-}
-
-function handleEditTable(rowId: string) {
-  const findItem = tableData.value.find((item) => item.id === rowId);
-  if (findItem) {
-    setEditData(findItem);
-  }
-  setModalType("edit");
-  openModal();
-}
 
 function handleDeleteArea(rowId: string) {
   deleteArea(rowId);
@@ -276,7 +252,6 @@ init();
     <NCard title="空间管理" :bordered="false" class="rounded-8px shadow-sm">
       <div class="flex-col">
         <NForm
-          ref="queryFormRef"
           inline
           label-placement="left"
           :model="queryParams"
@@ -303,51 +278,33 @@ init();
         </NForm>
       </div>
     </NCard>
-
-    <NCard>
-      <h2>空间名称: {{ spaces[0]?.name }}</h2>
-      <NSpace>
-        <NDataTable
-          :scroll-x="1088"
-          :columns="columns"
-          :data="detailOne"
-          :loading="loading"
-          :pagination="pagination"
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          @get-table-data="getTableData"
-        />
-      </NSpace>
-    </NCard>
-
-    <NCard>
-      <h2>空间名称: {{ spaces[1]?.name }}</h2>
-      <NSpace class="w-full mt-4" :size="24" justify="center">
-        <NDataTable
-          :scroll-x="1088"
-          :columns="columns"
-          :data="detailTwo"
-          :loading="loading"
-          :pagination="pagination"
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          @get-table-data="getTableData"
-        />
-      </NSpace>
-    </NCard>
+    <div>
+      <n-scrollbar style="max-height: 280px">
+        <NCard v-for="(item, index) in spaces" :key="index">
+          <div class="space-name">空间名称: {{ item.name }}</div>
+          <NSpace>
+            <NDataTable
+              :scroll-x="1088"
+              :columns="columns"
+              :data="detailOne"
+              :loading="loading"
+              :pagination="pagination"
+              class="flex-1-hidden"
+            />
+            <TableActionModal
+              v-model:visible="visible"
+              :type="modalType"
+              :edit-data="editData"
+              @get-table-data="getTableData"
+            />
+          </NSpace>
+        </NCard>
+      </n-scrollbar>
+    </div>
 
     <NCard title="" :bordered="false" class="rounded-8px shadow-sm">
       <div class="flex-col">
         <NForm
-          ref="queryFormRef"
           inline
           label-placement="left"
           :model="queryParams"
@@ -402,5 +359,9 @@ init();
 <style scoped>
 :deep(.n-space) {
   display: block !important;
+}
+.space-name {
+  padding: 0 15px 15px 0;
+  font-weight: 700;
 }
 </style>

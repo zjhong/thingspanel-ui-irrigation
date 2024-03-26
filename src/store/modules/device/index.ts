@@ -1,11 +1,11 @@
-import { ref } from "vue";
-import { defineStore } from "pinia";
-import { SetupStoreId } from "@/enum";
-import { deviceDetail } from "@/service/api";
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+import { SetupStoreId } from '@/enum';
+import { deviceDetail } from '@/service/api';
 
 export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
   const deviceData = ref<DeviceManagement.DeviceDetail | null>(null); // 更具体的类型替换 any
-  let executeFlag: any = ref("");
+  const executeFlag: any = ref('');
 
   async function fetchData(id: string) {
     try {
@@ -16,10 +16,11 @@ export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
         deviceData.value = null;
       }
     } catch (error) {
-      console.error("fetchData error:", error);
+      console.error('fetchData error:', error);
       deviceData.value = null;
     }
   }
+
   function executeEdit(id: any) {
     executeFlag.value = id;
   }

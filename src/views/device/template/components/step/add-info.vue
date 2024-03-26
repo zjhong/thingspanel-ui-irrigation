@@ -98,7 +98,7 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
   addFrom.path = response.data.path;
   console.log(addFrom.path, 'addFrom.path');
   const relativePath = response.data.path.replace(/^\.\//, '');
-  pngPath.value = `${url.value.replace('/api/v1', '') + relativePath}`;
+  pngPath.value = `${url.value.replace('api/v1', '') + relativePath}`;
   console.log(pngPath.value, file);
 };
 
@@ -137,7 +137,7 @@ watchEffect(async () => {
         addFrom.version = data.version;
         addFrom.author = data.author;
         addFrom.templateTage = data.lable?.split(',') || [];
-        pngPath.value = `${url.value.replace('/api/v1', '') + data.path}`;
+        pngPath.value = `${url.value.replace('api/v1', '') + data.path}`;
       }
     }
   } else {

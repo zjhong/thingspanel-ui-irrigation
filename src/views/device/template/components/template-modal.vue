@@ -67,6 +67,7 @@ const modelPopUpclosed: () => void = () => {
 };
 
 watchEffect(() => {
+  console.log(props.templateId);
   DeviceTemplateId.value = props.templateId;
 });
 
@@ -80,7 +81,12 @@ defineOptions({ name: 'TableActionModal' });
     :title="title"
     class="w-60%"
     @after-leave="modelPopUpclosed"
-    @after-hide="props.getTableData"
+    @after-hide="
+      () => {
+        DeviceTemplateId = props.templateId;
+        props.getTableData();
+      }
+    "
   >
     <n-steps :current="stepCurrent" status="process">
       <n-step :title="$t('device_template.templateInfo')" :description="$t('device_template.addDeviceInfo')" />
@@ -103,7 +109,7 @@ defineOptions({ name: 'TableActionModal' });
       :is="SwitchComponents"
       v-model:stepCurrent="stepCurrent"
       v-model:modalVisible="modalVisible"
-      :DeviceTemplateId="DeviceTemplateId"
+      v-model:DeviceTemplateId="DeviceTemplateId"
     ></component>
   </NModal>
 </template>

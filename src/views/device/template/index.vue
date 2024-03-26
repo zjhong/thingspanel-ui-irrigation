@@ -41,15 +41,15 @@ const handleQuery = async () => {
 getData();
 
 function handleAddTemplate() {
-  openModal();
   modalType.value = 'add';
   templateId.value = '';
+  openModal();
 }
 
 const handleEdit = async (id: string) => {
-  openModal();
   modalType.value = 'edit';
   templateId.value = id;
+  openModal();
 };
 
 const handleRemove = async (id: string) => {

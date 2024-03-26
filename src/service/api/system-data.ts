@@ -1,143 +1,125 @@
-import { request } from "../request";
+import { request } from '../request';
 
 /** 获取设备总数和激活数 */
 export const totalNumber = async () => {
-  const data = await request.get<Api.BaseApi.Data | null>("/board/device");
+  const data = await request.get<Api.BaseApi.Data | null>('/board/device');
   return data;
 };
 
 /** 获取租户总数、昨日新增、本月新增以及月历史数据 */
 export const tenant = async () => {
-  const data = await request.get<Api.BaseApi.Data | null>("/board/tenant");
+  const data = await request.get<Api.BaseApi.Data | null>('/board/tenant');
   return data;
 };
-/** 新增设备模板信息*/
+/** 新增设备模板信息 */
 export const addTemplat = async (params: any): Promise<any> => {
-  const data = await request.post("/device/template", params);
+  const data = await request.post('/device/template', params);
+  return data;
+};
+/** 更新模型详情数据 */
+export const putTemplat = async (params: any) => {
+  const data = await request.put<Api.BaseApi.Data | null>(`/device/template`, params);
+  return data;
+};
+
+/** 获取物模型详情数据 */
+export const getTemplat = async (id: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(`/device/template/detail/${id}`);
   return data;
 };
 
 /** 获取遥测数据 */
 export const telemetryApi = async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/telemetry",
-    { params },
-  );
+  const data = await request.get<Api.BaseApi.Data | null>('/device/model/telemetry', { params });
   return data;
 };
 
 /** 获取属性数据 */
 export const attributesApi = async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/attributes",
-    { params },
-  );
+  const data = await request.get<Api.BaseApi.Data | null>('/device/model/attributes', { params });
   return data;
 };
 
 /** 获取事件数据 */
 export const eventsApi = async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/events",
-    { params },
-  );
+  const data = await request.get<Api.BaseApi.Data | null>('/device/model/events', { params });
   return data;
 };
 
 /** 获取命令数据 */
 export const commandsApi = async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/commands",
-    { params },
-  );
+  const data = await request.get<Api.BaseApi.Data | null>('/device/model/commands', { params });
   return data;
 };
 
-/** 新增遥测数据*/
+/** 新增遥测数据 */
 export const addTelemetry = async (params: any): Promise<any> => {
-  const data = await request.post("/device/model/telemetry", params);
+  const data = await request.post('/device/model/telemetry', params);
   return data;
 };
 
-/** 删除遥测数据*/
+/** 删除遥测数据 */
 export const delTelemetry = async (id: string) => {
-  const data = await request.delete<Api.BaseApi.Data>(
-    `/device/model/telemetry/${id}`,
-  );
+  const data = await request.delete<Api.BaseApi.Data>(`/device/model/telemetry/${id}`);
   return data;
 };
 
-/** 删除属性数据*/
+/** 删除属性数据 */
 export const delAttributes = async (id: string) => {
-  const data = await request.delete<Api.BaseApi.Data>(
-    `/device/model/attributes/${id}`,
-  );
+  const data = await request.delete<Api.BaseApi.Data>(`/device/model/attributes/${id}`);
   return data;
 };
 
-/** 删除事件数据*/
+/** 删除事件数据 */
 export const delEvents = async (id: string) => {
-  const data = await request.delete<Api.BaseApi.Data>(
-    `/device/model/events/${id}`,
-  );
+  const data = await request.delete<Api.BaseApi.Data>(`/device/model/events/${id}`);
   return data;
 };
 
-/** 删除命令数据*/
+/** 删除命令数据 */
 export const delCommands = async (id: string) => {
-  const data = await request.delete<Api.BaseApi.Data>(
-    `/device/model/commands/${id}`,
-  );
+  const data = await request.delete<Api.BaseApi.Data>(`/device/model/commands/${id}`);
   return data;
 };
 
-/** 编辑遥测数据*/
+/** 编辑遥测数据 */
 export const putTelemetry = async (params: any): Promise<any> => {
-  const data = await request.put("/device/model/telemetry", params);
+  const data = await request.put('/device/model/telemetry', params);
   return data;
 };
 
-/** 新增属性数据*/
+/** 新增属性数据 */
 export const addAttributes = async (params: any): Promise<any> => {
-  const data = await request.post("/device/model/attributes", params);
+  const data = await request.post('/device/model/attributes', params);
   return data;
 };
 
-/** 编辑属性数据*/
+/** 编辑属性数据 */
 export const putAttributes = async (params: any): Promise<any> => {
-  const data = await request.put("/device/model/attributes", params);
+  const data = await request.put('/device/model/attributes', params);
   return data;
 };
 
-/** 新增事件数据*/
+/** 新增事件数据 */
 export const addEvents = async (params: any): Promise<any> => {
-  const data = await request.post("/device/model/events", params);
+  const data = await request.post('/device/model/events', params);
   return data;
 };
 
-/** 编辑事件数据*/
-export const putEvents= async (params: any): Promise<any> => {
-  const data = await request.put("/device/model/events", params);
+/** 编辑事件数据 */
+export const putEvents = async (params: any): Promise<any> => {
+  const data = await request.put('/device/model/events', params);
   return data;
 };
 
-/** 新增命令数据*/
+/** 新增命令数据 */
 export const addCommands = async (params: any): Promise<any> => {
-  const data = await request.post("/device/model/commands", params);
+  const data = await request.post('/device/model/commands', params);
   return data;
 };
 
-/** 编辑命令数据*/
+/** 编辑命令数据 */
 export const putCommands = async (params: any): Promise<any> => {
-  const data = await request.put("/device/model/commands", params);
-  return data;
-};
-
-/** 获取遥测数据 */
-export const  gitTelemetry= async (params: any) => {
-  const data = await request.get<Api.BaseApi.Data | null>(
-    "/device/model/telemetry",
-    { params },
-  );
+  const data = await request.put('/device/model/commands', params);
   return data;
 };

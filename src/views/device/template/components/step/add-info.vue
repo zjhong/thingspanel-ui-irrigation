@@ -3,23 +3,12 @@ import { reactive, ref } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { useDeviceDataStore } from '@/store/modules/device/index';
 import { localStg } from '@/utils/storage';
-import { addTemplat, gitTelemetry } from '@/service/api/system-data';
+import { addTemplat, getTemplat, putTemplat } from '@/service/api/system-data';
 import { $t } from '@/locales';
 import { createServiceConfig } from '~/env.config';
-
-const counterStore = useDeviceDataStore()
-const edit: () => void = async () => {
-  if (counterStore.executeFlag !== '') {
-    const response: any = await gitTelemetry({
-      page:1,
-      page_size:10,
-      device_template_id:counterStore.executeFlag.value
-    })
-    console.log(response, '哎嘿，获取不到吧，就是让你获取不到');
-  }
-}
-
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
+const counterStore = useDeviceDataStore()
+
 defineProps({
   stepCurrent: {
     type: Number,
@@ -42,21 +31,38 @@ interface AddFrom {
   templateTage: string[];
   version: string;
   author: string;
-  remark: string;
+  description: string;
   path: string;
   lable: string;
+  id?: string;
 }
 
-const addFrom: AddFrom = reactive({
+let addFrom: AddFrom = reactive({
   name: '',
   templateTage: [],
   version: '',
   author: '',
-  remark: '',
+  description: '',
   path: '',
   lable: ''
 });
 
+const edit: () => void = async () => {
+  if (counterStore.executeFlag !== '') {
+    const response: any = await getTemplat(counterStore.executeFlag.value)
+    const data = response.data;
+    ({
+      name: addFrom.name,
+      id: addFrom.id,
+      path: addFrom.path,
+      description: addFrom.description,
+      version: addFrom.version,
+      author: addFrom.author,
+    } = data);
+    addFrom.templateTage = data.lable.split(',')
+    console.log(addFrom, '哎嘿，获取不到吧，就是让你获取不到');
+  }
+}
 edit()
 
 type Rule = {
@@ -114,10 +120,18 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
 // 新增设备模板
 const next: () => void = async () => {
   await formRef.value?.validate();
-  addFrom.lable = addFrom.templateTage.join(',');
-  const response = await addTemplat(addFrom);
-  emit('update:stepCurrent', 2);
-  emit('update:DeviceTemplateId', response.data.id);
+  if (addFrom.id) {
+    addFrom.lable = addFrom.templateTage.join(',');
+    const response: any = await putTemplat(addFrom);
+    emit('update:stepCurrent', 2);
+    emit('update:DeviceTemplateId', response.data.id);
+    counterStore.executeEdit('')
+  } else {
+    addFrom.lable = addFrom.templateTage.join(',');
+    const response: any = await addTemplat(addFrom);
+    emit('update:stepCurrent', 2);
+    emit('update:DeviceTemplateId', response.data.id);
+  }
 };
 
 const cancellation: () => void = () => {
@@ -153,7 +167,7 @@ const cancellation: () => void = () => {
         <n-input v-model:value.trim="addFrom.version" :placeholder="$t('device_template.entertemplateVersion')" />
       </n-form-item>
       <n-form-item :label="$t('device_template.illustrate')">
-        <n-input v-model:value.trim="addFrom.remark" type="textarea"
+        <n-input v-model:value.trim="addFrom.description" type="textarea"
           :placeholder="$t('device_template.enterIllustrate')" />
       </n-form-item>
     </n-form>

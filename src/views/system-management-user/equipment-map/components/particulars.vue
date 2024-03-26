@@ -4,9 +4,14 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 11:36:02
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-23 13:52:44
+ * @LastEditTime: 2024-03-26 11:12:48
 -->
-<script setup lang="tsx"></script>
+<script setup lang="tsx">
+const videoSource = "";
+function onPlay() {}
+function onPause() {}
+function onEnded() {}
+</script>
 
 <template>
   <n-card>
@@ -36,7 +41,6 @@
             </div>
             <div class="video-box">
               <video
-                ref="videoPlayer"
                 :src="videoSource"
                 controls
                 @play="onPlay"

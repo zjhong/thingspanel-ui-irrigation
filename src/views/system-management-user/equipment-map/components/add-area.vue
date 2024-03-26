@@ -9,6 +9,13 @@ import { createServiceConfig } from "~/env.config";
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 const message = useMessage();
+const former = ref({
+  mapLocal: "",
+  mapAddress: "",
+  longitude: "", //地图纬度信息
+  latitude: "", //地图经度信息
+  dimension: [121.50861, 31.25141],
+});
 type spaceAreaForm = {
   name: string;
   spaces_id: string;
@@ -74,24 +81,15 @@ const areaRules = {
 };
 function getLocationClick(e) {
   console.log("地图22222", e);
-  areaForm.locationTexe =
-    "经度:" +
-    e.location.lng +
-    " " +
-    " " +
-    " " +
-    " " +
-    " " +
-    " " +
-    "维度:" +
-    e.location.lat;
+  areaForm.location = e.location.lng;
+  areaForm.dimensionality = e.location.lat;
 }
 function oNscope(val) {
   const scope: any = [];
   let data: any = "";
-  val.map((item, index) => {
+  val.map(item => {
     data = item.lat + "," + item.lng;
-    scope.push(data);
+    return scope.push(data);
   });
   areaForm.scope = JSON.stringify(scope);
   console.log("spaceForm.scope", areaForm.scope);
@@ -107,20 +105,7 @@ const addAreas = async () => {
 
   if (res) {
     message.success("添加成功");
-    (areaForm.name = ""),
-      (areaForm.spaces_id = ""),
-      (areaForm.sort = 1),
-      (areaForm.location = ""),
-      (areaForm.scope = ""),
-      (areaForm.image_url = ""),
-      (areaForm.description = ""),
-      (areaForm.remark = ""),
-      (areaForm.area = ""),
-      (areaForm.water_requirement = ""),
-      (areaForm.crop_type = ""),
-      (areaForm.soil_type = ""),
-      (areaForm.irrigation_type = ""),
-      (areaForm.locationTexe = "");
+   
   } else {
     message.error("添加失败");
   }
@@ -128,7 +113,7 @@ const addAreas = async () => {
 /**
  * 添加区域
  */
-function addAreaClick(e) {
+function addAreaClick() {
   console.log("添加区域");
   addAreas();
   // Object.assign(areaForm, {
@@ -150,13 +135,7 @@ function addAreaClick(e) {
   //   }
   // });
 }
-const former = ref({
-  mapLocal: "",
-  mapAddress: "",
-  longitude: "", //地图纬度信息
-  latitude: "", //地图经度信息
-  dimension: [121.50861, 31.25141],
-});
+
 function closeModal() {
   console.log("取消");
 }
@@ -169,6 +148,7 @@ async function beforeUpload(data: {
     message.error("只能上传png格式的图片文件，请重新上传");
     return false;
   }
+  return true
 }
 function handlePictureCardPreview(file) {
   console.log(9999, file);

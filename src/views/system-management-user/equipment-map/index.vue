@@ -4,7 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 09:35:32
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-25 15:41:08
+ * @LastEditTime: 2024-03-26 11:17:46
 -->
 <script lang="ts" setup>
 import { NButton } from "naive-ui";
@@ -23,13 +23,19 @@ const queryParams = reactive({
  *
  * @param e 重置
  */
-function handleReset(e) {
+function handleReset() {
   queryParams.name = "";
 }
 /**
  * 搜索列表
  */
-const listData = ref([]);
+const listData = ref([
+  {
+    space_id: "",
+    space_name: "",
+    districts: [{ district_id: "", district_name: "" }],
+  },
+]);
 /**
  * 列表
  */
@@ -174,7 +180,6 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           </NSpace>
           <NCard class="search-box">
             <NForm
-              ref="queryFormRef"
               :model="queryParams"
               label-placement="left"
             >
@@ -195,15 +200,15 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
                 <n-collapse-item title="全部">
                   <n-collapse>
                     <n-collapse-item
-                      v-for="item in listData"
-                      :key="item"
+                      v-for="(item, index) in listData"
+                      :key="index"
                       :title="item.space_name"
                       :name="item.space_id"
                     >
                       <div
                         class="test-box"
-                        v-for="items in item.districts"
-                        :key="items"
+                        v-for="(items, index) in item.districts"
+                        :key="index"
                         @click="selectClick(items.district_id)"
                       >
                         {{ items.district_name }}

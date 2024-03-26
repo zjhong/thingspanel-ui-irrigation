@@ -4,6 +4,8 @@ import { useMessage } from 'naive-ui';
 import { InformationCircleSharp } from '@vicons/ionicons5';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
+import CardTemplateItem from './card-template-item.vue';
+import CardTemplateForm from './card-template-form.vue';
 import { $t } from '~/src/locales';
 
 const props = defineProps<{

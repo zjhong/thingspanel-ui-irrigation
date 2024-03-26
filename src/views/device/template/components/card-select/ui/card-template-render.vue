@@ -2,6 +2,7 @@
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
+import CardTemplateItem from './card-template-item.vue';
 
 const props = defineProps<{
   layout: ICardView[];

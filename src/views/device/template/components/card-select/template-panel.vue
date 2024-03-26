@@ -1,23 +1,24 @@
 <script lang="tsx" setup>
 import { onMounted, reactive, ref } from 'vue';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
-import { PutBoard, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
+import AddTemplateCard from './ui/add-template-card.vue';
+import CardTemplateRender from './ui/card-template-render.vue';
 
-const props = defineProps<{ panelId: string }>();
-const panelDate = ref<Panel.Board>();
+const props = defineProps<{ templateId: string }>();
 
 const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
 const fetchBroad = async () => {
-  const { data } = await getBoard(props.panelId);
-  if (data) {
-    panelDate.value = data;
-    if (data.config) {
-      const configJson = JSON.parse(data.config);
-      layout.value = [...configJson, ...layout.value];
-    }
-  }
+  console.log(props.templateId);
+  // const {data} = await getBoard(props.panelId);
+  // if (data) {
+  //   panelDate.value = data;
+  //   if (data.config) {
+  //     const configJson = JSON.parse(data.config);
+  //     layout.value = [...configJson, ...layout.value];
+  //   }
+  // }
 };
 
 const state = reactive({
@@ -51,15 +52,8 @@ const edit = (view: ICardView) => {
 
 const savePanel = async () => {
   const layoutJson = JSON.stringify(layout.value);
-
-  await PutBoard({
-    id: props.panelId,
-    config: layoutJson,
-    name: panelDate.value?.name,
-    home_flag: panelDate.value?.home_flag
-  });
+  console.log(layoutJson);
 };
-
 onMounted(fetchBroad);
 </script>
 
@@ -85,8 +79,15 @@ onMounted(fetchBroad);
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
       <NEmpty description="暂未添加组件"></NEmpty>
     </div>
-    <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="65" @edit="edit" />
-    <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
+    <CardTemplateRender
+      ref="cr"
+      v-model:layout="layout"
+      :col-num="12"
+      :default-card-col="4"
+      :row-height="65"
+      @edit="edit"
+    />
+    <AddTemplateCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>
 

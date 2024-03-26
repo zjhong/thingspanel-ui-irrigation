@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
 import { $t } from '@/locales';
-import { useDeviceDataStore } from '@/store/modules/device/index';
 import { initTemplateInfoData, templateInfoData } from '../utils';
 import AddInfo from './step/add-info.vue';
 import ModelDefinition from './step/model-definition.vue';
@@ -18,7 +17,7 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'add'
 });
-const counterStore = useDeviceDataStore();
+
 const stepCurrent = ref<number>(1);
 const DeviceTemplateId = ref<string>(props.type === 'add' ? '' : props.templateId);
 
@@ -61,11 +60,6 @@ const title = computed(() => {
   return titles[props.type];
 });
 
-// 兄弟组件进行上一步的时候互相传递的id
-const modelPopUpclosed: () => void = () => {
-  counterStore.executeEdit('');
-};
-
 watchEffect(() => {
   console.log(props.templateId);
   DeviceTemplateId.value = props.templateId;
@@ -80,8 +74,7 @@ defineOptions({ name: 'TableActionModal' });
     preset="card"
     :title="title"
     class="w-60%"
-    @after-leave="modelPopUpclosed"
-    @after-hide="
+    @after-leave="
       () => {
         DeviceTemplateId = props.templateId;
         props.getTableData();

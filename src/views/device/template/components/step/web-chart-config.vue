@@ -2,6 +2,7 @@
 import { defineEmits, ref } from 'vue';
 import { useDeviceDataStore } from '@/store/modules/device/index';
 import { $t } from '@/locales';
+import templatePanel from '../card-select/template-panel.vue';
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const counterStore = useDeviceDataStore();
@@ -45,7 +46,7 @@ const next: () => void = () => {
 
 <template>
   <div>
-    web图表配置
+    <templatePanel :template-id="props.DeviceTemplateId" />
     <div class="box1 m-t2">
       <NButton @click="next">{{ $t('device_template.nextStep') }}</NButton>
       <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>

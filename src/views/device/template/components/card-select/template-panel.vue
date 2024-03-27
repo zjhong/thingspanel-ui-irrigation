@@ -1,24 +1,29 @@
 <script lang="tsx" setup>
-import { onMounted, reactive, ref } from 'vue';
+import type { Ref } from 'vue';
+import { inject, onMounted, provide, reactive, ref, watch } from 'vue';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
-import { useAppStore } from '@/store/modules/app';
+import { getTemplat } from '@/service/api';
 import AddTemplateCard from './ui/add-template-card.vue';
 import CardTemplateRender from './ui/card-template-render.vue';
 
-const props = defineProps<{ templateId: string }>();
+const props = defineProps<{ templateId: string; isApp: boolean }>();
 
-const appStore = useAppStore();
+const device_template_id = ref<any>(props.templateId as any);
+
+provide('device_template_id', device_template_id);
+const webChartConfig = inject<Ref<ICardView[]>>('web_chart_config');
 const layout = ref<ICardView[]>([]);
 const fetchBroad = async () => {
-  console.log(props.templateId);
-  // const {data} = await getBoard(props.panelId);
-  // if (data) {
-  //   panelDate.value = data;
-  //   if (data.config) {
-  //     const configJson = JSON.parse(data.config);
-  //     layout.value = [...configJson, ...layout.value];
-  //   }
-  // }
+  const { data, error } = await getTemplat(props.templateId);
+  if (!error && data) {
+    if (props.isApp && data.app_chart_config) {
+      const configJson = JSON.parse(data.app_chart_config);
+      layout.value = [...configJson];
+    } else if (data.web_chart_config) {
+      const configJson = JSON.parse(data.web_chart_config);
+      layout.value = [...configJson];
+    }
+  }
 };
 
 const state = reactive({
@@ -30,8 +35,23 @@ const editView = ref<ICardView | null>();
 const cr = ref<ICardRender>();
 
 const insertCard = (card: ICardData) => {
-  if (editView.value) {
+  if (editView.value && 'data' in editView.value) {
     editView.value.data = card;
+
+    const lastUniqueById = layout.value
+      .reduceRight((acc: ICardView[], cur: ICardView) => {
+        if (
+          !acc.some(item => {
+            if (!item.data) return false;
+            return item?.data?.cardId === cur?.data?.cardId;
+          })
+        ) {
+          acc.push(cur as ICardView); // 如果acc中没有当前cur的cardId，则添加cur到acc中
+        }
+        return acc;
+      }, [])
+      .reverse();
+    layout.value = lastUniqueById;
   } else {
     cr.value?.addCard(card);
   }
@@ -50,43 +70,40 @@ const edit = (view: ICardView) => {
   state.openAddPanel = true;
 };
 
-const savePanel = async () => {
-  const layoutJson = JSON.stringify(layout.value);
-  console.log(layoutJson);
-};
+watch(
+  () => layout.value,
+  () => {
+    if (webChartConfig?.value) {
+      webChartConfig.value = layout.value as any;
+    }
+  }
+);
+
 onMounted(fetchBroad);
 </script>
 
 <template>
   <div class="w-full px-5 py-5">
-    <div
-      v-show="!appStore.fullContent"
-      class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10"
-    >
-      <NSpace align="center">
-        <NButton @click="add">
-          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
-          添加组件
-        </NButton>
-        <!--        <NButton>-->
-        <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
-        <!--        </NButton>-->
-        <NDivider vertical />
-        <!--        <NButton>取消</NButton>-->
-        <NButton @click="savePanel">保存</NButton>
-      </NSpace>
-    </div>
+    <NSpace align="center">
+      <NButton @click="add">
+        <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
+        添加图表
+      </NButton>
+    </NSpace>
+    <div class="mb-2 mt-2 h-2px bg-[#f6f9f8]" />
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
       <NEmpty description="暂未添加组件"></NEmpty>
     </div>
     <CardTemplateRender
       ref="cr"
       v-model:layout="layout"
+      :is-app="props.isApp"
       :col-num="12"
       :default-card-col="4"
       :row-height="65"
       @edit="edit"
     />
+
     <AddTemplateCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>

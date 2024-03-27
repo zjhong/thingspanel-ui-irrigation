@@ -21,6 +21,7 @@ export interface ICardData {
       deviceMetrics?: string;
       name?: string;
       metricsId?: string;
+      metricsType?: string;
       metricsName?: string;
       metricsOptions?: any[];
       metricsShow: boolean;

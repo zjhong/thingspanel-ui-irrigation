@@ -6,6 +6,7 @@ import AddInfo from './step/add-info.vue';
 import ModelDefinition from './step/model-definition.vue';
 import WebChartConfig from './step/web-chart-config.vue';
 import AppChartConfig from './step/app-chart-config.vue';
+import Complete from './step/complete.vue';
 
 export interface Props {
   visible: boolean;
@@ -25,7 +26,8 @@ const componentsList: { id: number; components: any }[] = [
   { id: 1, components: AddInfo },
   { id: 2, components: ModelDefinition },
   { id: 3, components: WebChartConfig },
-  { id: 4, components: AppChartConfig }
+  { id: 4, components: AppChartConfig },
+  { id: 5, components: Complete }
 ];
 const SwitchComponents = computed<any>(() => {
   return componentsList.find(item => item.id === stepCurrent.value)?.components;

@@ -15,10 +15,7 @@
   "bugs": {
     "url": "https://github.com/ThingsPanel/thingspanel-ui/issues"
   },
-  "keywords": [
-    "Soybean Admin",
-    "ThingsPanel"
-  ],
+  "keywords": ["Soybean Admin", "ThingsPanel"],
   "scripts": {
     "build": "npm run typecheck && cross-env VITE_SERVICE_ENV=prod vite build",
     "build:dev": "npm run typecheck && cross-env VITE_SERVICE_ENV=dev vite build",
@@ -54,7 +51,7 @@
     "@sa/utils": "workspace:*",
     "@soybeanjs/vue-materials": "0.2.0",
     "@vue/runtime-dom": "^3.4.21",
-    "@vueuse/core": "10.8.0",
+    "@vueuse/core": "10.9.0",
     "axios": "1.5.1",
     "clipboard": "2.0.11",
     "codemirror": "5.65.16",

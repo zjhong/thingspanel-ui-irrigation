@@ -55,6 +55,7 @@ watch(
     }
   }
 );
+
 onUnmounted(() => {
   console.log(status.value);
   close();
@@ -62,11 +63,15 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex items-center">
+  <div class="h-full">
     <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
-    <span v-if="card.dataSource?.origin === 'system'" class="ml-2">
-      数据名：{{ card.dataSource.systemSource?.[0]?.name }}
-    </span>
-    <span class="ml-2">值：{{ value }}</span>
+    <div class="h-full flex-col items-center">
+      <div v-if="card.dataSource?.origin === 'system'" class="ml-2">
+        数据名：{{ card.dataSource.deviceSource?.[0]?.metricsName }}
+      </div>
+      <NCard :bordered="false">
+        <div class="text-center text-24px">{{ value }}</div>
+      </NCard>
+    </div>
   </div>
 </template>

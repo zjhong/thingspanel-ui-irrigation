@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui';
 import { InformationCircleSharp } from '@vicons/ionicons5';
+// eslint-disable-next-line vue/prefer-import-from-vue
+import type { UnwrapRefSimple } from '@vue/reactivity';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
+import { deviceTemplateSelect } from '@/service/api';
 import { $t } from '~/src/locales';
 
 const props = defineProps<{
@@ -81,7 +84,7 @@ const save = () => {
       state.curCardData.dataSource.deviceSource = [{}];
     }
   }
-
+  state.curCardData.type = tabValue.value;
   emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
 watch(props, pr => {
@@ -103,9 +106,48 @@ watch(props, pr => {
     }, 30);
   }
 });
+const deviceOptions = ref<UnwrapRefSimple<any>[]>();
+const webChartConfig = ref<any>([]);
+const availableCardIds = ref<string[]>([]);
+const deviceSelectId = ref<string>('');
+
+const getDeviceOptions = async () => {
+  const { data, error } = await deviceTemplateSelect();
+  if (!error) {
+    deviceOptions.value = data;
+  }
+};
+const collectData = (v, o) => {
+  webChartConfig.value = JSON.parse(o.web_chart_config);
+  availableCardIds.value = webChartConfig.value.map(item => {
+    item.data.dataSource.deviceSource.forEach(item1 => {
+      item1.deviceId = v;
+    });
+
+    return item.data.cardId;
+  });
+  console.log(webChartConfig.value);
+};
+
+onUpdated(() => {
+  if (props?.data?.dataSource?.deviceSource && props?.data?.dataSource?.deviceSource?.length > 0) {
+    deviceSelectId.value = props?.data?.dataSource?.deviceSource[0]?.deviceId || '';
+    availableCardIds.value = [props?.data?.cardId as string];
+  } else {
+    availableCardIds.value = [];
+  }
+  tabValue.value = props?.data?.type || 'builtin';
+});
 
 onMounted(() => {
+  if (props?.data?.dataSource?.deviceSource && props?.data?.dataSource?.deviceSource?.length > 0) {
+    deviceSelectId.value = props?.data?.dataSource?.deviceSource[0]?.deviceId || '';
+    availableCardIds.value = [props?.data?.cardId as string];
+  } else {
+    availableCardIds.value = [];
+  }
   tabValue.value = props?.data?.type || 'builtin';
+  getDeviceOptions();
 });
 </script>
 
@@ -152,25 +194,79 @@ onMounted(() => {
           :value="tabValue"
           animated
           class="h-full"
-          @update:value="value => (tabValue = value)"
+          @update:value="
+            value => {
+              console.log(value);
+              if (state.curCardData) {
+                state.curCardData.cardId = '';
+              }
+              availableCardIds = [];
+              webChartConfig = [];
+              tabValue = value;
+            }
+          "
         >
           <NTabPane v-for="item1 in tabList" :key="item1.type" class="h-full" :name="item1.type" :tab="item1.tab">
+            <div v-if="item1.tab === '设备'">
+              <NSelect
+                v-model:value="deviceSelectId"
+                placeholder="请选择设备"
+                :options="deviceOptions"
+                value-field="device_id"
+                label-field="device_name"
+                @update:value="
+                  (value, option) => {
+                    if (state.curCardData) {
+                      state.curCardData.cardId = '';
+                    }
+                    collectData(value, option);
+                  }
+                "
+              ></NSelect>
+            </div>
             <n-scrollbar style="height: 100%; padding: 4px">
-              <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
-                <n-gi v-for="item in PanelCards[item1.type]" :key="item.id" class="min-w-240px">
-                  <div
-                    class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
-                    :style="item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'"
-                    @mousedown.prevent=""
-                    @click="selectCard(item)"
+              <div v-if="item1.tab === '设备'">
+                <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
+                  <n-gi
+                    v-for="item in PanelCards.chart.filter(item9 => {
+                      return availableCardIds.includes(item9.id);
+                    })"
+                    :key="item.id"
+                    class="min-w-240px"
                   >
-                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
-                    <div class="h-148px w-full">
-                      <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                    <div
+                      class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
+                      :style="
+                        item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
+                      "
+                      @click="selectCard(item)"
+                    >
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="h-148px w-full">
+                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                      </div>
                     </div>
-                  </div>
-                </n-gi>
-              </n-grid>
+                  </n-gi>
+                </n-grid>
+              </div>
+              <div v-else>
+                <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
+                  <n-gi v-for="item in PanelCards[item1.type]" :key="item.id" class="min-w-240px">
+                    <div
+                      class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
+                      :style="
+                        item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
+                      "
+                      @click="selectCard(item)"
+                    >
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="h-148px w-full">
+                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                      </div>
+                    </div>
+                  </n-gi>
+                </n-grid>
+              </div>
             </n-scrollbar>
           </NTabPane>
         </NTabs>
@@ -211,7 +307,11 @@ onMounted(() => {
         "
       >
         <div class="mt-4 h-full flex-col justify-start">
-          <CardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
+          <CardForm
+            ref="formRef"
+            :device-web-chart-config="webChartConfig"
+            @update="(data: any) => (state.curCardData = data)"
+          />
         </div>
         <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
           <spna class="text-12px text-primary-600">移入展开配置</spna>

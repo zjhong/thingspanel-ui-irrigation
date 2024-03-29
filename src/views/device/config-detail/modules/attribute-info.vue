@@ -1,10 +1,11 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import type { Ref } from 'vue';
-import { h, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { DataTableColumns } from 'naive-ui';
-import { NButton, NFlex, NPagination, useMessage } from 'naive-ui';
+import { NButton, NCode, NFlex, NPagination, NPopover, NScrollbar, useMessage } from 'naive-ui';
 import { deviceConfigEdit, deviceTemplate, deviceTemplateDetail } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
+
 const { routerPushByKey } = useRouterPush();
 
 const message = useMessage();
@@ -12,12 +13,15 @@ const message = useMessage();
 const emit = defineEmits();
 
 const showPopover = ref(false);
+
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
+const rowTemplateDetail = ref<string>('');
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
@@ -35,40 +39,46 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     title: '操作',
     align: 'center',
     width: '130px',
-    render() {
-      return h(
-        NFlex,
-        {
-          justify: 'center'
-        },
-        [
-          h(
-            NButton,
-            {
-              ghost: true,
-              type: 'primary',
-              tertiary: true,
-              size: 'small',
-              // eslint-disable-next-line @typescript-eslint/no-use-before-define,@typescript-eslint/no-shadow
-              onClick: row => choseTemp(row)
-            },
-            { default: () => '选择' }
-          ),
-          h(
-            NButton,
-            {
-              ghost: true,
-              type: 'info',
-              tertiary: true,
-              size: 'small',
-              // eslint-disable-next-line @typescript-eslint/no-use-before-define,@typescript-eslint/no-shadow
-              onClick: () => openTemp()
-            },
-            { default: () => '查看' }
-          )
-        ]
-      );
-    }
+    render: row => (
+      <div class="flex">
+        <NButton
+          ghost
+          quaternary
+          type={'primary'}
+          onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            choseTemp(row);
+          }}
+        >
+          选择
+        </NButton>
+        <span>
+          <NPopover
+            trigger="hover"
+            onUpdateShow={show => {
+              if (show) {
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                openTemp(row);
+              }
+            }}
+          >
+            {{
+              trigger: () => (
+                <NButton ghost quaternary type={'primary'}>
+                  查看
+                </NButton>
+              ),
+              default: () => (
+                <NScrollbar style="max-height: 220px;padding:8px">
+                  {' '}
+                  <NCode code={rowTemplateDetail.value} language="json" />
+                </NScrollbar>
+              )
+            }}
+          </NPopover>
+        </span>
+      </div>
+    )
   }
 ]);
 const choseTemp = async row => {
@@ -86,7 +96,14 @@ const choseTemp = async row => {
     emit('upDateConfig');
   }
 };
-const openTemp = () => {};
+const openTemp = async row => {
+  const { data, error } = await deviceTemplateDetail({ id: row.id });
+  if (!error) {
+    data.app_chart_config = JSON.parse(data.app_chart_config);
+    data.web_chart_config = JSON.parse(data.web_chart_config);
+    rowTemplateDetail.value = JSON.stringify(data, null, 2);
+  }
+};
 const plugList = ref([]);
 const plugQuery = ref({
   page: 1,
@@ -96,6 +113,7 @@ const plugQuery = ref({
 const plugTotal = ref(0);
 const getTableData = async () => {
   const res = await deviceTemplate(plugQuery.value);
+  console.log(res);
   plugList.value = res.data.list;
   plugTotal.value = res.data.total;
 };
@@ -107,12 +125,12 @@ const templateDetail = ref<any>({});
 const getTemplateDetail = async () => {
   if (props.configInfo.device_template_id) {
     const res = await deviceTemplateDetail({ id: props.configInfo.device_template_id });
-    templateDetail.value = res.data;
+    templateDetail.value = res.data || {};
   }
 };
 const openPopover = () => {
   showPopover.value = true;
-  plugQuery.value.name = templateDetail.value.name;
+  plugQuery.value.name = templateDetail?.value?.name || '';
   getTableData();
 };
 const toTemplate = () => {
@@ -136,7 +154,7 @@ onMounted(async () => {
   <div class="attribute-box">
     <NFlex align="center">
       <div>绑定设备模板</div>
-      <n-popover :show="showPopover" placement="bottom-start" trigger="manual" @clickoutside="showPopover = false">
+      <NPopover :show="showPopover" placement="bottom-start" trigger="manual" @clickoutside="showPopover = false">
         <template #trigger>
           <NInput
             v-model:value="templateDetail.name"
@@ -159,7 +177,7 @@ onMounted(async () => {
             />
           </div>
         </div>
-      </n-popover>
+      </NPopover>
       <div class="to-create" @click="toTemplate">没有找到？去创建</div>
     </NFlex>
   </div>
@@ -183,17 +201,21 @@ onMounted(async () => {
     margin-bottom: 10px;
   }
 }
+
 .pagination-box {
   display: flex;
   justify-content: flex-end;
 }
+
 .m-tb-10 {
   margin: 10px 0;
 }
+
 .w-300px {
   width: 300px;
   margin: 0 15px;
 }
+
 .w-500 {
   width: 500px;
 }

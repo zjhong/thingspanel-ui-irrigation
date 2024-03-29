@@ -212,3 +212,9 @@ export const commandDataById = async (id: any) => {
   const url = `/command/datas/${id}`;
   return await request.get<DeviceManagement.telemetryCurrent | any>(url);
 };
+
+/** 有图表的设备list */
+export const deviceTemplateSelect = async () => {
+  const url = `/device/template/chart/select`;
+  return await request.get<any>(url);
+};

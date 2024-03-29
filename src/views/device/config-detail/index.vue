@@ -34,6 +34,7 @@ const editConfig = () => {
 };
 const getConfig = async () => {
   const res = await deviceConfigInfo({ id: configId.value });
+  console.log(res.data);
   configForm.value = res.data;
 };
 

@@ -8,8 +8,9 @@ import { deviceListForPanel, deviceMetricsList } from '@/service/api';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
-defineProps<{
+const props = defineProps<{
   mobile?: boolean;
+  deviceWebChartConfig: any;
 }>();
 const systemNorm = [
   { label: '设备总数', value: 1 },
@@ -108,7 +109,10 @@ const metricsOptionRender = (info, item) => {
         return (
           <div
             onClick={() => {
+              console.log(it);
               item.metricsId = it.key;
+              item.metricsName = it.label || '';
+
               updateDropdownShow(false, item);
             }}
           >
@@ -125,6 +129,7 @@ const metricsOptionRender = (info, item) => {
 
 onUpdated(() => {
   deviceCount.value = state?.data?.dataSource?.deviceSource?.length || 1;
+
   if (state.data.type === 'chart') {
     getDeviceList();
   }
@@ -136,6 +141,17 @@ onMounted(() => {
     getDeviceList();
   }
 });
+
+watch(
+  () => state.data.cardId,
+  cardId => {
+    if (props?.deviceWebChartConfig?.length > 0) {
+      state.data.dataSource.deviceSource = props?.deviceWebChartConfig?.filter(
+        item => item.data.cardId === cardId
+      )[0]?.data?.dataSource?.deviceSource;
+    }
+  }
+);
 </script>
 
 <template>
@@ -179,6 +195,7 @@ onMounted(() => {
             <div v-if="state.data.dataSource?.origin === 'device'">
               <n-input-number
                 v-model:value="deviceCount"
+                :disabled="props?.deviceWebChartConfig?.length !== 0"
                 :min="1"
                 :max="state.data.dataSource.sourceNum || 9"
                 class="m-b-2 w-360px"
@@ -191,6 +208,7 @@ onMounted(() => {
                 <NSelect
                   v-if="i <= deviceCount - 1"
                   v-model:value="item.deviceId"
+                  :disabled="props?.deviceWebChartConfig?.length !== 0"
                   class="w-120px"
                   :options="deviceOption"
                   label-field="name"
@@ -203,13 +221,14 @@ onMounted(() => {
                 <NSelect
                   v-if="i <= deviceCount - 1"
                   v-model:value="item.metricsId"
+                  :disabled="props?.deviceWebChartConfig?.length !== 0"
                   class="w-225px"
                   :show="item.metricsShow"
                   :options="item?.metricsOptions"
                   :render-option="info => metricsOptionRender(info, item)"
                   @update:show="show => updateDropdownShow(show, item)"
                 ></NSelect>
-                <NInput style="max-width: 140px" />
+                <NInput v-if="i <= deviceCount - 1" v-model:value="item.metricsName" style="max-width: 140px" />
               </div>
             </div>
           </NForm>

@@ -202,6 +202,7 @@ onMounted(() => {
               }
               availableCardIds = [];
               webChartConfig = [];
+              deviceSelectId = '';
               tabValue = value;
             }
           "

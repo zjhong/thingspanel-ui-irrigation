@@ -9,12 +9,12 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  DeviceTemplateId: { type: String, required: true }
+  deviceTemplateId: { type: String, required: true }
 });
 const emit = defineEmits(['update:modalVisible', 'update:stepCurrent']);
 const code = ref<string>('');
 const getTemplate = async () => {
-  const { data, error } = await getTemplat(props.DeviceTemplateId);
+  const { data, error } = await getTemplat(props.deviceTemplateId);
   if (!error) {
     data.app_chart_config = JSON.parse(data.app_chart_config);
     data.web_chart_config = JSON.parse(data.web_chart_config);

@@ -1,17 +1,16 @@
-
 <script setup lang="tsx">
-import { ref, reactive, watch } from "vue"
-import { addTelemetry, putTelemetry } from '@/service/api/system-data'
-import { $t } from "@/locales";
+import { reactive, ref, watch } from 'vue';
+import { addTelemetry, putTelemetry } from '@/service/api/system-data';
+import { $t } from '@/locales';
 
 const emit = defineEmits(['update:addAndEditModalVisible', 'update:objItem', 'determine']);
 
 const props = defineProps({
   addAndEditModalVisible: {
     type: Boolean,
-    required: true,
+    required: true
   },
-  DeviceTemplateId: {
+  deviceTemplateId: {
     type: String,
     required: true
   },
@@ -21,12 +20,11 @@ const props = defineProps({
   }
 });
 
-
 // 提交表单
-const formRef: any = ref(null)
-const DeviceTemplateId = ref<string>(props.DeviceTemplateId)
+const formRef: any = ref(null);
+const deviceTemplateId = ref<string>(props.deviceTemplateId);
 
-let addFrom: any = reactive({})
+let addFrom: any = reactive({});
 
 type Rule = {
   required: boolean;
@@ -44,7 +42,7 @@ const fromRules: Rules = {
   data_name: {
     required: true,
     trigger: ['blur', 'input'],
-    message:  $t('device_template.table_header.pleaseEnterADataName')
+    message: $t('device_template.table_header.pleaseEnterADataName')
   },
   data_identifier: {
     required: true,
@@ -55,93 +53,117 @@ const fromRules: Rules = {
     required: true,
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheDataType')
-  },
-}
+  }
+};
 
-let objItem = reactive<any>(props.objItem)
+const objItem = reactive<any>(props.objItem);
 
 // 监听一下父组件传递过来的编辑数据
-watch(objItem, (newVal) => {
-  console.log('objItem changed', newVal.id);
-  if (objItem.id) {
-    addFrom = reactive({
-      device_template_id: DeviceTemplateId,
-      ...newVal
-    })
-  } else {
-    addFrom = reactive({
-      device_template_id: DeviceTemplateId,
-      data_name: '',
-      data_identifier: '',
-      read_write_flag: 'String',
-      unit: '',
-      description: ''
-    })
-  }
-}, { deep: true, immediate: true });
+watch(
+  objItem,
+  newVal => {
+    console.log('objItem changed', newVal.id);
+    if (objItem.id) {
+      addFrom = reactive({
+        device_template_id: deviceTemplateId,
+        ...newVal
+      });
+    } else {
+      addFrom = reactive({
+        device_template_id: deviceTemplateId,
+        data_name: '',
+        data_identifier: '',
+        read_write_flag: 'String',
+        unit: '',
+        description: ''
+      });
+    }
+  },
+  { deep: true, immediate: true }
+);
 
-const generalOptions: any = reactive(['String', 'Number', 'Boolean'].map(
-  (v) => ({
+const generalOptions: any = reactive(
+  ['String', 'Number', 'Boolean'].map(v => ({
     label: v,
     value: v
-  })
-))
+  }))
+);
 
 // 确定按钮
 const submit: () => void = async () => {
-  await formRef.value?.validate()
+  await formRef.value?.validate();
   if (props.objItem.id) {
-    const response: any = await putTelemetry(addFrom)
+    const response: any = await putTelemetry(addFrom);
     if (response.data) {
-      emit('update:objItem', {})
-      emit('update:addAndEditModalVisible', false)
-      emit('determine')
+      emit('update:objItem', {});
+      emit('update:addAndEditModalVisible', false);
+      emit('determine');
     }
     console.log(response, '提交');
   } else {
-    const response: any = await addTelemetry(addFrom)
+    const response: any = await addTelemetry(addFrom);
     if (response.data) {
-      emit('update:objItem', {})
-      emit('update:addAndEditModalVisible', false)
-      emit('determine')
+      emit('update:objItem', {});
+      emit('update:addAndEditModalVisible', false);
+      emit('determine');
     }
     console.log(response, '提交');
   }
-}
+};
 
 // 取消按钮
 const clear: () => void = () => {
-  emit('update:objItem', {})
-  emit('update:addAndEditModalVisible', false)
+  emit('update:objItem', {});
+  emit('update:addAndEditModalVisible', false);
   console.log(props.objItem, '取消');
-}
+};
 </script>
 
 <template>
-  <n-form :model="addFrom" :rules="fromRules" label-placement="left" label-width="100" ref="formRef"
-    require-mark-placement="right-hanging" class="addFrom">
+  <n-form
+    ref="formRef"
+    :model="addFrom"
+    :rules="fromRules"
+    label-placement="left"
+    label-width="100"
+    require-mark-placement="right-hanging"
+    class="addFrom"
+  >
     <n-form-item :label="$t('device_template.table_header.dataName')" path="data_name">
-      <n-input v-model:value.trim="addFrom.data_name" :placeholder="$t('device_template.table_header.pleaseEnterADataName')" />
+      <n-input
+        v-model:value.trim="addFrom.data_name"
+        :placeholder="$t('device_template.table_header.pleaseEnterADataName')"
+      />
     </n-form-item>
-    <n-form-item :label=" $t('device_template.table_header.dataIdentifier')" path="data_identifier">
-      <n-input v-model:value.trim="addFrom.data_identifier" :placeholder=" $t('device_template.table_header.pleaseEnterTheDataIdentifier')" />
+    <n-form-item :label="$t('device_template.table_header.dataIdentifier')" path="data_identifier">
+      <n-input
+        v-model:value.trim="addFrom.data_identifier"
+        :placeholder="$t('device_template.table_header.pleaseEnterTheDataIdentifier')"
+      />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.dataType')" path="read_write_flag">
-      <n-select v-model:value="addFrom.read_write_flag" :options="generalOptions" :placeholder=" $t('device_template.table_header.pleaseEnterTheDataType')" />
+      <n-select
+        v-model:value="addFrom.read_write_flag"
+        :options="generalOptions"
+        :placeholder="$t('device_template.table_header.pleaseEnterTheDataType')"
+      />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">
       <n-input v-model:value.trim="addFrom.unit" :placeholder="$t('device_template.table_header.pleaseEnterTheUnit')" />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.description')">
-      <n-input v-model:value.trim="addFrom.description" :placeholder="$t('device_template.table_header.PleaseEnterADescription')" type="textarea" />
+      <n-input
+        v-model:value.trim="addFrom.description"
+        :placeholder="$t('device_template.table_header.PleaseEnterADescription')"
+        type="textarea"
+      />
     </n-form-item>
   </n-form>
   <div class="box1">
-    <n-button @click="clear" class="m-r3">{{$t('device_template.cancellation')}}</n-button>
-    <n-button @click="submit">{{$t('device_template.confirm')}}</n-button>
+    <n-button class="m-r3" @click="clear">{{ $t('device_template.cancellation') }}</n-button>
+    <n-button @click="submit">{{ $t('device_template.confirm') }}</n-button>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
 .box1 {

@@ -872,6 +872,11 @@ declare namespace App {
           pleaseEnterTheCommandName: string;
           pleaseEnterTheCommandIdentifier: string;
           PleaseEnterTheCommandType: string;
+          eventDescription: string;
+          PleaseEventDescription: string;
+          singleControlTaskl: string;
+          PleaseEventName: string;
+          PleaseEeventIdentifier: string;
         };
       };
     };

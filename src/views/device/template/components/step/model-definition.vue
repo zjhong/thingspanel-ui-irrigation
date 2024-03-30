@@ -1,7 +1,6 @@
 <script setup lang="tsx">
 import { computed, reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
-import { useDeviceDataStore } from '@/store/modules/device/index';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
@@ -21,11 +20,8 @@ import AddEditAttributes from './add-edit-attributes.vue';
 import AddEditEvents from './add-edit-events.vue';
 import AddEditCommands from './add-edit-commands.vue';
 
-
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const { loading, startLoading, endLoading } = useLoading(false);
-const counterStore = useDeviceDataStore()
-
 
 const props = defineProps({
   stepCurrent: {
@@ -36,13 +32,13 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  DeviceTemplateId: {
+  deviceTemplateId: {
     type: String,
     required: true
   }
 });
 
-let DeviceTemplateId = ref<string>(props.DeviceTemplateId);
+const deviceTemplateId = ref<string>(props.deviceTemplateId);
 const tabsCurrent: any = ref('telemetry');
 const addAndEditModalVisible = ref<boolean>(false);
 const addAndEditTitle = ref<string>($t('device_template.addAndEditTelemetry'));
@@ -67,7 +63,7 @@ const SwitchCom = computed<any>(() => {
 const queryParams: any = reactive({
   page: 1,
   page_size: 10,
-  device_template_id: props.DeviceTemplateId
+  device_template_id: props.deviceTemplateId
 });
 
 const checkedTabs: (value: string | number) => void = value => {
@@ -98,7 +94,7 @@ const pagination: PaginationProps = reactive({
 });
 
 // 编辑
-let objItem = reactive<object>({});
+let objItem = reactive<any>({});
 const edit: (row: any) => void = row => {
   addAndEditModalVisible.value = true;
   objItem = row;
@@ -131,8 +127,6 @@ const next: () => void = async () => {
 };
 // 下一步
 const back: () => void = async () => {
-  console.log(counterStore, '使用pinia');
-  counterStore.executeEdit(DeviceTemplateId)
   emit('update:stepCurrent', 1);
 };
 // 取消
@@ -321,13 +315,6 @@ const getTableData: (value?: string) => void = async value => {
     endLoading();
   }
 };
-// 判断一下是不是进行了下一步，是就改变一下id
-const backEdit: () => void = async () => {
-  if (counterStore.executeFlag !== '') {
-    DeviceTemplateId = counterStore.executeFlag
-  }
-}
-backEdit()
 getTableData();
 </script>
 
@@ -341,8 +328,13 @@ getTableData();
           </template>
           {{ $t('device_template.add') }}
         </NButton>
-        <n-data-table :columns="item.col" :data="item.data" :loading="loading" :pagination="pagination"
-          class="m-t9 flex-1-hidden" />
+        <n-data-table
+          :columns="item.col"
+          :data="item.data"
+          :loading="loading"
+          :pagination="pagination"
+          class="m-t9 flex-1-hidden"
+        />
       </n-tab-pane>
     </n-tabs>
   </div>
@@ -351,11 +343,20 @@ getTableData();
     <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>
     <NButton class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</NButton>
   </div>
-  <NModal v-model:show="addAndEditModalVisible" preset="card" :title="addAndEditTitle"
+  <NModal
+    v-model:show="addAndEditModalVisible"
+    preset="card"
+    :title="addAndEditTitle"
     :class="[tabsCurrent === 'events' || tabsCurrent === 'command' ? 'w-50%' : 'w-30%']"
-    @after-leave="cloneaddAndEditVisible">
-    <component :is="SwitchCom" v-model:addAndEditModalVisible="addAndEditModalVisible"
-      v-model:DeviceTemplateId="DeviceTemplateId" v-model:objItem="objItem" @determine="determine"></component>
+    @after-leave="cloneaddAndEditVisible"
+  >
+    <component
+      :is="SwitchCom"
+      v-model:addAndEditModalVisible="addAndEditModalVisible"
+      v-model:deviceTemplateId="deviceTemplateId"
+      v-model:objItem="objItem"
+      @determine="determine"
+    ></component>
   </NModal>
 </template>
 

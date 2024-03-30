@@ -718,7 +718,12 @@ const local: App.I18n.Schema = {
       pleaseEnterACommandDescription: 'PleaseEnterACommandDescription',
       pleaseEnterTheCommandName: 'PleaseEnterTheCommandName',
       pleaseEnterTheCommandIdentifier: 'PleaseEnterTheCommandIdentifier',
-      PleaseEnterTheCommandType: 'PleaseEnterTheCommandType'
+      PleaseEnterTheCommandType: 'PleaseEnterTheCommandType',
+      eventDescription: 'EventDescription',
+      PleaseEventDescription: 'PleaseEventDescription',
+      singleControlTaskl: 'SingleControlTaskl',
+      PleaseEventName: 'PleaseEventName',
+      PleaseEeventIdentifier: 'PleaseEeventIdentifier'
     }
   }
 };

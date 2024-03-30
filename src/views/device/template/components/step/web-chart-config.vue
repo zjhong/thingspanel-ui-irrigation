@@ -19,7 +19,7 @@ const props = defineProps({
     required: true
   },
   // 当前的设备模型id
-  DeviceTemplateId: {
+  deviceTemplateId: {
     type: String,
     required: true
   }
@@ -51,7 +51,7 @@ const next = async () => {
   if (web_chart_config.value.length < 1 || flag) {
     window.NMessage.error(flag ? `第${theIndex + 1}个图表没有配任何指标` : '至少选择一个图表');
   } else {
-    const res = await getTemplat(props.DeviceTemplateId);
+    const res = await getTemplat(props.deviceTemplateId);
     await putTemplat({ ...res.data, web_chart_config: JSON.stringify(web_chart_config.value) });
     emit('update:stepCurrent', 4);
   }
@@ -60,7 +60,7 @@ const next = async () => {
 
 <template>
   <div>
-    <templatePanel :template-id="props.DeviceTemplateId" :is-app="false" />
+    <templatePanel :template-id="props.deviceTemplateId" :is-app="false" />
     <div class="box1 m-t2">
       <NButton @click="next">{{ $t('device_template.nextStep') }}</NButton>
       <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>

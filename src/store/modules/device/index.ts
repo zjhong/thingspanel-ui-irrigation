@@ -5,7 +5,6 @@ import { deviceDetail } from '@/service/api';
 
 export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
   const deviceData = ref<DeviceManagement.DeviceDetail | null>(null); // 更具体的类型替换 any
-  const executeFlag: any = ref('');
 
   async function fetchData(id: string) {
     try {
@@ -21,9 +20,5 @@ export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
     }
   }
 
-  function executeEdit(id: any) {
-    executeFlag.value = id;
-  }
-
-  return { deviceData, fetchData, executeFlag, executeEdit };
+  return { deviceData, fetchData };
 });

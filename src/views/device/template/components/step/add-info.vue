@@ -1,14 +1,12 @@
 <script setup lang="tsx">
 import { reactive, ref, watchEffect } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
-import { useDeviceDataStore } from '@/store/modules/device/index';
 import { localStg } from '@/utils/storage';
 import { addTemplat, getTemplat, putTemplat } from '@/service/api/system-data';
 import { $t } from '@/locales';
 import { createServiceConfig } from '~/env.config';
 
-const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:DeviceTemplateId']);
-const counterStore = useDeviceDataStore();
+const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:deviceTemplateId']);
 
 const props = defineProps({
   stepCurrent: {
@@ -19,12 +17,12 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  DeviceTemplateId: {
+  deviceTemplateId: {
     type: String,
     required: true
   }
 });
-const DeviceTemplateId = ref(props.DeviceTemplateId);
+const deviceTemplateId = ref(props.deviceTemplateId);
 const formRef: any = ref(null);
 
 interface AddFrom {
@@ -109,13 +107,12 @@ const next: () => void = async () => {
     addFrom.lable = addFrom.templateTage.join(',');
     const response: any = await putTemplat(addFrom);
     emit('update:stepCurrent', 2);
-    emit('update:DeviceTemplateId', response.data.id);
-    counterStore.executeEdit('');
+    emit('update:deviceTemplateId', response.data.id);
   } else {
     addFrom.lable = addFrom.templateTage.join(',');
     const response: any = await addTemplat(addFrom);
     emit('update:stepCurrent', 2);
-    emit('update:DeviceTemplateId', response.data.id);
+    emit('update:deviceTemplateId', response.data.id);
   }
 };
 
@@ -124,10 +121,10 @@ const cancellation: () => void = () => {
 };
 
 watchEffect(async () => {
-  DeviceTemplateId.value = props.DeviceTemplateId;
-  console.log(DeviceTemplateId.value, 'DeviceTemplateId.value');
-  if (DeviceTemplateId.value) {
-    const { data, error } = await getTemplat(DeviceTemplateId.value);
+  deviceTemplateId.value = props.deviceTemplateId;
+  console.log(deviceTemplateId.value, 'deviceTemplateId.value');
+  if (deviceTemplateId.value) {
+    const { data, error } = await getTemplat(deviceTemplateId.value);
     if (!error) {
       if (data) {
         addFrom.name = data.name;
@@ -136,8 +133,8 @@ watchEffect(async () => {
         addFrom.description = data.description;
         addFrom.version = data.version;
         addFrom.author = data.author;
-        addFrom.templateTage = data.lable?.split(',') || [];
-        pngPath.value = `${url.value.replace('api/v1', '') + data.path}`;
+        addFrom.templateTage = data.lable && data.lable.length > 0 ? data.lable?.split(',') : [];
+        pngPath.value = data.path === '' ? '' : `${url.value.replace('api/v1', '') + data.path}`;
       }
     }
   } else {

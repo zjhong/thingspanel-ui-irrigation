@@ -10,7 +10,7 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  DeviceTemplateId: {
+  deviceTemplateId: {
     type: String,
     required: true
   },
@@ -22,7 +22,7 @@ const props = defineProps({
 
 // 提交表单
 const formRef: any = ref(null);
-const DeviceTemplateId = ref<string>(props.DeviceTemplateId);
+const deviceTemplateId = ref<string>(props.deviceTemplateId);
 
 let addFrom: any = reactive({});
 
@@ -65,12 +65,12 @@ watch(
     console.log('objItem changed', newVal.id);
     if (objItem.id) {
       addFrom = reactive({
-        device_template_id: DeviceTemplateId,
+        device_template_id: deviceTemplateId,
         ...newVal
       });
     } else {
       addFrom = reactive({
-        device_template_id: DeviceTemplateId,
+        device_template_id: deviceTemplateId,
         data_name: '',
         data_identifier: '',
         read_write_flag: 'String',
@@ -168,8 +168,6 @@ const clear: () => void = () => {
   <div class="box1">
     <n-button class="m-r3" @click="clear">{{ $t('device_template.cancellation') }}</n-button>
     <n-button @click="submit">{{ $t('device_template.confirm') }}</n-button>
-    <n-button class="m-r3" @click="clear">取消</n-button>
-    <n-button @click="submit">确定</n-button>
   </div>
 </template>
 

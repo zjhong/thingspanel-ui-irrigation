@@ -20,7 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const stepCurrent = ref<number>(1);
-const DeviceTemplateId = ref<string>(props.type === 'add' ? '' : props.templateId);
+const deviceTemplateId = ref<string>(props.type === 'add' ? '' : props.templateId);
 
 const componentsList: { id: number; components: any }[] = [
   { id: 1, components: AddInfo },
@@ -64,7 +64,7 @@ const title = computed(() => {
 
 watchEffect(() => {
   console.log(props.templateId);
-  DeviceTemplateId.value = props.templateId;
+  deviceTemplateId.value = props.templateId;
 });
 
 defineOptions({ name: 'TableActionModal' });
@@ -78,7 +78,7 @@ defineOptions({ name: 'TableActionModal' });
     class="w-60%"
     @after-leave="
       () => {
-        DeviceTemplateId = props.templateId;
+        deviceTemplateId = props.templateId;
         props.getTableData();
       }
     "
@@ -104,7 +104,7 @@ defineOptions({ name: 'TableActionModal' });
       :is="SwitchComponents"
       v-model:stepCurrent="stepCurrent"
       v-model:modalVisible="modalVisible"
-      v-model:DeviceTemplateId="DeviceTemplateId"
+      v-model:deviceTemplateId="deviceTemplateId"
     ></component>
   </NModal>
 </template>

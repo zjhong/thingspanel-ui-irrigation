@@ -717,7 +717,12 @@ const local: App.I18n.Schema = {
       pleaseEnterACommandDescription: '请输入命令描述',
       pleaseEnterTheCommandName: '请输入命令名称',
       pleaseEnterTheCommandIdentifier: '请输入命令标识符',
-      PleaseEnterTheCommandType: '请输入命令类型'
+      PleaseEnterTheCommandType: '请输入命令类型',
+      eventDescription: '事件描述',
+      PleaseEventDescription: '请输入事件描述',
+      singleControlTaskl: '单次控制任务',
+      PleaseEventName: '请输入事件名称',
+      PleaseEeventIdentifier: '请输入事件标识符'
     }
   }
 };

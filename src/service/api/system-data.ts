@@ -11,6 +11,7 @@ export const tenant = async () => {
   const data = await request.get<Api.BaseApi.Data | null>('/board/tenant');
   return data;
 };
+
 /** 新增设备模板信息 */
 export const addTemplat = async (params: any): Promise<any> => {
   const data = await request.post('/device/template', params);

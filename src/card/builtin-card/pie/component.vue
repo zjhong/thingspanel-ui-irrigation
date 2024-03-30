@@ -21,8 +21,8 @@ const getData: () => void = async () => {
     const response: { data: any } = await totalNumber();
     if (response.data) {
       deviceNum.value = response.data.device_total;
-      activeNum.value = response.data.device_on;
-      notActiveNum.value = deviceNum.value - activeNum.value;
+      activeNum.value = response?.data?.device_activity ?? 0;
+      notActiveNum.value = (deviceNum?.value ?? 0) - (activeNum?.value ?? 0);
       // 计算激活率
       const rate = activeNum.value === 0 || deviceNum.value === 0 ? 0 : (activeNum.value / deviceNum.value) * 100;
       activeRateNum.value = Number(rate.toFixed(2)); // 转换为数字并保留四位小数
@@ -40,6 +40,8 @@ getData();
 const equipment = ref(null);
 
 const init: () => void = () => {
+  console.log(activeNum, notActiveNum, '总数');
+
   const myecharts = echarts.init(equipment.value, null, { renderer: 'svg' });
   const option = {
     title: {
@@ -80,8 +82,8 @@ const init: () => void = () => {
           borderWidth: 1 // 设置边框宽度
         },
         data: [
-          { value: 10000, name: $t('dashboard_panel.cardName.active') },
-          { value: 5005, name: $t('dashboard_panel.cardName.notActive') }
+          { value: activeNum.value ?? 0, name: $t('dashboard_panel.cardName.active') },
+          { value: notActiveNum.value ?? 0, name: $t('dashboard_panel.cardName.notActive') }
         ],
         emphasis: {
           itemStyle: {

@@ -73,11 +73,45 @@ const aggregateOptions: SelectOption[] = [
   { label: '7天', value: '7d', disabled: false },
   { label: '1月', value: '1mo', disabled: false }
 ];
+
+const updateDisabledOptions = (timeFrame: string) => {
+  const disableBeforeIndex: { [key: string]: number } = {
+    最近3小时: 1, // 30秒
+    最近6小时: 2, // 1分钟
+    最近12小时: 3, // 2分钟
+    最近24小时: 4, // 5分钟
+    最近3天: 5, // 10分钟
+    最近7天: 6, // 30分钟
+    最近15天: 7, // 1小时
+    最近30天: 7, // 1小时
+    最近60天: 8, // 3小时
+    最近90天: 9, // 6小时
+    最近6个月: 9, // 6小时
+    最近1年: 12, // 1月
+    今天: 4, // 5分钟
+    昨天: 4, // 5分钟
+    前天: 4, // 5分钟
+    上周今日: 4, // 5分钟
+    本周: 6, // 30分钟
+    上周: 6, // 30分钟
+    本月: 7, // 1小时
+    上个月: 7, // 1小时
+    今年: 12, // 1月
+    去年: 12 // 1月
+  };
+
+  // 默认不禁用“不聚合”，根据时间范围禁用其余选项
+  aggregateOptions.forEach((option, index) => {
+    option.disabled = index <= (disableBeforeIndex[timeFrame] || 0);
+  });
+};
+
 const updateTime = (v: number, o: SelectOption) => {
   let now = new Date();
   let start_time: Date;
   let end_time: Date = new Date();
   isAggregate.value = true;
+  updateDisabledOptions(o.label as string);
   switch (o.label) {
     case '今天':
       start_time = new Date(now.setHours(0, 0, 0, 0));

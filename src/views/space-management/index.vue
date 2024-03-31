@@ -10,15 +10,13 @@ import {
 } from "@/constants/business";
 import { fetchDataServiceList } from "@/service/api_demo/management";
 import type { ModalType } from "./components/table-action-modal.vue";
-import TableActionModal from "./components/table-action-modal.vue";
-import SecretKeyModal from "./components/secret-key-modal.vue";
+
 import { useBoolean, useLoading } from "~/packages/hooks";
 import { areasList, deleteArea, spacesList } from "@/service/api/equipment-map";
 import { router } from "@/router";
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible } = useBoolean();
-const { bool: secretKeyVisible, setTrue: openSecretKeyModal } = useBoolean();
 
 const queryParams = reactive({
   name: "",
@@ -35,9 +33,8 @@ const params = reactive({
   limit: 100,
 });
 
-const spaces = ref([{ name: "", id: "" }]);
+const spaces = ref([{ name: "", id: "", rows: [] }]);
 //区域详情列表
-const detailOne: any = ref([]);
 
 const detailTwo: any = ref([]);
 //获取空间列表
@@ -48,13 +45,20 @@ async function getSpacesList() {
   getAreaList();
 }
 function getAreaList() {
-  let dataList = { limit: 100, space_id: "" };
-  spaces.value.map((item) => {
+  let dataList = { limit: 10, space_id: "" };
+  spaces.value.map((item, index) => {
     console.log(item.id);
     dataList.space_id = item.id;
-    const { data } = areasList(dataList) as any;
-    console.log("获取区域列表", data);
-    return data
+    let add: any = [];
+    areasList(dataList).then((e) => {
+      if (e.data.rows) {
+        spaces.value[index].rows = e.data.rows;
+        console.log("区域表", spaces.value);
+      }
+      add.push(e);
+    });
+
+    return;
   });
 }
 
@@ -139,7 +143,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     key: "actions",
     title: "操作",
     align: "center",
-    width: "300px",
+    width: 350,
     render: (row) => {
       return (
         <NSpace justify={"center"}>
@@ -226,12 +230,8 @@ const pagination: PaginationProps = reactive({
   },
 });
 
-/** 查看密钥 */
-const secretKey = ref<string>("");
-
 function handleViewKey(rowId: string) {
-  secretKey.value = rowId;
-  openSecretKeyModal();
+  equipmentShow.value = true;
 }
 
 function handleQuery() {
@@ -245,23 +245,20 @@ function init() {
 
 // 初始化
 init();
+const equipmentShow = ref(false);
 </script>
 
 <template>
   <div>
-    <NCard title="空间管理" :bordered="false" class="rounded-8px shadow-sm">
+    <NCard title="空间管理" :bordered="false">
       <div class="flex-col">
-        <NForm
-          inline
-          label-placement="left"
-          :model="queryParams"
-        >
+        <NForm inline label-placement="left" :model="queryParams">
           <NFormItem label="空间名称" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="空间名称" path="name">
+          <!-- <NFormItem label="空间名称" path="name">
             <NInput v-model:value="queryParams.name" />
-          </NFormItem>
+          </NFormItem> -->
           <NFormItem label="作物" path="status">
             <NSelect
               v-model:value="queryParams.status"
@@ -279,36 +276,34 @@ init();
       </div>
     </NCard>
     <div>
-      <n-scrollbar style="max-height: 280px">
+      <n-scrollbar style="max-height: 500px">
         <NCard v-for="(item, index) in spaces" :key="index">
           <div class="space-name">空间名称: {{ item.name }}</div>
-          <NSpace>
-            <NDataTable
-              :scroll-x="1088"
-              :columns="columns"
-              :data="detailOne"
-              :loading="loading"
-              :pagination="pagination"
-              class="flex-1-hidden"
-            />
-            <TableActionModal
+          <NDataTable
+            :columns="columns"
+            :data="item.rows"
+            :loading="loading"
+            :pagination="pagination"
+          />
+
+          <!-- <TableActionModal
               v-model:visible="visible"
               :type="modalType"
               :edit-data="editData"
               @get-table-data="getTableData"
-            />
-          </NSpace>
+            /> -->
         </NCard>
       </n-scrollbar>
     </div>
 
-    <NCard title="" :bordered="false" class="rounded-8px shadow-sm">
+    <NModal
+      v-model:show="equipmentShow"
+      preset="card"
+      title="设备管理"
+      class="w-1200px"
+    >
       <div class="flex-col">
-        <NForm
-          inline
-          label-placement="left"
-          :model="queryParams"
-        >
+        <NForm inline label-placement="left" :model="queryParams">
           <NFormItem label="设备名称" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
@@ -347,21 +342,16 @@ init();
           @get-table-data="getTableData"
         />
       </div>
-    </NCard>
-
-    <SecretKeyModal
-      v-model:visible="secretKeyVisible"
-      :secret-key="secretKey"
-    ></SecretKeyModal>
+    </NModal>
   </div>
 </template>
 
 <style scoped>
-:deep(.n-space) {
-  display: block !important;
-}
 .space-name {
   padding: 0 15px 15px 0;
   font-weight: 700;
+}
+:deep(.n-space) {
+  width: 100% !important;
 }
 </style>

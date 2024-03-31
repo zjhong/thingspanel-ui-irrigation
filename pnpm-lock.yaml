@@ -98,6 +98,9 @@ importers:
       qs:
         specifier: 6.11.2
         version: 6.11.2
+      screenfull:
+        specifier: ^6.0.2
+        version: 6.0.2
       socket.io-client:
         specifier: 4.7.2
         version: 4.7.2
@@ -10182,6 +10185,11 @@ packages:
       immutable: 4.3.5
       source-map-js: 1.2.0
     dev: true
+
+  /screenfull@6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
+    dev: false
 
   /seemly@0.3.8:
     resolution: {integrity: sha512-MW8Qs6vbzo0pHmDpFSYPna+lwpZ6Zk1ancbajw/7E8TKtHdV+1DfZZD+kKJEhG/cAoB/i+LiT+5msZOqj0DwRA==}

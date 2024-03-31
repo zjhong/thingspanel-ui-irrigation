@@ -15,7 +15,10 @@
   "bugs": {
     "url": "https://github.com/ThingsPanel/thingspanel-ui/issues"
   },
-  "keywords": ["Soybean Admin", "ThingsPanel"],
+  "keywords": [
+    "Soybean Admin",
+    "ThingsPanel"
+  ],
   "scripts": {
     "build": "npm run typecheck && cross-env VITE_SERVICE_ENV=prod vite build",
     "build:dev": "npm run typecheck && cross-env VITE_SERVICE_ENV=dev vite build",
@@ -69,6 +72,7 @@
     "pinia": "2.1.7",
     "print-js": "1.6.0",
     "qs": "6.11.2",
+    "screenfull": "^6.0.2",
     "socket.io-client": "4.7.2",
     "swiper": "10.3.1",
     "ua-parser-js": "1.0.36",

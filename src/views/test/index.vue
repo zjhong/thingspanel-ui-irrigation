@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div></div>
+  <div>dsadsa</div>
 </template>
 
 <style scoped></style>

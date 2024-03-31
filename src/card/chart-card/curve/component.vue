@@ -2,7 +2,7 @@
 import { watch } from 'vue';
 import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
-import LineChart from '../modules/line-chart.vue';
+import LineChart from '@/card/chart-card/curve/modules/line-chart.vue';
 import { colorGroups } from './theme';
 
 const props = defineProps<{

@@ -126,23 +126,30 @@ const collectData = (v, o) => {
 
     return item.data.cardId;
   });
-  console.log(webChartConfig.value);
 };
 
 onUpdated(() => {
+  console.log(webChartConfig.value, '4234324324');
   if (props?.data?.dataSource?.deviceSource && props?.data?.dataSource?.deviceSource?.length > 0) {
     deviceSelectId.value = props?.data?.dataSource?.deviceSource[0]?.deviceId || '';
-    availableCardIds.value = [props?.data?.cardId as string];
+    collectData(
+      deviceSelectId.value,
+      deviceOptions.value?.find(item => item.device_id === deviceSelectId.value)
+    );
   } else {
     availableCardIds.value = [];
   }
+
   tabValue.value = props?.data?.type || 'builtin';
 });
 
 onMounted(() => {
   if (props?.data?.dataSource?.deviceSource && props?.data?.dataSource?.deviceSource?.length > 0) {
     deviceSelectId.value = props?.data?.dataSource?.deviceSource[0]?.deviceId || '';
-    availableCardIds.value = [props?.data?.cardId as string];
+    collectData(
+      deviceSelectId.value,
+      deviceOptions.value?.find(item => item.device_id === deviceSelectId.value)
+    );
   } else {
     availableCardIds.value = [];
   }

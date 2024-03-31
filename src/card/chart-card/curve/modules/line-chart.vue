@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { use } from 'echarts/core';
 // import { CanvasRenderer } from 'echarts/renderers';
@@ -7,18 +7,28 @@ import { LineChart } from 'echarts/charts';
 // import { LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts';
-import { TimeOutline } from '@vicons/ionicons5';
+import { DiscOutline, FilterCircleOutline, RefreshCircleOutline, TimeOutline } from '@vicons/ionicons5';
 import type { ICardData } from '@/components/panel/card';
 import { deviceTelemetryList } from '@/card/chart-card/curve/api';
 
 use([LineChart]);
 const chartRef = ref();
-
+const isAggregate = ref<boolean>(false);
 const props = defineProps<{
   card: ICardData;
   colorGroup: { name: string; top: string; bottom: string }[];
 }>();
 
+const d_end_time = new Date().getTime();
+// 获取1小时前的时间
+const d_start_time = d_end_time - 3600000;
+const params = reactive({
+  start_time: d_start_time,
+  end_time: d_end_time,
+  aggregate_window: 'no_aggregate',
+  aggregate_function: 'avg',
+  time_range: 'custom'
+});
 const timeOptions: SelectOption[] = [
   { label: '最近5分钟', value: 300000 },
   { label: '最近15分钟', value: 900000 },
@@ -47,11 +57,27 @@ const timeOptions: SelectOption[] = [
   { label: '今年', value: 7776000000 },
   { label: '去年', value: 31536000000 }
 ];
+
+const aggregateOptions: SelectOption[] = [
+  { label: '不聚合', value: 'no_aggregate', disabled: false },
+  { label: '30秒', value: '30s', disabled: false },
+  { label: '1分钟', value: '1m', disabled: false },
+  { label: '2分钟', value: '2m', disabled: false },
+  { label: '5分钟', value: '5m', disabled: false },
+  { label: '10分钟', value: '10m', disabled: false },
+  { label: '30分钟', value: '30m', disabled: false },
+  { label: '1小时', value: '1h', disabled: false },
+  { label: '3小时', value: '3h', disabled: false },
+  { label: '6小时', value: '6h', disabled: false },
+  { label: '1天', value: '1d', disabled: false },
+  { label: '7天', value: '7d', disabled: false },
+  { label: '1月', value: '1mo', disabled: false }
+];
 const updateTime = (v: number, o: SelectOption) => {
   let now = new Date();
   let start_time: Date;
   let end_time: Date = new Date();
-
+  isAggregate.value = true;
   switch (o.label) {
     case '今天':
       start_time = new Date(now.setHours(0, 0, 0, 0));
@@ -113,9 +139,25 @@ const updateTime = (v: number, o: SelectOption) => {
       end_time = new Date();
   }
 
-  console.log(v);
-  console.log(o.label);
-  console.log(start_time, end_time);
+  params.start_time = start_time.getTime();
+  params.end_time = end_time.getTime();
+};
+
+const aggregateOptionsValue = ref<string>('');
+
+const updateAggregate = (v: string) => {
+  aggregateOptionsValue.value = v;
+  params.aggregate_window = v;
+};
+const aggregateFunctionOptions: SelectOption[] = [
+  { label: '平均数', value: 'avg' },
+  { label: '最大值', value: 'max' }
+];
+const aggregateFunctionValue = ref<string>('avg');
+
+const updateSggregateFunction = v => {
+  aggregateFunctionValue.value = v;
+  params.aggregate_function = v;
 };
 
 const deviceList = ref<any[]>([
@@ -169,24 +211,22 @@ const option = ref({
   ],
   series: [] as any[]
 });
-
-const d_end_time = new Date().getTime();
-// 获取1小时前的时间
-const d_start_time = d_end_time - 3600000;
+const reFresh = () => {
+  isAggregate.value = false;
+  params.start_time = d_start_time;
+  params.end_time = d_end_time;
+  params.aggregate_window = 'no_aggregate';
+  params.aggregate_function = 'avg';
+  params.time_range = 'custom';
+};
 const getTelemetryList = async (device_id, key, index) => {
-  console.log('666');
   if (!device_id || !key) {
-    console.log('4324324324');
     return;
   }
-  console.log('777');
   const { data, error } = await deviceTelemetryList({
     device_id,
     key,
-    start_time: d_start_time,
-    end_time: d_end_time,
-    aggregate_window: 'no_aggregate',
-    time_range: 'custom'
+    ...params
   });
   if (!error) {
     if (data && data.time_series && data.time_series.length > 0) {
@@ -247,12 +287,10 @@ const getTelemetryList = async (device_id, key, index) => {
     option.value.series[index].data = deviceList.value[index];
   }
 };
-
-watch(
-  () => props.card?.dataSource?.deviceSource,
-  () => {
+const setSeries = dataSource => {
+  if (dataSource) {
     option.value.series =
-      props?.card?.dataSource?.deviceSource?.slice(0, props?.card?.dataSource?.deviceCount || 1).map((i, index) => {
+      dataSource.deviceSource?.slice(0, dataSource.deviceCount || 1).map((i, index) => {
         let str: any = '';
         str = `${i?.metricsId || '-'}_${i?.metricsName || '-'}`;
 
@@ -288,6 +326,20 @@ watch(
           data: deviceList.value[index]
         };
       }) || [];
+  }
+};
+watch(
+  () => params,
+  () => {
+    console.log(params, '345435435');
+    setSeries(props?.card?.dataSource);
+  },
+  { deep: true }
+);
+watch(
+  () => props.card?.dataSource?.deviceSource,
+  () => {
+    setSeries(props?.card?.dataSource);
   },
   { deep: true }
 );
@@ -298,15 +350,42 @@ watch(
     <div class="mb-4 mt-2 flex justify-between">
       <div>曲线</div>
       <div class="flex justify-end">
-        <n-popselect :options="timeOptions" trigger="hover" scrollable @update:value="updateTime">
+        <n-popselect class="mr-4px" :options="timeOptions" trigger="hover" scrollable @update:value="updateTime">
           <n-icon size="24">
             <TimeOutline />
           </n-icon>
         </n-popselect>
-        <p class="w-12px">2</p>
-        <p>3</p>
-        <p class="w-12px">4</p>
-        <p class="w-12px">5</p>
+
+        <n-popselect
+          v-if="isAggregate"
+          v-model:value="aggregateOptionsValue"
+          class="mr-4px"
+          :options="aggregateOptions"
+          trigger="hover"
+          scrollable
+          @update:value="updateAggregate"
+        >
+          <n-icon size="24">
+            <DiscOutline />
+          </n-icon>
+        </n-popselect>
+
+        <n-popselect
+          v-if="isAggregate"
+          v-model:value="aggregateFunctionValue"
+          class="mr-4px"
+          :options="aggregateFunctionOptions"
+          trigger="hover"
+          scrollable
+          @update:value="updateSggregateFunction"
+        >
+          <n-icon size="24">
+            <FilterCircleOutline />
+          </n-icon>
+        </n-popselect>
+        <n-icon size="24" @click="reFresh">
+          <RefreshCircleOutline />
+        </n-icon>
       </div>
     </div>
     <VChart :key="option.series.length" ref="chartRef" class="chart" :option="option" autoresize />

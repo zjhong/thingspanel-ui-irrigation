@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import type { SelectOption } from 'naive-ui';
 import { use } from 'echarts/core';
 // import { CanvasRenderer } from 'echarts/renderers';
 import { LineChart } from 'echarts/charts';
 // import { LegendComponent, TitleComponent, TooltipComponent } from 'echarts/components';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts';
+import { TimeOutline } from '@vicons/ionicons5';
 import type { ICardData } from '@/components/panel/card';
 import { deviceTelemetryList } from '@/card/chart-card/curve/api';
 
@@ -17,7 +19,106 @@ const props = defineProps<{
   colorGroup: { name: string; top: string; bottom: string }[];
 }>();
 
-const devicrlits = ref<any[]>([
+const timeOptions: SelectOption[] = [
+  { label: '最近5分钟', value: 300000 },
+  { label: '最近15分钟', value: 900000 },
+  { label: '最近30分钟', value: 1800000 },
+  { label: '最近1小时', value: 3600000 },
+  { label: '最近3小时', value: 10800000 },
+  { label: '最近6小时', value: 21600000 },
+  { label: '最近12小时', value: 43200000 },
+  { label: '最近24小时', value: 86400000 },
+  { label: '最近3天', value: 259200000 },
+  { label: '最近7天', value: 604800000 },
+  { label: '最近15天', value: 1296000000 },
+  { label: '最近30天', value: 2592000000 },
+  { label: '最近60天', value: 5184000000 },
+  { label: '最近90天', value: 7776000000 },
+  { label: '最近6个月', value: 15811200000 },
+  { label: '最近1年', value: 31536000000 },
+  { label: '今天', value: 28740000 },
+  { label: '昨天', value: 86400000 },
+  { label: '前天', value: 172800000 },
+  { label: '上周今日', value: 604800000 },
+  { label: '本周', value: 518400000 },
+  { label: '上周', value: 604800000 },
+  { label: '本月', value: 2592000000 },
+  { label: '上个月', value: 2592000000 },
+  { label: '今年', value: 7776000000 },
+  { label: '去年', value: 31536000000 }
+];
+const updateTime = (v: number, o: SelectOption) => {
+  let now = new Date();
+  let start_time: Date;
+  let end_time: Date = new Date();
+
+  switch (o.label) {
+    case '今天':
+      start_time = new Date(now.setHours(0, 0, 0, 0));
+      now = new Date(); // 重新获取当前时间，避免修改
+      end_time = new Date(now.setHours(23, 59, 59, 999));
+      break;
+    case '昨天':
+      start_time = new Date();
+      start_time.setDate(now.getDate() - 1);
+      start_time.setHours(0, 0, 0, 0);
+      end_time = new Date(start_time);
+      end_time.setHours(23, 59, 59, 999);
+      break;
+    case '前天':
+      start_time = new Date();
+      start_time.setDate(start_time.getDate() - 2); // 设置为两天前的日期
+      start_time.setHours(0, 0, 0, 0); // 那一天的开始
+      end_time = new Date(start_time);
+      end_time.setHours(23, 59, 59, 999); // 那一天的结束一天的结束
+      break;
+    case '本周':
+      // eslint-disable-next-line no-case-declarations
+      const currentDayOfWeek = now.getDay(); // 当前是周几，周日为0
+      // eslint-disable-next-line no-case-declarations
+      const distanceToMonday = currentDayOfWeek === 0 ? -6 : 1 - currentDayOfWeek; // 计算到周一需要回退的天数
+      start_time = new Date();
+      start_time.setDate(now.getDate() + distanceToMonday); // 设置为本周一
+      start_time.setHours(0, 0, 0, 0); // 本周一的开始
+      end_time = new Date(); // 本周的当前时间
+      break;
+    case '上周':
+      // eslint-disable-next-line no-case-declarations
+      const daysToLastMonday = now.getDay() === 0 ? -6 : 1; // 如果今天是周日，则上周一是6天前
+      start_time = new Date();
+      start_time.setDate(now.getDate() - now.getDay() - daysToLastMonday);
+      start_time.setHours(0, 0, 0, 0);
+      end_time = new Date(start_time);
+      end_time.setDate(start_time.getDate() + 6);
+      end_time.setHours(23, 59, 59, 999);
+      break;
+    case '本月':
+      start_time = new Date(now.getFullYear(), now.getMonth(), 1);
+      end_time = now;
+      break;
+    case '上个月':
+      start_time = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      end_time = new Date(now.getFullYear(), now.getMonth(), 0);
+      break;
+    case '今年':
+      start_time = new Date(now.getFullYear(), 0, 1);
+      end_time = now;
+      break;
+    case '去年':
+      start_time = new Date(now.getFullYear() - 1, 0, 1);
+      end_time = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59, 999);
+      break;
+    default:
+      start_time = new Date(now.getTime() - v);
+      end_time = new Date();
+  }
+
+  console.log(v);
+  console.log(o.label);
+  console.log(start_time, end_time);
+};
+
+const deviceList = ref<any[]>([
   [20, 32, 11, 34, 90, 30, 10],
   [120, 132, 101, 134, 90, 230, 210],
   [232, 282, 291, 334, 390, 430, 510],
@@ -143,7 +244,7 @@ const getTelemetryList = async (device_id, key, index) => {
       });
     }
   } else {
-    option.value.series[index].data = devicrlits.value[index];
+    option.value.series[index].data = deviceList.value[index];
   }
 };
 
@@ -184,7 +285,7 @@ watch(
           emphasis: {
             focus: 'series'
           },
-          data: devicrlits.value[index]
+          data: deviceList.value[index]
         };
       }) || [];
   },
@@ -197,7 +298,11 @@ watch(
     <div class="mb-4 mt-2 flex justify-between">
       <div>曲线</div>
       <div class="flex justify-end">
-        <p class="w-12px">1</p>
+        <n-popselect :options="timeOptions" trigger="hover" scrollable @update:value="updateTime">
+          <n-icon size="24">
+            <TimeOutline />
+          </n-icon>
+        </n-popselect>
         <p class="w-12px">2</p>
         <p>3</p>
         <p class="w-12px">4</p>

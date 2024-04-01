@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "target": "ESNext",
     "jsx": "preserve",
     "jsxImportSource": "vue",

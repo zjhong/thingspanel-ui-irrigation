@@ -332,6 +332,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'edit-area',
+    path: '/edit-area',
+    component: 'layout.base$view.edit-area',
+    meta: {
+      title: 'edit-area',
+      i18nKey: 'route.edit-area'
+    }
+  },
+  {
     name: 'function',
     path: '/function',
     component: 'layout.base',
@@ -663,6 +672,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         ]
       }
     ]
+  },
+  {
+    name: 'new-area',
+    path: '/new-area',
+    component: 'layout.base$view.new-area',
+    meta: {
+      title: 'new-area',
+      i18nKey: 'route.new-area'
+    }
   },
   {
     name: 'personal-center',

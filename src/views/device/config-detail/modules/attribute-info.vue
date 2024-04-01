@@ -82,6 +82,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   }
 ]);
 const choseTemp = async row => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const postData = props.configInfo;
   postData.device_template_id = row.id;
   const res = await deviceConfigEdit(postData);
@@ -105,6 +106,8 @@ const openTemp = async row => {
   }
 };
 const plugList = ref([]);
+
+const selectValue = ref();
 const plugQuery = ref({
   page: 1,
   page_size: 10,
@@ -136,6 +139,54 @@ const openPopover = () => {
 const toTemplate = () => {
   routerPushByKey('device_template');
 };
+
+const configRenderOption = info => {
+  console.log(info);
+
+  return (
+    <NFlex class="ml-4 w-full items-center justify-between hover:bg-primary-100">
+      <div class="flex-1">{info.option.name}</div>
+      <div class="mr-6 flex">
+        <NButton
+          ghost
+          quaternary
+          type={'primary'}
+          onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
+            choseTemp(info.option);
+          }}
+        >
+          选择
+        </NButton>
+        <span>
+          <NPopover
+            trigger="hover"
+            onUpdateShow={show => {
+              if (show) {
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                openTemp(info.option);
+              }
+            }}
+          >
+            {{
+              trigger: () => (
+                <NButton ghost quaternary type={'primary'}>
+                  查看
+                </NButton>
+              ),
+              default: () => (
+                <NScrollbar style="max-height: 220px;padding:8px">
+                  <NCode code={rowTemplateDetail.value} language="json" />
+                </NScrollbar>
+              )
+            }}
+          </NPopover>
+        </span>
+      </div>
+    </NFlex>
+  );
+};
+
 // watch(
 //     () => props.configInfo,
 //     (newValue) => {
@@ -180,6 +231,23 @@ onMounted(async () => {
       </NPopover>
       <div class="to-create" @click="toTemplate">没有找到？去创建</div>
     </NFlex>
+    <div class="mt-24px w-500">
+      <div>绑定设备模板(方案2)</div>
+      <NSelect
+        v-model:value="selectValue"
+        value-field="id"
+        label-field="name"
+        :options="plugList"
+        filterable
+        :render-option="configRenderOption"
+        @focus="getTableData"
+        @search="
+          v => {
+            console.log(v);
+          }
+        "
+      />
+    </div>
   </div>
 </template>
 

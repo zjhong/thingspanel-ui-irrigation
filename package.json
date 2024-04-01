@@ -31,7 +31,7 @@
     "dev:test": "cross-env VITE_SERVICE_ENV=test vite",
     "format": "sa prettier-write",
     "gen-route": "sa gen-route",
-    "lint": "eslint . --cache --fix",
+    "lint": "eslint . --cache --fix --cache-location=./eslintcache",
     "logo": "tsx ./scripts/logo.ts",
     "prepare": "simple-git-hooks",
     "preview": "vite preview",

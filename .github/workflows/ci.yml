@@ -28,4 +28,4 @@ jobs:
         run: pnpm typecheck # 运行TypeScript类型检查
 
       - name: Run ESLint
-        run: pnpm lint-staged # 运行ESLint检查
+        run: pnpm lint # 运行ESLint检查

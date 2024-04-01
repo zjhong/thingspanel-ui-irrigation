@@ -1,0 +1,24 @@
+name: Continuous Integration
+
+# 触发工作流的事件：推送到任何分支或在任何分支上创建Pull Request
+on: [ push, pull_request ]
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # 设置Node.js的版本
+
+      - name: Install Dependencies
+        run: pnpm install # 安装项目依赖
+
+      - name: Run TypeCheck
+        run: pnpm run typecheck # 运行TypeScript类型检查
+
+      - name: Run ESLint
+        run: pnpm run lint # 运行ESLint检查

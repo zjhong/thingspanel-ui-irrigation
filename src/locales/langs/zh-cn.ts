@@ -166,7 +166,9 @@ const local: App.I18n.Schema = {
     component_table: '表格',
     ...czh_cn,
     device_template: '设备模板',
-    'personal-center': ''
+    'personal-center': '个人中心',
+    'edit-area': '编辑空间/区域',
+    'new-area': '添加空间/区域'
   },
   page: {
     product: productLocaleZhCn,

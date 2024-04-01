@@ -1,4 +1,4 @@
-import { defineConfig } from '@soybeanjs/eslint-config';
+import {defineConfig} from '@soybeanjs/eslint-config';
 
 console.log('4324324');
 export default defineConfig(
@@ -16,7 +16,8 @@ export default defineConfig(
         files: ['*.vue'],
         rules: {
           'no-undef': 'off', // use tsc to check the ts code of the vue
-          'vue/no-setup-props-destructure': 'off' // wait to fix this rule
+          'vue/no-setup-props-destructure': 'off',// wait to fix this rule
+          "@typescript-eslint/no-use-before-define": "warn"
         }
       },
       // 覆盖soybean默认prettier

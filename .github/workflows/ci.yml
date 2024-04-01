@@ -12,13 +12,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # 设置Node.js的版本
+          node-version: 18.17.0
 
       - name: Install Dependencies
         run: pnpm install # 安装项目依赖
 
       - name: Run TypeCheck
-        run: pnpm run typecheck # 运行TypeScript类型检查
+        run: pnpm typecheck # 运行TypeScript类型检查
 
       - name: Run ESLint
-        run: pnpm run lint # 运行ESLint检查
+        run: pnpm lint-staged # 运行ESLint检查

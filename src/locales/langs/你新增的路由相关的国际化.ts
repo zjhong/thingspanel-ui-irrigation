@@ -67,7 +67,9 @@ export const czh_cn = {
   irrigation_rotation: '轮灌计划',
   personal_center: '个人中心',
   'space-management': '空间管理',
-  'system-management-user_equipment-map': '设备地图'
+  'system-management-user_equipment-map': '设备地图',
+  "edit-area": "编辑区域",
+  "new-area": "新建区域",
 };
 
 export const cen = {
@@ -135,5 +137,7 @@ export const cen = {
   irrigation_rotation: 'Irrigation Rotation',
   personal_center: 'Personal Center',
   'space-management': 'Space Management',
-  'system-management-user_equipment-map': 'Equipment Map'
+  'system-management-user_equipment-map': 'Equipment Map',
+  "edit-area": "Edit Area",
+  "new-area": "New Area",
 };

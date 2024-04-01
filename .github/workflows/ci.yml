@@ -15,6 +15,7 @@ jobs:
           node-version: 18.17.0
 
       - name: Install Dependencies
+      - run: npm install -g pnpm
         run: pnpm install # 安装项目依赖
 
       - name: Run TypeCheck

@@ -31,7 +31,7 @@
     "dev:test": "cross-env VITE_SERVICE_ENV=test vite",
     "format": "sa prettier-write",
     "gen-route": "sa gen-route",
-    "lint": "eslint . --fix",
+    "lint": "eslint . --cache --fix",
     "logo": "tsx ./scripts/logo.ts",
     "prepare": "simple-git-hooks",
     "preview": "vite preview",
@@ -150,7 +150,7 @@
     "pre-commit": "pnpm typecheck && pnpm lint-staged"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*.{ts,vue}": "eslint --cache --fix"
   },
   "website": "http://23.94.59.38:8089/"
 }

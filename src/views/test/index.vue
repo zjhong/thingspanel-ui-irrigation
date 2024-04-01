@@ -1,8 +1,7 @@
 <script setup lang="ts">
-const a = 999;
-
-const s = '323232';
-const c = a + s;
+const a: number = 999;
+const s: string = '323232';
+const c: number = a + Number(s);
 console.log(c);
 </script>
 

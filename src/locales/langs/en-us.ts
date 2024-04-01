@@ -165,9 +165,11 @@ const local: App.I18n.Schema = {
     component_card: 'Card',
     component_table: 'Table',
     ...cen,
-    'alarm_warning-message': '',
-    device_template: 'device template',
-    'personal-center': ''
+    'alarm_warning-message': 'alarmWarningMessage',
+    device_template: 'deviceTemplate',
+    'personal-center': 'personalCenter',
+    'edit-area': 'editArea',
+    'new-area': 'newArea'
   },
   page: {
     product: productLocaleEn,

@@ -4,7 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 09:35:32
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-31 09:58:38
+ * @LastEditTime: 2024-04-01 12:02:53
 -->
 <script lang="ts" setup>
 import { NButton } from "naive-ui";
@@ -14,6 +14,7 @@ import gaoDe from "./components/map/gaode-map.vue";
 import * as echarts from "echarts";
 import { $t } from "@/locales";
 import screenfull from "screenfull";
+import { useMessage } from "naive-ui";
 
 import { useRouter } from "vue-router";
 const router = useRouter();
@@ -21,7 +22,16 @@ const queryParams = reactive({
   name: "",
   status: null,
 });
-
+const message = useMessage();
+const former = ref({
+  mapLocal: "",
+  mapAddress: "",
+  longitude: "", //地图纬度信息
+  latitude: "", //地图经度信息
+  scope: "" as any,
+  dimension: [121.50861, 31.25141],
+  districts: [] as any,
+});
 /**
  * 全屏
  */
@@ -50,11 +60,19 @@ function handleReset() {
 function neaAreaClick() {
   router.push("/new-area");
 }
+/**
+ * 编辑空间
+ */
+
 function editClick() {
-  router.push({
-    path: "/edit-area",
-    query: { id: sumId.value.id, type: typeData.value },
-  });
+  if (sumId.value.id.length === 0) {
+    message.warning("请选择一个空间或者区域");
+  } else {
+    router.push({
+      path: "/edit-area",
+      query: { id: sumId.value.id, type: typeData.value },
+    });
+  }
 }
 /**
  * 搜索列表
@@ -89,16 +107,13 @@ const sumId = ref({
 });
 const typeData = ref("");
 function areaClick(e, w) {
-  console.log(999999999999, e, w);
   typeData.value = w;
   former.value.districts = [];
-
   former.value.scope = "";
-  former.value.scope = eval(e.scope);
+  former.value.scope = JSON.parse(e.scope);
   e.districts.map((item) => {
-    former.value.districts.push(item);
+   return former.value.districts.push(item);
   });
-
   let data = [];
   data = e.location.split(",");
   let datas: any = [];
@@ -118,7 +133,7 @@ function selectClick(e, w) {
   sumId.value.id = e.district_id;
   console.log(8888888, w);
   sums();
-  former.value.scope = eval(e.scope);
+  former.value.scope = JSON.parse(e.scope);
   getChildList.value.mapInit(former.value.dimension, e);
 }
 /**
@@ -142,15 +157,7 @@ function nameInput() {
   spacesDataList();
 }
 
-const former = ref({
-  mapLocal: "",
-  mapAddress: "",
-  longitude: "", //地图纬度信息
-  latitude: "", //地图经度信息
-  scope: "" as any,
-  dimension: [121.50861, 31.25141],
-  districts: [] as any,
-});
+
 const gaoDeShow = ref(false);
 // 图表
 const foldLine = ref(null);
@@ -327,8 +334,14 @@ const loading = ref(false);
                 </n-collapse-item>
               </n-collapse>
             </n-scrollbar>
+
             <div class="add-but">
-              <n-button @click="neaAreaClick"> 添加空间/区域 </n-button>
+              <n-button class="edit-but" @click="editClick" type="primary">
+                编辑当前空间/区域
+              </n-button>
+              <n-button @click="neaAreaClick" type="primary">
+                添加空间/区域
+              </n-button>
             </div>
           </div>
         </div>
@@ -343,9 +356,7 @@ const loading = ref(false);
           <SvgIcon class="full-screen" local-icon="ArrowSync20Filled" />
         </n-button>
         <n-button strong secondary type="info" @click="overviewShowClick">
-          <SvgIcon class="full-screen" local-icon="Box24Filled" /> </n-button
-        ><n-button strong secondary type="info" @click="editClick">
-          <SvgIcon class="full-screen" local-icon="AddLocationAltOutlined" />
+          <SvgIcon class="full-screen" local-icon="Box24Filled" />
         </n-button>
       </div>
       <div class="overview" v-if="overviewShow">
@@ -564,5 +575,8 @@ const loading = ref(false);
       font-size: 20px;
     }
   }
+}
+.edit-but {
+  margin-bottom: 15px;
 }
 </style>

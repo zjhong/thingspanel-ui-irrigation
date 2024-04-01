@@ -66,11 +66,11 @@
       </div>
     </div>
 
-    <div id="containerAdd" style="height: 600px"></div>
+    <div id="containerAdd" style="height: 1080px"></div>
   </div>
 </template>
 <script>
-import { watch, reactive, toRefs, onMounted } from "vue";
+import {  reactive, toRefs, onMounted } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { useMessage } from "naive-ui";
 import { useNaiveForm } from "@/hooks/common/form";
@@ -165,7 +165,7 @@ export default {
        * 保存
        */
       handleReset(e) {
-        console.log("保存", state.spaceForm.location);
+        console.log("保存", props);
 
         e.preventDefault();
         formRef.value?.validate((errors) => {
@@ -307,6 +307,7 @@ export default {
           });
       },
     };
+    
 
     onMounted(() => {
       methods.mapInit(state.dimension);

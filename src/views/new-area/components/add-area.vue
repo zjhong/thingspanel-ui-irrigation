@@ -128,11 +128,11 @@
       </div>
     </div>
 
-    <div id="containers" style="height: 600px"></div>
+    <div id="containers" style="height: 1080px"></div>
   </div>
 </template>
 <script>
-import { watch, reactive, toRefs, onMounted } from "vue";
+import {  reactive, toRefs, onMounted } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { useMessage } from "naive-ui";
 import { useNaiveForm } from "@/hooks/common/form";
@@ -205,13 +205,13 @@ export default {
         const name = { name: "" };
 
         const { data } = await spacesData(name);
-        console.log("列表2222", data);
+        console.log("列表2222", props);
         if (data) {
-          data.list.map((item, index) => {
-            state.spaces.push({
+          data.list.map((item) => {
+          return  state.spaces.push({
               label: item.space_name,
               value: item.space_id,
-              scope: eval(item.scope),
+              scope: JSON.parse(item.scope),
               districts: item.districts,
             });
           });
@@ -354,8 +354,8 @@ export default {
 
               state.districts.map((item) => {
                 pash = eval(item.scope);
-                let space = ""; //定义多边形
-                space = new AMap.Polygon({
+                let spaces = ""; //定义多边形
+                spaces = new AMap.Polygon({
                   path: pash, // 设置多边形边界路径
                   strokeColor: "#FF33FF", // 线颜色
                   strokeOpacity: 0.2, // 线透明度
@@ -363,7 +363,7 @@ export default {
                   fillColor: "pink", // 填充色
                   fillOpacity: 0.5, // 填充透明度
                 });
-                state.map.add(space);
+              return  state.map.add(spaces);
               });
               console.log("state.districts", pash);
             }

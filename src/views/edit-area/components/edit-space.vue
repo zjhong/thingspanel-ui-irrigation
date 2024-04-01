@@ -66,18 +66,18 @@
       </div>
     </div>
 
-    <div id="containerAdd" style="height: 600px"></div>
+    <div id="containerAdd" style="height: 1080px"></div>
   </div>
 </template>
 <script>
-import { watch, reactive, toRefs, onMounted } from "vue";
+import {  reactive, toRefs, onMounted } from "vue";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { useMessage } from "naive-ui";
 import { useNaiveForm } from "@/hooks/common/form";
 import { apaceDetail, editSpaces } from "@/service/api/equipment-map";
 import { useRoute } from "vue-router";
 export default {
-  setup(props, context) {
+  setup( context) {
     const state = reactive({
       newKeyAddress: "",
       conheight: {
@@ -130,7 +130,7 @@ export default {
           state.spaceForm.location = state.locationDatas[0];
           state.spaceForm.dimensionality = state.locationDatas[1];
           state.spaceForm.description = e.data.description;
-          state.spaceForm.scope = eval(e.data.scope);
+          state.spaceForm.scope = JSON.parse(e.data.scope);
           console.log("查询详情", state.spaceForm);
           methods.mapInit();
         });

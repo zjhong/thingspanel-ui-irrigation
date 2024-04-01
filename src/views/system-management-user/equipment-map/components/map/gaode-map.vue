@@ -1,6 +1,6 @@
 <template>
   <div class="mapContainer1">
-    <div id="container" style="height: 900px"></div>
+    <div id="container" style="height: 1080px"></div>
   </div>
 </template>
 <script>
@@ -62,7 +62,7 @@ export default {
             });
             if (data) {
               // 区域范围
-              state.lnglatArr = eval(data.scope);
+              state.lnglatArr = JSON.parse(data.scope);
               let polygon = ""; //定义多边形
               polygon = new AMap.Polygon({
                 path: state.lnglatArr, // 设置多边形边界路径
@@ -75,15 +75,7 @@ export default {
               state.map.add(polygon);
               // 自动缩放并聚焦合适中心点
               state.map.setFitView([polygon]);
-              const icon = new AMap.Icon({
-                imageOffset: new AMap.Pixel(0, -60), // 图像相对展示区域的偏移量，适于雪碧图等
-                imageSize: new AMap.Size(20, 20), // 根据所设置的大小拉伸或压缩图片
-                imageOffset: new AMap.Pixel(0, 0),
-                image: new URL(
-                  "../../../../../assets/svg-icon/AdjustRound.svg",
-                  import.meta.url,
-                ).href,
-              });
+              
 
               /**
                * 空间下区域范围
@@ -93,7 +85,7 @@ export default {
                 // let paths = [];
                 let polygons = ""; //定义多边形
                 data.districts.map((item) => {
-                  path = eval(item.scope);
+                  path = JSON.parse(item.scope);
                   polygons = new AMap.Polygon({
                     path: path, // 设置多边形边界路径
                     strokeColor: "#FF33FF", // 线颜色
@@ -102,7 +94,7 @@ export default {
                     fillColor: "pink", // 填充色
                     fillOpacity: 0.35, // 填充透明度
                   });
-                  state.map.add(polygons);
+                 return state.map.add(polygons);
                 });
               }
               /**
@@ -118,9 +110,10 @@ export default {
                     map: state.map,
                   });
                   state.marker.on("click", markerClick);
-                  function markerClick() {
+                function markerClick() {
                     context.emit("subcomponent", item);
                   }
+                  return
                 });
                 console.log(5555, coordinates);
               } else {

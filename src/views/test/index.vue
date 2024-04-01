@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const a: number = 999;
-const s: string = '323232';
-const c: number = a
+const s: string = '32';
+const c: number = a + 1;
 // const c: number = s
 console.log(a, c, s);
 </script>

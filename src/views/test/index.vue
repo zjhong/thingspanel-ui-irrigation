@@ -2,7 +2,7 @@
 const a: number = 999;
 const s: string = '323232';
 const c: number = a + Number(s);
-console.log(c);
+console.log(a, c);
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { use } from 'echarts/core';
 // import { CanvasRenderer } from 'echarts/renderers';
@@ -73,7 +73,7 @@ const aggregateOptions: SelectOption[] = [
   { label: '7天', value: '7d', disabled: false },
   { label: '1月', value: '1mo', disabled: false }
 ];
-
+const aggregateOptionsValue = ref<string>('');
 const updateDisabledOptions = (timeFrame: string) => {
   const disableBeforeIndex: { [key: string]: number } = {
     最近3小时: 1, // 30秒
@@ -101,8 +101,11 @@ const updateDisabledOptions = (timeFrame: string) => {
   };
 
   // 默认不禁用“不聚合”，根据时间范围禁用其余选项
-  aggregateOptions.forEach((option, index) => {
+  aggregateOptions.forEach((option, index, array) => {
     option.disabled = index <= (disableBeforeIndex[timeFrame] || 0);
+    if (index <= (disableBeforeIndex[timeFrame] || 0)) {
+      aggregateOptionsValue.value = array[index + 1].value as string;
+    }
   });
 };
 
@@ -176,8 +179,6 @@ const updateTime = (v: number, o: SelectOption) => {
   params.start_time = start_time.getTime();
   params.end_time = end_time.getTime();
 };
-
-const aggregateOptionsValue = ref<string>('');
 
 const updateAggregate = (v: string) => {
   aggregateOptionsValue.value = v;
@@ -362,10 +363,10 @@ const setSeries = dataSource => {
       }) || [];
   }
 };
+
 watch(
   () => params,
   () => {
-    console.log(params, '345435435');
     setSeries(props?.card?.dataSource);
   },
   { deep: true }
@@ -377,15 +378,18 @@ watch(
   },
   { deep: true }
 );
+onMounted(() => {
+  setSeries(props?.card?.dataSource);
+});
 </script>
 
 <template>
   <div class="m--6">
-    <div class="mb-4 mt-2 flex justify-between">
+    <div class="mb-4 mt-4 flex justify-between">
       <div>曲线</div>
       <div class="flex justify-end">
         <n-popselect class="mr-4px" :options="timeOptions" trigger="hover" scrollable @update:value="updateTime">
-          <n-icon size="24">
+          <n-icon size="24" class="hover:text-primary-500">
             <TimeOutline />
           </n-icon>
         </n-popselect>
@@ -399,7 +403,7 @@ watch(
           scrollable
           @update:value="updateAggregate"
         >
-          <n-icon size="24">
+          <n-icon size="24" class="hover:text-primary-500">
             <DiscOutline />
           </n-icon>
         </n-popselect>
@@ -413,11 +417,11 @@ watch(
           scrollable
           @update:value="updateSggregateFunction"
         >
-          <n-icon size="24">
+          <n-icon size="24" class="hover:text-primary-500">
             <FilterCircleOutline />
           </n-icon>
         </n-popselect>
-        <n-icon size="24" @click="reFresh">
+        <n-icon size="24" class="hover:text-primary-500" @click="reFresh">
           <RefreshCircleOutline />
         </n-icon>
       </div>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { router } from '@/router';
-import type { ICardView } from '@/components/panel/card';
-import { fetchHomeData } from '@/service/api';
+import {onMounted, ref} from 'vue';
+import {router} from '@/router';
+import type {ICardView} from '@/components/panel/card';
+import {fetchHomeData} from '@/service/api';
 
 const layout = ref<ICardView[]>([]);
 const isError = ref<boolean>(false);
 const active = ref<boolean>(true);
 
 const getLayout = async () => {
-  const { data, error } = await fetchHomeData({});
+  const {data, error} = await fetchHomeData({});
 
   isError.value = (error || !(data && data.config)) as boolean;
 
@@ -53,7 +53,7 @@ onMounted(getLayout);
     ref="cr"
     v-model:layout="layout"
     :is-preview="true"
-    :col-num="12"
+    :col-num="24"
     :default-card-col="4"
     :row-height="65"
   />

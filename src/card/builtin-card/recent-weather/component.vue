@@ -51,21 +51,21 @@ const weatherList: WeatherItem[] = reactive([
     humidity: '58%',
     text: $t('dashboard_panel.cardName.week.fri'),
     icons: 'yin'
-  },
-  {
-    id: '5',
-    temperature: '24°',
-    humidity: '64%',
-    text: $t('dashboard_panel.cardName.week.sat'),
-    icons: 'sunlight'
-  },
-  {
-    id: '6',
-    temperature: '24°',
-    humidity: '64%',
-    text: $t('dashboard_panel.cardName.week.sun'),
-    icons: 'cloudy'
   }
+  // {
+  //   id: '5',
+  //   temperature: '24°',
+  //   humidity: '64%',
+  //   text: $t('dashboard_panel.cardName.week.sat'),
+  //   icons: 'sunlight'
+  // },
+  // {
+  //   id: '6',
+  //   temperature: '24°',
+  //   humidity: '64%',
+  //   text: $t('dashboard_panel.cardName.week.sun'),
+  //   icons: 'cloudy'
+  // }
 ]);
 </script>
 

@@ -622,7 +622,7 @@ const local: App.I18n.Schema = {
       active: 'Active',
       notActive: 'NotActive',
       activationRate: 'ActivationRate',
-      sevenDayWeather: 'weatherOverview',
+      sevenDayWeather: 'RecentFiveWeatherOverview',
       spaceNum: 'SpaceNum',
       areaName: 'AreaName',
       corn: 'Corn',

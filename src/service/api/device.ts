@@ -218,3 +218,9 @@ export const deviceTemplateSelect = async () => {
   const url = `/device/template/chart/select`;
   return await request.get<any>(url);
 };
+
+export const telemetryHistoryData = async (params: any) => {
+  return await request.get<any>(`/telemetry/datas/history/pagination`, { params });
+};
+
+/** 有图表的设备list */

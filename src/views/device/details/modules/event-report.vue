@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import DistributionAndTable from '@/views/device/details/models/public/distribution-and-table.vue';
+import DistributionAndTable from '@/views/device/details/modules/public/distribution-and-table.vue';
 import { getEventDataSet } from '@/service/api';
 
 defineProps<{

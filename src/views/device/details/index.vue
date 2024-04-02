@@ -2,17 +2,17 @@
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDeviceDataStore } from '@/store/modules/device';
-import Telemetry from './models/telemetry.vue';
-import Join from './models/join.vue';
-import DeviceAnalysis from './models/device-analysis.vue';
-import Message from './models/message.vue';
-import Stats from './models/stats.vue';
-import EventReport from './models/event-report.vue';
-import CommandDelivery from './models/command-delivery.vue';
-import Automate from './models/automate.vue';
-import GiveAnAlarm from './models/give-an-alarm.vue';
-import User from './models/user.vue';
-import Settings from './models/settings.vue';
+import Telemetry from '@/views/device/details/modules/telemetry/telemetry.vue';
+import Join from '@/views/device/details/modules/join.vue';
+import DeviceAnalysis from '@/views/device/details/modules/device-analysis.vue';
+import Message from '@/views/device/details/modules/message.vue';
+import Stats from '@/views/device/details/modules/stats.vue';
+import EventReport from '@/views/device/details/modules/event-report.vue';
+import CommandDelivery from '@/views/device/details/modules/command-delivery.vue';
+import Automate from '@/views/device/details/modules/automate.vue';
+import GiveAnAlarm from '@/views/device/details/modules/give-an-alarm.vue';
+import User from '@/views/device/details/modules/user.vue';
+import Settings from '@/views/device/details/modules/settings.vue';
 
 const { query } = useRoute();
 const { id } = query;
@@ -33,6 +33,7 @@ const components = [
 ];
 
 onMounted(() => {
+  console.log(id);
   deviceDataStore.fetchData(id as string);
 });
 </script>

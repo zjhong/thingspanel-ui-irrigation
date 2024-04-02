@@ -89,7 +89,7 @@ const handleSubmit = async () => {
           </NFormItem>
         </div>
         <div v-if="element.type === 'table'">
-          <div class="table-label">{{ element.label }}</div>
+          <!--          <div class="table-label">{{ element.label }}</div>-->
           <div class="table-content">
             <template v-for="subElement in element.array" :key="subElement.dataKey">
               <div v-if="subElement.type === 'input'" class="table-item">

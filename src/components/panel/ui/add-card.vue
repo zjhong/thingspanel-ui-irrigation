@@ -118,14 +118,16 @@ const getDeviceOptions = async () => {
   }
 };
 const collectData = (v, o) => {
-  webChartConfig.value = JSON.parse(o.web_chart_config);
-  availableCardIds.value = webChartConfig.value.map(item => {
-    item.data.dataSource.deviceSource.forEach(item1 => {
-      item1.deviceId = v;
-    });
+  if (o?.web_chart_config) {
+    webChartConfig.value = JSON.parse(o.web_chart_config);
+    availableCardIds.value = webChartConfig.value.map(item => {
+      item.data.dataSource.deviceSource.forEach(item1 => {
+        item1.deviceId = v;
+      });
 
-    return item.data.cardId;
-  });
+      return item.data.cardId;
+    });
+  }
 };
 
 onUpdated(() => {

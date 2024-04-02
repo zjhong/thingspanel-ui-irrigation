@@ -110,6 +110,9 @@ importers:
       ua-parser-js:
         specifier: 1.0.36
         version: 1.0.36
+      uuid:
+        specifier: ^9.0.1
+        version: 9.0.1
       vditor:
         specifier: 3.9.6
         version: 3.9.6
@@ -189,6 +192,9 @@ importers:
       '@types/ua-parser-js':
         specifier: 0.7.37
         version: 0.7.37
+      '@types/uuid':
+        specifier: ^9.0.8
+        version: 9.0.8
       '@unocss/eslint-config':
         specifier: 0.58.5
         version: 0.58.5(eslint@8.57.0)(typescript@5.3.3)
@@ -3354,6 +3360,10 @@ packages:
 
   /@types/unist@3.0.2:
     resolution: {integrity: sha512-dqId9J8K/vGi5Zr7oo212BGii5m3q5Hxlkwy3WpYuKPklmBEvsbMYYyLxAQpSffdLl/gdW0XUpKWFvYmyoWCoQ==}
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/web-bluetooth@0.0.20:
@@ -11437,6 +11447,11 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
     dev: true
+
+  /uuid@9.0.1:
+    resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
+    hasBin: true
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

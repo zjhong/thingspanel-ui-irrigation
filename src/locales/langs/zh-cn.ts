@@ -621,7 +621,7 @@ const local: App.I18n.Schema = {
       active: '已激活',
       notActive: '未激活',
       activationRate: '激活率',
-      sevenDayWeather: '最近七天天气概况',
+      sevenDayWeather: '最近五天气概况',
       spaceNum: '空间总数',
       areaName: '区域名称',
       corn: '玉米',

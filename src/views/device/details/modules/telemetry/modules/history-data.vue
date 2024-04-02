@@ -11,6 +11,8 @@ interface Created {
   theKey: string;
 }
 
+const props = defineProps<Created>();
+
 interface Params {
   device_id: string;
   end_time: number;
@@ -31,7 +33,7 @@ const startTime = new Date(currentDate);
 startTime.setDate(1);
 startTime.setMonth(startTime.getMonth() - 1);
 startTime.setHours(0, 0, 0, 0);
-const props = defineProps<Created>();
+
 const params = reactive<Params>({
   device_id: props.deviceId,
   end_time: currentDate.getTime(),

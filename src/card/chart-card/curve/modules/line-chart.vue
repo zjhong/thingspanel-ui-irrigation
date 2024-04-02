@@ -233,17 +233,6 @@ const option = ref({
   yAxis: {
     type: 'value'
   },
-  dataZoom: [
-    {
-      type: 'inside',
-      start: 0,
-      end: 100
-    },
-    {
-      start: 0,
-      end: 100
-    }
-  ],
   series: [] as any[]
 });
 const reFresh = () => {

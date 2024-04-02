@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { DocumentOnePage24Regular, Timer16Regular } from '@vicons/fluent';
 import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
 import HistoryData from './modules/history-data.vue';
+import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
 
 const props = defineProps<{
@@ -13,6 +14,7 @@ const showDialog = ref(false);
 const showHistory = ref(false);
 const telemetryId = ref();
 const telemetryKey = ref();
+const modelType = ref<string>('');
 
 const formValue = ref('');
 const operationType = ref('');
@@ -111,7 +113,8 @@ fetchData();
 
     <n-modal v-model:show="showHistory" title="遥测历史数据" class="w-[600px]">
       <NCard>
-        <HistoryData :device-id="telemetryId" :the-key="telemetryKey" />
+        <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
+        <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />
       </NCard>
     </n-modal>
     <!-- 第二行 -->
@@ -130,6 +133,7 @@ fetchData();
                     size="24"
                     @click="
                       () => {
+                        modelType = '历史';
                         telemetryKey = i.key;
                         telemetryId = i.device_id;
                         showHistory = true;
@@ -140,7 +144,17 @@ fetchData();
                   </NIcon>
 
                   <NDivider vertical />
-                  <NIcon size="24">
+                  <NIcon
+                    size="24"
+                    @click="
+                      () => {
+                        modelType = '时序';
+                        telemetryKey = i.key;
+                        telemetryId = i.device_id;
+                        showHistory = true;
+                      }
+                    "
+                  >
                     <Timer16Regular />
                   </NIcon>
                 </div>

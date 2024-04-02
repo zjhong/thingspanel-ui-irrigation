@@ -33,7 +33,6 @@ const components = [
 ];
 
 onMounted(() => {
-  console.log(id);
   deviceDataStore.fetchData(id as string);
 });
 </script>
@@ -44,20 +43,24 @@ onMounted(() => {
       <div>
         <NH3>{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
 
-        <n-descriptions label-placement="left" :column="6">
-          <n-descriptions-item label="设备编号：">
-            {{ deviceDataStore?.deviceData?.device_number || '--' }}
-          </n-descriptions-item>
-          <n-descriptions-item label="设备配置：">
-            {{ deviceDataStore?.deviceData?.protocol_config || '--' }}
-          </n-descriptions-item>
-          <n-descriptions-item label=" 状态：">
-            {{ deviceDataStore?.deviceData?.is_online === 1 ? '在线' : '离线' }}
-          </n-descriptions-item>
-          <n-descriptions-item label="告警:">
-            {{ deviceDataStore?.deviceData?.remark1 || '无告警' }}
-          </n-descriptions-item>
-        </n-descriptions>
+        <NFlex>
+          <div class="mr-4">
+            <spna class="mr-2">设备编号:</spna>
+            <spna>{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
+          </div>
+          <div class="mr-4">
+            <spna class="mr-2">设备配置:</spna>
+            <spna>{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+          </div>
+          <div class="mr-4">
+            <spna class="mr-2">状态:</spna>
+            <spna>{{ deviceDataStore?.deviceData?.is_online === 1 ? '在线' : '离线' }}</spna>
+          </div>
+          <div class="mr-4">
+            <spna class="mr-2">告警:</spna>
+            <spna>{{ deviceDataStore?.deviceData?.is_online || '无告警' }}</spna>
+          </div>
+        </NFlex>
       </div>
       <n-divider title-placement="left"></n-divider>
       <div>

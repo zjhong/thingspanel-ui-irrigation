@@ -12,7 +12,7 @@ defineOptions({
 });
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { toggle } = useFullscreen();
+const { isFullscreen, toggle } = useFullscreen();
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
 
 const naiveLocale = computed(() => {
@@ -24,9 +24,9 @@ const naiveDateLocale = computed(() => {
 });
 const handleFullScreenChange = () => {
   if (!document.fullscreenElement) {
-    appStore.toggleFullContent();
-
-    toggle();
+    if (isFullscreen) {
+      toggle();
+    }
   }
 };
 

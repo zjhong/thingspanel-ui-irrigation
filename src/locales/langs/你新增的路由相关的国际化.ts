@@ -68,8 +68,8 @@ export const czh_cn = {
   personal_center: '个人中心',
   'space-management': '空间管理',
   'system-management-user_equipment-map': '设备地图',
-  "edit-area": "编辑区域",
-  "new-area": "新建区域",
+  'edit-area': '编辑区域',
+  'new-area': '新建区域'
 };
 
 export const cen = {
@@ -138,6 +138,6 @@ export const cen = {
   personal_center: 'Personal Center',
   'space-management': 'Space Management',
   'system-management-user_equipment-map': 'Equipment Map',
-  "edit-area": "Edit Area",
-  "new-area": "New Area",
+  'edit-area': 'Edit Area',
+  'new-area': 'New Area'
 };

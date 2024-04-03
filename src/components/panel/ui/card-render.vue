@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
+import { v4 as uuidv4 } from 'uuid';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
 
@@ -58,7 +59,7 @@ defineExpose({
         y,
         w: props.defaultCardCol,
         h: 4,
-        i: layoutData.length,
+        i: uuidv4(),
         data
       }
     ]);

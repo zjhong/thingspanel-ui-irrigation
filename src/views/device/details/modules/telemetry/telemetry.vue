@@ -1,38 +1,29 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { useMessage } from 'naive-ui';
 import dayjs from 'dayjs';
 import { DocumentOnePage24Regular, Timer16Regular } from '@vicons/fluent';
-import { addMonths } from 'date-fns';
-import { useLoading } from '@sa/hooks';
 import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
-// import { fetchTableData } from '@/api'; // 假设你有一个获取表格数据的 API
+import HistoryData from './modules/history-data.vue';
+import TimeSeriesData from './modules/time-series-data.vue';
+import { useLoading } from '~/packages/hooks';
+
 const props = defineProps<{
   id: string;
 }>();
 const showDialog = ref(false);
 const showHistory = ref(false);
+const telemetryId = ref();
+const telemetryKey = ref();
+const modelType = ref<string>('');
+
 const formValue = ref('');
 const operationType = ref('');
 const sendResult = ref('');
 const tableData = ref([]);
-const tableData2 = ref([]);
+
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
 const { loading, startLoading, endLoading } = useLoading();
 const total = ref(0);
-const total2 = ref(0);
-const dateRange = ref<[number, number] | null>(null);
-const message = useMessage();
-const checkDateRange = value => {
-  const [start, end] = value;
-  if (start && end && addMonths(start, 1) < end) {
-    dateRange.value = null;
-    message.error('日期范围不能超过一个月');
-  }
-};
-const refresh = () => {
-  // 刷新逻辑
-};
 
 const operationOptions = [
   { label: '全部', value: '' },
@@ -56,17 +47,13 @@ const columns = [
   { title: '操作时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
   { title: '发送结果', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') }
 ];
-const columns2 = [
-  { title: '时间', key: 'time', render: row => dayjs(row.time).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '数据标识符', key: 'identifier' },
-  { title: '值', key: 'value' }
-];
 
 const openDialog = () => {
   showDialog.value = true;
 };
 const fetchData = async () => {
   startLoading();
+  console.log(props.id);
   const { data, error } = await getTelemetryLogList({
     page: log_page.value,
     page_size: 5,
@@ -76,32 +63,11 @@ const fetchData = async () => {
   });
   if (!error) {
     tableData.value = data.value;
-    console.log(data.count);
     total.value = Math.ceil(data.count / 5);
     endLoading();
   }
 };
 
-const fetchData2 = async (page = 1, export_excel = false) => {
-  startLoading();
-  const params = {
-    page,
-    page_size: 4,
-    start_time: '', // 这里填入你的 start_time
-    end_time: '', // 这里填入你的 end_time
-    device_id: '', // 这里填入你的 device_id
-    key: '', // 这里填入你的 key
-    export_excel
-  };
-  console.log(params);
-  // const { data, error } = await getDeviceConfigList(params);
-  // if (!error) {
-  //   tableData2.value = data.value;
-  //   total.value = Math.ceil(data.count / 4);
-  // }
-  endLoading();
-};
-console.log(fetchData2);
 const send = async () => {
   // 发送属性的逻辑...
   const { error } = await telemetryDataPub({
@@ -146,20 +112,10 @@ fetchData();
     </n-modal>
 
     <n-modal v-model:show="showHistory" title="遥测历史数据" class="w-[600px]">
-      <n-card>
-        <n-flex justify="space-between" align="center">
-          <n-flex justify="space-between" align="center">
-            <n-date-picker v-model:value="dateRange" class="w-300px" type="daterange" @update:value="checkDateRange" />
-            <n-button class="ml-2" @click="refresh">刷新</n-button>
-          </n-flex>
-
-          <n-button type="primary">导出</n-button>
-        </n-flex>
-        <div>
-          <n-data-table :loading="loading" :columns="columns2" :data="tableData2" />
-          <n-pagination :page-count="total2" :page-size="4" @update:page="fetchData" />
-        </div>
-      </n-card>
+      <NCard>
+        <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
+        <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />
+      </NCard>
     </n-modal>
     <!-- 第二行 -->
     <n-card class="mb-4">
@@ -173,12 +129,32 @@ fetchData();
               </template>
               <template #header-extra>
                 <div class="h-24px w-120px flex items-center justify-end">
-                  <NIcon size="24" @click="console.log((showHistory = true))">
+                  <NIcon
+                    size="24"
+                    @click="
+                      () => {
+                        modelType = '历史';
+                        telemetryKey = i.key;
+                        telemetryId = i.device_id;
+                        showHistory = true;
+                      }
+                    "
+                  >
                     <DocumentOnePage24Regular />
                   </NIcon>
 
                   <NDivider vertical />
-                  <NIcon size="24">
+                  <NIcon
+                    size="24"
+                    @click="
+                      () => {
+                        modelType = '时序';
+                        telemetryKey = i.key;
+                        telemetryId = i.device_id;
+                        showHistory = true;
+                      }
+                    "
+                  >
                     <Timer16Regular />
                   </NIcon>
                 </div>

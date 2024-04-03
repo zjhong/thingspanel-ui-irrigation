@@ -7,16 +7,16 @@
  * @LastEditTime: 2024-03-20 17:23:40
 -->
 <script setup lang="tsx">
-import { ref } from "vue";
-import { NButton, NTag, useMessage } from "naive-ui";
-import type { ModalType } from "./components/change-information.vue";
-import ChangeInformation from "./components/change-information.vue";
-import { useBoolean } from "@sa/hooks";
-import { useAuthStore } from "@/store/modules/auth";
+import { ref } from 'vue';
+import { NButton, NTag, useMessage } from 'naive-ui';
+import { useBoolean } from '@sa/hooks';
+import { useAuthStore } from '@/store/modules/auth';
+import type { ModalType } from './components/change-information.vue';
+import ChangeInformation from './components/change-information.vue';
 
 const { bool: visible, setTrue: openModal } = useBoolean();
 const authStore = useAuthStore();
-const modalType = ref<ModalType>("amend");
+const modalType = ref<ModalType>('amend');
 const message = useMessage();
 function setModalType(type: ModalType) {
   modalType.value = type;
@@ -24,32 +24,28 @@ function setModalType(type: ModalType) {
 
 function editName() {
   openModal();
-  setModalType("amend");
+  setModalType('amend');
 }
 function changePassword() {
   openModal();
-  setModalType("changePassword");
+  setModalType('changePassword');
 }
 function modification(e) {
   console.log(895656, e);
   if (!e) {
     useAuthStore();
-    message.success("修改成功");
+    message.success('修改成功');
   } else {
-    message.error("修改失败");
+    message.error('修改失败');
   }
 }
 </script>
 
 <template>
   <div class="overflow-hidden">
-    <NCard
-      title="个人空间"
-      :bordered="false"
-      class="h-full rounded-8px shadow-sm"
-    >
+    <NCard title="个人空间" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="basic-information flex">
-        <NTag :bordered="false"> 基本信息 </NTag>
+        <NTag :bordered="false">基本信息</NTag>
         <NCard>
           <n-grid x-gap="9" :cols="3">
             <n-gi>
@@ -58,7 +54,7 @@ function modification(e) {
                   <NForm
                     label-placement="left"
                     :style="{
-                      maxWidth: '640px',
+                      maxWidth: '640px'
                     }"
                   >
                     <NFormItem label="  姓  名" path="inputValue">
@@ -78,23 +74,15 @@ function modification(e) {
               </NCard>
             </n-gi>
             <n-gi>
-              <SvgIcon
-                class="editor mt-8 lg:text-[18px] cursor-pointer"
-                local-icon="PencilAlt"
-                @click="editName()"
-              />
+              <SvgIcon class="editor mt-8 cursor-pointer lg:text-[18px]" local-icon="PencilAlt" @click="editName()" />
             </n-gi>
             <n-gi>
-              <NButton @click="changePassword" class="mt-5">修改密码</NButton>
+              <NButton class="mt-5" @click="changePassword">修改密码</NButton>
             </n-gi>
           </n-grid>
         </NCard>
       </div>
-      <ChangeInformation
-        v-model:visible="visible"
-        :type="modalType"
-        @modification="modification"
-      />
+      <ChangeInformation v-model:visible="visible" :type="modalType" @modification="modification" />
     </NCard>
   </div>
 </template>

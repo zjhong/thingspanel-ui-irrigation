@@ -1,4 +1,4 @@
-import { type DataTableColumns, NButton, NFlex, NPopconfirm } from 'naive-ui';
+import {type DataTableColumns, NButton, NFlex, NPopconfirm} from 'naive-ui';
 import dayjs from 'dayjs';
 
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
@@ -35,6 +35,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
       return (
         <NFlex justify={'start'}>
           <NButton
+            quaternary type="primary"
             size={'small'}
             onClick={() => {
               viewDetails(row.id);
@@ -49,7 +50,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
           >
             {{
               default: () => '确认删除',
-              trigger: () => <NButton size={'small'}>删除</NButton>
+              trigger: () => <NButton quaternary type="primary" size={'small'}>删除</NButton>
             }}
           </NPopconfirm>
         </NFlex>
@@ -102,11 +103,13 @@ export const createNoSelectDeviceColumns = (
     {
       title: '操作',
       key: 'actions',
-      width: 150,
+      width: 190,
       render: row => {
         return (
           <NFlex justify={'start'}>
             <NButton
+              quaternary
+              type="primary"
               size={'small'}
               onClick={() => {
                 viewDevicsseDetails(row.id);
@@ -121,7 +124,8 @@ export const createNoSelectDeviceColumns = (
             >
               {{
                 default: () => '确认删除',
-                trigger: () => <NButton size={'small'}>从分组中移除</NButton>
+                trigger: () => <NButton quaternary
+                                        type="primary" size={'small'}>从分组中移除</NButton>
               }}
             </NPopconfirm>
           </NFlex>

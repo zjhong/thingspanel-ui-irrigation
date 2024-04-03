@@ -8,7 +8,9 @@ import { useAppStore } from '@/store/modules/app';
 
 const props = defineProps<{ panelId: string }>();
 const panelDate = ref<Panel.Board>();
-const { isFullscreen, toggle } = useFullscreen();
+const cr = ref<ICardRender>();
+const fullui = ref();
+const { isFullscreen, toggle } = useFullscreen(fullui);
 const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
 const fetchBroad = async () => {
@@ -28,7 +30,6 @@ const state = reactive({
 });
 
 const editView = ref<ICardView | null>();
-const cr = ref<ICardRender>();
 
 const insertCard = (card: ICardData) => {
   if (editView.value) {
@@ -92,18 +93,18 @@ onMounted(fetchBroad);
           :full="isFullscreen"
           @click="
             () => {
-              appStore.toggleFullContent();
-
               toggle();
             }
           "
         />
       </NSpace>
     </div>
-    <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
-      <NEmpty description="暂未添加组件"></NEmpty>
+    <div ref="fullui" class="h-full flex-col items-center justify-center bg-white">
+      <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
+        <NEmpty description="暂未添加组件"></NEmpty>
+      </div>
+      <CardRender ref="cr" v-model:layout="layout" :col-num="24" :default-card-col="4" :row-height="65" @edit="edit" />
     </div>
-    <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="65" @edit="edit" />
     <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>

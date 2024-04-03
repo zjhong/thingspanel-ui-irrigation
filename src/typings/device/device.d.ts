@@ -78,6 +78,7 @@ declare namespace DeviceManagement {
     current_version: string; // 固件版本
     additional_info: string; // 附件信息 json字符串
     protocol_config: string; // 协议插件设备配置 协议插件相关的设备配置
+    device_config_name: string;
     remark1: string;
     remark2: string;
     remark3: string;

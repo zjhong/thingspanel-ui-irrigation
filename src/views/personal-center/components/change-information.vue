@@ -7,30 +7,27 @@
  * @LastEditTime: 2024-03-20 17:13:33
 -->
 <script setup lang="ts">
-import { computed, ref } from "vue";
-import { useMessage } from "naive-ui";
-import {
-  changeInformation,
-  passwordModification,
-} from "@/service/api/personal-center";
+import { computed, ref } from 'vue';
+import { useMessage } from 'naive-ui';
+import { changeInformation, passwordModification } from '@/service/api/personal-center';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
-  type?: "amend" | "changePassword";
+  type?: 'amend' | 'changePassword';
 }
-export type ModalType = NonNullable<Props["type"]>;
+export type ModalType = NonNullable<Props['type']>;
 
-defineOptions({ name: "TableActionModal" });
+defineOptions({ name: 'TableActionModal' });
 const props = withDefaults(defineProps<Props>(), {
-  type: "amend",
-  editData: null,
+  type: 'amend',
+  editData: null
 });
 
 interface Emits {
-  (e: "update:visible", visible: boolean): void;
+  (e: 'update:visible', visible: boolean): void;
 
-  (e: "modification"): void;
+  (e: 'modification'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -40,40 +37,37 @@ const modalVisible = computed({
     return props.visible;
   },
   set(visible) {
-    emit("update:visible", visible);
-  },
+    emit('update:visible', visible);
+  }
 });
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    amend: "基本信息修改",
-    changePassword: "密码修改",
+    amend: '基本信息修改',
+    changePassword: '密码修改'
   };
   return titles[props.type];
 });
 const estimate = computed(() => {
   const titles: Record<ModalType, string> = {
-    amend: "amend",
-    changePassword: "changePassword",
+    amend: 'amend',
+    changePassword: 'changePassword'
   };
   return titles[props.type];
 });
-/**
- * 关闭弹框
- */
+/** 关闭弹框 */
 const closeModal = () => {
   modalVisible.value = false;
 };
-/**
- * 初始from数据
- */
+/** 初始from数据 */
 const formData = ref({
-  name: "",
-  old_password: "",
-  password: "",
-  passwords: "",
+  name: '',
+  old_password: '',
+  password: '',
+  passwords: ''
 });
 /**
  * 修改姓名
+ *
  * @param name
  */
 const editName = async () => {
@@ -82,77 +76,63 @@ const editName = async () => {
 
   if (!res.error) {
     modalVisible.value = false;
-    emit("modification");
+    emit('modification');
   }
 };
-/**
- * passwordModification
- */
+/** passwordModification */
 const password = async () => {
   const data = {
     old_password: formData.value.old_password,
-    password: formData.value.password,
+    password: formData.value.password
   };
   const res = await passwordModification(data);
   if (!res.error) {
     modalVisible.value = false;
-    emit("modification");
+    emit('modification');
   }
 };
 function submit() {
-  if (estimate.value === "amend") {
+  if (estimate.value === 'amend') {
     editName();
+  } else if (formData.value.password !== formData.value.passwords) {
+    message.warning('两次密码输入不一致');
   } else {
-    if (formData.value.password !== formData.value.passwords) {
-      message.warning("两次密码输入不一致");
-    } else {
-      password();
-    }
+    password();
   }
 }
 </script>
 
 <template>
-  <NModal
-    v-model:show="modalVisible"
-    preset="card"
-    :title="title"
-    class="w-500px"
-  >
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
     <NForm ref="formRef" label-placement="left" :model="formData">
       <NGrid :cols="2" :x-gap="18">
-        <NFormItemGridItem
-          :span="24"
-          label="姓名"
-          path="description"
-          v-if="estimate === 'amend'"
-        >
+        <NFormItemGridItem v-if="estimate === 'amend'" :span="24" label="姓名" path="description">
           <NInput v-model:value="formData.name" />
         </NFormItemGridItem>
         <NFormItemGridItem
+          v-if="estimate === 'changePassword'"
           :span="24"
           label-width="100"
           label=" 原 密 码 "
           path="description"
-          v-if="estimate === 'changePassword'"
         >
           <NInput v-model:value="formData.old_password" />
         </NFormItemGridItem>
         <NFormItemGridItem
+          v-if="estimate === 'changePassword'"
           label-width="100"
           :span="24"
           label=" 新 密 码 "
           path="description"
-          v-if="estimate === 'changePassword'"
         >
           <NInput v-model:value="formData.password" />
         </NFormItemGridItem>
         <NFormItemGridItem
+          v-if="estimate === 'changePassword'"
           :span="24"
           label-width="100"
           label="重复新密码"
           path="description"
-          v-if="estimate === 'changePassword'"
         >
           <NInput v-model:value="formData.passwords" />
         </NFormItemGridItem>

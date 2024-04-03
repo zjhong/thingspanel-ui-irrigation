@@ -1,24 +1,32 @@
 name: Continuous Integration
 
-# 触发工作流的事件：推送到任何分支或在任何分支上创建Pull Request
-on: [ push, pull_request ]
+# 定义触发CI工作流的事件
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-lint:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 18.17.0
+          node-version: '18'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Install Dependencies
-        run: pnpm install # 安装项目依赖
+        run: pnpm install
 
       - name: Run TypeCheck
-        run: pnpm typecheck # 运行TypeScript类型检查
+        run: pnpm typecheck
 
       - name: Run ESLint
-        run: pnpm lint-staged # 运行ESLint检查
+        run: pnpm lint

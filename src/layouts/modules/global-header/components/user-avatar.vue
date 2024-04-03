@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { VNode } from 'vue';
+import { useRouter } from 'vue-router';
 import { useSvgIconRender } from '@sa/hooks';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-import { useRouter } from "vue-router";
 defineOptions({
   name: 'UserAvatar'
 });
@@ -66,11 +66,11 @@ function logout() {
 }
 
 function handleDropdown(key: DropdownKey) {
-  if (key === "logout") {
+  if (key === 'logout') {
     logout();
-  } else if (key === "user-center") {
-    console.log("个人中心");
-    router.push("/personal-center");
+  } else if (key === 'user-center') {
+    console.log('个人中心');
+    router.push('/personal-center');
   } else {
     routerPushByKey(key);
   }

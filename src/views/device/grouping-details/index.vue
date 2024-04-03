@@ -161,7 +161,6 @@ const devicePagination = reactive<PaginationProps>({
   }
 });
 const viewDeviceDetails = (rid: string) => {
-  console.log(rid);
   router.push({ name: 'device_details', query: { id: rid } });
 };
 const deleteDeviceItem = async (rid: string) => {

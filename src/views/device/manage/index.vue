@@ -84,12 +84,12 @@ const getDeviceConfigOptions = async pattern => {
 
 const columns_to_show = [
   {
-    key: 'device_number',
-    label: '设备编号'
-  },
-  {
     key: 'name',
     label: '设备名称'
+  },
+  {
+    key: 'device_number',
+    label: '设备编号'
   },
   {
     key: 'is_online',

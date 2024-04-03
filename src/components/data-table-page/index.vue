@@ -114,35 +114,42 @@ const generatedColumns = computed(() => {
       title: '操作',
       key: 'actions',
       render: row => (
-        <NSpace>
-          {tableActions.map(action => {
-            if (action.label === '删除') {
+        <div
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
+          <NSpace>
+            {tableActions.map(action => {
+              if (action.label === '删除') {
+                return (
+                  <NPopconfirm
+                    onPositiveClick={async e => {
+                      e.stopPropagation();
+                      await action.callback(row);
+                      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                      handleReset();
+                    }}
+                  >
+                    {{
+                      trigger: () => (
+                        <NButton text size="small">
+                          {action.label}
+                        </NButton>
+                      ),
+                      default: () => '确认删除'
+                    }}
+                  </NPopconfirm>
+                );
+              }
               return (
-                <NPopconfirm
-                  onPositiveClick={async () => {
-                    await action.callback(row);
-                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                    handleReset();
-                  }}
-                >
-                  {{
-                    trigger: () => (
-                      <NButton text size="small">
-                        {action.label}
-                      </NButton>
-                    ),
-                    default: () => '确认删除'
-                  }}
-                </NPopconfirm>
+                <NButton text size="small" onClick={() => action.callback(row)}>
+                  {action.label}
+                </NButton>
               );
-            }
-            return (
-              <NButton text size="small" onClick={() => action.callback(row)}>
-                {action.label}
-              </NButton>
-            );
-          })}
-        </NSpace>
+            })}
+          </NSpace>
+        </div>
       )
     });
   }

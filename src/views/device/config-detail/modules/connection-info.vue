@@ -3,16 +3,21 @@ import { onMounted, ref } from 'vue';
 import { NButton, useMessage } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
 import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
+
 const message = useMessage();
+
 interface Emits {
   (e: 'upDateConfig'): void;
 }
+
 const emit = defineEmits<Emits>();
 
 const typeOptions = ref([]);
+
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -43,14 +48,8 @@ const connectOptions = ref([] as any);
 const getVoucherType = async data => {
   const res = await deviceConfigVoucherType({ device_type: props.configInfo.device_type, protocol_type: data });
   if (res.data) {
-    const keyData = Object.keys(res.data) || [];
-    // eslint-disable-next-line array-callback-return
-    keyData.map(item => {
-      const itemData = {
-        label: item,
-        value: item
-      };
-      connectOptions.value.push(itemData);
+    connectOptions.value = Object.keys(res.data).map(key => {
+      return { label: key, value: res.data[key] };
     });
   }
 };
@@ -106,11 +105,13 @@ onMounted(() => {
 <style scoped lang="scss">
 .connection-box {
   padding: 50px;
+
   .connection-title {
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 20px;
   }
+
   .w-300 {
     width: 300px;
   }

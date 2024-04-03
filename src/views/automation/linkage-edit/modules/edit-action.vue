@@ -1,151 +1,317 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
-import { NButton } from 'naive-ui';
-const actionTypeOptions = ref([
+import { onMounted, reactive, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { NButton, NCard, NFlex } from 'naive-ui';
+import { deviceConfig, deviceGroupTree } from '@/service/api';
+import { warningMessageList } from '@/service/api/alarm';
+import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
+import { deviceConfigMetricsMenu, deviceListAll, deviceMetricsMenu, sceneGet } from '@/service/api/automation';
+const route = useRoute();
+
+interface Props {
+  // eslint-disable-next-line vue/no-unused-properties
+  conditionsType?: object | any;
+}
+const props = withDefaults(defineProps<Props>(), {
+  conditionsType: null
+});
+
+// 条件中单个/单类设备变化时,重置操作动作中的设备内容
+const resetActionData = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define,array-callback-return
+  actionGroups.map((item: any) => {
+    if (item.actionInstructList.length > 0) {
+      const data = [] as any;
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      const instructItem = JSON.parse(JSON.stringify(instructListItem.value));
+      instructItem.action_type = props.conditionsType;
+      data.push(instructItem);
+      item.actionInstructList = data;
+    }
+  });
+};
+
+watch(
+  () => props.conditionsType,
+  newValue => {
+    if (newValue) {
+      resetActionData();
+    }
+  }
+);
+
+const configId = ref(route.query.id || null);
+
+// 新建告警弹窗显示状态
+const popUpVisible = ref(false);
+// 新建告警回执
+const newEdit = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  getAlarmList('');
+};
+// 场景表单实例
+const configFormRef = ref(null);
+const actionGroupsReturn = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return actionGroups;
+};
+// 场景表单数据
+const actionForm = ref({
+  actionGroups: actionGroupsReturn
+});
+
+defineExpose({
+  actionGroupsReturn
+});
+
+// 场景表单规则
+const configFormRules = ref({
+  name: {
+    required: true,
+    message: '请输入场景名称',
+    trigger: 'blur'
+  },
+  description: {
+    required: true,
+    message: '请输入场景描述',
+    trigger: 'blur'
+  }
+});
+// 下拉选择器加载状态
+const loadingSelect = ref(false);
+
+// 动作选项
+const actionOptions = ref([
   {
     label: '操作设备',
-    value: 1
+    value: '1',
+    disabled: false
   },
   {
     label: '激活场景',
-    value: 2
+    value: '20'
   },
   {
     label: '触发告警',
-    value: 3
+    value: '30'
   },
   {
     label: '触发服务',
-    value: 4
-  }
-]);
-const singleDeviceOptions = ref([
-  {
-    label: '设备1',
-    value: '1'
-  },
-  {
-    label: '设备2',
-    value: '2'
-  }
-]);
-const deviceGroupOptions = ref([
-  {
-    label: '分组1',
-    value: '1'
-  },
-  {
-    label: '分组2',
-    value: '2'
-  }
-]);
-const specificDeviceOptions = ref([
-  {
-    label: '空调',
-    value: '1'
-  },
-  {
-    label: '设备',
-    value: '2'
+    value: '40'
   }
 ]);
 
-const homeModeOptions = ref([
-  {
-    label: '居家模式',
-    value: '1'
-  },
-  {
-    label: '离家模式',
-    value: '2'
+// 动作选择action值改变时
+const actionChange = (actionGroupItem: any, actionGroupIndex: any, data: any) => {
+  // eslint-disable-next-line array-callback-return
+  actionOptions.value.map(item => {
+    item.disabled = false;
+  });
+  actionGroupItem.actionInstructList = [];
+  actionGroupItem.action_type = null;
+  actionGroupItem.action_target = null;
+  if (data === '1') {
+    // eslint-disable-next-line array-callback-return
+    actionOptions.value.map(item => {
+      if (item.value === '1') {
+        item.disabled = true;
+      }
+    });
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    addIfGroupsSubItem(actionGroupIndex);
   }
-]);
-const alarmOptions = ref([
+};
+// 设备类型选项
+const actionTypeOptions = ref([
   {
-    label: '离线告警',
-    value: '1'
+    label: '单个设备',
+    value: '10'
   },
   {
-    label: '低温告警',
-    value: '2'
-  }
-]);
-
-const serviceTypeOptions = ref([
-  {
-    label: '告警服务',
-    value: '1'
-  },
-  {
-    label: '提示服务',
-    value: '2'
-  }
-]);
-
-const serviceExecuteOptions = ref([
-  {
-    label: '发送通知',
-    value: '1'
-  },
-  {
-    label: '短信提醒',
-    value: '2'
-  }
-]);
-const devicePropertiesOptions = ref([
-  {
-    label: '温度',
-    value: '1'
-  },
-  {
-    label: '重启设备命令',
-    value: '2'
-  },
-  {
-    label: '自定义属性下发',
-    value: '3'
+    label: '单类设备',
+    value: '11'
   }
 ]);
 
+// 选择设备类型
+const actionTypeChange = (instructItem: any, data: any) => {
+  instructItem.action_target = null;
+  instructItem.action_param_type = null;
+  instructItem.action_param = null;
+  instructItem.action_value = null;
+
+  if (data === '10') {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getDevice('', '');
+  } else if (data === '11') {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getDeviceConfig('');
+  }
+};
+
+// 设备分组列表
+const deviceGroupOptions = ref([] as any);
+// 获取设备分组
+const getGroup = async () => {
+  deviceGroupOptions.value = [];
+  const res = await deviceGroupTree({});
+  // eslint-disable-next-line array-callback-return
+  res.data.map((item: any) => {
+    deviceGroupOptions.value.push(item.group);
+  });
+};
+
+// 设备列表
+const deviceOptions = ref([] as any);
+const queryDevice = ref({
+  group_id: '',
+  name: ''
+});
+
+// 获取设备列表
+const getDevice = async (groupId: string, name: string) => {
+  queryDevice.value.group_id = groupId || '';
+  queryDevice.value.name = name || '';
+  const res = await deviceListAll(queryDevice.value);
+  deviceOptions.value = res.data;
+};
+
+// 设备配置列表
+const deviceConfigOption = ref([]);
+// 设备配置列表查询条件
+const queryDeviceConfig = ref({
+  page: 1,
+  page_size: 20,
+  name: ''
+});
+// 获取设备配置列表
+const getDeviceConfig = async (name: string) => {
+  queryDevice.value.name = name || '';
+  loadingSelect.value = true;
+  const res = await deviceConfig(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data.list;
+  loadingSelect.value = false;
+};
+
+// 选择动作目标
+const actionTargetChange = (instructItem: any) => {
+  instructItem.action_param_type = null;
+  instructItem.action_param = null;
+  instructItem.action_value = null;
+};
+
+// 下拉获取的动作标识符
+const actionParamShow = async (instructItem: any, data: any) => {
+  if (data === true && instructItem.action_target) {
+    instructItem.actionParamOptions = [];
+    let res = null as any;
+    if (instructItem.action_type === '10') {
+      res = await deviceMetricsMenu({ device_id: instructItem.action_target });
+    } else if (instructItem.action_type === '11') {
+      res = await deviceConfigMetricsMenu({ device_config_id: instructItem.action_target });
+    }
+    // eslint-disable-next-line array-callback-return
+    if (res.data) {
+      // eslint-disable-next-line array-callback-return
+      res.data.map((item: any) => {
+        item.value = item.data_source_type;
+        item.label = `${item.data_source_type}${item.label ? `(${item.label})` : ''}`;
+
+        // eslint-disable-next-line array-callback-return
+        item.options.map((subItem: any) => {
+          subItem.value = subItem.key;
+          subItem.label = `${subItem.key}${subItem.label ? `(${subItem.label})` : ''}`;
+        });
+      });
+      // eslint-disable-next-line require-atomic-updates
+      instructItem.actionParamOptions = res.data;
+    }
+  }
+};
+
+// 选择动作标识符
+const actionParamChange = (instructItem: any, pathValues: any) => {
+  instructItem.action_param_type = pathValues[0].value;
+  instructItem.action_value = null;
+};
+
+// 场景列表
+const sceneList = ref([]);
+// 场景查询条件
+const queryScene = ref({
+  page: 1,
+  page_size: 10,
+  name: ''
+});
+// 获取场景列表
+const getSceneList = async (name: string) => {
+  queryScene.value.name = name || '';
+  loadingSelect.value = true;
+  const res = await sceneGet(queryScene.value);
+  sceneList.value = res.data.list;
+  loadingSelect.value = false;
+};
+
+// 告警列表
+const alarmList = ref([]);
+// 告警列表查询条件
+const queryAlarm = ref({
+  page: 1,
+  page_size: 10,
+  name: ''
+});
+const getAlarmList = async (name: string) => {
+  queryAlarm.value.name = name || '';
+  loadingSelect.value = true;
+  const res = await warningMessageList(queryAlarm.value);
+  loadingSelect.value = false;
+  alarmList.value = res.data.list;
+};
+
+// 操作设备类型的数据Item
 const instructListItem = ref({
-  deviceId: null, // 设备ID
-  deviceGroupId: null, // 设备分组
-  specificDeviceId: null, // 特定设备
-  devicePropertiesValue: null, // 设备属性
-  targetValue: null, // 目标值,
-  parameter: null // 参数值
+  action_target: null, //  动作目标id  设备id、设备配置id，场景id、告警id
+  action_type: null, // 动作标识符类型
+  action_param_type: null, // 动作标识符类型
+  action_param: null, // 动作标识符类型
+  action_value: null, // 参数值
+  deviceGroupId: null, // 设备分组ID
+  actionParamOptions: [] // 动作标识菜单下拉列表数据选项
 });
 
 interface ActionInstructItem {
-  deviceId: string;
+  action_target: string;
+  action_type: string;
+  action_param_type: string;
+  action_param: string; // 动作标识符类型
+  action_value: string; // 参数值
   deviceGroupId: string;
-  specificDeviceId: string;
-  devicePropertiesValue: string;
-  targetValue: string; // 目标值,
-  parameter: string; // 参数值
+  actionParamOptions: object | any;
 }
+
+// 动作数组的item
 const actionItem = ref({
   actionType: null,
-  homeMode: null,
-  alarm: null,
-  serviceType: null,
-  serviceExecute: null,
-  actionInstructList: []
+  action_type: null, // 动作类型后端
+  action_target: null, // 动作目标id   设备id、设备配置id，场景id、告警id
+  actionInstructList: [],
+  actions: []
 });
 interface ActionItem {
-  actionType: number;
+  actionType: string;
+  action_type: string;
+  action_target: string;
   actionInstructList: Array<ActionInstructItem>;
-  homeMode: string;
-  alarm: string;
-  serviceType: string;
-  serviceExecute: string;
+  actions: any;
 }
-const actionGroups: Array<ActionItem> = reactive([]);
+
+// 动作数组的值
+let actionGroups: Array<ActionItem> = reactive([] as any);
 
 // 新增一个动作组
 const addActionGroupItem = () => {
   const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
-  actionItemData.actionInstructList.push(JSON.parse(JSON.stringify(instructListItem.value)));
+  // actionItemData.actionInstructList.push(JSON.parse(JSON.stringify(instructListItem.value)));
   actionGroups.push(actionItemData);
 };
 // 删除一个动作组
@@ -161,76 +327,215 @@ const addIfGroupsSubItem = (actionGroupIndex: any) => {
 const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
   actionGroups[actionGroupIndex].actionInstructList.splice(ifIndex, 1);
 };
+
+// const getSceneInfo = async () => {
+//   const res = await sceneInfo(configId.value);
+//   actionForm.value = { ...actionForm.value, ...res.data.info };
+//   actionForm.value.actions = res.data.actions;
+//   // eslint-disable-next-line @typescript-eslint/no-use-before-define
+//   dataEcho();
+// };
+
+// 处理页面回去回显
+// const dataEcho = () => {
+//   const actionGroupsData = [] as any;
+//   const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
+//   actionItemData.actionType = '1';
+//   // eslint-disable-next-line array-callback-return
+//   actionForm.value.actions.map((item: any) => {
+//     if (item.action_type === '10' || item.action_type === '11') {
+//       actionItemData.actionInstructList.push(item);
+//     } else {
+//       item.actionType = item.action_type;
+//       actionGroupsData.push(item);
+//     }
+//   });
+//   actionGroups.push(ctionItemData);
+//   actionGroups = actionGroups.concat(actionGroupsData);
+// };
+
 onMounted(() => {
-  addActionGroupItem();
+  getGroup();
+  getDevice('', '');
+  getDeviceConfig('');
+  getAlarmList('');
+  getSceneList('');
+  if (configId.value) {
+    // actionForm.value.id = configId.value;
+    // getSceneInfo();
+  } else {
+    addActionGroupItem();
+  }
 });
 </script>
 
 <template>
-  <NFlex vertical class="mt-1 w-100%">
-    <NFlex v-for="(actionGroupItem, actionGroupIndex) in actionGroups" :key="actionGroupIndex" class="mt-1 w-100%">
-      <n-select v-model:value="actionGroupItem.actionType" :options="actionTypeOptions" class="max-w-40" />
-      <template v-if="actionGroupItem.actionType === 1">
-        <!--          执行动作是操作设备->添加指令--->
-        <NCard class="flex-1">
-          <NFlex
-            v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
-            :key="instructIndex"
-            class="mb-6"
+  <div class="w-100%">
+    <NForm
+      ref="configFormRef"
+      :model="actionForm"
+      :rules="configFormRules"
+      label-placement="left"
+      label-width="150"
+      size="small"
+    >
+      <NFlex vertical class="mt-1 w-100%">
+        <NFlex v-for="(actionGroupItem, actionGroupIndex) in actionGroups" :key="actionGroupIndex" class="mt-1 w-100%">
+          <NSelect
+            v-model:value="actionGroupItem.actionType"
+            :options="actionOptions"
+            class="max-w-40"
+            @update:value="data => actionChange(actionGroupItem, actionGroupIndex, data)"
+          />
+          <template v-if="actionGroupItem.actionType === '1'">
+            <!--          执行动作是操作设备->添加指令--->
+            <NCard class="w-[calc(100%-248px)]">
+              <NFlex
+                v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
+                :key="instructIndex"
+                class="mb-6"
+              >
+                <template v-if="props.conditionsType !== '11'">
+                  <NSelect
+                    v-model:value="instructItem.action_type"
+                    :options="actionTypeOptions"
+                    class="max-w-40"
+                    @update:value="data => actionTypeChange(instructItem, data)"
+                  />
+                </template>
+                <template v-if="instructItem.action_type === '10'">
+                  <NSelect
+                    v-model:value="instructItem.action_target"
+                    :options="deviceOptions"
+                    value-field="id"
+                    label-field="name"
+                    :consistent-menu-width="false"
+                    :loading="loadingSelect"
+                    class="max-w-40"
+                    @update:value="() => actionTargetChange(instructItem)"
+                  >
+                    <template #header>
+                      <NFlex align="center" class="w-500px">
+                        分组
+                        <n-select
+                          v-model:value="instructItem.deviceGroupId"
+                          :options="deviceGroupOptions"
+                          label-field="name"
+                          value-field="id"
+                          class="max-w-40"
+                          clearable
+                          @update:value="data => getDevice(data, queryDevice.name)"
+                        />
+                        <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
+                        <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                          搜索
+                        </NButton>
+                      </NFlex>
+                    </template>
+                  </NSelect>
+                </template>
+                <template v-if="instructItem.action_type === '11'">
+                  <NSelect
+                    v-model:value="instructItem.action_target"
+                    :options="deviceConfigOption"
+                    label-field="name"
+                    value-field="id"
+                    class="max-w-40"
+                    placeholder="请选择"
+                    filterable
+                    remote
+                    :loading="loadingSelect"
+                    @search="getDeviceConfig"
+                    @update:value="() => actionTargetChange(instructItem)"
+                  />
+                </template>
+                <template v-if="instructItem.action_type">
+                  <NCascader
+                    v-model:value="instructItem.action_param"
+                    placeholder="请选择"
+                    :options="instructItem.actionParamOptions"
+                    check-strategy="child"
+                    children-field="options"
+                    size="small"
+                    class="max-w-40"
+                    @update:show="data => actionParamShow(instructItem, data)"
+                    @update:value="pathValues => actionParamChange(instructItem, pathValues)"
+                  />
+                  <NInput
+                    v-model:value="instructItem.action_value"
+                    placeholder="参数，如：{'param1':1}"
+                    class="max-w-40"
+                  />
+                </template>
+
+                <NButton
+                  v-if="instructIndex === 0"
+                  type="primary"
+                  class="absolute right-5"
+                  @click="addIfGroupsSubItem(actionGroupIndex)"
+                >
+                  新增一个操作
+                </NButton>
+                <NButton
+                  v-if="instructIndex !== 0"
+                  type="error"
+                  class="absolute right-5"
+                  @click="deleteIfGroupsSubItem(actionGroupIndex, instructIndex)"
+                >
+                  删除一个操作
+                </NButton>
+              </NFlex>
+            </NCard>
+          </template>
+          <template v-if="actionGroupItem.actionType === '20'">
+            <NFlex class="ml-6" align="center">
+              激活
+              <NSelect
+                v-model:value="actionGroupItem.action_target"
+                :options="sceneList"
+                label-field="name"
+                value-field="id"
+                class="max-w-40"
+                placeholder="请选择"
+                :loading="loadingSelect"
+                filterable
+                remote
+                @search="getSceneList"
+              />
+            </NFlex>
+          </template>
+          <template v-if="actionGroupItem.actionType === '30'">
+            <NFlex class="ml-6" align="center">
+              触发
+              <NSelect
+                v-model:value="actionGroupItem.action_target"
+                :options="alarmList"
+                label-field="name"
+                value-field="id"
+                class="max-w-40"
+                placeholder="请选择"
+                filterable
+                remote
+                :loading="loadingSelect"
+                @search="getAlarmList"
+              />
+              <NButton class="ml-4 w-30" @click="popUpVisible = true">创建告警</NButton>
+            </NFlex>
+          </template>
+          <NButton
+            v-if="actionGroupIndex > 0"
+            type="error"
+            class="ml-4"
+            @click="deleteActionGroupItem(actionGroupIndex)"
           >
-            <n-select v-model:value="instructItem.deviceId" :options="singleDeviceOptions" class="max-w-40" />
-            <n-select v-model:value="instructItem.deviceGroupId" :options="deviceGroupOptions" class="max-w-40" />
-            <n-select v-model:value="instructItem.specificDeviceId" :options="specificDeviceOptions" class="max-w-40" />
-            <n-select
-              v-model:value="instructItem.devicePropertiesValue"
-              :options="devicePropertiesOptions"
-              class="max-w-40"
-            />
-            <n-input v-model:value="instructItem.parameter" placeholder="参数，如：{'param1':1}" class="max-w-40" />
-            <NButton
-              v-if="instructIndex === 0"
-              type="primary"
-              class="w-30"
-              @click="addIfGroupsSubItem(actionGroupIndex)"
-            >
-              新增一行
-            </NButton>
-            <NButton
-              v-if="instructIndex !== 0"
-              type="error"
-              class="w-30"
-              @click="deleteIfGroupsSubItem(actionGroupIndex, instructIndex)"
-            >
-              删除
-            </NButton>
-          </NFlex>
-        </NCard>
-      </template>
-      <template v-if="actionGroupItem.actionType === 2">
-        <span class="ml-10 mr-10">激活</span>
-        <n-select v-model:value="actionGroupItem.homeMode" :options="homeModeOptions" class="max-w-40" />
-      </template>
-      <template v-if="actionGroupItem.actionType === 3">
-        <span class="ml-10 mr-10">触发</span>
-        <n-select v-model:value="actionGroupItem.alarm" :options="alarmOptions" class="max-w-40" />
-        <NButton type="primary" class="ml-4 w-30">创建告警</NButton>
-      </template>
-      <template v-if="actionGroupItem.actionType === 4">
-        <n-select v-model:value="actionGroupItem.serviceType" :options="serviceTypeOptions" class="max-w-40" />
-        <n-select v-model:value="actionGroupItem.serviceExecute" :options="serviceExecuteOptions" class="max-w-40" />
-        <NButton type="primary" class="ml-4 w-30">创建告警</NButton>
-      </template>
-      <NButton
-        v-if="actionGroupIndex > 0"
-        type="error"
-        class="ml-4 w-30"
-        @click="deleteActionGroupItem(actionGroupIndex)"
-      >
-        删除组
-      </NButton>
-    </NFlex>
-    <NButton type="primary" class="w-30" @click="addActionGroupItem()">新增执行动作</NButton>
-  </NFlex>
+            删除执行动作
+          </NButton>
+        </NFlex>
+        <NButton type="primary" class="w-30" @click="addActionGroupItem()">新增执行动作</NButton>
+      </NFlex>
+    </NForm>
+    <PopUp v-model:visible="popUpVisible" type="add" @new-edit="newEdit" />
+  </div>
 </template>
 
 <style scoped></style>

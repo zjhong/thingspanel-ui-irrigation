@@ -1,60 +1,179 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import type { FormInst } from 'naive-ui';
-import { NButton } from 'naive-ui';
+import { NButton, NCard, useDialog, useMessage } from 'naive-ui';
+import moment from 'moment';
 import EditAction from '@/views/automation/linkage-edit/modules/edit-action.vue';
 import EditPremise from '@/views/automation/linkage-edit/modules/edit-premise.vue';
-
+import { sceneAutomationsAdd, sceneAutomationsEdit } from '@/service/api/automation';
+const dialog = useDialog();
+const message = useMessage();
+const route = useRoute();
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入设备配置名称',
+    message: '请输入场景联动名称',
+    trigger: 'blur'
+  },
+  description: {
+    required: true,
+    message: '请输入场景联动描述',
     trigger: 'blur'
   }
 });
 const configFormRef = ref<HTMLElement & FormInst>();
 const configForm = ref(defaultConfigForm());
-
+const configId = ref(route.query.id || '');
 function defaultConfigForm() {
   return {
+    id: '',
     name: null,
-    description: null
+    description: null,
+    enabled: 'Y',
+    trigger_condition_groups: [],
+    actions: []
   };
 }
+const editPremise = ref();
+const editAction = ref();
+const submitData = async () => {
+  // 处理条件的数据
+  const TriggerConditionData = JSON.parse(JSON.stringify(editPremise.value.ifGroupsData()));
+  // eslint-disable-next-line array-callback-return
+  TriggerConditionData.map((ifGroupItem: any) => {
+    // eslint-disable-next-line array-callback-return
+    ifGroupItem.map((ifItem: any) => {
+      ifItem.expiration_time = moment().format();
+      if (ifItem.trigger_conditions_type === '10' || ifItem.trigger_conditions_type === '11') {
+        if (ifItem.trigger_operator === 'between') {
+          ifItem.trigger_value = `${ifItem.minValue}-${ifItem.maxValue}`;
+        }
+      }
+      if (ifItem.trigger_conditions_type === '22') {
+        let trigger_value = '';
+        // eslint-disable-next-line array-callback-return
+        ifItem.weekChoseValue.map((item: any) => {
+          trigger_value += item;
+        });
+        trigger_value += `|${moment(ifItem.startTimeValue).format('HH:mm:ssZ')}`;
+        trigger_value += `|${moment(ifItem.endTimeValue).format('HH:mm:ssZ')}`;
+        ifItem.trigger_value = trigger_value;
+      }
+      if (ifItem.trigger_conditions_type === 'once') {
+        ifItem.execution_time = moment(ifItem.onceTimeValue).format();
+      }
+      if (ifItem.trigger_conditions_type === 'repeat') {
+        if (ifItem.task_type === 'HOUR') {
+          ifItem.params = moment(ifItem.hourTimeValue).format('mm:00Z');
+          console.log(ifItem.params);
+        }
+        if (ifItem.task_type === 'DAY') {
+          ifItem.params = moment(ifItem.dayTimeValue).format('HH:mm:00Z');
+        }
+        if (ifItem.task_type === 'WEEK') {
+          let params = '';
+          // eslint-disable-next-line array-callback-return
+          ifItem.weekChoseValue.map((item: any) => {
+            params += item;
+          });
+          ifItem.params = `${params}|${moment(ifItem.weekTimeValue).format('HH:mm:00Z')}`;
+        }
+        if (ifItem.task_type === 'MONTH') {
+          ifItem.params = `${ifItem.monthChoseValue}T${moment(ifItem.monthTimeValue).format(`HH:mm:00Z`)}`;
+        }
+      }
+    });
+  });
+  configForm.value.trigger_condition_groups = TriggerConditionData;
+  // 处理动作的数据
+  const actionGroupsData = JSON.parse(JSON.stringify(editAction.value.actionGroupsReturn()));
+  const actionsData = [] as any;
+  // eslint-disable-next-line array-callback-return
+  actionGroupsData.map((item: any) => {
+    if (item.actionType === '1') {
+      // eslint-disable-next-line array-callback-return
+      item.actionInstructList.map((instructItem: any) => {
+        actionsData.push(instructItem);
+      });
+    } else {
+      item.action_type = item.actionType;
+      actionsData.push(item);
+    }
+  });
+  configForm.value.actions = actionsData;
+  await configFormRef?.value?.validate();
+  dialog.warning({
+    title: '提示',
+    content: '请确认是否保存该场景信息？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      if (configId.value) {
+        const res = await sceneAutomationsEdit(configForm.value);
+        if (!res.error) {
+          message.success('编辑成功');
+        }
+      } else {
+        const res = await sceneAutomationsAdd(configForm.value);
+        if (!res.error) {
+          message.success('新增成功');
+        }
+      }
+    }
+  });
+};
+
+const conditionsType = ref(null);
+const conditionChose = data => {
+  if (data) {
+    conditionsType.value = data;
+  }
+};
+const getSceneAutomationsInfo = () => {};
+onMounted(() => {
+  if (configId.value) {
+    // eslint-disable-next-line no-unused-expressions
+    typeof configId.value === 'string' ? (configForm.value.id = configId.value) : '';
+    getSceneAutomationsInfo();
+  }
+});
 </script>
 
 <template>
   <div class="linkage-edit">
-    <NForm
-      ref="configFormRef"
-      :model="configForm"
-      :rules="configFormRules"
-      label-placement="left"
-      label-width="150"
-      size="small"
-    >
-      <NFlex>
-        <NFormItem label="场景联动名称" path="name" class="w-150">
-          <NInput v-model:value="configForm.name" placeholder="请输入场景联动名称" />
+    <NCard :bordered="false" :title="`${configId ? '编辑' : '新增'}场景联动`">
+      <NForm
+        ref="configFormRef"
+        :model="configForm"
+        :rules="configFormRules"
+        label-placement="left"
+        label-width="150"
+        size="small"
+      >
+        <NFlex>
+          <NFormItem label="场景联动名称" path="name" class="w-150">
+            <NInput v-model:value="configForm.name" placeholder="请输入场景联动名称" />
+          </NFormItem>
+          <NFormItem label="描述" path="description" class="w-150">
+            <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
+          </NFormItem>
+        </NFlex>
+        <NFormItem label="如果:" class="w-100%">
+          <EditPremise ref="editPremise" @condition-chose="conditionChose" />
         </NFormItem>
-        <NFormItem label="描述" path="description" class="w-150">
-          <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
+        <NFormItem label=" ">
+          <n-divider dashed class="divider-class" />
         </NFormItem>
+        <NFormItem label="那么:" class="w-100%">
+          <EditAction ref="editAction" :conditions-type="conditionsType" />
+        </NFormItem>
+      </NForm>
+      <n-divider class="divider-class" />
+      <NFlex justify="center" class="mt-5">
+        <NButton type="primary" @click="submitData">保存</NButton>
       </NFlex>
-      <NFormItem label="如果:" class="w-100%">
-        <EditPremise />
-      </NFormItem>
-      <NFormItem label=" ">
-        <n-divider dashed class="divider-class" />
-      </NFormItem>
-      <NFormItem label="那么:" class="w-100%">
-        <EditAction />
-      </NFormItem>
-    </NForm>
-    <n-divider class="divider-class" />
-    <NFlex justify="center" class="mt-20">
-      <NButton type="primary">保存</NButton>
-    </NFlex>
+    </NCard>
   </div>
 </template>
 

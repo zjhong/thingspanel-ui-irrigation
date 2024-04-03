@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { NButton, useMessage } from 'naive-ui';
-import { dictQuery } from '@/service/api/setting';
-import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
+import {onMounted, ref} from 'vue';
+import {NButton, useMessage} from 'naive-ui';
+import {dictQuery} from '@/service/api/setting';
+import {deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm} from '@/service/api/device';
 
 const message = useMessage();
 
@@ -46,15 +46,15 @@ const getDict = async dictCode => {
 const connectOptions = ref([] as any);
 
 const getVoucherType = async data => {
-  const res = await deviceConfigVoucherType({ device_type: props.configInfo.device_type, protocol_type: data });
+  const res = await deviceConfigVoucherType({device_type: props.configInfo.device_type, protocol_type: data});
   if (res.data) {
     connectOptions.value = Object.keys(res.data).map(key => {
-      return { label: key, value: res.data[key] };
+      return {label: key, value: res.data[key]};
     });
   }
 };
 const getConfigForm = async data => {
-  const res = await protocolPluginConfigForm({ device_type: props.configInfo.device_type, protocol_type: data });
+  const res = await protocolPluginConfigForm({device_type: props.configInfo.device_type, protocol_type: data});
   console.log(res.data);
 };
 const choseProtocolType = async data => {

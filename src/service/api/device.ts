@@ -21,7 +21,7 @@ export const getDeviceGroup = async (params: any) => {
 
 /** 获取设备分组树 */
 export const deviceGroupTree = async (params: any) => {
-  return await request.get<DeviceManagement.TreeStructure | null>('/device/group/tree', params);
+  return await request.get<DeviceManagement.TreeStructure | any>('/device/group/tree', params);
 };
 /** 新增设备分组 */
 export const deviceGroup = async (params: { id: string; parent_id: string; name: string; description: string }) => {

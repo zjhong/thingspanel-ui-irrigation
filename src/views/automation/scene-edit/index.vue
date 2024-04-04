@@ -477,7 +477,7 @@ onMounted(() => {
                         size="small"
                         class="max-w-40"
                         @update:show="data => actionParamShow(instructItem, data)"
-                        @update:value="pathValues => actionParamChange(instructItem, pathValues)"
+                        @update:value="(value, option, pathValues) => actionParamChange(instructItem, pathValues)"
                       />
                       <NInput
                         v-model:value="instructItem.action_value"

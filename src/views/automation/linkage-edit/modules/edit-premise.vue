@@ -436,6 +436,7 @@ defineExpose({
 });
 
 const triggerParamChange = (ifItem: any, data: any) => {
+  console.log(data);
   ifItem.trigger_param_type = data[0].value;
   // ifItem.trigger_param = data[1].value;
 };
@@ -547,7 +548,7 @@ onMounted(() => {
                     size="small"
                     class="max-w-40"
                     @update:show="data => actionParamShow(ifItem, data)"
-                    @update:value="pathValues => triggerParamChange(ifItem, pathValues)"
+                    @update:value="(value, option, pathValues) => triggerParamChange(ifItem, pathValues)"
                   />
                   <template v-if="ifItem.trigger_param_type === 'telemetry'">
                     <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>触发消息标识符是遥测->选择操作符 --->

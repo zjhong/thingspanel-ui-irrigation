@@ -44,7 +44,7 @@ const submitData = async () => {
   TriggerConditionData.map((ifGroupItem: any) => {
     // eslint-disable-next-line array-callback-return
     ifGroupItem.map((ifItem: any) => {
-      ifItem.expiration_time = moment().format();
+      // ifItem.expiration_time = moment().format();
       if (ifItem.trigger_conditions_type === '10' || ifItem.trigger_conditions_type === '11') {
         if (ifItem.trigger_operator === 'between') {
           ifItem.trigger_value = `${ifItem.minValue}-${ifItem.maxValue}`;

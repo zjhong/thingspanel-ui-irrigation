@@ -33,6 +33,7 @@ declare module "@elegant-router/types" {
     "apply_service": "/apply/service";
     "automation": "/automation";
     "automation_linkage-edit": "/automation/linkage-edit";
+    "automation_scene-edit": "/automation/scene-edit";
     "automation_scene-linkage": "/automation/scene-linkage";
     "automation_scene-manage": "/automation/scene-manage";
     "component": "/component";
@@ -212,6 +213,7 @@ declare module "@elegant-router/types" {
     | "alarm_warning-message"
     | "apply_service"
     | "automation_linkage-edit"
+    | "automation_scene-edit"
     | "automation_scene-linkage"
     | "automation_scene-manage"
     | "component_button"

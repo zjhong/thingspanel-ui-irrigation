@@ -124,6 +124,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'automation_scene-edit',
+        path: '/automation/scene-edit',
+        component: 'view.automation_scene-edit',
+        meta: {
+          title: 'automation_scene-edit',
+          i18nKey: 'route.automation_scene-edit'
+        }
+      },
+      {
         name: 'automation_scene-linkage',
         path: '/automation/scene-linkage',
         component: 'view.automation_scene-linkage',

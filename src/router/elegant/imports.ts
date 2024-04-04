@@ -28,6 +28,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "alarm_warning-message": () => import("@/views/alarm/warning-message/index.vue"),
   apply_service: () => import("@/views/apply/service/index.vue"),
   "automation_linkage-edit": () => import("@/views/automation/linkage-edit/index.vue"),
+  "automation_scene-edit": () => import("@/views/automation/scene-edit/index.vue"),
   "automation_scene-linkage": () => import("@/views/automation/scene-linkage/index.vue"),
   "automation_scene-manage": () => import("@/views/automation/scene-manage/index.vue"),
   component_button: () => import("@/views/component/button/index.vue"),

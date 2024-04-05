@@ -6,6 +6,7 @@ import {
   deleteDeviceGroupRelation,
   deviceGroupRelation,
   deviceGroupTree,
+  deviceUpdateConfig,
   getDeviceConfigList,
   getDeviceGroupRelation
 } from '@/service/api';
@@ -73,7 +74,7 @@ const getTreeRelationData = async () => {
   }
 };
 const deviceDataStore = useDeviceDataStore();
-const selectedValues = ref();
+const selectedValues = ref<any>(deviceDataStore?.deviceData?.device_config_id);
 
 function flattenTree(list: undefined | Option[]): Option[] {
   const result: Option[] = [];
@@ -128,7 +129,10 @@ watch(
   }
 );
 const selectConfig = v => {
-  console.log(v);
+  selectedValues.value = v;
+
+  deviceUpdateConfig({ device_id: props.id, device_config_id: v });
+  deviceDataStore.fetchData(props.id);
 };
 onMounted(() => {
   getTreeData();

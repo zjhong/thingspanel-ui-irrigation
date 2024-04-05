@@ -76,13 +76,15 @@ onMounted(fetchDataFunction);
 
 <template>
   <div>
-    <NButton v-if="buttonName" type="primary" @click="openDialog">{{ buttonName }}</NButton>
-    <NButton :bordered="false" @click="refresh">
-      <NIcon size="18">
-        <Refresh />
-      </NIcon>
-      刷新
-    </NButton>
+    <NFlex :justify="buttonName ? 'space-between' : 'end'">
+      <NButton v-if="buttonName" type="primary" @click="openDialog">{{ buttonName }}</NButton>
+      <NButton :bordered="false" class="justify-end" @click="refresh">
+        <NIcon size="18">
+          <Refresh />
+        </NIcon>
+        刷新
+      </NButton>
+    </NFlex>
     <NModal v-if="submitApi" v-model:show="showDialog" title="下发属性" class="bg- w-400px">
       <n-card>
         <NForm>

@@ -4,7 +4,7 @@ import { SetupStoreId } from '@/enum';
 import { deviceDetail } from '@/service/api';
 
 export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
-  const deviceData = ref<DeviceManagement.DeviceDetail | null>(null); // 更具体的类型替换 any
+  const deviceData = ref<DeviceManagement.DeviceDetail | any>({}); // 更具体的类型替换 any
 
   async function fetchData(id: string) {
     try {
@@ -12,11 +12,11 @@ export const useDeviceDataStore = defineStore(SetupStoreId.Device, () => {
       if (!error) {
         deviceData.value = data;
       } else {
-        deviceData.value = null;
+        deviceData.value = {};
       }
     } catch (error) {
       console.error('fetchData error:', error);
-      deviceData.value = null;
+      deviceData.value = {};
     }
   }
 

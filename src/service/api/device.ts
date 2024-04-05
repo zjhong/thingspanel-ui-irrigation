@@ -227,4 +227,6 @@ export const telemetryHistoryData = async (params: any) => {
   return await request.get<any>(`/telemetry/datas/history/pagination`, { params });
 };
 
-/** 有图表的设备list */
+export const deviceUpdateConfig = async (params: any) => {
+  return await request.put<any>(`/device/update/config`, params);
+};

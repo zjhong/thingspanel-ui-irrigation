@@ -43,6 +43,12 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
+      console.log(response, '85943854');
+      if (response.config.method !== 'get') {
+        window.$message?.destroyAll();
+        window.$message?.success('操作成功');
+      }
+
       return response.data.data;
     },
     onError(error) {

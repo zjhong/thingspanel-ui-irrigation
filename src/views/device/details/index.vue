@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useLoading } from '@sa/hooks';
 import { useDeviceDataStore } from '@/store/modules/device';
 import Telemetry from '@/views/device/details/modules/telemetry/telemetry.vue';
 import Join from '@/views/device/details/modules/join.vue';
@@ -16,7 +17,7 @@ import Settings from '@/views/device/details/modules/settings.vue';
 
 const { query } = useRoute();
 const { id } = query;
-
+const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
 const components = [
   { key: 'telemetry', name: '遥测', component: Telemetry },
@@ -31,7 +32,12 @@ const components = [
   { key: 'user', name: '用户', component: User },
   { key: 'settings', name: '设置', component: Settings }
 ];
-
+const changeTabs = _v => {
+  startLoading();
+  setTimeout(() => {
+    endLoading();
+  }, 500);
+};
 onMounted(() => {
   deviceDataStore.fetchData(id as string);
 });
@@ -64,7 +70,7 @@ onMounted(() => {
       </div>
       <n-divider title-placement="left"></n-divider>
       <div>
-        <n-tabs type="line">
+        <n-tabs type="line" @update:value="changeTabs">
           <n-tab-pane
             v-for="component in components.filter(
               i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id
@@ -73,11 +79,13 @@ onMounted(() => {
             :tab="component.name"
             :name="component.name"
           >
-            <component
-              :is="component.component"
-              :id="id as string"
-              :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
-            />
+            <n-spin size="small" :show="loading">
+              <component
+                :is="component.component"
+                :id="id as string"
+                :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
+              />
+            </n-spin>
           </n-tab-pane>
         </n-tabs>
       </div>

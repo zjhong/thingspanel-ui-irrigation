@@ -87,41 +87,53 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <NForm>
-    <n-scrollbar style="max-height: 360px">
-      <template v-for="element in formElements" :key="element.dataKey">
-        <div v-if="element.type === 'input'" class="form-item">
-          <NFormItem :label="element.label">
-            <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
-          </NFormItem>
-        </div>
-        <div v-if="element.type === 'select'" class="form-item">
-          <NFormItem :label="element.label">
-            <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
-          </NFormItem>
-        </div>
-        <div v-if="element.type === 'table'">
-          <!--          <div class="table-label">{{ element.label }}</div>-->
-          <div class="table-content">
-            <template v-for="subElement in element.array" :key="subElement.dataKey">
-              <div v-if="subElement.type === 'input'" class="table-item">
-                <NFormItem :label="subElement.label">
-                  <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
-                </NFormItem>
-              </div>
-              <div v-if="subElement.type === 'select'" class="table-item">
-                <NFormItem :label="subElement.label">
-                  <NSelect
-                    v-model:value="formData[subElement.dataKey]"
-                    :options="subElement.options as SelectMixedOption[]"
-                  />
-                </NFormItem>
-              </div>
-            </template>
-          </div>
-        </div>
-      </template>
+  <div>
+    <n-descriptions label-placement="left" :column="1" class="mt-6">
+      <n-descriptions-item label="设备ID">
+        {{ deviceDataStore?.deviceData?.id || '--' }}
+      </n-descriptions-item>
+      <n-descriptions-item label="接入方式/服务">
+        {{ deviceDataStore?.deviceData?.device_config?.protocol_type || '--' }}
+      </n-descriptions-item>
+    </n-descriptions>
 
+    <NCard title="凭证" class="mb-6 mt-6">
+      <NForm>
+        <template v-for="element in formElements" :key="element.dataKey">
+          <div v-if="element.type === 'input'" class="form-item">
+            <NFormItem :label="element.label">
+              <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
+            </NFormItem>
+          </div>
+          <div v-if="element.type === 'select'" class="form-item">
+            <NFormItem :label="element.label">
+              <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
+            </NFormItem>
+          </div>
+          <div v-if="element.type === 'table'">
+            <!--          <div class="table-label">{{ element.label }}</div>-->
+            <div class="table-content">
+              <template v-for="subElement in element.array" :key="subElement.dataKey">
+                <div v-if="subElement.type === 'input'" class="table-item">
+                  <NFormItem :label="subElement.label">
+                    <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
+                  </NFormItem>
+                </div>
+                <div v-if="subElement.type === 'select'" class="table-item">
+                  <NFormItem :label="subElement.label">
+                    <NSelect
+                      v-model:value="formData[subElement.dataKey]"
+                      :options="subElement.options as SelectMixedOption[]"
+                    />
+                  </NFormItem>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </NForm>
+    </NCard>
+    <n-scrollbar class="h-400px">
       <NCard title="连接信息">
         <NDescriptions :column="1">
           <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
@@ -131,9 +143,9 @@ const handleSubmit = async () => {
       </NCard>
     </n-scrollbar>
     <div class="mt-4 w-full flex-center">
-      <NButton type="primary" @click="handleSubmit">提交</NButton>
+      <NButton type="primary" @click="handleSubmit">保存</NButton>
     </div>
-  </NForm>
+  </div>
 </template>
 
 <style scoped>

@@ -4,7 +4,7 @@ import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import UploadCard from './upload-card.vue';
 import { $t } from '~/src/locales';
-import { addProduct, editProduct, getDeviceList } from '~/src/service/product/list';
+import { addProduct, editProduct, getDeviceConfigList } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -56,11 +56,8 @@ const formRef = ref<HTMLElement & FormInst>();
 const deviceOptions = ref();
 
 const getList = () => {
-  getDeviceList({
-    page: 1,
-    page_size: 99
-  }).then(({ data }) => {
-    const list = data.list || [];
+  getDeviceConfigList({}).then(({ data }) => {
+    const list = data || [];
     deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || [];
   });
 };

@@ -42,7 +42,7 @@ export const czh_cn = {
   'device_grouping-details': '分组详情',
   device_manage: '设备管理',
   device_details: '设备详情',
-  device_config: '设备配置',
+  device_config: '配置模板',
   'device_config-detail': '设备配置详情',
   'device_config-edit': '编辑设备',
   'system-management-user': '系统管理(租户)',

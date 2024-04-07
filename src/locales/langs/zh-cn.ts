@@ -41,6 +41,7 @@ const local: App.I18n.Schema = {
     updateSuccess: '更新成功',
     userCenter: '个人中心',
     export: '导出',
+    description: '描述',
     yesOrNo: {
       yes: '是',
       no: '否'
@@ -165,7 +166,7 @@ const local: App.I18n.Schema = {
     component_card: '卡片',
     component_table: '表格',
     ...czh_cn,
-    device_template: '设备模板',
+    device_template: '功能模板',
     'personal-center': '个人中心',
     'edit-area': '编辑空间/区域',
     'new-area': '添加空间/区域'

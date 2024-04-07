@@ -41,6 +41,7 @@ const local: App.I18n.Schema = {
     refreshTable: 'Refresh Table',
     userCenter: 'User Center',
     export: 'export',
+    description: 'description',
     yesOrNo: {
       yes: 'Yes',
       no: 'No'

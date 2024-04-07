@@ -19,7 +19,7 @@ const formValue = ref({
 const rules = {
   name: {
     required: true,
-    message: '请输入姓名',
+    message: '请输入设备名称',
     trigger: 'blur'
   }
 };

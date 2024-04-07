@@ -131,7 +131,7 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
   const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
   const { name, path } = route;
-  const { title, i18nKey, icon = import.meta.env.VITE_MENU_ICON, localIcon } = route.meta ?? {};
+  const { title, i18nKey, icon = import.meta.env.VITE_MENU_ICON, localIcon, remark } = route.meta ?? {};
 
   const label = i18nKey ? $t(i18nKey) : title!;
 
@@ -141,7 +141,8 @@ function getGlobalMenuByBaseRoute(route: RouteLocationNormalizedLoaded | Elegant
     i18nKey,
     routeKey: name as RouteKey,
     routePath: path as RouteMap[RouteKey],
-    icon: SvgIconVNode({ icon, localIcon, fontSize: 20 })
+    icon: SvgIconVNode({ icon, localIcon, fontSize: 20 }),
+    remark: remark as string
   };
 
   return menu;

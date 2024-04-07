@@ -164,6 +164,7 @@ declare namespace App {
       icon?: () => VNode;
       /** The menu children */
       children?: Menu[];
+      remark: string;
     }
 
     type Breadcrumb = Omit<Menu, 'children'> & {
@@ -285,6 +286,7 @@ declare namespace App {
         changeTableColumns: string;
         userCenter: string;
         export: string;
+        description: string;
         yesOrNo: {
           yes: string;
           no: string;

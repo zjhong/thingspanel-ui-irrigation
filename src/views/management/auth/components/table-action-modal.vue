@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   (e: 'success'): void;
 }
 
@@ -206,7 +207,7 @@ watch(
             </NSpace>
           </NCheckboxGroup>
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('common.remark')">
+        <NFormItemGridItem :span="24" :label="$t('common.description')">
           <NInput v-model:value="formModel.remark" type="textarea" />
         </NFormItemGridItem>
       </NGrid>

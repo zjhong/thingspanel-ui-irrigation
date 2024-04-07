@@ -80,7 +80,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     width: '200'
   },
   {
-    key: 'ip',
+    key: 'name',
     title: '请求方法',
     align: 'left'
   },

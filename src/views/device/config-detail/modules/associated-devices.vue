@@ -87,23 +87,19 @@ const getDeviceOptions = async () => {
 const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '设备名称',
-    align: 'center'
+    title: '设备名称'
   },
   {
     key: 'device_number',
-    title: '设备编码',
-    align: 'center'
+    title: '设备编码'
   },
   {
     key: 'activate_flag',
-    title: '在线状态',
-    align: 'center'
+    title: '在线状态'
   },
   {
     key: 'ts',
     title: '推送时间',
-    align: 'center',
     render: row => {
       if (row.ts) {
         return moment(row.ts).format('YYYY-MM-DD hh:mm:ss');
@@ -120,7 +116,6 @@ const queryData = ref({
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
-  console.log(props.deviceConfigId, '432432432434');
   queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
   configDevice.value = res.data.list || [];

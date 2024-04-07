@@ -59,7 +59,8 @@ onMounted(() => {
 });
 
 watchEffect(() => {
-  const thejson = JSON.parse(deviceDataStore?.deviceData?.voucher || '');
+  const str = deviceDataStore?.deviceData?.voucher || '{}';
+  const thejson = JSON.parse(str);
   if (formElements.value && Array.isArray(formElements.value)) {
     formElements.value.forEach(element => {
       if (element.type === 'table' && Array.isArray(element.array)) {

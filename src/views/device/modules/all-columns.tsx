@@ -75,8 +75,7 @@ export const createDeviceColumns = (): DataTableColumns<DeviceManagement.DeviceD
   },
   {
     title: '设备配置',
-    key: 'device_config_id',
-    render: row => row.device_config_id || '-'
+    key: 'device_config_name',
   }
 ];
 
@@ -97,8 +96,7 @@ export const createNoSelectDeviceColumns = (
     },
     {
       title: '设备配置',
-      key: 'device_config_id',
-      render: row => row.device_config_id || '-'
+      key: 'device_config_name',
     },
     {
       title: '操作',

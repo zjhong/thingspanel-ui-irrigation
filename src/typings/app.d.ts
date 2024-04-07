@@ -887,6 +887,21 @@ declare namespace App {
           description: string;
           refresh: string;
         };
+        groupPage: {
+          groupName: string;
+          description: string;
+          createdAt: string;
+          actions: string;
+          view: string;
+          confirmDelete: string;
+          delete: string;
+          removeFromGroup: string;
+        };
+        devicePage: {
+          deviceName: string;
+          deviceNumber: string;
+          deviceConfig: string;
+        };
       };
     };
 

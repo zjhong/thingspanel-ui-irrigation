@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import type { PaginationProps } from 'naive-ui';
-import { CalendarEdit20Regular, Delete20Regular } from '@vicons/fluent';
-import { deleteDeviceTemplate, deviceTemplate } from '@/service/api/device-template-model';
+import {reactive, ref} from 'vue';
+import type {PaginationProps} from 'naive-ui';
+import {CalendarEdit20Regular, Delete20Regular} from '@vicons/fluent';
+import {deleteDeviceTemplate, deviceTemplate} from '@/service/api/device-template-model';
 import TemplateModal from './components/template-modal.vue';
-import { useBoolean, useLoading } from '~/packages/hooks/src';
+import {useBoolean, useLoading} from '~/packages/hooks/src';
 
-const { loading, startLoading, endLoading } = useLoading(false);
-const { bool: visible, setTrue: openModal } = useBoolean();
+const {loading, startLoading, endLoading} = useLoading(false);
+const {bool: visible, setTrue: openModal} = useBoolean();
 const pagination: PaginationProps = reactive({
   page: 1,
   pageSize: 20,
@@ -23,7 +23,7 @@ const deviceTemplateList = ref([] as any[]);
 const templateId = ref<string>('');
 const getData = async () => {
   startLoading();
-  const res = await deviceTemplate({ page: pagination.page as number, ...queryParams });
+  const res = await deviceTemplate({page: pagination.page as number, ...queryParams});
   if (!res.error) {
     deviceTemplateList.value = res.data.list;
     // eslint-disable-next-line require-atomic-updates
@@ -53,7 +53,7 @@ const handleEdit = async (id: string) => {
 };
 
 const handleRemove = async (id: string) => {
-  const { error } = await deleteDeviceTemplate(id);
+  const {error} = await deleteDeviceTemplate(id);
   if (!error) {
     window.$message?.info('已删除当前模板');
     await getData();
@@ -73,7 +73,7 @@ const handleRemove = async (id: string) => {
             </div>
             <!-- 搜索部分 -->
             <div class="flex items-center gap-2">
-              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
+              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称"/>
               <NButton type="primary" @click="handleQuery">搜索</NButton>
             </div>
           </div>
@@ -82,9 +82,12 @@ const handleRemove = async (id: string) => {
             <NGrid x-gap="24" y-gap="16" :cols="24">
               <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
                 <NCard hoverable>
-                  <div class="flex justify-between">
-                    <div class="text-16px font-600">
+                  <div class="flex-col justify-between">
+                    <div class="text-16px font-600 ">
                       {{ item.name }}
+                    </div>
+                    <div class="text-14px mt-2">
+                      {{ item.description || '--' }}
                     </div>
                   </div>
                   <template v-for="tag in (item.label || '').split(',')" :key="tag">
@@ -96,12 +99,12 @@ const handleRemove = async (id: string) => {
                   <div class="mt-4 flex justify-end gap-2">
                     <NButton strong circle secondary @click.stop="handleEdit(item.id)">
                       <template #icon>
-                        <CalendarEdit20Regular class="text-24px text-primary" />
+                        <CalendarEdit20Regular class="text-24px text-primary"/>
                       </template>
                     </NButton>
                     <NButton strong secondary circle @click.stop="handleRemove(item.id)">
                       <template #icon>
-                        <Delete20Regular class="text-24px text-primary" />
+                        <Delete20Regular class="text-24px text-primary"/>
                       </template>
                     </NButton>
                   </div>

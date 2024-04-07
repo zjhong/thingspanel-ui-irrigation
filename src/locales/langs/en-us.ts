@@ -1,4 +1,5 @@
 import { cen } from './你新增的路由相关的国际化';
+import { pen } from './页面国际化文件';
 import { productLocaleEn } from '~/src/views/product/locales/en';
 
 const local: App.I18n.Schema = {
@@ -728,7 +729,8 @@ const local: App.I18n.Schema = {
       PleaseEventName: 'PleaseEventName',
       PleaseEeventIdentifier: 'PleaseEeventIdentifier'
     }
-  }
+  },
+  custom: pen
 };
 
 export default local;

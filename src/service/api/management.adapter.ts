@@ -59,7 +59,7 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
         icon: item.param2,
         order: item.orders,
         hideInMenu: item.element_type === 5,
-        remark: (item.remark || '') as string
+        remark: item.remark || ''
       },
       children: item.children?.length ? replaceKeys(item.children) : []
     } as ElegantRoute;

@@ -33,27 +33,33 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
     width: 150,
     render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
       return (
-        <NFlex justify={'start'}>
-          <NButton
-            quaternary type="primary"
-            size={'small'}
-            onClick={() => {
-              viewDetails(row.id);
-            }}
-          >
-            查看
-          </NButton>
-          <NPopconfirm
-            onPositiveClick={() => {
-              deleteItem(row.id);
-            }}
-          >
-            {{
-              default: () => '确认删除',
-              trigger: () => <NButton quaternary type="primary" size={'small'}>删除</NButton>
-            }}
-          </NPopconfirm>
-        </NFlex>
+        <div onClick={(e) => {
+          e.stopPropagation();
+        }
+        }>
+          <NFlex justify={'start'}>
+            <NButton
+              quaternary type="primary"
+              size={'small'}
+              onClick={() => {
+                viewDetails(row.id);
+              }}
+            >
+              查看
+            </NButton>
+            <NPopconfirm
+              onPositiveClick={(e) => {
+                e.stopPropagation();
+                deleteItem(row.id);
+              }}
+            >
+              {{
+                default: () => '确认删除',
+                trigger: () => <NButton quaternary type="primary" size={'small'}>删除</NButton>
+              }}
+            </NPopconfirm>
+          </NFlex>
+        </div>
       );
     }
   }

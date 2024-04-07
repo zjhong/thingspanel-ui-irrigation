@@ -1,4 +1,5 @@
 import { productLocaleZhCn } from '@/views/product/locales/zh-CN';
+import { pzh_cn } from '@/locales/langs/页面国际化文件';
 import { czh_cn } from './你新增的路由相关的国际化';
 
 const local: App.I18n.Schema = {
@@ -727,7 +728,9 @@ const local: App.I18n.Schema = {
       PleaseEventName: '请输入事件名称',
       PleaseEeventIdentifier: '请输入事件标识符'
     }
-  }
+  },
+
+  custom: pzh_cn
 };
 
 export default local;

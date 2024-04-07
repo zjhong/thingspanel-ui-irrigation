@@ -1,8 +1,8 @@
 <script setup lang="tsx">
-import {ref, watch} from 'vue';
-import type {DrawerPlacement, StepsProps} from 'naive-ui';
+import { ref, watch } from 'vue';
+import type { DrawerPlacement, StepsProps } from 'naive-ui';
 import _ from 'lodash';
-import type {TreeSelectOption} from 'naive-ui/es/tree-select/src/interface';
+import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
 import {
   checkDevice,
   deleteDevice,
@@ -12,11 +12,11 @@ import {
   getDeviceConfigList,
   putDeviceActive
 } from '@/service/api/device';
-import type {SearchConfig} from '@/components/data-table-page/index.vue';
+import type { SearchConfig } from '@/components/data-table-page/index.vue';
 import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue';
 import AddDevicesStep2 from '@/views/device/manage/modules/add-devices-step2.vue';
 import AddDevicesStep3 from '@/views/device/manage/modules/add-devices-step3.vue';
-import {useRouterPush} from '@/hooks/common/router';
+import { useRouterPush } from '@/hooks/common/router';
 
 const addKey = ref();
 const deviceNumber = ref();
@@ -27,7 +27,7 @@ const formData = ref();
 const tablePageRef = ref();
 const buttonDisabled = ref(true);
 const getFormJson = async id => {
-  const res = await devicCeonnectForm({device_id: id});
+  const res = await devicCeonnectForm({ device_id: id });
 
   formData.value = res.data;
 };
@@ -39,7 +39,7 @@ const setUpId = (dId, cId) => {
 const getDeviceGroupOptions = async () => {
   // 将原始数据转换为树形结构
   function convertTreeNodeToTarget(treeNode: DeviceManagement.TreeNode): TreeSelectOption {
-    const {group, children} = treeNode;
+    const { group, children } = treeNode;
     const targetNode: TreeSelectOption = {
       label: group.name,
       key: group.id
@@ -67,7 +67,7 @@ const getDeviceGroupOptions = async () => {
 
 const getDeviceConfigOptions = async pattern => {
   console.log(pattern);
-  const res = await getDeviceConfigList({page: 1, page_size: 99, device_type: pattern});
+  const res = await getDeviceConfigList({ page: 1, page_size: 99, device_type: pattern });
   const options: any[] = [];
   if (res.data && res.data.list) {
     // eslint-disable-next-line array-callback-return
@@ -78,7 +78,7 @@ const getDeviceConfigOptions = async pattern => {
       });
     });
   }
-  configOptions.value = [{label: '不限设备配置', value: ''}, ...options];
+  configOptions.value = [{ label: '不限设备配置', value: '' }, ...options];
   return options;
 };
 
@@ -95,6 +95,7 @@ const columns_to_show = [
     key: 'is_online',
     label: '在线状态',
     render: row => {
+      console.log(row);
       return row?.is_online === 1 ? '在线' : '离线';
     }
   },
@@ -117,11 +118,13 @@ const columns_to_show = [
     key: 'access_way',
     label: '通过服务/协议',
     render: row => {
-      return row?.access_way === 'B' ? `通过服务(${row.protocol_type})` : `通过协议(${row.protocol_type});`
+      return row?.access_way === 'B'
+        ? `通过服务(${row?.protocol_type || '-'})`
+        : `通过协议(${row?.protocol_type || '-'})`;
     }
   }
 ];
-const {routerPushByKey} = useRouterPush();
+const { routerPushByKey } = useRouterPush();
 const goDeviceDetails = row => {
   routerPushByKey('device_details', {
     query: {
@@ -137,7 +140,7 @@ const actions = [
   {
     label: '删除',
     callback: async row => {
-      await deleteDevice({id: row?.id});
+      await deleteDevice({ id: row?.id });
     }
   }
 ];
@@ -147,14 +150,14 @@ const searchConfigs = ref<SearchConfig[]>([
     label: '分组',
     type: 'tree-select',
     multiple: false,
-    options: [{label: '分组', key: ''}],
+    options: [{ label: '分组', key: '' }],
     loadOptions: getDeviceGroupOptions
   },
   {
     key: 'device_config_id',
     label: '不限设备配置',
     type: 'select',
-    options: [{label: '不限设备配置', value: ''}],
+    options: [{ label: '不限设备配置', value: '' }],
     loadOptions: pattern => getDeviceConfigOptions(pattern)
   },
   {
@@ -162,9 +165,9 @@ const searchConfigs = ref<SearchConfig[]>([
     label: '不限在线状态',
     type: 'select',
     options: [
-      {label: '不限在线状态', value: ''},
-      {label: '在线', value: 1},
-      {label: '不在线', value: 0}
+      { label: '不限在线状态', value: '' },
+      { label: '在线', value: 1 },
+      { label: '不在线', value: 0 }
     ]
   },
   {
@@ -172,9 +175,9 @@ const searchConfigs = ref<SearchConfig[]>([
     label: '不限告警状态',
     type: 'select',
     options: [
-      {label: '不限告警状态', value: ''},
-      {label: '告警', value: 'Y'},
-      {label: '不告警', value: 'N'}
+      { label: '不限告警状态', value: '' },
+      { label: '告警', value: 'Y' },
+      { label: '不告警', value: 'N' }
     ]
   },
   {
@@ -182,9 +185,9 @@ const searchConfigs = ref<SearchConfig[]>([
     label: '不限接入类型',
     type: 'select',
     options: [
-      {label: '不限接入类型', value: ''},
-      {label: '通过协议', value: 'A'},
-      {label: '通过服务', value: 'B'}
+      { label: '不限接入类型', value: '' },
+      { label: '通过协议', value: 'A' },
+      { label: '通过服务', value: 'B' }
     ]
   },
   {
@@ -229,7 +232,7 @@ const activate = (place: DrawerPlacement, key: string | number) => {
 };
 
 const completeAdd = async () => {
-  const {error} = await putDeviceActive({device_number: deviceNumber.value});
+  const { error } = await putDeviceActive({ device_number: deviceNumber.value });
   if (!error) {
     active.value = true;
   }
@@ -247,7 +250,7 @@ watch(
   deviceNumber,
   _.debounce(async newDeviceNumber => {
     try {
-      const {data, error} = await checkDevice(newDeviceNumber);
+      const { data, error } = await checkDevice(newDeviceNumber);
       if (!error && data && data.is_available) {
         buttonDisabled.value = false;
       } else {
@@ -274,9 +277,9 @@ watch(
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
         <n-steps :current="current" :status="currentStatus">
-          <n-step title="创建设备" description="创建设备的基本信息"/>
-          <n-step title="配置设备端" description="根据系统提供的连接配置参数配置设备"/>
-          <n-step title="配置设备完成" description="如果配置成功，则完成配置"/>
+          <n-step title="创建设备" description="创建设备的基本信息" />
+          <n-step title="配置设备端" description="根据系统提供的连接配置参数配置设备" />
+          <n-step title="配置设备完成" description="如果配置成功，则完成配置" />
         </n-steps>
         <n-card class="mt-6" bordered border>
           <div v-if="current === 1">

@@ -39,6 +39,7 @@ const debouncedSearch = debounce(async () => {
   const res = await getDeviceGroup({
     page: currentPage.value,
     page_size: 10,
+    parent_id: 0,
     name: searchValue.value.trim() || undefined
   });
   data.value = res.data.list;

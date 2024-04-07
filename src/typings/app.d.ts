@@ -882,7 +882,11 @@ declare namespace App {
         };
       };
       custom: {
-        exp: string;
+        home: {
+          title: string;
+          description: string;
+          refresh: string;
+        };
       };
     };
 

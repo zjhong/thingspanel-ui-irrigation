@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
-import {router} from '@/router';
-import type {ICardView} from '@/components/panel/card';
-import {fetchHomeData} from '@/service/api';
+import { onMounted, ref } from 'vue';
+import { router } from '@/router';
+import type { ICardView } from '@/components/panel/card';
+import { fetchHomeData } from '@/service/api';
+import { $t } from '@/locales';
 
 const layout = ref<ICardView[]>([]);
 const isError = ref<boolean>(false);
 const active = ref<boolean>(true);
 
 const getLayout = async () => {
-  const {data, error} = await fetchHomeData({});
+  const { data, error } = await fetchHomeData({});
 
   isError.value = (error || !(data && data.config)) as boolean;
 
@@ -24,7 +25,7 @@ onMounted(getLayout);
 
 <template>
   <div v-if="isError" class="h-full w-full flex-center">
-    <n-result status="418" title="首页未配置或配置异常" description="一切尽在不言中">
+    <n-result status="418" :title="$t('custom.home.title')" :description="$t('custom.home.description')">
       <template #footer>
         <n-button
           type="primary"
@@ -42,7 +43,7 @@ onMounted(getLayout);
             :active="active"
             @finish="active = false"
           />
-          {{ active ? '' : '刷新' }}
+          {{ active ? '' : $t('custom.home.refresh') }}
         </n-button>
       </template>
     </n-result>

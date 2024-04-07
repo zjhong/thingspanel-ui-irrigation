@@ -99,10 +99,14 @@ onMounted(fetchBroad);
         />
       </NSpace>
     </div>
-    <div ref="fullui" class="h-full flex-col items-center justify-center bg-white">
+    <div
+      ref="fullui"
+      :class="!layout.length ? 'h-full flex-col items-center justify-center bg-white' : 'h-full  bg-white'"
+    >
       <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
         <NEmpty description="暂未添加组件"></NEmpty>
       </div>
+
       <CardRender ref="cr" v-model:layout="layout" :col-num="24" :default-card-col="4" :row-height="65" @edit="edit" />
     </div>
     <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />

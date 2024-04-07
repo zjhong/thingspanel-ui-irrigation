@@ -48,7 +48,7 @@ onMounted(async () => {
 
 <template>
   <div class="h-full overflow-hidden">
-    <NCard :title="configForm.name">
+    <NCard :title="configForm?.name || '--'">
       <template #header-extra>
         <NButton type="primary" @click="editConfig">编辑</NButton>
       </template>

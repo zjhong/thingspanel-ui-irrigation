@@ -230,3 +230,7 @@ export const telemetryHistoryData = async (params: any) => {
 export const deviceUpdateConfig = async (params: any) => {
   return await request.put<any>(`/device/update/config`, params);
 };
+
+export const deviceConfigMenu = async (params: any) => {
+  return await request.get<any>(`/device/template/menu`, { params });
+};

@@ -4,10 +4,10 @@ import { type DataTableColumns, NButton, NCard, NFlex, NPagination, useDialog, u
 import { IosSearch } from '@vicons/ionicons4';
 import moment from 'moment';
 import { sceneActive, sceneDel, sceneGet, sceneLog } from '@/service/api/automation';
-// import { useRouterPush } from '@/hooks/common/router';
+import { useRouterPush } from '@/hooks/common/router';
 const dialog = useDialog();
 const message = useMessage();
-// const { routerPushByKey } = useRouterPush();
+const { routerPushByKey } = useRouterPush();
 
 interface sceneManageItem {
   name: string;
@@ -19,13 +19,12 @@ let sceneManageList: Array<sceneManageItem> = reactive([] as any);
 
 // 新建场景
 const sceneAdd = () => {
-  // routerPushByKey('scene-edit');
+  routerPushByKey('automation_scene-edit');
 };
 
 // 编辑场景
 const sceneEdit = (item: any) => {
-  console.log(item);
-  // routerPushByKey('scene-edit', { query: { id: item.id } });
+  routerPushByKey('automation_scene-edit', { query: { id: item.id } });
 };
 
 // 激活场景

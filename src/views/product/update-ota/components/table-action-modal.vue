@@ -175,7 +175,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     }
   },
   {
-    key: 'device_config_name',
+    key: 'name',
     title: $t('page.product.update-package.packageName')
   },
   {
@@ -239,7 +239,7 @@ const onSubmit = () => {
               </NButton>
               <ColumnSetting v-model:columns="columns" />
             </NSpace>
-          </NSpace> 
+          </NSpace>
 -->
           <NDataTable
             :row-key="rowKey"

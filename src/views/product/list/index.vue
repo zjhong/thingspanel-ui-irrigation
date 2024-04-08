@@ -70,7 +70,7 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
     title: $t('page.product.list.productName')
   },
   {
-    key: 'device_type',
+    key: 'device_type_name',
     title: $t('page.product.list.deviceType')
   },
   {
@@ -78,7 +78,7 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
     title: $t('page.product.list.productNumber')
   },
   {
-    key: 'device_config_id',
+    key: 'device_config_name',
     title: $t('page.product.list.deviceConfig')
   },
   {
@@ -208,7 +208,7 @@ init();
           class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
+        <NDrawer v-model:show="editPwdVisible" width="80%" display-directive="show" placement="right">
           <NDrawerContent :title="drawerTitle" closable>
             <DeviceRegister :pid="(editData?.id as unknown as string)" />
           </NDrawerContent>

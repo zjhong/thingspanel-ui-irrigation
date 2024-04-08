@@ -57,7 +57,7 @@ const selectedKeys = computed({
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.addProduct'),
+    add: $t('page.product.list.deviceConfig'), // 设备配置
     edit: $t('page.product.list.editProduct')
   };
   return titles[props.type];

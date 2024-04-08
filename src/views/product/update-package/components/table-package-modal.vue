@@ -74,7 +74,7 @@ type formModelRuleName =
   | 'version'
   | 'target_version'
   | 'package_type'
-  | 'device_configs_id'
+  | 'device_config_id'
   | 'signature_type'
   | 'package_url';
 const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
@@ -82,7 +82,7 @@ const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
   version: createRequiredFormRule($t('page.product.update-package.versionPlaceholder')),
   target_version: createRequiredFormRule($t('page.product.update-package.versionCodePlaceholder')),
   package_type: createRequiredFormRule($t('page.product.update-package.typePlaceholder')),
-  device_configs_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
+  device_config_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
   signature_type: createRequiredFormRule($t('page.product.update-package.signModePlaceholder')),
   package_url: createRequiredFormRule($t('page.product.update-package.packagePlaceholder'))
 };
@@ -96,7 +96,7 @@ function createDefaultFormModel(): productPackageRecord {
     name: '',
     package_type: undefined as unknown as number,
     package_url: '',
-    device_configs_id: '',
+    device_config_id: '',
     remark: '',
     signature_type: '',
     target_version: '',
@@ -134,7 +134,6 @@ async function handleSubmit() {
     data = await editOtaPackage(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -171,8 +170,8 @@ watch(
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.packageName')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_configs_id">
-          <NSelect v-model:value="formModel.device_configs_id" :options="productOptions" />
+        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_config_id">
+          <NSelect v-model:value="formModel.device_config_id" :options="productOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.moduleName')" path="module">
           <NInput v-model:value="formModel.module" />

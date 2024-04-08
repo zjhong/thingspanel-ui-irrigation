@@ -56,8 +56,8 @@ function handleQuery() {
 }
 function handleReset() {
   Object.assign(queryParams, {
-    deviceNumber: '',
-    batchNumber: '',
+    name: '',
+    device_config_id: '',
     page: 1
   });
   handleQuery();

@@ -2,9 +2,10 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { getDeviceConfigList } from '@/service/api/device';
 import UploadCard from './upload-card.vue';
 import { $t } from '~/src/locales';
-import { addProduct, editProduct, getDeviceConfigList } from '~/src/service/product/list';
+import { addProduct, editProduct, getDict } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -46,8 +47,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.addProduct'),
-    edit: $t('page.product.list.editProduct')
+    add: $t('page.product.list.deviceConfig'),
+    edit: $t('page.product.list.deviceConfig')
   };
   return titles[props.type];
 });
@@ -55,11 +56,17 @@ const title = computed(() => {
 const formRef = ref<HTMLElement & FormInst>();
 const deviceOptions = ref();
 
-const getList = () => {
-  getDeviceConfigList({}).then(({ data }) => {
-    const list = data || [];
-    deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || [];
+const getList = async (name?: string) => {
+  const { data, error } = await getDeviceConfigList({
+    page: 1,
+    page_size: 99,
+    name
   });
+  if (!error && data) {
+    deviceOptions.value = data?.list?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+  }
 };
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
@@ -102,12 +109,24 @@ function handleUpdateFormModelByModalType() {
 
   handlers[props.type]();
 }
-
+const productOptions = ref([]);
+const getProductList = async (name?: string) => {
+  const res: any = await getDict({
+    page: 1,
+    page_size: 10,
+    dict_code: 'PRODUCT_TYPE',
+    name
+  });
+  productOptions.value = res.data || [];
+};
 async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct({ ...formModel, device_type: Number(formModel.device_type as string) });
+    data = await addProduct({
+      ...formModel,
+      device_type: Number(formModel.device_type as string)
+    });
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -129,20 +148,35 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :on-after-enter="getList" :title="title" class="w-700px">
-    <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
+  <NModal
+    v-model:show="modalVisible"
+    preset="card"
+    :on-after-enter="
+      () => {
+        getList(), getProductList();
+      }
+    "
+    :title="title"
+    class="w-700px"
+  >
+    <NForm ref="formRef" label-placement="left" :label-width="100" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productName')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceType')" path="device_type">
-          <NInput v-model:value="formModel.device_type" />
+          <NSelect
+            v-model:value="formModel.device_type"
+            filterable
+            :options="productOptions"
+            @search="getProductList"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productNumber')" path="product_model">
           <NInput v-model:value="formModel.product_model" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" :options="deviceOptions" />
+          <NSelect v-model:value="formModel.device_config_id" filterable :options="deviceOptions" @search="getList" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productKey')" path="product_key">
           <NInput v-model:value="formModel.product_key" />

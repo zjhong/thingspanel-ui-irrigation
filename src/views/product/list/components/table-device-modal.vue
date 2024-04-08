@@ -76,9 +76,9 @@ const rules = computed(() => {
 function createDefaultFormModel(): deviceAddType {
   const data: deviceAddType = {
     batch_file: '',
-    batch_number: '',
     create_type: '1',
-    current_version: ''
+    current_version: '',
+    batch_number: ''
   };
   return data;
 }
@@ -112,7 +112,6 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -132,7 +131,7 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" :label="$t('page.product.list.deviceNumber')" path="batch_number">
+        <NFormItemGridItem :span="24" :label="$t('page.product.list.batchNumber')" path="batch_number">
           <NInput v-model:value="formModel.batch_number" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.firmwareVersion')" path="current_version">
@@ -147,12 +146,12 @@ watch(
         <NFormItemGridItem
           v-if="formModel.create_type === '2'"
           :span="24"
-          label="$t('page.product.list.file')"
+          :label="$t('page.product.list.file')"
           path="batch_file"
         >
           <UploadCard
             v-model:value="formModel.batch_file"
-            text="$t('page.product.list.file')"
+            :text="$t('page.product.list.filePlaceholder')"
             accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
 "
             source-type="importBatch"

@@ -11,5 +11,4 @@ export const addDevice = (data: any): Promise<any> => request.post('/device/preR
 export const exportDevice = (params: any): Promise<any> => request.get('/device/preRegister/export', { params });
 // /device_config/{ id };
 export const delDeviceConfig = (id: string): Promise<any> => request.delete(`/device_config/${id}`);
-// /device_config/menu
-export const getDeviceConfigList = (params: any): Promise<any> => request.get('/device_config/menu', { params });
+export const getDict = (params: any): Promise<any> => request.get('/dict', { params });

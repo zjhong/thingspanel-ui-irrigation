@@ -19,8 +19,8 @@ const props: DeviceRegisterProps = defineProps({
   }
 });
 const queryParams = reactive({
-  deviceNumber: '',
-  batchNumber: '',
+  batch_number: '',
+  device_number: '',
   product_id: props.pid,
   page: 1,
   page_size: 10
@@ -64,8 +64,8 @@ function handleQuery() {
 }
 function handleReset() {
   Object.assign(queryParams, {
-    deviceNumber: '',
-    batchNumber: '',
+    batch_number: '',
+    device_number: '',
     page: 1
   });
   handleQuery();
@@ -83,7 +83,7 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   {
-    key: 'name',
+    key: 'device_number',
     title: $t('page.product.list.deviceNumber')
   },
   {
@@ -95,10 +95,10 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     title: $t('page.product.list.firmwareVersion')
   },
   {
-    key: 'created_at',
+    key: 'activate_flag',
     title: $t('page.product.list.activeStatus'),
     render: row => {
-      return row.created_at ? moment(row.created_at) : '-';
+      return row.activate_flag === 'inactive' ? '未激活' : '已激活';
     }
   },
   {
@@ -153,11 +153,11 @@ init();
     <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.product.list.batchNumber')" path="email">
-            <NInput v-model:value="queryParams.batchNumber" />
+          <NFormItem :label="$t('page.product.list.batchNumber')" path="batchNumber">
+            <NInput v-model:value="queryParams.batch_number" />
           </NFormItem>
-          <NFormItem :label="$t('page.product.list.deviceNumber')" path="name">
-            <NInput v-model:value="queryParams.deviceNumber" />
+          <NFormItem :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
+            <NInput v-model:value="queryParams.device_number" />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>

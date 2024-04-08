@@ -49,5 +49,6 @@ type DeviceRegisterProps = {
 
 type PreproductDeviceRecord = {
   created_at: any;
+  activate_flag: string;
   activate_at: any;
 };

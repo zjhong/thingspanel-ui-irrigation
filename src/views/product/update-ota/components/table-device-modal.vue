@@ -48,7 +48,7 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.addProduct'),
+    add: $t('page.product.update-ota.updateTask'),
     edit: $t('page.product.list.editProduct')
   };
   return titles[props.type];

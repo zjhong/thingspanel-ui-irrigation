@@ -293,6 +293,7 @@ declare namespace App {
         };
         debug: string;
         send: string;
+        creationTime: string;
       };
       theme: {
         themeSchema: { title: string } & Record<UnionKey.ThemeScheme, string>;
@@ -504,6 +505,10 @@ declare namespace App {
               male: string;
               female: string;
             };
+            status: {
+              freeze: string;
+              normal: string;
+            };
           };
           menu: {
             title: string;
@@ -596,6 +601,10 @@ declare namespace App {
                 lastCleanupTime: string;
                 lastCleanupDataTime: string;
                 enabled: string;
+              };
+              type: {
+                equipmentData: string;
+                operationLog: string;
               };
             };
           };
@@ -705,6 +714,19 @@ declare namespace App {
             valveStatus: string;
             pressure: string;
             chooseDevice: string;
+          };
+        };
+        apply: {
+          service: {
+            form: {
+              serviceName: string;
+              deviceType: string;
+              protocolType: string;
+              accessAddress: string;
+              httpAddress: string;
+              subTopicPrefix: string;
+              additionalInfo: string;
+            };
           };
         };
       };

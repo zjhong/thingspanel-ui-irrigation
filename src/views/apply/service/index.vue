@@ -56,12 +56,12 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '服务名称',
+    title: () => $t('page.apply.service.form.serviceName'),
     align: 'left'
   },
   {
     key: 'device_type',
-    title: '设备类型',
+    title: () => $t('page.apply.service.form.deviceType'),
     align: 'left',
     render: row => {
       if (row.device_type) {
@@ -72,32 +72,32 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   },
   {
     key: 'protocol_type',
-    title: '协议类型',
+    title: () => $t('page.apply.service.form.protocolType'),
     align: 'left'
   },
   {
     key: 'access_address',
-    title: '接入地址',
+    title: () => $t('page.apply.service.form.accessAddress'),
     align: 'left'
   },
   {
     key: 'http_address',
-    title: 'HTTP服务地址',
+    title: () => $t('page.apply.service.form.httpAddress'),
     align: 'left'
   },
   {
     key: 'sub_topic_prefix',
-    title: '插件订阅主题前缀',
+    title: () => $t('page.apply.service.form.subTopicPrefix'),
     align: 'left'
   },
   {
     key: 'description',
-    title: '描述',
+    title: () => $t('common.description'),
     align: 'left'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: () => $t('common.action'),
     align: 'center',
     width: '300px',
     render: row => {
@@ -157,7 +157,7 @@ function handleEditTable(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await delProtocolPlugin(rowId);
   if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'));
+    // window.$message?.success($t('common.deleteSuccess'));
     await getTableData();
   }
 }

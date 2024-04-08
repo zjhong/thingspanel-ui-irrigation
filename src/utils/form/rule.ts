@@ -32,7 +32,7 @@ export const formRules: CustomFormRules = {
     createRequiredFormRule('请输入验证码'),
     { pattern: REG_CODE_SIX, message: '验证码格式错误', trigger: 'input' }
   ],
-  email: [{ pattern: REG_EMAIL, message: '邮箱格式错误', trigger: 'blur' }]
+  email: [{ required: true, pattern: REG_EMAIL, message: '邮箱格式错误', trigger: 'blur' }]
 };
 
 /** 是否为空字符串 */

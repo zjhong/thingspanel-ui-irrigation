@@ -111,8 +111,8 @@ export const dataServiceStatusOptions = transformObjectToOption(dataServiceStatu
 
 /** 用户状态 */
 export const userStatusLabels: Record<UserManagement.UserStatusKey, string> = {
-  F: '冻结',
-  N: '正常'
+  F: 'freeze',
+  N: 'normal'
 };
 export const userStatusOptions = transformObjectToOption(userStatusLabels);
 

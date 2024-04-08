@@ -9,7 +9,7 @@ const local: App.I18n.Schema = {
   },
   common: {
     complete: 'Complete',
-    remark: '',
+    remark: 'Remark',
     action: 'Action',
     add: 'Add',
     save: 'save',
@@ -48,7 +48,8 @@ const local: App.I18n.Schema = {
       no: 'No'
     },
     debug: 'Debug',
-    send: 'Send'
+    send: 'Send',
+    creationTime: 'Creation time'
   },
   theme: {
     themeSchema: {
@@ -332,6 +333,10 @@ const local: App.I18n.Schema = {
         gender: {
           male: 'Male',
           female: 'Female'
+        },
+        status: {
+          freeze: 'Freeze',
+          normal: 'Normal'
         }
       },
       menu: {
@@ -425,6 +430,10 @@ const local: App.I18n.Schema = {
             lastCleanupTime: 'Last Cleanup Time',
             lastCleanupDataTime: 'Last Cleanup Data Time',
             enabled: 'Enabled'
+          },
+          type: {
+            equipmentData: 'Equipment Data',
+            operationLog: 'Operation Log'
           }
         }
       },
@@ -534,6 +543,19 @@ const local: App.I18n.Schema = {
         valveStatus: 'Valve Status',
         pressure: 'Pressure',
         chooseDevice: 'Choose Device'
+      }
+    },
+    apply: {
+      service: {
+        form: {
+          serviceName: 'Service name',
+          deviceType: 'Device type',
+          protocolType: 'Protocol type',
+          accessAddress: 'Access address',
+          httpAddress: 'Http address',
+          subTopicPrefix: 'Plug-in subscription subject prefix',
+          additionalInfo: 'Link parameter'
+        }
       }
     }
   },

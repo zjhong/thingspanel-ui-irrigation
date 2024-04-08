@@ -130,6 +130,7 @@ const pagination: PaginationProps = reactive({
   }
 });
 const stateData = ref({});
+const statisticsList: Ref<any[]> = ref([]);
 async function getTableData() {
   startLoading();
   queryParams.ota_upgrade_task_id = props.editData?.id;
@@ -141,6 +142,7 @@ async function getTableData() {
     statistics.forEach((item: any) => {
       stateData.value[item.status] = item.count;
     });
+    statisticsList.value = statistics;
     setTableData(list);
     pagination.pageCount = Math.ceil(data.total / queryParams.page_size);
     endLoading();
@@ -255,38 +257,55 @@ function init() {
     <div class="h-800px overflow-hidden">
       <div class="h-full flex-col">
         <NGrid :cols="24" x-gap="12px">
-          <NGridItem span="3">
-            <NCard :title="/*所有状态*/ $t('page.product.update-ota.allStatus')" size="small">
+          <NGridItem v-for="(item, index) in statisticsList" :key="index" span="3">
+            <NCard v-if="item?.status == 0" :title="/*所有状态*/ $t('page.product.update-ota.allStatus')" size="small">
               {{ stateData[0] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*待推送*/ $t('page.product.update-ota.pendingTask')" size="small">
+            <NCard
+              v-else-if="item?.status == 1"
+              :title="/*待推送*/ $t('page.product.update-ota.pendingTask')"
+              size="small"
+            >
               {{ stateData[1] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*已推送*/ $t('page.product.update-ota.pushTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 2"
+              :title="/*已推送*/ $t('page.product.update-ota.pushTask')"
+              size="small"
+            >
               {{ stateData[2] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级中*/ $t('page.product.update-ota.upgradingTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 3"
+              :title="/*升级中*/ $t('page.product.update-ota.upgradingTask')"
+              size="small"
+            >
               {{ stateData[3] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级成功*/ $t('page.product.update-ota.completeTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 4"
+              :title="/*升级成功*/ $t('page.product.update-ota.completeTask')"
+              size="small"
+            >
               {{ stateData[4] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级失败*/ $t('page.product.update-ota.failTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 5"
+              :title="/*升级失败*/ $t('page.product.update-ota.failTask')"
+              size="small"
+            >
               {{ stateData[5] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*已取消*/ $t('page.product.update-ota.cancelTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 6"
+              :title="/*已取消*/ $t('page.product.update-ota.cancelTask')"
+              size="small"
+            >
               {{ stateData[6] || '-' }}
             </NCard>
           </NGridItem>

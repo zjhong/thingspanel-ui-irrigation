@@ -6,6 +6,8 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { editOtaTaskDetail, getOtaTaskDetail } from '@/service/product/update-ota';
+import ColumnSetting from './column-setting.vue';
+
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -147,11 +149,15 @@ async function getTableData() {
 const toUpdate = async ({ id }, action: number) => {
   const data = await editOtaTaskDetail({ id, action });
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
+    getTableData();
   }
 };
 
 const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
+  {
+    key: 'device_number',
+    title: $t('page.product.list.deviceNumber')
+  },
   {
     key: 'name',
     title: $t('page.product.update-ota.deviceName')
@@ -294,6 +300,16 @@ function init() {
             <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
+        <NSpace class="pb-12px" justify="space-between">
+          <NSpace></NSpace>
+          <NSpace align="center" :size="18">
+            <NButton size="small" type="primary" @click="getTableData">
+              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+              {{ $t('common.refreshTable') }}
+            </NButton>
+            <ColumnSetting v-model:columns="columns" />
+          </NSpace>
+        </NSpace>
         <NDataTable
           size="small"
           remote

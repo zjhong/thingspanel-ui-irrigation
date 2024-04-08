@@ -129,6 +129,7 @@ function handleQuery() {
 
 function handleReset() {
   Object.assign(queryParams, {
+    activate_flag: 'active',
     name: '',
     product_id: '',
     page: 1
@@ -174,7 +175,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     }
   },
   {
-    key: 'name',
+    key: 'device_config_name',
     title: $t('page.product.update-package.packageName')
   },
   {
@@ -182,7 +183,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     title: $t('page.product.update-package.versionCode')
   },
   {
-    key: 'product _id',
+    key: 'device_number',
     title: $t('page.product.list.deviceNumber')
   }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
@@ -225,6 +226,21 @@ const onSubmit = () => {
               <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItem>
           </NForm>
+          <!--
+ <NSpace class="pb-12px" justify="space-between">
+            <NSpace></NSpace>
+            <NSpace align="center" :size="18">
+              <NButton size="small" type="primary" @click="getTableData">
+                <IconMdiRefresh
+                  class="mr-4px text-16px"
+                  :class="{ 'animate-spin': loading }"
+                />
+                {{ $t("common.refreshTable") }}
+              </NButton>
+              <ColumnSetting v-model:columns="columns" />
+            </NSpace>
+          </NSpace> 
+-->
           <NDataTable
             :row-key="rowKey"
             remote

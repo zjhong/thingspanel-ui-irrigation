@@ -3,6 +3,7 @@ import { defineProps, onMounted, reactive, ref, watchEffect } from 'vue';
 import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 import { getDeviceConnectInfo, updateDeviceVoucher } from '@/service/api/device';
+import { $t } from '@/locales';
 
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
@@ -114,7 +115,7 @@ const handleSubmit = async () => {
         </div>
       </template>
 
-      <NCard title="连接信息">
+      <NCard :title="$t('custom.devicePage.connectInfo')">
         <NDescriptions :column="1">
           <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
             <span class="font-600">{{ value }}</span>
@@ -123,7 +124,7 @@ const handleSubmit = async () => {
       </NCard>
     </n-scrollbar>
     <div class="mt-4 w-full flex-center">
-      <NButton type="primary" @click="handleSubmit">提交</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('custom.devicePage.submit') }}</NButton>
     </div>
   </NForm>
 </template>

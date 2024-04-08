@@ -13,6 +13,7 @@ import { AddOrEditDevices } from '@/views/device/grouping/components';
 import { createNoSelectDeviceColumns, group_columns } from '@/views/device/modules/all-columns';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import DeviceSelectList from '@/views/device/grouping-details/modules/device-select-list.vue';
+import { $t } from '@/locales';
 
 const group_data = ref([]);
 const device_data = ref<DeviceManagement.DeviceData[]>([]);
@@ -54,7 +55,7 @@ const queryParams = reactive<{ parent_id: string; page: number; page_size: numbe
 
 const getDetails = async (tid: string) => {
   if (!currentId.value) {
-    message.error('没有传人的分组id');
+    message.error('00');
   } else {
     queryParams.parent_id = tid;
     startLoading();
@@ -225,41 +226,39 @@ watch(
               <template #icon>
                 <svg-icon icon="material-symbols:arrow-back" />
               </template>
-              上一页
+              {{ $t('custom.grouping_details.previousPage') }}
             </NButton>
             <NButton v-if="details_data.detail.parent_id !== '0'" type="primary" @click="goWhere('up')">
               <template #icon>
                 <svg-icon icon="material-symbols:fitbit-arrow-upward" />
               </template>
 
-              上一级
+              {{ $t('custom.grouping_details.previousLevel') }}
             </NButton>
-            <NButton @click="goWhere('first')">返回分组列表</NButton>
+            <NButton @click="goWhere('first')">{{ $t('custom.grouping_details.backToGroupList') }}</NButton>
           </NSpace>
         </template>
         <NTabs type="line" animated>
-          <NTabPane name="详情" tab="详情">
+          <NTabPane name="详情" :tab="$t('custom.grouping_details.detail')">
             <NDescriptions label-placement="top" bordered :column="6">
-              <NDescriptionsItem>
-                <template #label>分组层级</template>
+              <NDescriptionsItem :label="$t('custom.grouping_details.groupLevel')">
                 {{ details_data.tier.group_path }}
               </NDescriptionsItem>
-              <NDescriptionsItem>
-                <template #label>分组ID</template>
+              <NDescriptionsItem :label="$t('custom.grouping_details.groupId')">
                 {{ details_data.detail.id }}
               </NDescriptionsItem>
-              <NDescriptionsItem>
-                <template #label>描述</template>
+              <NDescriptionsItem :label="$t('custom.grouping_details.description')">
                 {{ details_data.detail.description }}
               </NDescriptionsItem>
-              <NDescriptionsItem>
-                <template #label>创建时间</template>
+              <NDescriptionsItem :label="$t('custom.grouping_details.createTime')">
                 {{ details_data.detail.created_at }}
               </NDescriptionsItem>
             </NDescriptions>
-            <NDivider title-placement="left">子分组</NDivider>
+            <NDivider title-placement="left">{{ $t('custom.grouping_details.subGroup') }}</NDivider>
             <NSpace>
-              <NButton type="primary" @click="showGroupModalChild">添加子分组</NButton>
+              <NButton type="primary" @click="showGroupModalChild">
+                {{ $t('custom.grouping_details.addSubGroup') }}
+              </NButton>
             </NSpace>
             <NSpace class="mt4">
               <NDataTable
@@ -271,9 +270,11 @@ watch(
               ></NDataTable>
             </NSpace>
 
-            <NDivider title-placement="left">设备</NDivider>
+            <NDivider title-placement="left">{{ $t('custom.grouping_details.device') }}</NDivider>
             <NSpace class="mb6">
-              <NButton type="primary" @click="showGroupDeviceModal = true">添加设备到分组</NButton>
+              <NButton type="primary" @click="showGroupDeviceModal = true">
+                {{ $t('custom.grouping_details.addDeviceToGroup') }}
+              </NButton>
             </NSpace>
 
             <NDataTable :columns="deviceColumns" :data="device_data" :loading="loading" class="h-auto"></NDataTable>
@@ -299,8 +300,8 @@ watch(
             />
           </NTabPane>
 
-          <NTabPane name="编辑" tab="设置">
-            <NButton type="primary" @click="showGroupModal">编辑</NButton>
+          <NTabPane name="编辑" :tab="$t('custom.grouping_details.setting')">
+            <NButton type="primary" @click="showGroupModal">{{ $t('custom.grouping_details.detail') }}</NButton>
 
             <AddOrEditDevices
               ref="the_modal2"
@@ -318,7 +319,14 @@ watch(
     </NSpace>
 
     <NModal v-model:show="showGroupDeviceModal">
-      <NCard style="width: 800px" title="添加设备到分组" :bordered="false" size="huge" role="dialog" aria-modal="true">
+      <NCard
+        style="width: 800px"
+        :title="$t('custom.grouping_details.addDeviceToGroup')"
+        :bordered="false"
+        size="huge"
+        role="dialog"
+        aria-modal="true"
+      >
         <DeviceSelectList
           :group_id="currentId as string"
           @closed_modal="handleChildChange"

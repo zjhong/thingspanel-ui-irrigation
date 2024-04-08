@@ -1,7 +1,12 @@
 import {type DataTableColumns, NButton, NFlex, NPopconfirm} from 'naive-ui';
 import dayjs from 'dayjs';
 import {$t} from "@/locales";
+import {useAppStore} from "@/store/modules/app";
 
+
+const appS = useAppStore()
+
+console.log(appS.locale, "5430954392504")
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
   {
     title: () => $t('custom.groupPage.groupName'),
@@ -31,7 +36,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
   {
     title: () => $t('custom.groupPage.actions'),
     key: 'actions',
-    width: 150,
+    width: 190,
     render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
       return (
         <div onClick={(e) => {
@@ -109,7 +114,7 @@ export const createNoSelectDeviceColumns = (
     {
       title: () => $t('custom.groupPage.actions'),
       key: 'actions',
-      width: 190,
+      width: 250,
       render: row => {
         return (
           <NFlex justify={'start'}>

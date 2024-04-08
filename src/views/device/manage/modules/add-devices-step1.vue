@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import type { FormInst } from 'naive-ui';
 import { useMessage } from 'naive-ui';
 import { deviceAdd } from '@/service/api/device';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   configOptions: any[];
@@ -19,7 +20,7 @@ const formValue = ref({
 const rules = {
   name: {
     required: true,
-    message: '请输入设备名称',
+    message: $t('custom.devicePage.enterDeviceName'),
     trigger: 'blur'
   }
 };
@@ -35,7 +36,7 @@ function handleValidateClick(e: MouseEvent) {
       props.nextCallback();
     } else {
       console.log(errors);
-      message.error('验证失败');
+      message.error($t('custom.devicePage.validationFailed'));
     }
   });
 }
@@ -45,17 +46,23 @@ function handleValidateClick(e: MouseEvent) {
   <div>
     <n-card :bordered="false">
       <n-form ref="formRef" :label-width="80" :model="formValue" :rules="rules" size="small">
-        <n-form-item label="设备名称" path="name">
-          <n-input v-model:value="formValue.name" placeholder="输入设备名称" />
+        <n-form-item :label="$t('custom.devicePage.deviceName')" path="name">
+          <n-input v-model:value="formValue.name" :placeholder="() => $t('custom.devicePage.inputDeviceName')" />
         </n-form-item>
-        <n-form-item label="标签" path="lable">
+        <n-form-item :label="$t('custom.devicePage.label')" path="lable">
           <n-dynamic-tags v-model:value="formValue.lable" />
         </n-form-item>
-        <n-form-item label="设备配置" path="device_config_id">
-          <n-select v-model:value="formValue.device_config_id" placeholder="选择设备配置" :options="configOptions" />
+        <n-form-item :label="$t('custom.devicePage.deviceConfig')" path="device_config_id">
+          <n-select
+            v-model:value="formValue.device_config_id"
+            :placeholder="() => $t('custom.devicePage.selectDeviceConfig')"
+            :options="configOptions"
+          />
         </n-form-item>
         <n-form-item>
-          <n-button type="primary" attr-type="button" @click="handleValidateClick">完成</n-button>
+          <n-button type="primary" attr-type="button" @click="handleValidateClick">
+            {{ $t('custom.devicePage.finish') }}
+          </n-button>
         </n-form-item>
       </n-form>
     </n-card>

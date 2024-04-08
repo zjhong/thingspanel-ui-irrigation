@@ -7,6 +7,7 @@ import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
 import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
+export type theLabel = string | (() => string) | undefined;
 export type SearchConfig =
   | {
       key: string;
@@ -17,8 +18,8 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
-      options: { label: string; value: any }[];
-      loadOptions?: (pattern) => Promise<{ label: string; value: any }[]>;
+      options: { label: theLabel; value: any }[];
+      loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
     }
   | {
       key: string;
@@ -30,19 +31,21 @@ export type SearchConfig =
     };
 
 // 通过props从父组件接收参数
+
 const props = defineProps<{
   fetchData: (data: any) => Promise<any>; // 数据获取函数
   columnsToShow: // 表格列配置
   | {
         key: string;
-        label: string;
+        label: theLabel;
         render?: (row: any) => VueElement | string | undefined; // 自定义渲染函数
       }[]
     | 'all'; // 特殊值'all'表示显示所有列
   searchConfigs: SearchConfig[]; // 搜索配置数组
   tableActions: Array<{
     // 表格行操作
-    label: string; // 按钮文本
+    theKey?: string; // 操作键
+    label: theLabel; // 按钮文本
     callback: any; // 点击回调
   }>;
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
@@ -113,6 +116,7 @@ const generatedColumns = computed(() => {
     columns.push({
       title: '操作',
       key: 'actions',
+      width: 150,
       render: row => (
         <div
           onClick={e => {
@@ -121,7 +125,7 @@ const generatedColumns = computed(() => {
         >
           <NSpace>
             {tableActions.map(action => {
-              if (action.label === '删除') {
+              if (action.theKey === '删除') {
                 return (
                   <NPopconfirm
                     onPositiveClick={async e => {
@@ -134,7 +138,7 @@ const generatedColumns = computed(() => {
                     {{
                       trigger: () => (
                         <NButton text size="small">
-                          {action.label}
+                          {typeof action.label === 'function' ? action.label() : action.label || ''}
                         </NButton>
                       ),
                       default: () => '确认删除'
@@ -144,7 +148,7 @@ const generatedColumns = computed(() => {
               }
               return (
                 <NButton text size="small" onClick={() => action.callback(row)}>
-                  {action.label}
+                  {typeof action.label === 'function' ? action.label() : action.label || ''}
                 </NButton>
               );
             })}

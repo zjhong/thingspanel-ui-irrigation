@@ -17,6 +17,7 @@ import AddDevicesStep1 from '@/views/device/manage/modules/add-devices-step1.vue
 import AddDevicesStep2 from '@/views/device/manage/modules/add-devices-step2.vue';
 import AddDevicesStep3 from '@/views/device/manage/modules/add-devices-step3.vue';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 
 const addKey = ref();
 const deviceNumber = ref();
@@ -78,49 +79,48 @@ const getDeviceConfigOptions = async pattern => {
       });
     });
   }
-  configOptions.value = [{ label: '不限设备配置', value: '' }, ...options];
+  configOptions.value = [{ label: $t('custom.devicePage.unlimitedDeviceConfig'), value: '' }, ...options];
   return options;
 };
 
 const columns_to_show = [
   {
     key: 'name',
-    label: '设备名称'
+    label: () => $t('custom.devicePage.deviceName')
   },
   {
     key: 'device_number',
-    label: '设备编号'
+    label: () => $t('custom.devicePage.deviceNumber')
   },
   {
     key: 'is_online',
-    label: '在线状态',
+    label: () => $t('custom.devicePage.onlineStatus'),
     render: row => {
-      console.log(row);
-      return row?.is_online === 1 ? '在线' : '离线';
+      return row?.is_online === 1 ? $t('custom.devicePage.online') : $t('custom.devicePage.offline');
     }
   },
   {
     key: 'warn_status',
-    label: '告警',
+    label: () => $t('custom.devicePage.alarmStatus'),
     render: row => {
-      return row?.warn_status === 'Y' ? '告警' : '未告警';
+      return row?.warn_status === 'Y' ? $t('custom.devicePage.alarmed') : $t('custom.devicePage.notAlarmed');
     }
   },
   {
     key: 'device_config_name',
-    label: '设备配置'
+    label: () => $t('custom.devicePage.deviceConfig')
   },
   {
     key: 'ts',
-    label: '上次推送时间'
+    label: () => $t('custom.devicePage.lastPushTime')
   },
   {
     key: 'access_way',
-    label: '通过服务/协议',
+    label: () => $t('custom.devicePage.accessServiceProtocol'),
     render: row => {
       return row?.access_way === 'B'
-        ? `通过服务(${row?.protocol_type || '-'})`
-        : `通过协议(${row?.protocol_type || '-'})`;
+        ? `${$t('custom.devicePage.byProtocol')}(${row?.protocol_type || '-'})`
+        : `${$t('custom.devicePage.byService')}(${row?.protocol_type || '-'})`;
     }
   }
 ];
@@ -134,11 +134,12 @@ const goDeviceDetails = row => {
 };
 const actions = [
   {
-    label: '详情',
+    label: () => $t('custom.devicePage.details'),
+    theKey: '删除',
     callback: goDeviceDetails
   },
   {
-    label: '删除',
+    label: () => $t('custom.devicePage.delete'),
     callback: async row => {
       await deleteDevice({ id: row?.id });
     }
@@ -147,7 +148,7 @@ const actions = [
 const searchConfigs = ref<SearchConfig[]>([
   {
     key: 'group_id',
-    label: '分组',
+    label: $t('custom.devicePage.group'),
     type: 'tree-select',
     multiple: false,
     options: [{ label: '分组', key: '' }],
@@ -155,54 +156,54 @@ const searchConfigs = ref<SearchConfig[]>([
   },
   {
     key: 'device_config_id',
-    label: '不限设备配置',
+    label: $t('custom.devicePage.unlimitedDeviceConfig'),
     type: 'select',
-    options: [{ label: '不限设备配置', value: '' }],
+    options: [{ label: () => $t('custom.devicePage.unlimitedDeviceConfig'), value: '' }],
     loadOptions: pattern => getDeviceConfigOptions(pattern)
   },
   {
     key: 'is_online',
-    label: '不限在线状态',
+    label: $t('custom.devicePage.unlimitedOnlineStatus'),
     type: 'select',
     options: [
-      { label: '不限在线状态', value: '' },
-      { label: '在线', value: 1 },
-      { label: '不在线', value: 0 }
+      { label: () => $t('custom.devicePage.unlimitedOnlineStatus'), value: ' ' },
+      { label: () => $t('custom.devicePage.online'), value: 1 },
+      { label: () => $t('custom.devicePage.offline'), value: 0 }
     ]
   },
   {
     key: 'warn_status',
-    label: '不限告警状态',
+    label: $t('custom.devicePage.unlimitedAlarmStatus'),
     type: 'select',
     options: [
-      { label: '不限告警状态', value: '' },
-      { label: '告警', value: 'Y' },
-      { label: '不告警', value: 'N' }
+      { label: () => $t('custom.devicePage.unlimitedAlarmStatus'), value: '' },
+      { label: () => $t('custom.devicePage.alarm'), value: 'Y' },
+      { label: () => $t('custom.devicePage.noAlarm'), value: 'N' }
     ]
   },
   {
     key: 'access_way',
-    label: '不限接入类型',
+    label: $t('custom.devicePage.unlimitedAccessType'),
     type: 'select',
     options: [
-      { label: '不限接入类型', value: '' },
-      { label: '通过协议', value: 'A' },
-      { label: '通过服务', value: 'B' }
+      { label: $t('custom.devicePage.unlimitedAccessType'), value: '' },
+      { label: $t('custom.devicePage.byProtocol'), value: 'A' },
+      { label: $t('custom.devicePage.byService'), value: 'B' }
     ]
   },
   {
     key: 'search',
-    label: '设备名称或编号',
+    label: $t('custom.devicePage.deviceNameOrNumber'),
     type: 'input'
   }
 ]);
 const dropOption = [
   {
-    label: '手动添加',
+    label: () => $t('custom.devicePage.manualAdd'),
     key: 'hands'
   },
   {
-    label: '通过编号添加',
+    label: () => $t('custom.devicePage.addByNumber'),
     key: 'number'
   }
 ];
@@ -210,7 +211,7 @@ const topActions = [
   {
     element: () => (
       <n-dropdown options={dropOption} trigger="hover" onSelect={handleSelect}>
-        <n-button type="primary">添加设备</n-button>
+        <n-button type="primary">{$t('custom.devicePage.addDevice')}</n-button>
       </n-dropdown>
     )
   }
@@ -277,9 +278,9 @@ watch(
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
       <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
         <n-steps :current="current" :status="currentStatus">
-          <n-step title="创建设备" description="创建设备的基本信息" />
-          <n-step title="配置设备端" description="根据系统提供的连接配置参数配置设备" />
-          <n-step title="配置设备完成" description="如果配置成功，则完成配置" />
+          <n-step :title="$t('custom.devicePage.step1Title')" :description="$t('custom.devicePage.step1Desc')" />
+          <n-step :title="$t('custom.devicePage.step2Title')" :description="$t('custom.devicePage.step2Desc')" />
+          <n-step :title="$t('custom.devicePage.step3Title')" :description="$t('custom.devicePage.step3Desc')" />
         </n-steps>
         <n-card class="mt-6" bordered border>
           <div v-if="current === 1">
@@ -304,8 +305,6 @@ watch(
                 }
               "
             />
-            <!--            <n-button @click="current-=1">取消</n-button>-->
-            <!--            <n-button @click="current+=1">完成</n-button>-->
           </div>
           <div v-if="current === 3">
             <AddDevicesStep3
@@ -324,18 +323,28 @@ watch(
           </div>
         </n-card>
       </n-drawer-content>
-      <n-drawer-content v-if="addKey === 'number'" class="flex-center pt-24px" title="通过编号添加">
+      <n-drawer-content
+        v-if="addKey === 'number'"
+        class="flex-center pt-24px"
+        :title="$t('custom.devicePage.addByNumber')"
+      >
         <n-h4 align-text>
           <n-li>
-            <NText strong>输入设备编号立即完成设备添加</NText>
+            <NText strong>{{ $t('custom.devicePage.tips') }}</NText>
           </n-li>
         </n-h4>
         <div class="mb-6">
-          <n-input v-model:value="deviceNumber" placeholder="请输入设备编号" class="max-w-240px"></n-input>
-          {{ buttonDisabled ? '' : '设备编号可用' }}
+          <n-input
+            v-model:value="deviceNumber"
+            :placeholder="$t('custom.devicePage.enterDeviceNumber')"
+            class="max-w-240px"
+          ></n-input>
+          {{ buttonDisabled ? '' : $t('custom.devicePage.deviceNumberAvailable') }}
         </div>
 
-        <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">完成</n-button>
+        <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">
+          {{ $t('custom.devicePage.finish') }}
+        </n-button>
       </n-drawer-content>
     </n-drawer>
   </div>

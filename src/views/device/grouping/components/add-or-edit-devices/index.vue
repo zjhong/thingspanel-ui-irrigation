@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import type { FormInst, FormRules } from 'naive-ui';
 import { useMessage } from 'naive-ui';
 import { deviceGroup, deviceGroupTree, putDeviceGroup } from '@/service/api/device';
+import { $t } from '@/locales';
 
 interface Group {
   id: string;
@@ -50,12 +51,12 @@ const rules: FormRules = {
   parent_id: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请选择父分组'
+    message: $t('custom.groupPage.selectParentGroup')
   },
   Name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入分组名称'
+    message: $t('custom.groupPage.enterGroupName')
   }
 };
 
@@ -84,7 +85,7 @@ const getOptions = async () => {
   options.value = [
     {
       id: '0', // Root node for tree select
-      name: '分组',
+      name: $t('custom.groupPage.group'),
       children: data?.map(item => ({
         id: item.group.id,
         name: item.group.name,
@@ -100,10 +101,10 @@ const handleSubmit = async () => {
   showModal.value = false;
   if (props.isEdit) {
     await putDeviceGroup(formItem.value);
-    message.success('修改成功');
+    message.success($t('custom.groupPage.modificationSuccess'));
   } else {
     await deviceGroup(formItem.value);
-    message.success('新增成功');
+    message.success($t('custom.groupPage.additionSuccess'));
   }
 
   await getOptions();
@@ -152,7 +153,12 @@ watch(
 <template>
   <!-- Modal component to display a form with tree selection, input field, and textarea -->
   <NModal v-model:show="showModal" @after-enter="getOptions">
-    <NCard :bordered="false" :title="props.isEdit ? '新增分组' : '编辑分组'" size="huge" style="width: 600px">
+    <NCard
+      :bordered="false"
+      :title="props.isEdit ? $t('custom.groupPage.addGroup') : $t('custom.groupPage.editGroup')"
+      size="huge"
+      style="width: 600px"
+    >
       <NForm ref="formRef" :model="formItem" :rules="rules" label-placement="left" label-width="auto">
         <!-- Parent group selection using tree select component -->
         <NFormItem :rules="[rules.parent_id]" label="父分组" path="parent_id">
@@ -170,13 +176,13 @@ watch(
           <NInput v-model:value="formItem.name" />
         </NFormItem>
         <!-- Description textarea for optional input -->
-        <NFormItem label="描述" path="description">
+        <NFormItem :label="$t('custom.groupPage.description')" path="description">
           <NInput v-model:value="formItem.description" type="textarea" />
         </NFormItem>
         <!-- Form action buttons -->
         <div style="display: flex; justify-content: flex-end; gap: 8px">
-          <NButton @click="handleSubmit">确定</NButton>
-          <NButton @click="handleClose">取消</NButton>
+          <NButton @click="handleSubmit">{{ $t('custom.groupPage.confirm') }}</NButton>
+          <NButton @click="handleClose">{{ $t('custom.groupPage.cancel') }}</NButton>
         </div>
       </NForm>
     </NCard>

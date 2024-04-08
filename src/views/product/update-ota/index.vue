@@ -175,7 +175,7 @@ init();
           flex-height
           class="flex-1-hidden"
         />
-        <NDrawer v-model:show="editPwdVisible" width="80%" placement="right">
+        <NDrawer v-model:show="editPwdVisible" display-directive="show" width="80%" placement="right">
           <NDrawerContent :title="$t('page.product.update-ota.lookTask')" closable>
             <DeviceRegister :mid="currentMid" :record="editData" />
           </NDrawerContent>

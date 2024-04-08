@@ -1,10 +1,11 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { userStatusLabels, userStatusOptions } from '@/constants/business';
+import dayjs from 'dayjs';
+import { userStatusOptions } from '@/constants/business';
 import { delUser, fetchUserList } from '@/service/api/auth';
 import TableActionModal from './components/table-action-modal.vue';
 import EditPasswordModal from './components/edit-password-modal.vue';
@@ -15,6 +16,16 @@ import { $t } from '~/src/locales';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible, setTrue: openEditPwdModal } = useBoolean();
+
+const customUserStatusOptions = computed(() => {
+  return userStatusOptions.map(item => {
+    const key = item.value === 'N' ? 'page.manage.user.status.normal' : 'page.manage.user.status.freeze';
+    return {
+      label: $t(key),
+      value: item.value
+    };
+  });
+});
 
 type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
   page: number;
@@ -29,6 +40,26 @@ const queryParams = reactive<QueryFormModel>({
   page_size: 10
 });
 
+const pagination: PaginationProps = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  itemCount: 0,
+  pageSizes: [10, 15, 20, 25, 30],
+  onChange: (page: number) => {
+    pagination.page = page;
+    queryParams.page = page;
+    getTableData();
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    queryParams.page = 1;
+    queryParams.page_size = pageSize;
+    getTableData();
+  }
+});
+
 const tableData = ref<UserManagement.User[]>([]);
 function setTableData(data: UserManagement.User[]) {
   tableData.value = data;
@@ -39,6 +70,7 @@ async function getTableData() {
   const { data } = await fetchUserList(queryParams);
   if (data) {
     const list: UserManagement.User[] = data.list;
+    pagination.itemCount = data.total;
     setTableData(list);
     endLoading();
   }
@@ -61,6 +93,12 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
     align: 'center'
   },
   {
+    key: 'created_at',
+    title: () => $t('common.creationTime'),
+    align: 'center',
+    render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+  },
+  {
     key: 'status',
     title: () => $t('page.manage.user.userStatus'),
     align: 'center',
@@ -70,7 +108,8 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
           N: 'success',
           F: 'error'
         };
-        return <NTag type={tagTypes[row.status]}>{userStatusLabels[row.status]}</NTag>;
+        const key = row.status === 'N' ? 'page.manage.user.status.normal' : 'page.manage.user.status.freeze';
+        return <NTag type={tagTypes[row.status]}>{$t(key)}</NTag>;
       }
       return <span></span>;
     }
@@ -171,34 +210,15 @@ async function handleDeleteTable(rowId: string) {
   }
 }
 
-const pagination: PaginationProps = reactive({
-  page: 1,
-  pageSize: 10,
-  showSizePicker: true,
-  pageSizes: [10, 15, 20, 25, 30],
-  onChange: (page: number) => {
-    pagination.page = page;
-    queryParams.page = page;
-    getTableData();
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    pagination.pageSize = pageSize;
-    pagination.page = 1;
-    queryParams.page = 1;
-    queryParams.page_size = pageSize;
-    getTableData();
-  }
-});
-
 function handleQuery() {
   init();
 }
 
 function handleReset() {
   Object.assign(queryParams, {
-    email: undefined,
-    name: undefined,
-    status: undefined,
+    email: null,
+    name: null,
+    status: null,
     page: 1
   });
   handleQuery();
@@ -216,7 +236,7 @@ init();
   <div class="overflow-auto">
     <NCard :title="$t('route.management_user')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+        <NForm inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
             <NInput v-model:value="queryParams.email" />
           </NFormItem>
@@ -224,7 +244,7 @@ init();
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
           <NFormItem :label="$t('page.manage.user.userStatus')" path="status">
-            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="userStatusOptions" />
+            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="customUserStatusOptions" />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -259,6 +279,8 @@ init();
 -->
         </NSpace>
         <NDataTable
+          :row-key="row => row.id"
+          :remote="true"
           :columns="columns"
           :data="tableData"
           :loading="loading"

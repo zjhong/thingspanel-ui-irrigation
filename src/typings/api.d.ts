@@ -412,7 +412,7 @@ declare namespace Api {
       /** 备注 */
       remark: string | null;
       /** 创建时间 */
-      createTime: string | null;
+      created_at: string | null;
     }
 
     interface Data {

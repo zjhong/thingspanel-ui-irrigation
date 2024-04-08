@@ -5,7 +5,7 @@ import { NButton, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import dayjs from 'dayjs';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { dataClearSettingCleanupTypeLabels, dataClearSettingEnabledTypeOptions } from '@/constants/business';
+import { dataClearSettingEnabledTypeOptions } from '@/constants/business';
 import { editDataClear, fetchDataClearList } from '@/service/api/setting';
 import { deepClone } from '@/utils/common/tool';
 import { $t } from '~/src/locales';
@@ -55,7 +55,11 @@ const columns: Ref<DataTableColumns<GeneralSetting.DataClearSetting>> = ref([
           '1': 'success',
           '2': 'warning'
         };
-        return <NTag type={tagTypes[row.data_type]}>{dataClearSettingCleanupTypeLabels[row.data_type]}</NTag>;
+        const key =
+          row.data_type === '1'
+            ? 'page.manage.setting.dataClearSetting.type.equipmentData'
+            : 'page.manage.setting.dataClearSetting.type.operationLog';
+        return <NTag type={tagTypes[row.data_type]}>{$t(key)}</NTag>;
       }
       return <span></span>;
     }

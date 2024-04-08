@@ -10,7 +10,7 @@ const local: App.I18n.Schema = {
   common: {
     complete: '完成',
     action: '操作',
-    remark: '操作',
+    remark: '备注',
     add: '新增',
     save: '保存',
     addSuccess: '添加成功',
@@ -48,7 +48,8 @@ const local: App.I18n.Schema = {
       no: '否'
     },
     debug: '调试',
-    send: '发送'
+    send: '发送',
+    creationTime: '创建时间'
   },
   theme: {
     themeSchema: {
@@ -308,29 +309,33 @@ const local: App.I18n.Schema = {
       },
       user: {
         title: '用户列表',
-        userName: '用户名',
+        userName: '姓名',
         userGender: '性别',
         nickName: '昵称',
         userPhone: '手机号',
         userEmail: '邮箱',
-        userStatus: '用户状态',
-        userRole: '用户角色',
+        userStatus: '租户状态',
+        userRole: '租户角色',
         password: '密码',
         confirmPwd: '确认密码',
         form: {
-          userName: '请输入用户名',
+          userName: '请输入姓名',
           userGender: '请选择性别',
           nickName: '请输入昵称',
           userPhone: '请输入手机号',
           userEmail: '请输入邮箱',
-          userStatus: '请选择用户状态',
-          userRole: '请选择用户角色'
+          userStatus: '请选择租户状态',
+          userRole: '请选择租户角色'
         },
         addUser: '新增用户',
         editUser: '编辑用户',
         gender: {
           male: '男',
           female: '女'
+        },
+        status: {
+          freeze: '冻结',
+          normal: '正常'
         }
       },
       menu: {
@@ -424,6 +429,10 @@ const local: App.I18n.Schema = {
             lastCleanupTime: '上次清理时间',
             lastCleanupDataTime: '上次清理数据时间节点',
             enabled: '是否启用'
+          },
+          type: {
+            equipmentData: '设备数据',
+            operationLog: '操作日志'
           }
         }
       },
@@ -533,6 +542,19 @@ const local: App.I18n.Schema = {
         valveStatus: '阀门状态',
         pressure: '压力',
         chooseDevice: '选择设备'
+      }
+    },
+    apply: {
+      service: {
+        form: {
+          serviceName: '服务名称',
+          deviceType: '设备类型',
+          protocolType: '协议类型',
+          accessAddress: '接入地址',
+          httpAddress: 'HTTP服务地址',
+          subTopicPrefix: '插件订阅主题前缀',
+          additionalInfo: '链接参数'
+        }
       }
     }
   },

@@ -4,23 +4,62 @@
  * @Author: zhaoqi
  * @Date: 2024-03-28 19:49:57
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-31 09:50:40
+ * @LastEditTime: 2024-04-08 11:35:41
 -->
 <script setup lang="tsx">
-import { useRoute } from 'vue-router';
-import editSpace from './components/edit-space.vue';
-import editArea from './components/edit-area.vue';
+import editSpace from "./components/edit-space.vue";
+import editArea from "./components/edit-area.vue";
 
-const route = useRoute();
-const type: any = route.query.type;
-console.log(99999, type);
+interface Props {
+  typeData: {
+    id?: string;
+    typeData?: string;
+  };
+}
+
+const props = defineProps<Props>();
+const type: any = props.typeData.typeData;
+console.log("555555555id", props.typeData.id);
+
+interface Emits {
+  (e: "editAdd", menu: App.Global.Menu): boolean;
+  (e: "saveSpace", menu: App.Global.Menu): boolean;
+  (e: "cancelEditArea", menu: App.Global.Menu): boolean;
+  (e: "saveEditArea", menu: App.Global.Menu): boolean;
+}
+const emit = defineEmits<Emits>();
+
+function editAdd(data) {
+  emit("editAdd", data);
+  console.log("孙", data);
+}
+function saveSpace(data) {
+  console.log("孙修改", data);
+  emit("saveSpace", data);
+}
+function cancelEditArea(data) {
+  emit("cancelEditArea", data);
+}
+function saveEditArea(data) {
+  emit("saveEditArea", data);
+}
 </script>
 
 <template>
   <NCard>
     <n-tabs type="line" animated :value="type">
-      <n-tab-pane name="space" tab="编辑空间"><editSpace /></n-tab-pane>
-      <n-tab-pane name="area" tab="编辑区域"><editArea /></n-tab-pane>
+      <n-tab-pane name="space" tab="编辑空间"
+        ><editSpace
+          :dataId="props.typeData.id"
+          @editAdd="editAdd"
+          @saveSpace="saveSpace"
+      /></n-tab-pane>
+      <n-tab-pane name="area" tab="编辑区域"
+        ><editArea
+          :dataId="props.typeData.id"
+          @cancelEditArea="cancelEditArea"
+          @saveEditArea="saveEditArea"
+      /></n-tab-pane>
     </n-tabs>
   </NCard>
 </template>

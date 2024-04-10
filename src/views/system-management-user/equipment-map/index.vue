@@ -4,7 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 09:35:32
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-04-08 11:14:14
+ * @LastEditTime: 2024-04-10 05:47:07
 -->
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
@@ -78,7 +78,7 @@ function cancelAdd(data) {
 function saveAddSpace(data) {
   if (!data) {
     addShow.value = false;
-    spacesDataList()
+    spacesDataList();
   }
 }
 
@@ -118,8 +118,10 @@ async function spacesDataList() {
 const parameter = {
   id: "",
   typeData: "",
+  buttonDisabled: true,
 };
 function areaClick(e, w) {
+  console.log(8888, e);
   parameter.id = e.space_id;
   parameter.typeData = w;
   console.log("parameter", parameter);
@@ -130,6 +132,11 @@ function areaClick(e, w) {
   e.districts.map((item) => {
     return former.value.districts.push(item);
   });
+  if (e.districts.length > 0) {
+    parameter.buttonDisabled = true;
+  } else {
+    parameter.buttonDisabled = false;
+  }
   let data = [];
   data = e.location.split(",");
   const datas: any = [];
@@ -633,7 +640,7 @@ function saveEditArea(data) {
 }
 
 .test-box {
-  padding: 10px;
+  padding: 5px 0 5px 50px;
 }
 
 .test-box:hover {

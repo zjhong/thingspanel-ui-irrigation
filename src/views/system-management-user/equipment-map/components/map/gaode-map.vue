@@ -1,17 +1,24 @@
 <script>
-import { onMounted, reactive, toRefs, watch } from 'vue';
-import AMapLoader from '@amap/amap-jsapi-loader';
+import { onMounted, reactive, toRefs, watch } from "vue";
+import AMapLoader from "@amap/amap-jsapi-loader";
 
 export default {
   // isMarkerShow 是否使用标记点
-  props: ['keywords', 'keyAddress', 'isMarkerShow', 'lnglatArr', 'dimension', 'districts'],
-  emits: ['locationValue', 'lnglatArr', 'subcomponent'],
+  props: [
+    "keywords",
+    "keyAddress",
+    "isMarkerShow",
+    "lnglatArr",
+    "dimension",
+    "districts",
+  ],
+  emits: ["locationValue", "lnglatArr", "subcomponent"],
   setup(props, context) {
     const state = reactive({
       newKeyAddress: props.keyAddress,
       conheight: {
-        height: '1000px',
-        width: ''
+        height: "1000px",
+        width: "",
       },
       map: null,
       marker: null,
@@ -22,39 +29,45 @@ export default {
       newdimension: [],
 
       lnglatArr: props.lnglatArr, // 多边形需要的数据
-      districts: props.districts
+      districts: props.districts,
     });
     const methods = {
       sweepAway() {
         state.lnglatArr = [];
-        state.newKeyAddress = '';
+        state.newKeyAddress = "";
         methods.mapInit();
       },
       mapInit(type, data) {
-        state.newKeyAddress = '';
+        console.log(111111, data);
+        state.newKeyAddress = "";
         AMapLoader.load({
-          key: '5c842e97cdff04d92eb472cf4a4860b2',
-          version: '2.0',
-          plugins: ['AMap.ToolBar', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Geocoder']
+          key: "5c842e97cdff04d92eb472cf4a4860b2",
+          version: "2.0",
+          plugins: [
+            "AMap.ToolBar",
+            "AMap.PlaceSearch",
+            "AMap.Geolocation",
+            "AMap.Geocoder",
+          ],
         })
-          .then(AMap => {
-            state.map = new AMap.Map('container', {
+          .then((AMap) => {
+            state.map = new AMap.Map("container", {
               center: type,
               resizeEnable: true,
               zoom: 12,
-              lang: 'cn'
+              lang: "cn",
             });
             if (data) {
               // 区域范围
               state.lnglatArr = JSON.parse(data.scope);
-              let polygon = ''; // 定义多边形
+              let polygon = ""; // 定义多边形
               polygon = new AMap.Polygon({
                 path: state.lnglatArr, // 设置多边形边界路径
-                strokeColor: '#FF33FF', // 线颜色
+                strokeColor: "#FF33FF", // 线颜色
                 strokeOpacity: 0.2, // 线透明度
                 strokeWeight: 3, // 线宽
-                fillColor: '1791fc', // 填充色
-                fillOpacity: 0.35 // 填充透明度
+                fillColor: "1791fc", // 填充色
+                fillOpacity: 0.35, // 填充透明度
               });
               state.map.add(polygon);
               // 自动缩放并聚焦合适中心点
@@ -64,69 +77,69 @@ export default {
               if (data.districts) {
                 let path = [];
                 // let paths = [];
-                let polygons = ''; // 定义多边形
-                data.districts.map(item => {
+                let polygons = ""; // 定义多边形
+                data.districts.map((item) => {
                   path = JSON.parse(item.scope);
                   polygons = new AMap.Polygon({
                     path, // 设置多边形边界路径
-                    strokeColor: '#FF33FF', // 线颜色
+                    strokeColor: "#FF33FF", // 线颜色
                     strokeOpacity: 0.2, // 线透明度
                     strokeWeight: 3, // 线宽
-                    fillColor: 'pink', // 填充色
-                    fillOpacity: 0.35 // 填充透明度
+                    fillColor: "pink", // 填充色
+                    fillOpacity: 0.35, // 填充透明度
                   });
                   return state.map.add(polygons);
                 });
               }
               /** 坐标 */
-              if (data.districts) {
+              if (data.districts.length > 0) {
                 const coordinates = [];
                 data.districts.map((item, index) => {
                   console.log(item);
-                  coordinates.push(item.location.split(','));
+                  coordinates.push(item.location.split(","));
                   state.marker = new AMap.Marker({
                     position: [coordinates[index][0], coordinates[index][1]],
-                    map: state.map
+                    map: state.map,
                   });
-                  state.marker.on('click', markerClick);
+                  state.marker.on("click", markerClick);
 
                   function markerClick() {
-                    context.emit('subcomponent', item);
+                    context.emit("subcomponent", item);
                   }
 
                   return undefined;
                 });
                 console.log(5555, coordinates);
               } else {
-                const coordinates = data.location.split(',');
-                console.log('data', data);
-                console.log('coordinates', coordinates);
+                const coordinates = data.location.split(",");
+                console.log("data", data);
+                console.log("coordinates", coordinates);
 
                 state.marker = new AMap.Marker({
                   position: [coordinates[0], coordinates[1]],
-                  map: state.map
+                  map: state.map,
                 });
-                state.marker.on('click', markerClick);
+                state.marker.on("click", markerClick);
 
                 // eslint-disable-next-line no-inner-declarations
                 function markerClick() {
-                  context.emit('subcomponent', data);
+                  context.emit("subcomponent", data);
                 }
               }
             }
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
-      }
+      },
     };
     watch(
       () => props.keywords,
 
       () => {
-        const newArr = props.keywords.split(',');
+        const newArr = props.keywords.split(",");
         if (newArr.length > 1) {
-          state.newdimension = newArr.map(item => {
+          state.newdimension = newArr.map((item) => {
             return item - 0;
           });
           methods.mapInit(state.newdimension, state.lnglatArr);
@@ -134,14 +147,14 @@ export default {
           methods.mapInit(state.dimension, state.lnglatArr);
         }
       },
-      { immediate: true }
+      { immediate: true },
     );
 
     onMounted(() => {
       methods.mapInit(state.dimension);
     });
     return { ...methods, ...toRefs(state) };
-  }
+  },
 };
 </script>
 

@@ -4,7 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-28 19:49:57
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-04-08 11:35:41
+ * @LastEditTime: 2024-04-10 05:50:15
 -->
 <script setup lang="tsx">
 import editSpace from "./components/edit-space.vue";
@@ -14,6 +14,7 @@ interface Props {
   typeData: {
     id?: string;
     typeData?: string;
+    buttonDisabled?: boolean;
   };
 }
 
@@ -51,6 +52,7 @@ function saveEditArea(data) {
       <n-tab-pane name="space" tab="编辑空间"
         ><editSpace
           :dataId="props.typeData.id"
+          :buttonDisabled="props.typeData.buttonDisabled"
           @editAdd="editAdd"
           @saveSpace="saveSpace"
       /></n-tab-pane>

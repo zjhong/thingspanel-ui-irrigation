@@ -7,7 +7,7 @@ import { useNaiveForm } from "@/hooks/common/form";
 import { apaceDetail, editSpaces } from "@/service/api/equipment-map";
 
 export default {
-  props: ["dataId"],
+  props: ["dataId", "buttonDisabled"],
 
   setup(props, context) {
     const state = reactive({
@@ -48,6 +48,7 @@ export default {
       locationDatas: [],
       FirstLoad: true,
       spinShow: false,
+      buttonDisabled: props.buttonDisabled,
     });
     const message = useMessage();
     const { formRef } = useNaiveForm();
@@ -95,7 +96,7 @@ export default {
           name: state.spaceForm.name,
           sort: state.spaceForm.sort,
           location: `${state.spaceForm.location},${state.spaceForm.dimensionality}`,
-          scope: JSON.stringify(state.spaceForm.scope),
+          scope: state.spaceForm.scope,
           description: state.spaceForm.description,
         };
         console.log("空间保存", data);
@@ -138,7 +139,6 @@ export default {
         });
       },
       sweepAway() {
-        console.log(1111111, state.lnglatArr);
         state.lnglatArr = [];
         state.newKeyAddress = "";
         methods.mapInit();
@@ -182,7 +182,7 @@ export default {
         })
           .then((AMap) => {
             console.log("AMap", AMap);
-            state.map = new AMap.Map("containerAdd", {
+            state.map = new AMap.Map("containerEdit", {
               center: type,
               resizeEnable: true,
               zoom: 12,
@@ -214,24 +214,19 @@ export default {
               }
             } else {
               /** 设置位置获取坐标 */
-              // eslint-disable-next-line no-inner-declarations
+              /** 设置位置获取坐标 */
               function locationDataClick(e) {
-                state.locationDatas = [];
-                state.spaceForm.scope = [];
                 if (state.locationData) {
-                  state.positionCoordinates.push(e.lnglat);
-
-                  if (state.positionCoordinates.length > 1) {
-                    message.error("只能添加一个位置信息");
-                  } else {
-                    state.spaceForm.location = String(e.lnglat.lng);
-                    state.spaceForm.dimensionality = String(e.lnglat.lat);
-                    state.buttonData = "primary";
-                    const marker = new AMap.Marker({
-                      position: new AMap.LngLat(e.lnglat.lng, e.lnglat.lat), // 经纬度对象
-                    });
-                    state.map.add(marker);
+                  state.spaceForm.location = String(e.lnglat.lng);
+                  state.spaceForm.dimensionality = String(e.lnglat.lat);
+                  state.buttonData = "primary";
+                  if (state.marker) {
+                    state.map.remove(state.marker);
                   }
+                  state.marker = new AMap.Marker({
+                    position: new AMap.LngLat(e.lnglat.lng, e.lnglat.lat), // 经纬度对象
+                    map: state.map,
+                  });
                 }
               }
 
@@ -279,17 +274,16 @@ export default {
               state.map.setFitView(); // 根据地图上添加的覆盖物分布情况，自动缩放地图到合适的视野级别
             }
 
-            // eslint-disable-next-line func-names
             AMap.plugin(["AMap.AutoComplete", "AMap.PlaceSearch"], function () {
               const autoOptions = {
-                input: "tipinput",
+                input: "editInput",
               };
               const autocomplete = new AMap.Autocomplete(autoOptions);
               const placeSearch = new AMap.PlaceSearch({
                 city: "上海",
                 map: state.map,
               });
-              // eslint-disable-next-line func-names
+
               AMap.Event.addListener(autocomplete, "select", function (e) {
                 context.emit("locationValue", e.poi);
                 placeSearch.search(e.poi.name);
@@ -315,7 +309,7 @@ export default {
   <div class="mapContainer">
     <div class="searchInfo">
       <input
-        id="tipinput"
+        id="editInput"
         v-model="newKeyAddress"
         placeholder="请输入关键字..."
         class="input-with-select"
@@ -327,7 +321,6 @@ export default {
             <NForm
               ref="formRef"
               label-placement="left"
-              :label-width="80"
               :model="spaceForm"
               :rules="rules"
             >
@@ -341,7 +334,10 @@ export default {
                   label="空间位置"
                   class="whitespace-nowrap"
                 >
-                  <n-button :type="buttonData" @click="locationSetting"
+                  <n-button
+                    :type="buttonData"
+                    @click="locationSetting"
+                    :disabled="buttonDisabled"
                     >编辑位置</n-button
                   >
                   <span class="required-span">*</span>
@@ -357,7 +353,11 @@ export default {
                   <NInput v-model:value="spaceForm.dimensionality" disabled />
                 </NFormItemGridItem>
                 <NFormItemGridItem :span="16" label="地图范围" path="scope">
-                  <n-button @click="rangeSettingClick">设置范围</n-button>
+                  <n-button
+                    @click="rangeSettingClick"
+                    :disabled="buttonDisabled"
+                    >设置范围</n-button
+                  >
                 </NFormItemGridItem>
                 <NFormItemGridItem
                   :span="16"
@@ -383,7 +383,7 @@ export default {
       </div>
     </div>
 
-    <div id="containerAdd" style="height: 1080px"></div>
+    <div id="containerEdit" style="height: 1080px"></div>
   </div>
 </template>
 

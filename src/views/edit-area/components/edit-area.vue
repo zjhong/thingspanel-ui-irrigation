@@ -69,6 +69,29 @@ export default {
     const message = useMessage();
     const { formRef } = useNaiveForm();
     const methods = {
+      /** 详情接口 */
+      edit() {
+        areaData(state.parameterId).then((e) => {
+          console.log("查询详情", e);
+          if (e.data) {
+            state.locationData = e.data.location.split(",");
+            state.areaForm = { ...e.data };
+            state.areaForm.location = state.locationData[0];
+            state.areaForm.dimensionality = state.locationData[1];
+            state.areaForm.description = e.data.description;
+            // eslint-disable-next-line no-eval
+            state.areaForm.scope = JSON.parse(e.data.scope);
+            console.log("查询详情11111", state.areaForm.scope);
+            state.spaces.map((item) => {
+              if (item.value === state.areaForm.space_id) {
+                state.selected = item.value;
+                console.log(787878, state.selected);
+              }
+            });
+            methods.mapInit();
+          }
+        });
+      },
       /** 选择空间 */
       async spacesList() {
         const name = { name: "" };
@@ -116,29 +139,7 @@ export default {
         methods.mapInit();
         context.emit("cancelEditArea", false);
       },
-      /** 详情接口 */
-      edit() {
-        areaData(state.parameterId).then((e) => {
-          console.log("查询详情", e);
-          if (e.data) {
-            state.locationData = e.data.location.split(",");
-            state.areaForm = { ...e.data };
-            state.areaForm.location = state.locationData[0];
-            state.areaForm.dimensionality = state.locationData[1];
-            state.areaForm.description = e.data.description;
-            // eslint-disable-next-line no-eval
-            state.areaForm.scope = JSON.stringify(e.data.scope);
-            console.log("查询详情11111", state.spaces);
-            state.spaces.map((item) => {
-              console.log(787878, item);
-              if (item.value === state.areaForm.space_id) {
-                state.selected=item.value
-              }
-            });
-            methods.mapInit();
-          }
-        });
-      },
+
       editAreas() {
         let data = { ...areaForm };
         let id = editArea(data).then((e) => {});
@@ -200,7 +201,7 @@ export default {
         })
           .then((AMap) => {
             console.log("AMap", AMap);
-            state.map = new AMap.Map("containers", {
+            state.map = new AMap.Map("containersEdit", {
               center: type,
               resizeEnable: true,
               zoom: 12,
@@ -360,116 +361,127 @@ export default {
       <div class="add-box">
         <NCard>
           <n-scrollbar style="max-height: 520px">
-            <NForm
-              ref="formRef"
-              label-placement="left"
-              :label-width="80"
-              :model="areaForm"
-              :rules="areaRules"
-            >
-              <NGrid :cols="1" :x-gap="24">
-                <NFormItemGridItem :span="1" label="所属空间" path="spaces_id">
-                  <NSelect
-                    v-model:value="selected"
-                    class="w-200px"
-                    :options="spaces"
-                    @update:value="selectUpdate"
-                  />
-                </NFormItemGridItem>
-                <NFormItemGridItem :span="1" label="区域名称" path="name">
-                  <NInput v-model:value="areaForm.name" placeholder="" />
-                </NFormItemGridItem>
-
-                <NFormItemGridItem
-                  :span="18"
-                  label="空间位置"
-                  class="whitespace-nowrap"
-                >
-                  <n-button :type="buttonData" @click="locationSetting"
-                    >设置位置</n-button
+            <div class="form-box">
+              <NForm
+                ref="formRef"
+                label-placement="left"
+                :model="areaForm"
+                :rules="areaRules"
+              >
+                <NGrid :cols="1" :x-gap="24">
+                  <NFormItemGridItem
+                    :span="1"
+                    label="所属空间"
+                    path="spaces_id"
                   >
-                  <span class="required-span">*</span>
-                </NFormItemGridItem>
-                <NFormItemGridItem
-                  label="位置信息"
-                  class="whitespace-nowrap"
-                  :span="18"
-                >
-                  经度:
-                  <NInput v-model:value="areaForm.location" disabled />
-                  纬度:
-                  <NInput v-model:value="areaForm.dimensionality" disabled />
-                </NFormItemGridItem>
-                <NFormItemGridItem label="地图范围" path="scope">
-                  <n-button @click="rangeSettingClick">设置范围</n-button>
-                </NFormItemGridItem>
-                <NFormItemGridItem label="区域图片" path="image_url">
-                  <n-upload
-                    :action="url + '/file/up'"
-                    :default-file-list="fileList"
-                    list-type="image-card"
-                    @before-upload="beforeUpload"
-                    @preview="handlePictureCardPreview"
-                  ></n-upload>
-                </NFormItemGridItem>
-                <NFormItemGridItem
-                  label="区域面积"
-                  path="area"
-                  class="text-nowrap"
-                >
-                  <NInput
-                    v-model:value="areaForm.area"
-                    placeholder=""
-                    class="mr-2"
-                  />
-                  公顷
-                </NFormItemGridItem>
-                <NFormItemGridItem
-                  label-width="120"
-                  label="作物所需供水量"
-                  path="water_requirement"
-                >
-                  <NInput
-                    v-model:value="areaForm.water_requirement"
-                    placeholder=""
-                    class="mr-2"
-                  />
-                  升
-                </NFormItemGridItem>
-                <NFormItemGridItem label="种植作物" path="crop_type">
-                  <NInput v-model:value="areaForm.crop_type" placeholder="" />
-                </NFormItemGridItem>
-                <NFormItemGridItem label="土壤类型" path="soil_type">
-                  <NInput v-model:value="areaForm.soil_type" placeholder="" />
-                </NFormItemGridItem>
-                <NFormItemGridItem label="灌溉类型" path="irrigation_type">
-                  <NInput
-                    v-model:value="areaForm.irrigation_type"
-                    placeholder=""
-                  />
-                </NFormItemGridItem>
-                <NFormItemGridItem label="位置详情" path="description">
-                  <NInput
-                    v-model:value="areaForm.description"
-                    type="textarea"
-                    :rows="5"
-                    placeholder=""
-                  />
-                </NFormItemGridItem>
-              </NGrid>
-              <NSpace class="w-full" :size="24" justify="center">
-                <NButton class="w-72px" @click="closeModal">取消</NButton>
-                <NButton class="w-72px" type="primary" @click="addAreaClick"
-                  >保存</NButton
-                >
-              </NSpace>
-            </NForm>
+                    <NSelect
+                      v-model:value="selected"
+                      class="w-200px"
+                      :options="spaces"
+                      @update:value="selectUpdate"
+                      disabled
+                    />
+                  </NFormItemGridItem>
+                  <NFormItemGridItem :span="1" label="区域名称" path="name">
+                    <NInput v-model:value="areaForm.name" placeholder="" />
+                  </NFormItemGridItem>
+
+                  <NFormItemGridItem
+                    :span="18"
+                    label="区域位置"
+                    class="whitespace-nowrap"
+                  >
+                    <n-button
+                      :type="buttonData"
+                      @click="locationSetting"
+                      disabled
+                      >设置位置</n-button
+                    >
+                    <span class="required-span">*</span>
+                  </NFormItemGridItem>
+                  <NFormItemGridItem
+                    label="位置信息"
+                    class="whitespace-nowrap"
+                    :span="18"
+                  >
+                    经度:
+                    <NInput v-model:value="areaForm.location" disabled />
+                    纬度:
+                    <NInput v-model:value="areaForm.dimensionality" disabled />
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="地图范围" path="scope">
+                    <n-button @click="rangeSettingClick" disabled
+                      >设置范围</n-button
+                    >
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="区域图片" path="image_url">
+                    <n-upload
+                      :action="url + '/file/up'"
+                      :default-file-list="fileList"
+                      list-type="image-card"
+                      @before-upload="beforeUpload"
+                      @preview="handlePictureCardPreview"
+                    ></n-upload>
+                  </NFormItemGridItem>
+                  <NFormItemGridItem
+                    label="区域面积"
+                    path="area"
+                    class="text-nowrap"
+                  >
+                    <NInput
+                      v-model:value="areaForm.area"
+                      placeholder=""
+                      class="mr-2"
+                    />
+                    公顷
+                  </NFormItemGridItem>
+                  <NFormItemGridItem
+                    label-width="120"
+                    label="作物所需供水量"
+                    path="water_requirement"
+                  >
+                    <NInput
+                      v-model:value="areaForm.water_requirement"
+                      placeholder=""
+                      class="mr-2"
+                    />
+                    升
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="种植作物" path="crop_type">
+                    <NInput v-model:value="areaForm.crop_type" placeholder="" />
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="土壤类型" path="soil_type">
+                    <NInput v-model:value="areaForm.soil_type" placeholder="" />
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="灌溉类型" path="irrigation_type">
+                    <NInput
+                      v-model:value="areaForm.irrigation_type"
+                      placeholder=""
+                    />
+                  </NFormItemGridItem>
+                  <NFormItemGridItem label="位置详情" path="description">
+                    <NInput
+                      v-model:value="areaForm.description"
+                      type="textarea"
+                      :rows="5"
+                      placeholder=""
+                    />
+                  </NFormItemGridItem>
+                </NGrid>
+                <NSpace class="w-full" :size="24" justify="center">
+                  <NButton class="w-72px" @click="closeModal">取消</NButton>
+                  <NButton class="w-72px" type="primary" @click="addAreaClick"
+                    >保存</NButton
+                  >
+                </NSpace>
+              </NForm>
+            </div>
           </n-scrollbar>
         </NCard>
       </div>
     </div>
 
-    <div id="containers" style="height: 1080px"></div>
+    <div id="containersEdit" style="height: 1080px"></div>
   </div>
 </template>
 
@@ -509,5 +521,8 @@ export default {
 .required-span {
   margin-left: 10px;
   color: red;
+}
+.form-box {
+  padding-right: 15px;
 }
 </style>

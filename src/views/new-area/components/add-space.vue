@@ -17,8 +17,7 @@ export default {
       marker: null,
       // 默认维度
       dimension: [121.50861, 31.25141],
-      // 新维度
-      newdimension: [],
+   
       lnglatArr: [], // 多边形需要的数据
 
       spaceForm: {
@@ -255,7 +254,6 @@ export default {
           <NForm
             ref="formRef"
             label-placement="left"
-            :label-width="80"
             :model="spaceForm"
             :rules="rules"
           >

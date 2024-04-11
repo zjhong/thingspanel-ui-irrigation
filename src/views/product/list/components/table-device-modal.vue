@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { STATIC_BASE_URL } from '@/constants/common';
 import UploadCard from '../../update-package/components/upload-card.vue';
 import { $t } from '~/src/locales';
 import { addDevice, editProduct } from '~/src/service/product/list';
@@ -73,6 +74,10 @@ const rules = computed(() => {
   return rulesData;
 });
 
+const downloadTemplate = () => {
+  window.open(`${STATIC_BASE_URL}/files/batch_template/batch_template.xlsx`);
+};
+
 function createDefaultFormModel(): deviceAddType {
   const data: deviceAddType = {
     batch_file: '',
@@ -107,7 +112,11 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addDevice({ ...formModel, product_id: props.pid, device_count: Number(formModel.device_count) });
+    data = await addDevice({
+      ...formModel,
+      product_id: props.pid,
+      device_count: Number(formModel.device_count)
+    });
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -158,7 +167,9 @@ watch(
             class="mt-10px"
             :file-type="['xls', 'xlsx']"
           ></UploadCard>
-          <NButton quaternary type="primary">{{ $t('page.product.list.downloadTemplate') }}</NButton>
+          <NButton quaternary type="primary" @click="downloadTemplate">
+            {{ $t('page.product.list.downloadTemplate') }}
+          </NButton>
         </NFormItemGridItem>
         <NFormItemGridItem v-else :span="24" :label="$t('page.product.list.deviceCount')" path="device_count">
           <NInput v-model:value="formModel.device_count" />

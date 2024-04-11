@@ -3,9 +3,10 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { getDeviceConfigList } from '@/service/api/device';
+import { dictQuery } from '@/service/api/setting';
 import UploadCard from './upload-card.vue';
 import { $t } from '~/src/locales';
-import { addProduct, editProduct, getDict } from '~/src/service/product/list';
+import { addProduct, editProduct } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -111,7 +112,7 @@ function handleUpdateFormModelByModalType() {
 }
 const productOptions = ref([]);
 const getProductList = async (name?: string) => {
-  const res: any = await getDict({
+  const res: any = await dictQuery({
     page: 1,
     page_size: 10,
     dict_code: 'PRODUCT_TYPE',
@@ -169,6 +170,8 @@ watch(
             v-model:value="formModel.device_type"
             filterable
             :options="productOptions"
+            label-field="translation"
+            value-field="dict_value"
             @search="getProductList"
           />
         </NFormItemGridItem>

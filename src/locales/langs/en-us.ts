@@ -12,6 +12,8 @@ const local: App.I18n.Schema = {
     remark: 'Remark',
     action: 'Action',
     add: 'Add',
+    input: 'Place Input ',
+    select: 'Place Select ',
     save: 'save',
     addSuccess: 'Add Success',
     backToHome: 'Back to home',

@@ -44,6 +44,7 @@ export const productLocaleEn: ProductLocal = {
     packageList: 'Upgrade Package List',
     packageName: 'Upgrade Package Name',
     version: 'Target Version for Upgrade',
+    versionText: 'Version Code',
     versionCode: 'Upgrade Package Version Code',
     deviceConfig: 'Device Configuration',
     type: 'Upgrade Package Type',

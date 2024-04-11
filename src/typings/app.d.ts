@@ -254,6 +254,8 @@ declare namespace App {
       common: {
         complete: string;
         action: string;
+        input: string;
+        select: string;
         remark: string;
         add: string;
         save: string;

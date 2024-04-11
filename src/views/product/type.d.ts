@@ -47,6 +47,7 @@ type ProductLocal = {
     packageName: string;
     packageNamePlaceholder: string;
     version: string;
+    versionText: string;
     versionPlaceholder: string;
     versionCode: string;
     versionCodePlaceholder: string;

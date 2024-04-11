@@ -13,7 +13,7 @@ export interface Props {
   type?: 'add' | 'edit';
   pid: string;
   /** 编辑的表格行数据 */
-  editData?: UpgradeTaskCreate | null;
+  editData?: productPackageRecord | null;
 }
 
 export type ModalType = NonNullable<Props['type']>;
@@ -86,7 +86,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       if (props.editData) {
-        handleUpdateFormModel(props.editData as UpgradeTaskCreate);
+        handleUpdateFormModel(props.editData);
       }
     }
   };
@@ -150,6 +150,7 @@ const deviceChange = value => {
             <TableActionModal
               v-model:visible="deviceVisible"
               v-model:selected-keys="formModel.device_id_list"
+              :record="props.editData"
               @success="deviceChange"
             />
           </NSpace>

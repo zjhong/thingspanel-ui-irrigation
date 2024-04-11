@@ -10,6 +10,8 @@ const local: App.I18n.Schema = {
   common: {
     complete: '完成',
     action: '操作',
+    input: '请输入',
+    select: '请选择',
     remark: '备注',
     add: '新增',
     save: '保存',

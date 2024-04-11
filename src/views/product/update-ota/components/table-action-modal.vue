@@ -13,7 +13,7 @@ export interface Props {
   /** 弹窗类型 add: 新增 edit: 编辑 */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: otaRecord | null;
+  editData?: productPackageRecord | null;
   selectedKeys: string[];
 }
 
@@ -113,8 +113,10 @@ const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
   name: '',
-  product_id: '',
+  // product_id: props.editData?.id,
+  current_version: '',
   page: 1,
+  is_enabled: 'enabled',
   page_size: 10
 });
 const tableData = ref<productPackageRecord[]>([]);
@@ -129,9 +131,8 @@ function handleQuery() {
 
 function handleReset() {
   Object.assign(queryParams, {
-    activate_flag: 'active',
     name: '',
-    product_id: '',
+    current_version: '',
     page: 1
   });
   handleQuery();
@@ -176,11 +177,11 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'name',
-    title: $t('page.product.update-package.packageName')
+    title: $t('page.product.update-ota.deviceName')
   },
   {
-    key: 'version',
-    title: $t('page.product.update-package.versionCode')
+    key: 'current_version',
+    title: $t('page.product.update-package.versionText')
   },
   {
     key: 'device_number',
@@ -210,37 +211,28 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
     <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
         <div class="h-full flex-col">
           <NForm inline label-placement="left" :model="queryParams">
-            <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
-              <NInput v-model:value="queryParams.product_id" />
+            <NFormItem :label="$t('page.product.update-package.versionText')" path="versionText">
+              <NInput
+                v-model:value="queryParams.current_version"
+                :placeholder="$t('common.input') + $t('page.product.update-package.versionText')"
+              />
             </NFormItem>
-            <NFormItem :label="$t('page.product.update-package.packageName')" path="name">
-              <NInput v-model:value="queryParams.name" />
+            <NFormItem :label="$t('page.product.update-ota.deviceName')" path="deviceName">
+              <NInput
+                v-model:value="queryParams.name"
+                :placeholder="$t('common.input') + $t('page.product.update-ota.deviceName')"
+              />
             </NFormItem>
             <NFormItem>
               <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
               <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItem>
           </NForm>
-          <!--
- <NSpace class="pb-12px" justify="space-between">
-            <NSpace></NSpace>
-            <NSpace align="center" :size="18">
-              <NButton size="small" type="primary" @click="getTableData">
-                <IconMdiRefresh
-                  class="mr-4px text-16px"
-                  :class="{ 'animate-spin': loading }"
-                />
-                {{ $t("common.refreshTable") }}
-              </NButton>
-              <ColumnSetting v-model:columns="columns" />
-            </NSpace>
-          </NSpace>
--->
           <NDataTable
             :row-key="rowKey"
             remote

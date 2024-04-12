@@ -32,9 +32,8 @@ const fetchDataFunction = async () => {
     page_size: !props.noRefresh ? 4 : undefined,
     device_id: props.id
   });
-
   if (!error) {
-    tableData.value = data?.value || data || [];
+    tableData.value = data?.value || data?.list || data || [];
     if (data?.count) {
       page_coune.value = Math.ceil(data.count / 4);
     }

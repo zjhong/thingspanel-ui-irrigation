@@ -84,7 +84,7 @@ onMounted(() => {
             )"
             :key="component.key"
             :tab="component.name"
-            :name="component.name"
+            :name="component.key"
           >
             <n-spin size="small" :show="loading">
               <component

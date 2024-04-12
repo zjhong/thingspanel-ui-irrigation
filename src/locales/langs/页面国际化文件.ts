@@ -4,7 +4,6 @@ export const pzh_cn = {
     description: '一切尽在不言中',
     refresh: '刷新'
   },
-
   groupPage: {
     groupName: '分组名称',
     description: '描述',

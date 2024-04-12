@@ -28,7 +28,6 @@ const getDevice = async () => {
   totalPages.value = Math.ceil(res.data.total / 10);
   loading.value = false;
 };
-
 // 使用 lodash 的 debounce 函数来延迟搜索请求的发送
 const debouncedSearch = debounce(async () => {
   if (isRequestPending.value) {
@@ -55,7 +54,6 @@ const handleInput = () => {
   debouncedSearch();
 };
 // Async function to fetch device groups from the backend
-
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
   await deleteDeviceGroup({ id: rid });
@@ -65,7 +63,6 @@ const router = useRouter();
 const viewDetails = (rid: string) => {
   router.push({ name: 'device_grouping-details', query: { id: rid } });
 };
-
 // Define columns for the data table
 const columns = group_columns(viewDetails, deleteItem);
 // Function to show the modal for adding or editing device groups
@@ -74,7 +71,6 @@ const showModal = () => {
     the_modal.value.showModal = true;
   }
 };
-
 onMounted(getDevice); // Fetch device groups on component mount
 </script>
 

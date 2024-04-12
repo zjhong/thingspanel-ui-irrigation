@@ -118,7 +118,8 @@ const columns_to_show = [
     key: 'access_way',
     label: () => $t('custom.devicePage.accessServiceProtocol'),
     render: row => {
-      return row?.access_way === 'B'
+      if (row?.access_way === '') return '此项为空';
+      return row?.access_way === 'A'
         ? `${$t('custom.devicePage.byProtocol')}(${row?.protocol_type || '-'})`
         : `${$t('custom.devicePage.byService')}(${row?.protocol_type || '-'})`;
     }
@@ -135,11 +136,12 @@ const goDeviceDetails = row => {
 const actions = [
   {
     label: () => $t('custom.devicePage.details'),
-    theKey: '删除',
+
     callback: goDeviceDetails
   },
   {
     label: () => $t('custom.devicePage.delete'),
+    theKey: '删除',
     callback: async row => {
       await deleteDevice({ id: row?.id });
     }

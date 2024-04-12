@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { defineExpose, onMounted, ref } from 'vue';
 import { NButton, NDataTable, NForm, NFormItem, NInput, NModal, NPagination } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { Refresh } from '@vicons/ionicons5';
@@ -8,6 +8,7 @@ import { commandDataById } from '@/service/api';
 
 const props = defineProps<{
   id: string;
+  noRefresh?: boolean;
   isCommand?: boolean;
   buttonName?: string;
   tableColumns: any[] | undefined;
@@ -25,11 +26,19 @@ const { loading, startLoading, endLoading } = useLoading();
 
 const fetchDataFunction = async () => {
   startLoading();
-  const { data, error } = await props.fetchDataApi({ page: the_page.value, page_size: 4, device_id: props.id });
+
+  const { data, error } = await props.fetchDataApi({
+    page: !props.noRefresh ? the_page.value : undefined,
+    page_size: !props.noRefresh ? 4 : undefined,
+    device_id: props.id
+  });
 
   if (!error) {
-    tableData.value = data.value;
-    page_coune.value = Math.ceil(data.count / 4);
+    tableData.value = data?.value || data || [];
+    if (data?.count) {
+      page_coune.value = Math.ceil(data.count / 4);
+    }
+
     endLoading();
   }
 };
@@ -65,6 +74,8 @@ const refresh = () => {
   the_page.value = 1;
   fetchDataFunction();
 };
+
+defineExpose({ refresh });
 const getOptions = async show => {
   if (show) {
     const res = await commandDataById(props.id);
@@ -78,7 +89,7 @@ onMounted(fetchDataFunction);
   <div>
     <NFlex :justify="buttonName ? 'space-between' : 'end'">
       <NButton v-if="buttonName" type="primary" @click="openDialog">{{ buttonName }}</NButton>
-      <NButton :bordered="false" class="justify-end" @click="refresh">
+      <NButton v-if="!noRefresh" :bordered="false" class="justify-end" @click="refresh">
         <NIcon size="18">
           <Refresh />
         </NIcon>
@@ -96,6 +107,8 @@ onMounted(fetchDataFunction);
               :options="options"
               @update:show="getOptions"
             />
+            <span class="ml-4 mr-4">或</span>
+            <NInput v-model:value="commandValue" placeholder="或在此输入" />
           </NFormItem>
           <NFormItem label="属性">
             <NInput v-model:value="textValue" type="textarea" />
@@ -108,6 +121,6 @@ onMounted(fetchDataFunction);
       </n-card>
     </NModal>
     <NDataTable class="mb-4 mt-4" :loading="loading" :columns="tableColumns" :data="tableData" />
-    <NPagination :page-count="page_coune" :page="the_page" :page-size="4" @update:page="updatePage" />
+    <NPagination v-if="!noRefresh" :page-count="page_coune" :page="the_page" :page-size="4" @update:page="updatePage" />
   </div>
 </template>

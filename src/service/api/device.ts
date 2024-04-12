@@ -187,6 +187,14 @@ export const telemetryDataPub = async (params: any) => {
   return await request.post<any>(`/telemetry/datas/pub`, params);
 };
 
+export const getAttributeDataSet = async (params: any) => {
+  return await request.get<any>(`attribute/datas/${params.device_id}`);
+};
+
+export const deleteAttributeDataSet = async (params: any) => {
+  return await request.delete<any>(`attribute/datas/${params}`);
+};
+
 /** 属性下发记录查询（分页） */
 export const getAttributeDataSetLogs = async (params: any) => {
   return await request.get<any>(`/attribute/datas/set/logs`, { params });

@@ -14,23 +14,24 @@ import Automate from '@/views/device/details/modules/automate.vue';
 import GiveAnAlarm from '@/views/device/details/modules/give-an-alarm.vue';
 import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
+import { $t } from '@/locales';
 
 const { query } = useRoute();
 const { id } = query;
 const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
 const components = [
-  { key: 'telemetry', name: '遥测', component: Telemetry },
-  { key: 'join', name: '连接', component: Join },
-  { key: 'device-analysis', name: '子设备', component: DeviceAnalysis },
-  { key: 'message', name: '信息', component: Message },
-  { key: 'stats', name: '属性', component: Stats },
-  { key: 'event-report', name: '事件(上报)', component: EventReport },
-  { key: 'command-delivery', name: '命令(下发)', component: CommandDelivery },
-  { key: 'automate', name: '自动化', component: Automate },
-  { key: 'give-an-alarm', name: '告警', component: GiveAnAlarm },
-  { key: 'user', name: '用户', component: User },
-  { key: 'settings', name: '设置', component: Settings }
+  { key: 'telemetry', name: () => $t('custom.device_details.telemetry'), component: Telemetry },
+  { key: 'join', name: () => $t('custom.device_details.join'), component: Join },
+  { key: 'device-analysis', name: () => $t('custom.device_details.deviceAnalysis'), component: DeviceAnalysis },
+  { key: 'message', name: () => $t('custom.device_details.message'), component: Message },
+  { key: 'stats', name: () => $t('custom.device_details.stats'), component: Stats },
+  { key: 'event-report', name: () => $t('custom.device_details.eventReport'), component: EventReport },
+  { key: 'command-delivery', name: () => $t('custom.device_details.commandDelivery'), component: CommandDelivery },
+  { key: 'automate', name: () => $t('custom.device_details.automate'), component: Automate },
+  { key: 'give-an-alarm', name: () => $t('custom.device_details.giveAnAlarm'), component: GiveAnAlarm },
+  { key: 'user', name: () => $t('custom.device_details.user'), component: User },
+  { key: 'settings', name: () => $t('custom.device_details.settings'), component: Settings }
 ];
 const changeTabs = _v => {
   startLoading();
@@ -51,20 +52,26 @@ onMounted(() => {
 
         <NFlex>
           <div class="mr-4">
-            <spna class="mr-2">设备编号:</spna>
+            <spna class="mr-2">{{ $t('custom.device_details.deviceNumber') }}:</spna>
             <spna>{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
           </div>
           <div class="mr-4">
-            <spna class="mr-2">设备配置:</spna>
+            <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
             <spna>{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
           </div>
           <div class="mr-4">
-            <spna class="mr-2">状态:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.is_online === 1 ? '在线' : '离线' }}</spna>
+            <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna>
+            <spna>
+              {{
+                deviceDataStore?.deviceData?.is_online === 1
+                  ? $t('custom.device_details.online')
+                  : $t('custom.device_details.offline')
+              }}
+            </spna>
           </div>
           <div class="mr-4">
-            <spna class="mr-2">告警:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.is_online || '无告警' }}</spna>
+            <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna>
+            <spna>{{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}</spna>
           </div>
         </NFlex>
       </div>

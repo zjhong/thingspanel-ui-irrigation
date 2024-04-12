@@ -993,7 +993,6 @@ declare namespace App {
           deviceConfigFail: string;
           back: string;
         };
-
         grouping_details: {
           previousPage: string;
           previousLevel: string;
@@ -1014,6 +1013,26 @@ declare namespace App {
           operationFail: string;
           cancel: string;
           confirm: string;
+        };
+        device_details: {
+          telemetry: string;
+          join: string;
+          deviceAnalysis: string;
+          message: string;
+          stats: string;
+          eventReport: string;
+          commandDelivery: string;
+          automate: string;
+          giveAnAlarm: string;
+          user: string;
+          settings: string;
+          deviceNumber: string;
+          deviceConfig: string;
+          status: string;
+          online: string;
+          offline: string;
+          alarm: string;
+          noAlarm: string;
         };
       };
     };

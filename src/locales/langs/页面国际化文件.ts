@@ -104,6 +104,26 @@ export const pzh_cn = {
     operationFail: '操作失败',
     cancel: '取消',
     confirm: '确定'
+  },
+  device_details: {
+    telemetry: '遥测',
+    join: '连接',
+    deviceAnalysis: '子设备',
+    message: '信息',
+    stats: '属性',
+    eventReport: '事件(上报)',
+    commandDelivery: '命令(下发)',
+    automate: '自动化',
+    giveAnAlarm: '告警',
+    user: '用户',
+    settings: '设置',
+    deviceNumber: '设备编号',
+    deviceConfig: '设备配置',
+    status: '状态',
+    online: '在线',
+    offline: '离线',
+    alarm: '告警',
+    noAlarm: '无告警'
   }
 };
 
@@ -213,5 +233,25 @@ export const pen = {
     operationFail: 'Operation Fail',
     cancel: 'Cancel',
     confirm: 'Confirm'
+  },
+  device_details: {
+    telemetry: 'telemetry',
+    join: 'join',
+    deviceAnalysis: 'deviceAnalysis',
+    message: 'message',
+    stats: 'stats',
+    eventReport: 'eventReport',
+    commandDelivery: 'commandDelivery',
+    automate: 'automate',
+    giveAnAlarm: 'giveAnAlarm',
+    user: 'user',
+    settings: 'settings',
+    deviceNumber: 'deviceNumber',
+    deviceConfig: 'deviceConfig',
+    status: 'status',
+    online: 'online',
+    offline: 'offline',
+    alarm: 'alarm',
+    noAlarm: 'noAlarm'
   }
 };

@@ -168,7 +168,7 @@ const searchConfigs = ref<SearchConfig[]>([
     label: $t('custom.devicePage.unlimitedOnlineStatus'),
     type: 'select',
     options: [
-      { label: () => $t('custom.devicePage.unlimitedOnlineStatus'), value: ' ' },
+      { label: () => $t('custom.devicePage.unlimitedOnlineStatus'), value: '' },
       { label: () => $t('custom.devicePage.online'), value: 1 },
       { label: () => $t('custom.devicePage.offline'), value: 0 }
     ]

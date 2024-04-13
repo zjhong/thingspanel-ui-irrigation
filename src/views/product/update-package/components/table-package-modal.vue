@@ -150,7 +150,7 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" :on-after-enter="getOptions()" preset="card" :title="title" class="w-800px">
+  <NModal v-model:show="modalVisible" :on-after-enter="()=>getOptions()" preset="card" :title="title" class="w-800px">
     <NForm ref="formRef" label-placement="left" label-width="auto" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.type')" path="package_type">

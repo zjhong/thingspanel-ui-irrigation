@@ -172,7 +172,7 @@ watch(
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_config_id">
           <NSelect
-            v-model:value="queryParams.device_config_id"
+            v-model:value="formModel.device_config_id"
             filterable
             :options="productOptions"
             @search="getOptions"

@@ -6,7 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { getOtaPackageList } from '@/service/product/update-package';
-import { getDeviceList } from '@/service/product/list';
+import { getDeviceConfigList } from '@/service/api/device';
 import ColumnSetting from './components/column-setting.vue';
 import DeviceRegister from './components/device-register.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -121,16 +121,21 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
 ]) as Ref<DataTableColumns<productPackageRecord>>;
 
 const deviceOptions = ref();
-const getDevice = () => {
-  getDeviceList({ page: 1, page_size: 99 }).then(res => {
-    deviceOptions.value = res.data.list.map(item => ({
-      label: item.name,
-      value: item.id
-    }));
+
+const getList = async (name?: string) => {
+  const { data, error } = await getDeviceConfigList({
+    page: 1,
+    page_size: 99,
+    name
   });
+  if (!error && data) {
+    deviceOptions.value = data?.list?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+  }
 };
 function init() {
-  getDevice();
+  getList();
   getTableData();
 }
 
@@ -145,7 +150,14 @@ init();
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NGrid :cols="24" :x-gap="18">
             <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
-              <NSelect v-model:value="queryParams.device_config_id" :options="deviceOptions" />
+              <NSelect
+                v-model:value="queryParams.device_config_id"
+                filterable
+                :options="deviceOptions"
+                label-field="translation"
+                value-field="dict_value"
+                @search="getList"
+              />
             </NFormItemGridItem>
             <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
               <NInput v-model:value="queryParams.name" />

@@ -129,9 +129,7 @@ const getList = async (name?: string) => {
     name
   });
   if (!error && data) {
-    deviceOptions.value = data?.list?.map(item => {
-      return { label: item.name, value: item.id };
-    });
+    deviceOptions.value = data?.list||[];
   }
 };
 function init() {
@@ -154,8 +152,8 @@ init();
                 v-model:value="queryParams.device_config_id"
                 filterable
                 :options="deviceOptions"
-                label-field="translation"
-                value-field="dict_value"
+                label-field="name"
+                value-field="id"
                 @search="getList"
               />
             </NFormItemGridItem>

@@ -37,7 +37,6 @@ const fetchDataFunction = async () => {
     if (data?.count) {
       page_coune.value = Math.ceil(data.count / 4);
     }
-
     endLoading();
   }
 };

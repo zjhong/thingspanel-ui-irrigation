@@ -62,7 +62,7 @@ const fetchData = async () => {
     sendResult: sendResult.value
   });
   if (!error) {
-    tableData.value = data.value;
+    tableData.value = data?.value || data.list;
     total.value = Math.ceil(data.count / 5);
     endLoading();
   }

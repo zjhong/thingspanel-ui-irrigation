@@ -352,7 +352,7 @@ loadOptionsOnMount2();
         v-model:page-size="pageSize"
         class="justify-end"
         :item-count="total"
-        :page-size-options="[10, 20, 30, 40]"
+        :page-sizes="[10, 20, 30, 40, 50]"
         show-size-picker
         @update:page="onUpdatePage"
         @update:page-size="onUpdatePageSize"

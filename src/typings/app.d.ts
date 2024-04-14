@@ -492,6 +492,7 @@ declare namespace App {
             userRole: string;
             password: string;
             confirmPwd: string;
+            enter: string;
             form: {
               userName: string;
               userGender: string;

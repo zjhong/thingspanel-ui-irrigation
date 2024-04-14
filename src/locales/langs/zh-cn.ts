@@ -320,6 +320,7 @@ const local: App.I18n.Schema = {
         userRole: '租户角色',
         password: '密码',
         confirmPwd: '确认密码',
+        enter: '进入',
         form: {
           userName: '请输入姓名',
           userGender: '请选择性别',

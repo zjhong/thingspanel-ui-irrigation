@@ -7,12 +7,14 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import dayjs from 'dayjs';
 import { userStatusOptions } from '@/constants/business';
 import { delUser, fetchUserList } from '@/service/api/auth';
+import { useAuthStore } from '@/store/modules/auth';
 import TableActionModal from './components/table-action-modal.vue';
 import EditPasswordModal from './components/edit-password-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
+const authStore = useAuthStore();
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible, setTrue: openEditPwdModal } = useBoolean();
@@ -142,6 +144,20 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
+          <NPopconfirm
+            negative-text={$t('common.cancel')}
+            positive-text={$t('common.confirm')}
+            onPositiveClick={() => handleEnter(row.id)}
+          >
+            {{
+              default: () => $t('common.confirm'),
+              trigger: () => (
+                <NButton type="warning" size={'small'}>
+                  {$t('page.manage.user.enter')}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
           <NButton type="warning" size={'small'} onClick={() => handleEditPwd(row.id)}>
             {$t('page.login.resetPwd.title')}
           </NButton>
@@ -183,6 +199,11 @@ function setEditData(data: UserManagement.User | null) {
 function handleAddTable() {
   openModal();
   setModalType('add');
+}
+
+/** 切换用户 */
+async function handleEnter(rowId: string) {
+  await authStore.enter(rowId);
 }
 
 function handleEditPwd(rowId: string) {

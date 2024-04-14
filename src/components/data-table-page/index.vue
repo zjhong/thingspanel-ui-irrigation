@@ -76,6 +76,7 @@ const getData = async () => {
     })
   );
   // 调用提供的fetchData函数获取数据
+
   const response = await fetchData({
     page: currentPage.value,
     page_size: pageSize.value,
@@ -185,6 +186,7 @@ const handleReset = () => {
   Object.keys(searchCriteria.value).forEach(key => {
     searchCriteria.value[key] = ''; // 或者对应字段的默认值
   });
+
   handleSearch(); // 重置后重新获取数据
 };
 defineExpose({
@@ -192,6 +194,7 @@ defineExpose({
 });
 // 更新树形选择器的选项
 const handleTreeSelectUpdate = (value, key) => {
+  currentPage.value = 1;
   searchCriteria.value[key] = value;
 };
 
@@ -265,6 +268,7 @@ loadOptionsOnMount2();
                 :options="config.options"
                 :placeholder="config.label"
                 class="input-style"
+                @update:value="currentPage = 1"
                 @search="
                   value => {
                     throttledLoadOptionsOnMount(value);
@@ -348,7 +352,7 @@ loadOptionsOnMount2();
         v-model:page-size="pageSize"
         class="justify-end"
         :item-count="total"
-        :page-size-options="[10, 20, 30, 40]"
+        :page-sizes="[10, 20, 30, 40, 50]"
         show-size-picker
         @update:page="onUpdatePage"
         @update:page-size="onUpdatePageSize"

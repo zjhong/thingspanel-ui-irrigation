@@ -59,14 +59,8 @@ async function renderMap(devices) {
 
   const markers = devices.map(device => {
     const locations = device.location && device.location.split(',');
-    const latitude = !Number.isNaN(Number(locations[1]))
-      ? Number(locations[1])
-      : 39 + Number((Math.random() * (0.999999 - 0.000001) + 0.000001).toFixed(6));
-
-    const longitude = !Number.isNaN(Number(locations[0]))
-      ? Number(locations[0])
-      : 116 + Number((Math.random() * (0.999999 - 0.000001) + 0.000001).toFixed(6));
-    console.log(latitude, longitude);
+    const latitude = !Number.isNaN(Number(locations[1])) ? Number(locations[1]) : undefined;
+    const longitude = !Number.isNaN(Number(locations[0])) ? Number(locations[0]) : undefined;
     return {
       position: new TMap.LatLng(latitude, longitude),
       id: device.id,

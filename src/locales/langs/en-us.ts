@@ -321,6 +321,7 @@ const local: App.I18n.Schema = {
         userRole: 'User Role',
         password: 'Password',
         confirmPwd: 'Confirm Password',
+        enter: 'Enter',
         form: {
           userName: 'Please enter user name',
           userGender: 'Please select gender',

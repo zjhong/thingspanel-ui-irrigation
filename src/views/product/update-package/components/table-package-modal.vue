@@ -2,23 +2,23 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { getDeviceList } from '@/service/product/update-ota';
+import { getDeviceConfigList } from '@/service/api/device';
 import UploadCard from './upload-card.vue';
 import { addOtaPackage, editOtaPackage } from '~/src/service/product/update-package';
 import { $t } from '~/src/locales';
 import { packageOptions, signModeOptions } from '~/src/constants/business';
 const productOptions = ref();
-const getOptions = () => {
-  getDeviceList({ page: 1, page_size: 99 }).then(({ data }) => {
-    if (data && data.list && data.list.length) {
-      productOptions.value = data.list.map((item: productRecord) => {
-        return {
-          label: item.name,
-          value: item.id
-        };
-      });
-    }
+const getOptions = async (name?: string) => {
+  const { data, error } = await getDeviceConfigList({
+    page: 1,
+    page_size: 99,
+    name
   });
+  if (!error && data) {
+    productOptions.value = data?.list?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+  }
 };
 export interface Props {
   /** 弹窗可见性 */
@@ -150,7 +150,7 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" :on-after-enter="getOptions" preset="card" :title="title" class="w-800px">
+  <NModal v-model:show="modalVisible" :on-after-enter="()=>getOptions()" preset="card" :title="title" class="w-800px">
     <NForm ref="formRef" label-placement="left" label-width="auto" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.type')" path="package_type">
@@ -171,7 +171,12 @@ watch(
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" :options="productOptions" />
+          <NSelect
+            v-model:value="formModel.device_config_id"
+            filterable
+            :options="productOptions"
+            @search="getOptions"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.update-package.moduleName')" path="module">
           <NInput v-model:value="formModel.module" />

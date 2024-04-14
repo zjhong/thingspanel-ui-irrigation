@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
 import { useDeviceDataStore } from '@/store/modules/device';
@@ -15,8 +15,10 @@ import GiveAnAlarm from '@/views/device/details/modules/give-an-alarm.vue';
 import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
+import { useAppStore } from '@/store/modules/app';
 
 const { query } = useRoute();
+const appStore = useAppStore();
 const { id } = query;
 const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
@@ -33,8 +35,12 @@ const components = [
   { key: 'user', name: () => $t('custom.device_details.user'), component: User },
   { key: 'settings', name: () => $t('custom.device_details.settings'), component: Settings }
 ];
-const changeTabs = _v => {
+
+const tabValue = ref<any>('telemetry');
+const changeTabs = v => {
   startLoading();
+
+  tabValue.value = v;
   setTimeout(() => {
     endLoading();
   }, 500);
@@ -42,6 +48,20 @@ const changeTabs = _v => {
 onMounted(() => {
   deviceDataStore.fetchData(id as string);
 });
+
+watch(
+  () => appStore.locale,
+  () => {
+    console.log(appStore.locale);
+    let temporary: any;
+    // eslint-disable-next-line prefer-const
+    temporary = tabValue.value;
+    tabValue.value = '';
+    setTimeout(() => {
+      tabValue.value = temporary;
+    }, 50);
+  }
+);
 </script>
 
 <template>
@@ -77,7 +97,7 @@ onMounted(() => {
       </div>
       <n-divider title-placement="left"></n-divider>
       <div>
-        <n-tabs type="line" @update:value="changeTabs">
+        <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane
             v-for="component in components.filter(
               i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id

@@ -4,6 +4,7 @@ import { useLoading } from '@sa/hooks';
 import { SetupStoreId } from '@/enum';
 import { useRouterPush } from '@/hooks/common/router';
 import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { transformUser } from '@/service/api/auth';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
 import { useRouteStore } from '../route';
@@ -69,6 +70,41 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     endLoading();
   }
 
+  /**
+   * enter
+   *
+   * @param userId userId
+   */
+  async function enter(userId: string) {
+    startLoading();
+
+    const { data: loginToken, error } = await transformUser({
+      become_user_id: userId
+    });
+
+    if (!error) {
+      const pass = await loginByToken(loginToken);
+
+      if (pass) {
+        await routeStore.initAuthRoute();
+
+        await redirectFromLogin();
+
+        if (routeStore.isInitAuthRoute) {
+          window.$notification?.success({
+            title: $t('page.login.common.loginSuccess'),
+            content: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
+            duration: 4500
+          });
+        }
+      }
+    } else {
+      await resetStore();
+    }
+
+    endLoading();
+  }
+
   async function loginByToken(loginToken: Api.Auth.LoginToken) {
     // 1. stored in the localStorage, the later requests need it in headers
     localStg.set('token', loginToken.token);
@@ -96,6 +132,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     isLogin,
     loginLoading,
     resetStore,
-    login
+    login,
+    enter
   };
 });

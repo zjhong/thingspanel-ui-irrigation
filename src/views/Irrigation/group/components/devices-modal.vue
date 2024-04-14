@@ -1,91 +1,95 @@
 <script setup lang="tsx">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref ,onMounted} from 'vue';
 import type { Ref } from 'vue';
-import { NButton } from 'naive-ui';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { NButton,CascaderOption } from 'naive-ui';
+import type {PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchUserList } from '@/service/api/auth';
+import {
+  irrigationGroupDeviceList,
+  getIrrigationSpaces,
+  getIrrigationDistricts,
+  irrigationGroupDeviceTypes
+} from '@/service/api';
 import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
-  /** 弹窗类型 add: 新增 edit: 编辑 */
-  type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null;
+  ids?: any;
 }
 
-const controlTypeOptions = ref();
-
 const props = withDefaults(defineProps<Props>(), {
-  type: 'add',
-  editData: null
 });
 
 const { loading, startLoading, endLoading } = useLoading(false);
 
-type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
+interface QueryFormModel  {
+  deviceName:string;
+  deviceNumber:string;
+  productType:string;
+  districtId:string
   page: number;
   page_size: number;
 };
 
 const queryParams = reactive<QueryFormModel>({
-  email: null,
-  name: null,
-  status: null,
+  deviceName:'',
+  deviceNumber:'',
+  productType:'',
+  districtId:'',
   page: 1,
   page_size: 10
 });
 
-const tableData = ref<UserManagement.User[]>([]);
+const tableData = ref<any>([]);
 
-function setTableData(data: UserManagement.User[]) {
+function setTableData(data: any) {
   tableData.value = data;
 }
 
 async function getTableData() {
   startLoading();
-  const { data } = await fetchUserList(queryParams);
+  const { data } = await irrigationGroupDeviceList(queryParams);
   if (data) {
-    const list: UserManagement.User[] = data.list;
+    const list: any = data.list;
     setTableData(list);
     endLoading();
   }
 }
 
 const checkedRowKeys = ref<string[]>([]);
-const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
+const columns: Ref<any> = ref([
   {
     type: 'selection'
   },
   {
-    key: 'email',
+    key: 'name',
     title: () => $t('page.irrigation.group.deviceName'),
     align: 'center'
   },
   {
-    key: 'name',
+    key: 'id',
     title: () => $t('page.irrigation.group.deviceCode'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'spaceAndDistrictName',
     title: () => $t('page.irrigation.group.detail.spaceOrArea'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'productTyp',
     title: () => $t('page.irrigation.group.deviceType'),
     align: 'center'
   }
-]) as Ref<DataTableColumns<UserManagement.User>>;
+]) as Ref<any>;
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
 
   /** 点击协议 */
-  (e: 'success'): void;
+  (e: 'success',list:any): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -124,18 +128,57 @@ function handleQuery() {
 
 function handleReset() {
   Object.assign(queryParams, {
-    email: undefined,
-    name: undefined,
-    status: undefined,
+    deviceName:'',
+    deviceNumber:'',
+    productType:'',
+    districtId:'',
     page: 1
   });
   handleQuery();
 }
 
-function init() {
+const diveceTypesOption = ref<any>([])
+async function init() {
   getTableData();
+ const {data} =  await irrigationGroupDeviceTypes()
+ data.forEach(i=>{i.label=i.translation,i.value=i.dict_value})
+ diveceTypesOption.value = data
 }
 
+const closeModal = () => {
+  modalVisible.value = false;
+};
+
+const spaceOptions = ref<any>([])
+onMounted(async ()=>{
+  const {data}  = await getIrrigationSpaces()
+  data.rows.forEach(i=>{
+    i.depth= 1
+    i.isLeaf= false
+  })
+  spaceOptions.value = data.rows
+  checkedRowKeys.value = props.ids||[]
+})
+// 区域选择请求空间
+async function handleSpaceLoad(option: CascaderOption){
+  const { data } = await getIrrigationDistricts({ limit:100, space_id:option.id })
+  data.rows.forEach(i=>{
+  i.depth= 2
+  i.isLeaf= true
+  })
+  option.children = data.rows
+  return data.rows
+}
+
+const onSave = ()=>{
+  if(checkedRowKeys.value.length===0){
+    window.$message?.error('请勾选设备');
+  }else{
+    const items = tableData.value.filter(i=>checkedRowKeys.value.includes(i.id))
+    emit('success',items)
+    closeModal()
+  }
+}
 // 初始化
 init();
 </script>
@@ -146,21 +189,33 @@ init();
       v-model:show="modalVisible"
       preset="card"
       :title="$t('page.irrigation.group.chooseDevices')"
-      class="h-750px w-1200px"
+      class="h-80vh w-1400px"
     >
       <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.irrigation.group.deviceName')" path="email">
-            <NInput v-model:value="queryParams.status" class="important-w-150px" />
+            <NInput v-model:value="queryParams.deviceName" class="important-w-150px" />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.group.deviceCode')" path="email">
-            <NInput v-model:value="queryParams.status" class="important-w-150px" />
+            <NInput v-model:value="queryParams.deviceNumber" class="important-w-150px" />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.group.detail.spaceOrArea')" path="email">
-            <NSelect v-model:value="queryParams.status" clearable class="w-150px" :options="controlTypeOptions" />
+            <NCascader
+              ref="refNCascader"
+              v-model:value="queryParams.districtId"
+              placeholder="请选择"
+              :options="spaceOptions"
+              :show-path="true"
+              label-field="name"
+              value-field="id"
+              check-strategy="child"
+              remote
+              :on-load="handleSpaceLoad"
+              class="important-w-300px"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.group.deviceType')" path="email">
-            <NSelect v-model:value="queryParams.status" clearable class="w-150px" :options="controlTypeOptions" />
+            <NSelect v-model:value="queryParams.productType" clearable class="w-150px" :options="diveceTypesOption" />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -177,6 +232,10 @@ init();
           :flex-height="true"
           class="flex-1-hidden"
         />
+        <NSpace class="w-full pt-16px" :size="24" justify="end">
+            <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
+            <NButton class="w-72px" type="primary" @click="onSave">{{ $t('common.confirm') }}</NButton>
+          </NSpace>
       </div>
     </NModal>
   </div>

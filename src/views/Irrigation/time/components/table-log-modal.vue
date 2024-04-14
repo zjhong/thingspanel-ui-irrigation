@@ -1,44 +1,37 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref ,watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchUserList } from '@/service/api/auth';
+import { irrigationTimeHistorys } from '@/service/api/irrigation';
 import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
-  /** 弹窗类型 add: 新增 edit: 编辑 */
-  type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null;
+  editData?: any;
 }
 const { loading } = useLoading(false);
-export type ModalType = NonNullable<Props['type']>;
-
-defineOptions({ name: 'TableActionModal' });
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'add',
   editData: null
 });
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-  /** 点击协议 */
-  (e: 'success'): void;
 }
 
 const emit = defineEmits<Emits>();
-type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
-  page: number;
-  page_size: number;
-};
+
+interface QueryFormModel {
+  page: number
+  page_size: number
+  scheduled_irrigation_id:string
+}
+
 const queryParams = reactive<QueryFormModel>({
-  email: null,
-  name: null,
-  status: null,
+  scheduled_irrigation_id: '',
   page: 1,
   page_size: 10
 });
@@ -52,80 +45,36 @@ const modalVisible = computed({
   }
 });
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
-  password: string;
-  confirmPwd: string;
-};
 
-const formModel = reactive<FormModel>(createDefaultFormModel());
-
-function createDefaultFormModel(): FormModel {
-  return {
-    name: '',
-    gender: null,
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmPwd: '',
-    remark: ''
-  };
-}
-
-function handleUpdateFormModel(model: Partial<FormModel>) {
-  Object.assign(formModel, model);
-}
-
-function handleUpdateFormModelByModalType() {
-  const handlers: Record<ModalType, () => void> = {
-    add: () => {
-      const defaultFormModel = createDefaultFormModel();
-      handleUpdateFormModel(defaultFormModel);
-    },
-    edit: () => {
-      if (props.editData) {
-        handleUpdateFormModel(props.editData);
-      }
-    }
-  };
-
-  handlers[props.type]();
-}
-
-const tableData = ref<UserManagement.User[]>([]);
-function setTableData(data: UserManagement.User[]) {
-  tableData.value = data;
-}
+const tableData = ref<any>([]);
 async function getTableData() {
-  const { data } = await fetchUserList(queryParams);
-  if (data) {
-    const list: UserManagement.User[] = data.list;
-    setTableData(list);
-  }
+  const { data } = await irrigationTimeHistorys(queryParams);
+  tableData.value = data.list
 }
 
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
-    key: 'email',
+    key: 'command_datetime',
     title: () => $t('page.irrigation.time.log.commandIssuanceTime'),
     align: 'center'
   },
   {
-    key: 'name',
+    key: 'command',
     title: () => $t('page.irrigation.time.log.instructionContent'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'execution_result',
     title: () => $t('page.irrigation.time.log.result'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'operation_type',
     title: () => $t('page.irrigation.time.log.operationType'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'execute_process',
     title: () => $t('page.irrigation.time.log.detail'),
     align: 'center'
   }
@@ -150,21 +99,16 @@ const pagination: PaginationProps = reactive({
   }
 });
 
+// 初始化
 watch(
   () => props.visible,
   newValue => {
     if (newValue) {
-      handleUpdateFormModelByModalType();
+      queryParams.scheduled_irrigation_id = props.editData?.id
+      getTableData()
     }
   }
 );
-
-function init() {
-  getTableData();
-}
-
-// 初始化
-init();
 </script>
 
 <template>

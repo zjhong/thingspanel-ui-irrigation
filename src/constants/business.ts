@@ -175,3 +175,26 @@ export const notificationOptions = [
     value: 'WEBHOOK'
   }
 ];
+
+/** 灌溉计划-计划状态 */
+export const irrigationPlanStatus: Record<DataService.FlagKey, string> = {
+  ISS: '已下发',
+  PND: '待下发 ',
+  CNL:'已取消',
+};
+export const irrigationPlanStatusOption = transformObjectToOption(irrigationPlanStatus);
+
+/** 灌溉计划-控制类型 */
+export const irrigationControlType: Record<DataService.FlagKey, string> = {
+  A: '时长',
+  B: '容量 ',
+};
+export const irrigationControlTypeOption = transformObjectToOption(irrigationControlType);
+
+
+/** 灌溉计划-控制模式 */
+export const irrigationScheduleType: Record<DataService.FlagKey, string> = {
+  A: '单次控制',
+  B: '循环控制 ',
+};
+export const irrigationScheduleTypeOption = transformObjectToOption(irrigationScheduleType);

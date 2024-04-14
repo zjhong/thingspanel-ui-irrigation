@@ -1,12 +1,16 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, toRefs, watch } from 'vue';
+import dayjs from 'dayjs';
+import { computed, reactive, ref, watch , onMounted} from 'vue';
 import type { Ref } from 'vue';
-import type { DataTableColumns, FormInst, FormItemRule } from 'naive-ui';
+import type {FormInst, FormItemRule } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 // import { genderOptions } from '@/constants'
 // import { controlModalLabels } from '@/constants/business';
-import { addUser, editUser } from '@/service/api/auth';
-import { createRequiredFormRule, formRules, getConfirmPwdRule } from '@/utils/form/rule';
+import {
+  addIrrigationGroup,
+  irrigationGroupDeviceDetail
+} from '@/service/api';
+import { createRequiredFormRule} from '@/utils/form/rule';
 import DevicesModal from './devices-modal.vue';
 import { $t } from '~/src/locales';
 
@@ -16,7 +20,7 @@ export interface Props {
   /** 弹窗类型 add: 新增 edit: 编辑 */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null;
+  editData?: any;
 }
 const modalType = ref<ModalType>('add');
 const { bool: devicesVisible, setTrue: openDevicesModal } = useBoolean();
@@ -59,23 +63,34 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
-  password: string;
-  confirmPwd: string;
-  startTime: number;
+interface FormModel {
+  id?:string
+  name: string
+  start_irrigation_datetime: number|null
+  device_ids: string
+  control_type: 'A'|'B'
+  irrigation_duration: number|null
+  durationH?:number|null
+  durationM?:number|null
+  valve_opening: number|null
+  schedule_type: 'A'|'B'
+  cycle_index: number|null
+  interval_time: number|null,
+  durationSH?:number|null
+  durationSM?:number|null
+  status: 'PND',
 };
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
-const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
+const rules: Record<any, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('common.pleaseCheckValue')),
-  gender: createRequiredFormRule($t('common.pleaseCheckValue')),
-  phone_number: formRules.phone,
-  email: formRules.email,
-  password: formRules.pwd,
-  startTime: createRequiredFormRule($t('common.pleaseCheckValue')),
-  confirmPwd: getConfirmPwdRule(toRefs(formModel).password),
-  remark: createRequiredFormRule($t('common.pleaseCheckValue'))
+  start_irrigation_datetime: createRequiredFormRule($t('common.pleaseCheckValue')),
+  device_ids: createRequiredFormRule($t('common.pleaseCheckValue')),
+  control_type: createRequiredFormRule($t('common.pleaseCheckValue')),
+  irrigation_duration: createRequiredFormRule($t('common.pleaseCheckValue')),
+  valve_opening: createRequiredFormRule($t('common.pleaseCheckValue')),
+  schedule_type: createRequiredFormRule($t('common.pleaseCheckValue')),
 };
 
 function openDevicesModalFn() {
@@ -85,13 +100,19 @@ function openDevicesModalFn() {
 function createDefaultFormModel(): FormModel {
   return {
     name: '',
-    gender: null,
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmPwd: '',
-    remark: '',
-    startTime: 0
+    start_irrigation_datetime: null,
+    device_ids: '',
+    control_type: 'A',
+    irrigation_duration: null,
+    durationH:null,
+    durationM:null,
+    valve_opening: null,
+    schedule_type: 'A',
+    cycle_index: null,
+    interval_time:null,
+    status: 'PND',
+    durationSH:null,
+    durationSM:null
   };
 }
 
@@ -115,32 +136,83 @@ function handleUpdateFormModelByModalType() {
   handlers[props.type]();
 }
 
+const formatTime = (time: string | null) => {
+  if (time) {
+    return new Date(time + 8 * 60 * 60 * 1000).toISOString().toString();
+  }
+  return '';
+};
+
 async function handleSubmit() {
   await formRef.value?.validate();
+  const params = JSON.parse(JSON.stringify(formModel))
+  params.start_irrigation_datetime = formatTime(params.start_irrigation_datetime)
   let data: any;
   if (props.type === 'add') {
-    data = await addUser(formModel);
+    data = await addIrrigationGroup(params);
   } else if (props.type === 'edit') {
-    data = await editUser(formModel);
+    data = await addIrrigationGroup(params);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
     emit('success');
   }
   closeModal();
 }
-const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
+const columns: Ref<any> = ref([
   {
-    key: 'email',
+    key: 'spaceAndDistrictName',
     title: () => $t('page.irrigation.group.detail.spaceOrArea'),
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return '123'
+    }
   },
   {
     key: 'name',
     title: () => $t('page.irrigation.group.deviceName'),
     align: 'center'
   }
-]) as Ref<DataTableColumns<UserManagement.User>>;
+]) as Ref<any>;
+
+//选择设备
+const tabelDeviceData = ref<any>([])
+const handleChooseDevice = (list:any)=>{
+  tabelDeviceData.value = list
+}
+//详情
+const loadDetail = async ()=>{
+  const { data } = await irrigationGroupDeviceDetail(props.editData?.id)
+    formModel.id = data.id
+    formModel.name = data.name
+    formModel.start_irrigation_datetime = dayjs(data.start_irrigation_datetime).valueOf()
+    formModel.device_ids = ''
+
+    formModel.control_type = data.control_type
+    formModel.irrigation_duration = null
+    formModel.durationH = Number((data.irrigation_duration / 60).toFixed(0)) || null
+    formModel.durationM = data.irrigation_duration % 60  || null
+    formModel.valve_opening = data.valve_opening
+    formModel.schedule_type = data.schedule_type
+    if(formModel.schedule_type === 'B'){
+      formModel.interval_time = null
+      formModel.durationSH = Number((data.interval_time / 60).toFixed(0)) || null
+      formModel.durationSM = data.interval_time % 60  || null
+      formModel.cycle_index = data.cycle_index
+    }
+    formModel.status = data.status
+}
+
+onMounted(()=>{
+  if(props.type === 'edit'){
+    loadDetail()
+  }
+})
+
+watch(tabelDeviceData,()=>{
+  const list:any = tabelDeviceData.value.map(i=>i.id)
+  formModel.device_ids =list
+})
+
 watch(
   () => props.visible,
   newValue => {
@@ -149,69 +221,148 @@ watch(
     }
   }
 );
+watch(
+  ()=>formModel.durationH,
+  ()=>{
+    if(!!formModel.durationH && !!formModel.durationM){
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
+    }else{
+      formModel.irrigation_duration=null
+    }
+  }
+)
+watch(
+  ()=>formModel.durationM,
+  ()=>{
+    if(!!formModel.durationH && !!formModel.durationM){
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
+    }else{
+      formModel.irrigation_duration=null
+    }
+  }
+)
+watch(
+  ()=>formModel.durationSH,
+  ()=>{
+    if(!!formModel.durationSH && !!formModel.durationSM){
+      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH)*60
+    }else{
+      formModel.interval_time=null
+    }
+  }
+)
+watch(
+  ()=>formModel.durationSM,
+  ()=>{
+    if(!!formModel.durationSH && !!formModel.durationSM){
+      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH)*60
+    }else{
+      formModel.interval_time=null
+    }
+  }
+)
+const valveOpenOptions = [
+  {
+    label: '100%',
+    value: 100
+  },
+  {
+    label: '90%',
+    value: 90
+  },
+  {
+    label: '80%',
+    value: 80
+  },
+  {
+    label: '70%',
+    value: 70
+  },
+  {
+    label: '60%',
+    value: 60
+  },
+  {
+    label: '50%',
+    value: 50
+  },
+  {
+    label: '40%',
+    value: 40
+  },
+  {
+    label: '30%',
+    value: 30
+  },
+  {
+    label: '20%',
+    value: 20
+  },
+  {
+    label: '10%',
+    value: 10
+  },
+]
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-1000px">
     <NForm ref="formRef" label-placement="left" :label-width="100" :model="formModel" :rules="rules">
-      <NGrid :cols="2" :x-gap="18">
-        <NGridItem>
+      <NGrid :cols="24">
+        <NGridItem  :span="14">
           <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.planName')" path="name">
             <NInput v-model:value="formModel.name" class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.startTime')" path="name">
-            <NDatePicker v-model:value="formModel.startTime" type="datetime" clearable />
+          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.startTime')" path="start_irrigation_datetime">
+            <NDatePicker v-model:value="formModel.start_irrigation_datetime" type="datetime" clearable />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.deviceType')" path="name">
-            <NSelect v-model:value="formModel.name" class="important-w-200px" clearable :options="[]" />
-          </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.addDevice')" path="name">
+          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.addDevice')" path="device_ids">
             <NButton type="info" @click="openDevicesModalFn">
               {{ $t('page.irrigation.group.clickToAdd') }}
             </NButton>
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.controlType')" path="name">
-            <NRadioGroup v-model:value="formModel.name" name="radiogroup">
+          <NFormItemGridItem :span="24" :label="$t('page.irrigation.controlType')" path="control_type">
+            <NRadioGroup v-model:value="formModel.control_type" name="radiogroup">
               <NSpace>
-                <NRadio value="song.value">{{ $t('page.irrigation.duration') }}</NRadio>
-                <NRadio value="song.value">{{ $t('page.irrigation.capacity') }}</NRadio>
+                <NRadio value="A">{{ $t('page.irrigation.duration') }}</NRadio>
+                <NRadio value="B">{{ $t('page.irrigation.capacity') }}</NRadio>
               </NSpace>
             </NRadioGroup>
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.duration')" path="name">
-            <NInput v-model:value="formModel.name" class="important-w-100px" />
+          <NFormItemGridItem v-if="formModel.control_type=== 'A'" :span="24" :label="$t('page.irrigation.group.duration')" path="irrigation_duration">
+            <NInputNumber v-model:value="formModel.durationH" class="important-w-150px" />
             <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
-            <NInput v-model:value="formModel.name" class="important-w-100px" />
+            <NInputNumber v-model:value="formModel.durationM" class="important-w-150px" />
             <label class="ml-10px text-nowrap">{{ $t('page.irrigation.minute') }}</label>
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.capacity')" path="name">
-            <NInput v-model:value="formModel.name" class="important-w-200px" />
+          <NFormItemGridItem v-else :span="24" :label="$t('page.irrigation.capacity')" path="irrigation_duration">
+            <NInputNumber v-model:value="formModel.irrigation_duration" class="important-w-200px" />
             <label class="ml-10px mr-20px text-nowrap">L</label>
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.doorOpeing')" path="name">
-            <NSelect v-model:value="formModel.name" class="w-200px" clearable :options="[]" />
+          <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.doorOpeing')" path="valve_opening">
+            <NSelect v-model:value="formModel.valve_opening" class="w-200px" clearable :options="valveOpenOptions" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.controlModel')" path="name">
-            <NRadioGroup v-model:value="formModel.name" name="radiogroup">
+          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.controlModel')" path="schedule_type">
+            <NRadioGroup v-model:value="formModel.schedule_type" name="radiogroup2">
               <NSpace>
-                <NRadio value="song.value">{{ $t('page.irrigation.group.singleControl') }}</NRadio>
-                <NRadio value="song.value">{{ $t('page.irrigation.group.loopControl') }}</NRadio>
+                <NRadio value="A">{{ $t('page.irrigation.group.singleControl') }}</NRadio>
+                <NRadio value="B">{{ $t('page.irrigation.group.loopControl') }}</NRadio>
               </NSpace>
             </NRadioGroup>
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.cycleNumber')" path="name">
-            <NSelect v-model:value="formModel.name" class="w-200px" clearable :options="[]" />
+          <NFormItemGridItem v-if="formModel.schedule_type==='B'" :span="24" :label="$t('page.irrigation.group.cycleNumber')" path="cycle_index">
+            <NInputNumber v-model:value="formModel.cycle_index"  class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.intervalDuration')" path="name">
-            <NInput v-model:value="formModel.name" class="important-w-100px" />
+          <NFormItemGridItem v-if="formModel.schedule_type==='B'" :span="24" :label="$t('page.irrigation.group.intervalDuration')" path="interval_time">
+            <NInputNumber v-model:value="formModel.durationSH" class="important-w-150px" />
             <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
-            <NInput v-model:value="formModel.name" class="important-w-100px" />
+            <NInputNumber v-model:value="formModel.durationSM" class="important-w-150px" />
             <label class="ml-10px text-nowrap">{{ $t('page.irrigation.minute') }}</label>
           </NFormItemGridItem>
         </NGridItem>
-        <NGridItem>
+        <NGridItem :span="10" class="flex-col ml-50px  ">
           <div class="mb-5px">{{ $t('page.irrigation.group.choosedDevice') }}：</div>
-          <NDataTable :columns="columns" :data="[]" :pagination="false" :flex-height="true" class="flex-1-hidden" />
+          <NDataTable :columns="columns" :data="tabelDeviceData" :pagination="false" :flex-height="true" class="flex-1-hidden" />
         </NGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
@@ -219,7 +370,7 @@ watch(
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
-    <DevicesModal v-model:visible="devicesVisible" :type="modalType" :edit-data="editData" @success="handleSubmit" />
+    <DevicesModal v-if="devicesVisible" v-model:visible="devicesVisible" :type="modalType" :ids="formModel.device_ids" @success="handleChooseDevice" />
   </NModal>
 </template>
 

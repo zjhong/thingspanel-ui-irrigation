@@ -1,9 +1,9 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref,onMounted } from 'vue';
 import type { Ref } from 'vue';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import type {PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchUserList } from '@/service/api/auth';
+import { irrigationGroupHistoryDetail } from '@/service/api/irrigation';
 import { $t } from '~/src/locales';
 
 export interface Props {
@@ -12,10 +12,10 @@ export interface Props {
   /** 弹窗类型 add: 新增 edit: 编辑 */
   type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null;
+  editData?: any;
 }
 
-const { loading } = useLoading(false);
+const { loading, startLoading, endLoading } = useLoading(false);
 export type ModalType = NonNullable<Props['type']>;
 
 defineOptions({ name: 'TableActionModal' });
@@ -27,19 +27,16 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-  /** 点击协议 */
-  (e: 'success'): void;
 }
 
 const emit = defineEmits<Emits>();
-type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
+interface QueryFormModel  {
+  group_irrigation_history_id:string;
   page: number;
   page_size: number;
 };
 const queryParams = reactive<QueryFormModel>({
-  email: null,
-  name: null,
-  status: null,
+  group_irrigation_history_id:'',
   page: 1,
   page_size: 10
 });
@@ -53,99 +50,85 @@ const modalVisible = computed({
   }
 });
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
-  password: string;
-  confirmPwd: string;
-};
-
-const formModel = reactive<FormModel>(createDefaultFormModel());
-
-function createDefaultFormModel(): FormModel {
-  return {
-    name: '',
-    gender: null,
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmPwd: '',
-    remark: ''
-  };
-}
-
-function handleUpdateFormModel(model: Partial<FormModel>) {
-  Object.assign(formModel, model);
-}
-
-function handleUpdateFormModelByModalType() {
-  const handlers: Record<ModalType, () => void> = {
-    add: () => {
-      const defaultFormModel = createDefaultFormModel();
-      handleUpdateFormModel(defaultFormModel);
-    },
-    edit: () => {
-      if (props.editData) {
-        handleUpdateFormModel(props.editData);
-      }
-    }
-  };
-
-  handlers[props.type]();
-}
-
-const tableData = ref<UserManagement.User[]>([]);
-function setTableData(data: UserManagement.User[]) {
+const tableData = ref<any>([]);
+function setTableData(data: any) {
+  console.error(data)
   tableData.value = data;
 }
 async function getTableData() {
-  const { data } = await fetchUserList(queryParams);
+  startLoading()
+  queryParams.group_irrigation_history_id = props.editData?.id||''
+  const { data } = await irrigationGroupHistoryDetail(queryParams);
+  endLoading()
   if (data) {
-    const list: UserManagement.User[] = data.list;
+    const list: any = data.list;
     setTableData(list);
   }
 }
 
-const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
+const columns: Ref<any> = ref([
   {
-    key: 'email',
+    key: 'command_datetime',
     title: () => $t('page.irrigation.group.detail.commandIssuanceTime'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'name',
+    key: 'space_and_district',
     title: () => $t('page.irrigation.group.detail.spaceOrArea'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'device_name',
     title: () => $t('page.irrigation.group.deviceName'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'command_id',
     title: () => $t('page.irrigation.group.orderNumber'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'command',
     title: () => $t('page.irrigation.group.detail.orderContent'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'result',
     title: () => $t('page.irrigation.group.detail.result'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'execute_detail',
     title: () => $t('page.irrigation.group.detail.detail'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'operation_type',
     title: () => $t('page.irrigation.group.detail.actionType'),
     align: 'center'
   }
-]) as Ref<DataTableColumns<UserManagement.User>>;
+]) as Ref<any>;
 
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -165,22 +148,11 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
+onMounted(()=>{
+  getTableData()
+})
 
-watch(
-  () => props.visible,
-  newValue => {
-    if (newValue) {
-      handleUpdateFormModelByModalType();
-    }
-  }
-);
 
-function init() {
-  getTableData();
-}
-
-// 初始化
-init();
 </script>
 
 <template>
@@ -188,7 +160,7 @@ init();
     v-model:show="modalVisible"
     preset="card"
     :title="$t('page.irrigation.group.runDetail')"
-    class="h-600px w-1000px"
+    class="h-600px w-1400px"
   >
     <div class="h-full flex-col">
       <NDataTable
@@ -204,3 +176,4 @@ init();
 </template>
 
 <style scoped></style>
+s

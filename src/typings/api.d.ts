@@ -562,4 +562,21 @@ declare namespace Api {
       send_time_stop?: string;
     }
   }
+  /**灌溉计划 */
+  namespace Irrigation {
+    interface AddTimeIrrigation {
+      name: string|null,
+      space_id:  string|null,
+      district_id: string|null
+      device_id:  string|null,
+      irrigation_time:  string|null
+      schedule: string|null
+      control_type:  string|null
+      irrigation_duration: number|null
+      valve_opening: number|null
+      status?: string|null
+      remark: string|null
+      [key:string]:any
+    }
+  }
 }

@@ -1,21 +1,17 @@
 <script setup lang="tsx">
-import { reactive, ref ,onMounted } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NSpace,useDialog } from 'naive-ui';
-import type { DataTableColumns, PaginationProps ,CascaderOption} from 'naive-ui';
+import { NButton, NSpace, useDialog } from 'naive-ui';
+import type { CascaderOption, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
+import { irrigationControlTypeOption, irrigationPlanStatus, irrigationPlanStatusOption } from '@/constants/business';
 import {
-  irrigationPlanStatus,
-  irrigationPlanStatusOption,
-  irrigationControlTypeOption
-} from '@/constants/business';
-import {
-   getIrrigationTimeList,
-   getIrrigationSpaces ,
-    getIrrigationDistricts,
-    irrigationTimeDistribute,
-    irrigationTimeDel,
-    irrigationTimeCancle
+  getIrrigationDistricts,
+  getIrrigationSpaces,
+  getIrrigationTimeList,
+  irrigationTimeCancle,
+  irrigationTimeDel,
+  irrigationTimeDistribute
 } from '@/service/api/irrigation';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
@@ -23,20 +19,20 @@ import type { ModalType } from './components/table-action-modal.vue';
 import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
-const dialog = useDialog()
+const dialog = useDialog();
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: logVisible, setTrue: openLogModal } = useBoolean();
 
-
 interface QueryFormModel {
-  district_id: string|null,
-  device_name: string|null,
-  control_type: string|null,
-  status: string|null,
-  page: number,
-  page_size: number
+  district_id: string | null;
+  device_name: string | null;
+  control_type: string | null;
+  status: string | null;
+  page: number;
+  page_size: number;
 }
+
 const queryParams = reactive<QueryFormModel>({
   district_id: null,
   device_name: null,
@@ -62,6 +58,36 @@ async function getTableData() {
   }
 }
 
+// 下发
+const runDistribute = (rowId: string, status: 2 | 3) => {
+  dialog.warning({
+    title: '提示',
+    content: status === 3 ? '确定将计划下发给设备吗' : '确定取消计划吗',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      if (status === 3) {
+        await irrigationTimeDistribute(rowId, { status });
+      } else {
+        await irrigationTimeCancle({ id: rowId, status });
+      }
+      init();
+    }
+  });
+};
+// 删除
+const runDel = (rowId: string) => {
+  dialog.warning({
+    title: '提示',
+    content: '确定删除计划吗',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      await irrigationTimeDel(rowId);
+      init();
+    }
+  });
+};
 const columns: Ref<any> = ref([
   {
     key: 'space_name',
@@ -70,8 +96,8 @@ const columns: Ref<any> = ref([
     ellipsis: {
       tooltip: true
     },
-    render: row =>{
-      return `${row.space_name}|${row.discrict_name}`
+    render: row => {
+      return `${row.space_name}|${row.discrict_name}`;
     }
   },
   {
@@ -86,8 +112,8 @@ const columns: Ref<any> = ref([
     key: 'control_type',
     title: () => $t('page.irrigation.controlType'),
     align: 'center',
-    render: row =>{
-      return row.control_type === 'A' ? '时长' : '容量'
+    render: row => {
+      return row.control_type === 'A' ? '时长' : '容量';
     }
   },
   {
@@ -97,14 +123,14 @@ const columns: Ref<any> = ref([
     ellipsis: {
       tooltip: true
     },
-    render: row =>{
-      const p = ['一','二','三','四','五','六','日']
-      const t = row.schedule.split(',')
-      const list:any = []
-      t.forEach(i=>{
-        list.push(`周${p[Number(i-1)]}`)
-      })
-      return list.join(',')
+    render: row => {
+      const p = ['一', '二', '三', '四', '五', '六', '日'];
+      const t = row.schedule.split(',');
+      const list: any = [];
+      t.forEach(i => {
+        list.push(`周${p[Number(i - 1)]}`);
+      });
+      return list.join(',');
     }
   },
   {
@@ -129,8 +155,8 @@ const columns: Ref<any> = ref([
     key: 'status',
     title: () => $t('page.irrigation.planStatus'),
     align: 'center',
-    render: row =>{
-      return irrigationPlanStatus[row.status]
+    render: row => {
+      return irrigationPlanStatus[row.status];
     }
   },
   {
@@ -141,7 +167,13 @@ const columns: Ref<any> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton v-show={row.status === 'PND' ||  row.status === 'CNL'} quaternary type="info" size={'small'} onClick={() => runDistribute(row.id,3)}>
+          <NButton
+            v-show={row.status === 'PND' || row.status === 'CNL'}
+            quaternary
+            type="info"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 3)}
+          >
             {$t('page.irrigation.distribute')}
           </NButton>
           <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
@@ -153,7 +185,13 @@ const columns: Ref<any> = ref([
           <NButton quaternary type="primary" size={'small'} onClick={() => handOpenLogModal(row.id)}>
             {$t('page.irrigation.log')}
           </NButton>
-          <NButton v-show={row.status === 'ISS'} quaternary type="primary" size={'small'} onClick={() => runDistribute(row.id,2)}>
+          <NButton
+            v-show={row.status === 'ISS'}
+            quaternary
+            type="primary"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 2)}
+          >
             {$t('common.cancel')}
           </NButton>
         </NSpace>
@@ -178,38 +216,6 @@ function handleAddTable() {
   openModal();
   setModalType('add');
 }
-
-// 下发
-const runDistribute = (rowId:string, status:2|3)=>{
-  dialog.warning({
-    title:'提示',
-    content: status ===3 ? '确定将计划下发给设备吗' :'确定取消计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
-    onPositiveClick: async() => {
-      if(status===3){
-        await irrigationTimeDistribute(rowId,{status:status})
-      }else{
-        await irrigationTimeCancle({ id:rowId, status:status })
-      }
-      init()
-    }
-  })
-}
-// 删除
-const runDel = (rowId:string)=>{
-  dialog.warning({
-    title:'提示',
-    content:'确定删除计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
-    onPositiveClick: async() => {
-      await irrigationTimeDel(rowId)
-      init()
-    }
-  })
-}
-
 
 // 编辑表格
 function handleEditTable(rowId: string) {
@@ -261,7 +267,7 @@ function handleReset() {
     device_name: null,
     control_type: null,
     status: null,
-    page: 1,
+    page: 1
   });
   handleQuery();
 }
@@ -272,25 +278,28 @@ function init() {
 
 // 初始化
 init();
-const spaceOptions = ref<any>([])
+const spaceOptions = ref<any>([]);
+
 // 区域选择请求空间
-async function handleSpaceLoad(option: CascaderOption){
- const { data } = await getIrrigationDistricts({ limit:100, space_id:option.id })
- data.rows.forEach(i=>{
-  i.id = `${option.id},${i.id}`
-  i.depth= 2
-  i.isLeaf= true
- })
- option.children = data.rows
+async function handleSpaceLoad(option: CascaderOption) {
+  const { data } = await getIrrigationDistricts({ limit: 100, space_id: option.id });
+  data.rows.forEach(i => {
+    i.id = `${option.id},${i.id}`;
+    i.depth = 2;
+    i.isLeaf = true;
+  });
+  // eslint-disable-next-line require-atomic-updates
+  option.children = data.rows;
 }
-onMounted(async ()=>{
-  const {data}  = await getIrrigationSpaces()
-  data.rows.forEach(i=>{
-    i.depth= 1
-    i.isLeaf= false
-  })
-  spaceOptions.value = data.rows
-})
+
+onMounted(async () => {
+  const { data } = await getIrrigationSpaces();
+  data.rows.forEach(i => {
+    i.depth = 1;
+    i.isLeaf = false;
+  });
+  spaceOptions.value = data.rows;
+});
 </script>
 
 <template>
@@ -307,20 +316,30 @@ onMounted(async ()=>{
               label-field="name"
               value-field="id"
               check-strategy="child"
-              remote
               :on-load="handleSpaceLoad"
               class="important-w-200px"
               clearable
+              remote
             />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.diviceName')" path="device_name">
             <NInput v-model:value="queryParams.device_name" clearable />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.controlType')" path="control_type">
-            <NSelect v-model:value="queryParams.control_type" clearable class="w-200px" :options="irrigationControlTypeOption" />
+            <NSelect
+              v-model:value="queryParams.control_type"
+              clearable
+              class="w-200px"
+              :options="irrigationControlTypeOption"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.planStatus')" path="status">
-            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="irrigationPlanStatusOption" />
+            <NSelect
+              v-model:value="queryParams.status"
+              clearable
+              class="w-200px"
+              :options="irrigationPlanStatusOption"
+            />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -343,7 +362,13 @@ onMounted(async ()=>{
           :flex-height="true"
           class="flex-1-hidden"
         />
-        <TableActionModal  v-if="visible" v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-if="visible"
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
         <TableLogModal v-if="logVisible" v-model:visible="logVisible" :edit-data="editData"></TableLogModal>
       </div>
     </NCard>

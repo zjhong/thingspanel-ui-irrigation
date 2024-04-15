@@ -1,37 +1,33 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NSpace ,useDialog} from 'naive-ui';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { NButton, NSpace, useDialog } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { userStatusOptions } from '@/constants/business';
+import {
+  irrigationRotationCancel,
+  irrigationRotationDel,
+  irrigationRotationExecute,
+  irrigationRotationList
+} from '@/service/api';
+import { irrigationPlanStatus, irrigationPlanStatusOption } from '@/constants/business';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import { $t } from '~/src/locales';
-import {
-  irrigationRotationList,
-  irrigationRotationExecute,
-  irrigationRotationCancel,
-  irrigationRotationDel
-} from '@/service/api';
-import {
-  irrigationPlanStatus,
-  irrigationPlanStatusOption,
-} from '@/constants/business';
 // import ColumnSetting from './components/column-setting.vue'
 
-const dialog = useDialog()
+const dialog = useDialog();
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: logVisible, setTrue: openLogModal } = useBoolean();
 
-interface QueryFormModel  {
-  name:string|null;
-  status:string|null;
+interface QueryFormModel {
+  name: string | null;
+  status: string | null;
   page: number;
   page_size: number;
-};
+}
 
 const queryParams = reactive<QueryFormModel>({
   name: null,
@@ -43,7 +39,7 @@ const queryParams = reactive<QueryFormModel>({
 const tableData = ref<any>([]);
 
 function setTableData(data: any[]) {
-  tableData.value = data||[];
+  tableData.value = data || [];
 }
 
 async function getTableData() {
@@ -57,35 +53,35 @@ async function getTableData() {
 }
 
 // 下发
-const runDistribute = (rowId:string, status:number)=>{
+const runDistribute = (rowId: string, status: number) => {
   dialog.warning({
-    title:'提示',
-    content: status ===4 ? '确定将计划下发给设备吗' :'确定取消计划吗',
+    title: '提示',
+    content: status === 4 ? '确定将计划下发给设备吗' : '确定取消计划吗',
     positiveText: '确定',
     negativeText: '取消',
-    onPositiveClick: async() => {
-      if(status===4){
-        await irrigationRotationExecute({id:rowId,status:status})
-      }else{
-        await irrigationRotationCancel({ id:rowId, status:status })
+    onPositiveClick: async () => {
+      if (status === 4) {
+        await irrigationRotationExecute({ id: rowId, status });
+      } else {
+        await irrigationRotationCancel({ id: rowId, status });
       }
-      init()
+      init();
     }
-  })
-}
+  });
+};
 // 删除
-const runDel = (rowId:string)=>{
+const runDel = (rowId: string) => {
   dialog.warning({
-    title:'提示',
-    content:'确定删除计划吗',
+    title: '提示',
+    content: '确定删除计划吗',
     positiveText: '确定',
     negativeText: '取消',
-    onPositiveClick: async() => {
-      await irrigationRotationDel(rowId)
-      init()
+    onPositiveClick: async () => {
+      await irrigationRotationDel(rowId);
+      init();
     }
-  })
-}
+  });
+};
 
 const columns: Ref<any> = ref([
   {
@@ -107,22 +103,22 @@ const columns: Ref<any> = ref([
     ellipsis: {
       tooltip: true
     },
-    align: 'center',
+    align: 'center'
   },
   {
     key: 'water_pump_valve_opening',
     title: () => $t('page.irrigation.time.doorOpeing'),
     align: 'center',
-    render: row =>{
-      return row.water_pump_valve_opening+'%'
+    render: row => {
+      return `${row.water_pump_valve_opening}%`;
     }
   },
   {
     key: 'status',
     title: () => $t('page.irrigation.planStatus'),
     align: 'center',
-    render: row =>{
-      return irrigationPlanStatus[row.status]
+    render: row => {
+      return irrigationPlanStatus[row.status];
     }
   },
   {
@@ -133,7 +129,13 @@ const columns: Ref<any> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton  v-show={row.status === 'PND' ||  row.status === 'CNL'}  quaternary type="info" size={'small'} onClick={() => runDistribute(row.id,4)}>
+          <NButton
+            v-show={row.status === 'PND' || row.status === 'CNL'}
+            quaternary
+            type="info"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 4)}
+          >
             {$t('page.irrigation.distribute')}
           </NButton>
           <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
@@ -145,7 +147,13 @@ const columns: Ref<any> = ref([
           <NButton quaternary type="primary" size={'small'} onClick={() => handOpenLogModal(row.id)}>
             {$t('page.irrigation.log')}
           </NButton>
-          <NButton v-show={row.status === 'ISS'}  quaternary type="primary" size={'small'} onClick={() => runDistribute(row.id,0)}>
+          <NButton
+            v-show={row.status === 'ISS'}
+            quaternary
+            type="primary"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 0)}
+          >
             {$t('common.cancel')}
           </NButton>
         </NSpace>
@@ -171,12 +179,12 @@ function handleAddTable() {
   openModal();
 }
 
-function handleEditPwd(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId);
-  if (findItem) {
-    setEditData(findItem);
-  }
-}
+// function handleEditPwd(rowId: string) {
+//   const findItem = tableData.value.find(item => item.id === rowId);
+//   if (findItem) {
+//     setEditData(findItem);
+//   }
+// }
 
 function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
@@ -187,7 +195,7 @@ function handleEditTable(rowId: string) {
   openModal();
 }
 
-function handOpenLogModal(rowId:string) {
+function handOpenLogModal(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
   if (findItem) {
     setEditData(findItem);
@@ -253,7 +261,12 @@ init();
             <NInput v-model:value="queryParams.name" clearable />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.planStatus')" path="status">
-            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="irrigationPlanStatusOption" />
+            <NSelect
+              v-model:value="queryParams.status"
+              clearable
+              class="w-200px"
+              :options="irrigationPlanStatusOption"
+            />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -276,7 +289,13 @@ init();
           :flex-height="true"
           class="flex-1-hidden"
         />
-        <TableActionModal v-if="visible" v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-if="visible"
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
         <TableLogModal v-if="logVisible" v-model:visible="logVisible" :edit-data="editData"></TableLogModal>
       </div>
     </NCard>

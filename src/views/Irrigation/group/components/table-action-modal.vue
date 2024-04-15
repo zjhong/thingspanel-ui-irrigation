@@ -164,13 +164,16 @@ const columns: Ref<any> = ref([
     title: () => $t('page.irrigation.group.detail.spaceOrArea'),
     align: 'center',
     render: row => {
-      return '123'
+      return row.spaceAndDistrictName||`${row.spaces_name}|${row.disticts_name}`
     }
   },
   {
     key: 'name',
     title: () => $t('page.irrigation.group.deviceName'),
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return row.name||row.disticts_name
+    }
   }
 ]) as Ref<any>;
 
@@ -200,6 +203,7 @@ const loadDetail = async ()=>{
       formModel.cycle_index = data.cycle_index
     }
     formModel.status = data.status
+    tabelDeviceData.value = data.devices
 }
 
 onMounted(()=>{
@@ -209,7 +213,7 @@ onMounted(()=>{
 })
 
 watch(tabelDeviceData,()=>{
-  const list:any = tabelDeviceData.value.map(i=>i.id)
+  const list:any = tabelDeviceData.value.map(i=>i.id || i.device_id)
   formModel.device_ids =list
 })
 

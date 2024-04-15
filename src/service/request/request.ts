@@ -1,9 +1,8 @@
-import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
-import { localStg } from '@/utils/storage';
-import { createProxyPattern, createServiceConfig } from '~/env.config';
+import {BACKEND_ERROR_CODE, createFlatRequest} from '@sa/axios';
+import {localStg} from '@/utils/storage';
+import {createProxyPattern, createServiceConfig} from '~/env.config';
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-console.log(import.meta.env);
+const {otherBaseURL} = createServiceConfig(import.meta.env);
 
 const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
 
@@ -16,13 +15,12 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const { headers, params } = config;
+      const {headers, params} = config;
       // set token
       const token = localStg.get('token');
       // const Authorization = token ? `Bearer ${token}` : null;
-      const headersWithToken = token ? { 'x-token': token } : {};
+      const headersWithToken = token ? {'x-token': token} : {};
       Object.assign(headers, headersWithToken);
-      console.log(params);
       if (params && typeof params === 'object' && !Array.isArray(params)) {
         Object.keys(params).forEach(key => {
           if (params[key] === '') {
@@ -43,7 +41,6 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
-      console.log(response, '85943854');
       if (response.config.method !== 'get') {
         window.$message?.destroyAll();
         window.$message?.success('操作成功');
@@ -53,6 +50,21 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
     },
     onError(error) {
       // when the requestTs is fail, you can show error message
+
+      if (error?.response?.status === 401) {
+        window.$message?.error("非法授权，请重新登录");
+
+        setTimeout(() => {
+          localStg.remove('token');
+          localStg.remove('refreshToken');
+          localStg.remove('userInfo');
+
+          window.location.reload()
+        }, 200)
+
+
+        return
+      }
 
       let message = error.message;
 
@@ -72,12 +84,12 @@ export const mockRequest = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const { headers } = config;
+      const {headers} = config;
 
       // set token
       const token = localStg.get('token');
       const XToken = token || null;
-      Object.assign(headers, { 'x-token': XToken });
+      Object.assign(headers, {'x-token': XToken});
 
       return config;
     },

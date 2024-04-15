@@ -36,12 +36,40 @@ const columns0 = [
   }
 ];
 
+// 操作类型
+const formatOperationType = status => {
+  switch (status) {
+    case '1':
+      return '手动操作';
+    case '2':
+      return '自动触发';
+    default:
+      return '';
+  }
+};
+
+// 状态
+const formatStatus = status => {
+  switch (status) {
+    case '1':
+      return '发送成功';
+    case '2':
+      return '发送失败';
+    case '3':
+      return '返回成功';
+    case '4':
+      return '返回失败';
+    default:
+      return '';
+  }
+};
+
 const columns = [
   { title: '属性下发时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
   { title: '消息id', key: 'message_id' },
   { title: '发送内容', key: 'data' },
-  { title: '操作类型', key: 'operation_type', render: row => (row.status === 1 ? '手动操作' : '自动触发') },
-  { title: '状态', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') },
+  { title: '操作类型', key: 'operation_type', render: row => formatOperationType(row.status) },
+  { title: '状态', key: 'status', render: row => formatStatus(row.status) },
   { title: '错误信息', key: 'error_message' }
 ];
 </script>

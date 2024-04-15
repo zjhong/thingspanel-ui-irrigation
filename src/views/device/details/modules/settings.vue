@@ -128,24 +128,30 @@ watch(
     }
   }
 );
-const selectConfig = v => {
-  selectedValues.value = v;
 
-  deviceUpdateConfig({ device_id: props.id, device_config_id: v });
-  deviceDataStore.fetchData(props.id);
-};
-onMounted(() => {
+const initData = () => {
   getTreeData();
   getTreeRelationData();
+};
+
+onMounted(() => {
+  initData();
   DeviceConfigList('');
 });
+
+const selectConfig = v => {
+  selectedValues.value = v;
+  deviceUpdateConfig({ device_id: props.id, device_config_id: v });
+  deviceDataStore.fetchData(props.id);
+  initData();
+};
 </script>
 
 <template>
   <div>
     <NFlex justify="space-between" class="mb-24px mt-8 h-50px items-center">
       <div class="w-320px flex items-center">
-        <div>设备配置：</div>
+        <div>设备配置22：</div>
         <NSelect
           v-model:value="selectedValues"
           filterable

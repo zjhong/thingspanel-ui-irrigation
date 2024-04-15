@@ -242,3 +242,8 @@ export const deviceUpdateConfig = async (params: any) => {
 export const deviceConfigMenu = async (params: any) => {
   return await request.get<any>(`/device/template/menu`, { params });
 };
+
+// 保存设备位置
+export const deviceLocation = async (params: any) => {
+  return await request.put<any>(`/device`, params);
+};

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { deviceConfigInfo } from '@/service/api';
+import { deviceConfigInfo, deviceLocation } from '@/service/api';
 import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置调整
 const props = defineProps<{
   id: string;
@@ -23,6 +23,11 @@ const getConfigInfo = async () => {
   const res = deviceConfigInfo({ id: props.deviceConfigId });
   console.log(res);
 };
+
+const handleSave = () => {
+  deviceLocation({ id: props.id, location: `${latitude.value},${longitude.value}` });
+};
+
 onMounted(getConfigInfo);
 </script>
 
@@ -38,7 +43,7 @@ onMounted(getConfigInfo);
 
     <NCard title="扩展信息" class="mb-4"></NCard>
 
-    <NButton>保存</NButton>
+    <NButton @click="handleSave">保存</NButton>
     <NModal v-model:show="isShow" class="w-440px flex-center">
       <NCard>
         <TencentMap @position-selected="onPositionSelected" />

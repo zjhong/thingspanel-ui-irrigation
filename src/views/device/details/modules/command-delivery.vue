@@ -7,11 +7,27 @@ defineProps<{
   id: string;
 }>();
 
+// 状态
+const formatStatus = status => {
+  switch (status) {
+    case '1':
+      return '发送成功';
+    case '2':
+      return '发送失败';
+    case '3':
+      return '返回成功';
+    case '4':
+      return '返回失败';
+    default:
+      return '';
+  }
+};
+
 const columns = [
   { title: '命名名称', key: 'id' },
   { title: '命令标识符', key: 'identify' },
   { title: '命令下发时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '状态', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') },
+  { title: '状态', key: 'status', render: row => formatStatus(row.status) },
   { title: '命令参数', key: 'data' }
 ];
 </script>

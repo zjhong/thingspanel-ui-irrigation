@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, reactive, ref ,watch } from 'vue';
+import { computed, reactive, ref ,watch, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
@@ -35,6 +35,11 @@ const queryParams = reactive<QueryFormModel>({
   page: 1,
   page_size: 10
 });
+
+onMounted(()=>{
+  queryParams.scheduled_irrigation_id = props.editData?.id
+  getTableData()
+})
 
 const modalVisible = computed({
   get() {

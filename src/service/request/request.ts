@@ -1,8 +1,8 @@
-import {BACKEND_ERROR_CODE, createFlatRequest} from '@sa/axios';
-import {localStg} from '@/utils/storage';
-import {createProxyPattern, createServiceConfig} from '~/env.config';
+import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
+import { localStg } from '@/utils/storage';
+import { createProxyPattern, createServiceConfig } from '~/env.config';
 
-const {otherBaseURL} = createServiceConfig(import.meta.env);
+const { otherBaseURL } = createServiceConfig(import.meta.env);
 
 const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
 
@@ -15,11 +15,11 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const {headers, params} = config;
+      const { headers, params } = config;
       // set token
       const token = localStg.get('token');
       // const Authorization = token ? `Bearer ${token}` : null;
-      const headersWithToken = token ? {'x-token': token} : {};
+      const headersWithToken = token ? { 'x-token': token } : {};
       Object.assign(headers, headersWithToken);
       if (params && typeof params === 'object' && !Array.isArray(params)) {
         Object.keys(params).forEach(key => {
@@ -45,25 +45,26 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
         window.$message?.destroyAll();
         window.$message?.success('操作成功');
       }
-
+      if ((response as any).config?.needMessage) {
+        return response.data;
+      }
       return response.data.data;
     },
     onError(error) {
       // when the requestTs is fail, you can show error message
 
       if (error?.response?.status === 401) {
-        window.$message?.error("非法授权，请重新登录");
+        window.$message?.error('非法授权，请重新登录');
 
         setTimeout(() => {
           localStg.remove('token');
           localStg.remove('refreshToken');
           localStg.remove('userInfo');
 
-          window.location.reload()
-        }, 200)
+          window.location.reload();
+        }, 200);
 
-
-        return
+        return;
       }
 
       let message = error.message;
@@ -84,12 +85,12 @@ export const mockRequest = createFlatRequest<App.Service.DEVResponse>(
   },
   {
     async onRequest(config) {
-      const {headers} = config;
+      const { headers } = config;
 
       // set token
       const token = localStg.get('token');
       const XToken = token || null;
-      Object.assign(headers, {'x-token': XToken});
+      Object.assign(headers, { 'x-token': XToken });
 
       return config;
     },

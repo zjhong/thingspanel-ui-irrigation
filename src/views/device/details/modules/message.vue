@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { deviceConfigInfo, deviceLocation } from '@/service/api';
+import { useRoute } from 'vue-router';
+import { deviceConfigInfo, deviceDetail, deviceLocation } from '@/service/api';
 import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置调整
 const props = defineProps<{
   id: string;
   deviceConfigId: string;
-  location: string;
 }>();
 const latitude = ref('');
 const longitude = ref('');
 const isShow = ref(false);
+const { query } = useRoute();
 
 const onPositionSelected = position => {
   latitude.value = position.lat.toString();
@@ -21,11 +22,12 @@ const openMapAndGetPosition = () => {
   isShow.value = true;
 };
 const getConfigInfo = async () => {
-  const locationData = props.location?.split(',') || [];
+  const result = await deviceDetail(query.id as string);
+  const location = result?.data?.location || '';
+  const locationData = location?.split(',') || [];
   latitude.value = locationData[0] || '';
   longitude.value = locationData[1] || '';
-  const res = deviceConfigInfo({ id: props.deviceConfigId });
-  console.log(res);
+  deviceConfigInfo({ id: props.deviceConfigId });
 };
 
 const handleSave = () => {

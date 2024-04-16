@@ -29,6 +29,13 @@ const handleQuery = async () => {
   deviceConfigList.value = [];
   await getData();
 };
+
+const handleClearQuery = async () => {
+  queryData.value.page = 1;
+  queryData.value.name = '';
+  deviceConfigList.value = [];
+  await getData();
+};
 // 页面跳转
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
@@ -50,7 +57,7 @@ onMounted(() => {
             placeholder="请输入配置名称"
             type="text"
             clearable
-            @clear="handleQuery"
+            @clear="handleClearQuery"
             @keydown.enter="handleQuery"
           >
             <template #prefix>
@@ -77,7 +84,7 @@ onMounted(() => {
             @click="goRouter('device_config-detail', item.id)"
           >
             <NCard hoverable>
-              <div class="text-16px font-600">
+              <div class="title text-16px font-600">
                 {{ item.name }}
               </div>
               <NFlex justify="space-between" align="center" class="mt-4">
@@ -112,6 +119,7 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 0;
+
   .config-item {
     //height: 120px;
     //width: 25%;
@@ -125,5 +133,12 @@ onMounted(() => {
     cursor: pointer;
     border-radius: 12px;
   }
+}
+
+.title {
+  height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

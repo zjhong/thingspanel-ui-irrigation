@@ -164,7 +164,7 @@ export const dataScriptEdit = async (params: any) => {
 
 /** 调试数据处理 */
 export const dataScriptQuiz = async (params: any) => {
-  return await request.post<Api.BaseApi.Data | any>(`/data_script/quiz`, params);
+  return await request.post<Api.BaseApi.Data | any>(`/data_script/quiz`, params, { needMessage: true } as any);
 };
 /** 删除数据处理 */
 export const dataScriptDel = async (params: any) => {

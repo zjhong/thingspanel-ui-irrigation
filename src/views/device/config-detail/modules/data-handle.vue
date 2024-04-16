@@ -158,7 +158,10 @@ const doQuiz = async () => {
     analog_input: '',
     topic: ''
   };
-  await dataScriptQuiz(postData);
+  const result = await dataScriptQuiz(postData);
+  if (result?.data?.code === 200) {
+    configForm.value.last_analog_input = result?.data?.message || '';
+  }
 };
 
 const cmRef = ref();
@@ -198,7 +201,7 @@ onMounted(() => {
         </div>
         <NSwitch v-model:value="item.enable_flag" checked-value="Y" unchecked-value="N" />
       </div>
-      <div class="item-desc">{{ item.description }}</div>
+      <div class="item-desc description">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
         <NButton circle tertiary type="info" @click="openModal('编辑', item)">
@@ -302,5 +305,15 @@ onMounted(() => {
       align-items: center;
     }
   }
+}
+
+.description {
+  height: 40px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 </style>

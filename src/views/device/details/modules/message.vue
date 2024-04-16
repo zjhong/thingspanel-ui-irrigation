@@ -5,6 +5,7 @@ import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置�
 const props = defineProps<{
   id: string;
   deviceConfigId: string;
+  location: string;
 }>();
 const latitude = ref('');
 const longitude = ref('');
@@ -20,6 +21,9 @@ const openMapAndGetPosition = () => {
   isShow.value = true;
 };
 const getConfigInfo = async () => {
+  const locationData = props.location?.split(',') || [];
+  latitude.value = locationData[0] || '';
+  longitude.value = locationData[1] || '';
   const res = deviceConfigInfo({ id: props.deviceConfigId });
   console.log(res);
 };

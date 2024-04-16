@@ -111,6 +111,7 @@ watch(
                 :is="component.component"
                 :id="id as string"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
+                :location="deviceDataStore?.deviceData?.location || ''"
               />
             </n-spin>
           </n-tab-pane>

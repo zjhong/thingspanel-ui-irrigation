@@ -3,7 +3,6 @@ import { localStg } from '@/utils/storage';
 import { createProxyPattern, createServiceConfig } from '~/env.config';
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
-console.log(import.meta.env);
 
 const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
 
@@ -22,7 +21,6 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // const Authorization = token ? `Bearer ${token}` : null;
       const headersWithToken = token ? { 'x-token': token } : {};
       Object.assign(headers, headersWithToken);
-      console.log(params);
       if (params && typeof params === 'object' && !Array.isArray(params)) {
         Object.keys(params).forEach(key => {
           if (params[key] === '') {
@@ -43,7 +41,6 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
-      console.log(response, '85943854');
       if (response.config.method !== 'get') {
         window.$message?.destroyAll();
         window.$message?.success('操作成功');

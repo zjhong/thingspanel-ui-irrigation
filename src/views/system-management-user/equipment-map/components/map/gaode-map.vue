@@ -82,7 +82,6 @@ export default {
               if (data.districts) {
                 const coordinates = [];
                 data.districts.map((item, index) => {
-                  console.log(item);
                   coordinates.push(item.location.split(','));
                   state.marker = new AMap.Marker({
                     position: [coordinates[index][0], coordinates[index][1]],

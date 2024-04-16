@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-import { type Ref, onMounted, reactive, ref } from 'vue';
+import { type Ref, onMounted, ref } from 'vue';
 import {
   type DataTableColumns,
   NButton,
@@ -11,8 +11,8 @@ import {
   useDialog,
   useMessage
 } from 'naive-ui';
-import { IosSearch } from '@vicons/ionicons4';
 import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
+import moment from 'moment';
 import { useRouterPush } from '@/hooks/common/router';
 import {
   sceneAutomationsDel,
@@ -24,14 +24,7 @@ const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
 
-interface sceneLinkageItem {
-  id: string;
-  name: string;
-  description: string;
-  created_at: string;
-  enabled: string;
-}
-let sceneLinkageList: Array<sceneLinkageItem> = reactive([] as any);
+const sceneLinkageList = ref([] as any);
 
 // 新建场景
 const linkAdd = () => {
@@ -62,27 +55,36 @@ const dataTotal = ref(0);
 
 const getData = async () => {
   const res = await sceneAutomationsGet(queryData.value);
-  sceneLinkageList = res.data.list;
+  sceneLinkageList.value = res.data.list;
   dataTotal.value = res.data.total;
 };
-const handleQuery = async () => {
-  queryData.value.page = 1;
-  await getData();
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const handleQuery = async () => {
+//   queryData.value.page = 1;
+//   await getData();
+// };
 const bodyStyle = ref({
   width: '800px'
 });
 const showLog = ref(false);
+console.log(moment().subtract(7, 'day').format());
 const logQuery = ref({
   page: 1,
   page_size: 12,
-  time: ref<[number, number]>([Date.now(), Date.now()]),
-  status: ''
+  scene_automation_id: '',
+  execution_result: null,
+  execution_start_time: '',
+  execution_end_time: '',
+  queryTime: ref(null as any)
 });
 const logDataTotal = 0;
 const logData = ref([]);
-const getLogList = async (item: any) => {
-  const res = await sceneAutomationsLog(item.id);
+const getLogList = async () => {
+  if (logQuery.value.queryTime && logQuery.value.queryTime.length === 2) {
+    logQuery.value.execution_start_time = moment(logQuery.value.queryTime[0]).format();
+    logQuery.value.execution_end_time = moment(logQuery.value.queryTime[1]).format();
+  }
+  const res = await sceneAutomationsLog(logQuery.value);
   logData.value = res.data;
 };
 
@@ -105,14 +107,15 @@ const logColumnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
 ]);
 // 查看日志
 const openLog = (item: any) => {
-  getLogList(item);
+  logQuery.value.scene_automation_id = item.id;
+  getLogList();
   showLog.value = true;
 };
 // 删除场景
 const deleteLink = async (item: any) => {
   dialog.warning({
     title: '删除提示',
-    content: '请确认是否删除该场景信息？',
+    content: '请确认是否删除该场景联动信息？',
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
@@ -124,6 +127,9 @@ const deleteLink = async (item: any) => {
     }
   });
 };
+const closeTest = () => {
+  showLog.value = false;
+};
 onMounted(() => {
   getData();
 });
@@ -134,22 +140,22 @@ onMounted(() => {
     <NCard :bordered="false">
       <NFlex justify="space-between" class="mb-4">
         <NButton type="primary" @click="linkAdd()">+新增联动规则</NButton>
-        <NFlex align="center" justify="flex-end" :wrap="false">
-          <NInput
-            v-model:value="queryData.name"
-            placeholder="请输入场景联动名称"
-            class="search-input"
-            type="text"
-            clearable
-          >
-            <template #prefix>
-              <NIcon>
-                <IosSearch />
-              </NIcon>
-            </template>
-          </NInput>
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
-        </NFlex>
+        <!--        <NFlex align="center" justify="flex-end" :wrap="false">-->
+        <!--          <NInput-->
+        <!--            v-model:value="queryData.name"-->
+        <!--            placeholder="请输入场景联动名称"-->
+        <!--            class="search-input"-->
+        <!--            type="text"-->
+        <!--            clearable-->
+        <!--          >-->
+        <!--            <template #prefix>-->
+        <!--              <NIcon>-->
+        <!--                <IosSearch />-->
+        <!--              </NIcon>-->
+        <!--            </template>-->
+        <!--          </NInput>-->
+        <!--          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>-->
+        <!--        </NFlex>-->
       </NFlex>
       <n-empty
         v-if="sceneLinkageList.length === 0"
@@ -176,7 +182,7 @@ onMounted(() => {
               <NFlex justify="flex-end" class="mt-4">
                 <NTooltip trigger="hover">
                   <template #trigger>
-                    <NButton tertiary circle type="warning" @click="linkEdit(item.id)">
+                    <NButton tertiary circle type="warning" @click="linkEdit(item)">
                       <template #icon>
                         <n-icon>
                           <editIcon />
@@ -188,7 +194,7 @@ onMounted(() => {
                 </NTooltip>
                 <NTooltip trigger="hover">
                   <template #trigger>
-                    <NButton circle tertiary type="info" @click="openLog">
+                    <NButton circle tertiary type="info" @click="openLog(item)">
                       <template #icon>
                         <n-icon>
                           <copyIcon />
@@ -224,10 +230,19 @@ onMounted(() => {
         </NFlex>
       </template>
     </NCard>
-    <n-modal v-model:show="showLog" :style="bodyStyle" preset="card" title="日志" size="huge" :bordered="false">
+    <NModal
+      v-model:show="showLog"
+      :style="bodyStyle"
+      preset="card"
+      title="日志"
+      size="huge"
+      :bordered="false"
+      :mask-closable="false"
+      @close="closeTest"
+    >
       <NFlex class="mb-10">
-        <n-date-picker v-model:value="logQuery.time" type="datetimerange" clearable />
-        <n-select v-model:value="logQuery.status" class="max-w-40" />
+        <n-date-picker v-model:value="logQuery.queryTime" type="daterange" clearable @change="getLogList" />
+        <n-select v-model:value="logQuery.execution_result" class="max-w-40" />
       </NFlex>
       <NDataTable :columns="logColumnsData" :data="logData" size="small" class="mb-10" />
       <NFlex justify="end">
@@ -238,7 +253,7 @@ onMounted(() => {
           @update:page="getLogList"
         />
       </NFlex>
-    </n-modal>
+    </NModal>
   </div>
 </template>
 

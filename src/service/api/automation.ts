@@ -85,8 +85,8 @@ export const sceneAutomationsInfo = async (id: any) => {
 };
 
 /** 获取场景日志 */
-export const sceneAutomationsLog = async (id: any) => {
-  return await request.get<any>(`/scene_automations/log/${id}`);
+export const sceneAutomationsLog = async (params: any) => {
+  return await request.get<any>(`/scene_automations/log`, { params });
 };
 
 /** 激活场景 */

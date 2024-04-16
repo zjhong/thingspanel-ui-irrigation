@@ -137,7 +137,6 @@ const getDeviceConfig = async (name: string) => {
 // 下拉获取的动作标识符
 const actionParamShow = async (ifItem: any, data: any) => {
   if (data === true && ifItem.trigger_source) {
-    console.log(ifItem);
     ifItem.triggerParamOptions = [];
     let res = null as any;
     if (ifItem.trigger_conditions_type === '10') {
@@ -455,7 +454,6 @@ watch(
   () => props.conditionData,
   newValue => {
     if (newValue) {
-      console.log(props.conditionData);
       ifGroups.value = props.conditionData;
     }
   }
@@ -464,12 +462,6 @@ onMounted(() => {
   getGroup();
   getDevice('', '');
   getDeviceConfig('');
-  // console.log(props.conditionData);
-  // if (props.conditionData.length > 0) {
-  //   ifGroups = props.conditionData;
-  // } else {
-  //   addIfGroupItem();
-  // }
 });
 </script>
 
@@ -624,9 +616,10 @@ onMounted(() => {
                   <!--  时间条件下->单次->输入时间-->
                   <NFlex class="w-150" align="center">
                     <n-date-picker
-                      v-model:formatted-value="ifItem.onceTimeValue"
+                      v-model:value="ifItem.onceTimeValue"
                       type="datetime"
                       :time-picker-props="{ format: 'HH:mm' }"
+                      format="yyyy-MM-dd HH:mm"
                       placeholder="请选择日时分"
                     />
                     <span class="ml-4">未执行</span>
@@ -653,12 +646,7 @@ onMounted(() => {
                     placeholder="请选择重复周期"
                   />
                   <template v-if="ifItem.task_type === 'HOUR'">
-                    <NTimePicker
-                      v-model:value="ifItem.hourTimeValue"
-                      placeholder="请选择"
-                      value-format="mm"
-                      format="mm"
-                    />
+                    <NTimePicker v-model:value="ifItem.hourTimeValue" placeholder="请选择" format="mm" />
                     <span class="ml-4">过期时间</span>
                     <NSelect
                       v-model:value="ifItem.expiration_time"

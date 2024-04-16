@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { NButton, NFlex } from 'naive-ui';
 import type { FormInst } from 'naive-ui';
 import { IosRefresh } from '@vicons/ionicons4';
@@ -187,11 +187,11 @@ const actionParamShow = async (ifItem: any, data: any) => {
 const timeConditionOptions = ref([
   {
     label: '单次',
-    value: 'once'
+    value: '20'
   },
   {
     label: '重复',
-    value: 'repeat'
+    value: '21'
   },
   {
     label: '时间范围',
@@ -309,24 +309,24 @@ const determineOptions = ref([
 // 过期时间选项
 const expirationTimeOptions = ref([
   {
-    label: '5min',
+    label: '5分钟',
     value: 5
   },
   {
-    label: '10min',
+    label: '10分钟',
     value: 10
   },
   {
-    label: '30min',
+    label: '30分钟',
     value: 30
   },
   {
-    label: '1h',
+    label: '1小时',
     value: 60
   },
   {
-    label: '1h',
-    value: 60 * 24
+    label: '1天',
+    value: 1140
   }
 ]);
 
@@ -366,37 +366,37 @@ const judgeItem = ref({
   deviceGroupId: null, // 设备分组id
   triggerParamOptions: [] // 动作标识菜单下拉列表数据选项
 });
-interface JudgeItem {
-  ifType: string; // 第一条件类型
-  trigger_conditions_type: string; // 第二条件--后端
-  trigger_source: string; // 设备类ID值--后端
-  trigger_param_type: string; // 触发消息标识符--后端
-  trigger_param: string; // 触发参数--后端
-  trigger_operator: string; // 操作符
-  trigger_value: string; // 目标值(后端)
-  onceTimeValue: string; // 单次执行时间-日时分值
-  execution_time: string; // 单次执行时间-后端
-  expiration_time: string; // 单次过期时间-后端
+// interface JudgeItem {
+//   ifType: string; // 第一条件类型
+//   trigger_conditions_type: string; // 第二条件--后端
+//   trigger_source: string; // 设备类ID值--后端
+//   trigger_param_type: string; // 触发消息标识符--后端
+//   trigger_param: string; // 触发参数--后端
+//   trigger_operator: string; // 操作符
+//   trigger_value: string; // 目标值(后端)
+//   onceTimeValue: string; // 单次执行时间-日时分值
+//   execution_time: string; // 单次执行时间-后端
+//   expiration_time: string; // 单次过期时间-后端
+//
+//   timeValue: string; // 时分秒值
+//   task_type: string; // 重复时间周期值
+//   params: string; //  时间值-后端
+//   hourTimeValue: number; // 时间值-选择小时
+//   dayTimeValue: number; // 时间值-选择天
+//   weekTimeValue: number; // 时间值-选择周
+//   monthTimeValue: number; // 时间值-选择月
+//   weekChoseValue: (string | number)[] | null | undefined; // 星期多选值
+//   monthChoseValue: string; // 月份某一天
+//   startTimeValue: number; // 范围的开始时间
+//   endTimeValue: number; // 范围的结束时间
+//   minValue: string; // 最小
+//   maxValue: string; // 最大
+//   weatherValue: string; // 天气值
+//   deviceGroupId: string; // 设备分组id
+//   triggerParamOptions: object | any; // 动作标识菜单下拉列表数据选项
+// }
 
-  timeValue: string; // 时分秒值
-  task_type: string; // 重复时间周期值
-  params: string; //  时间值-后端
-  hourTimeValue: number; // 时间值-选择小时
-  dayTimeValue: number; // 时间值-选择天
-  weekTimeValue: number; // 时间值-选择周
-  monthTimeValue: number; // 时间值-选择月
-  weekChoseValue: (string | number)[] | null | undefined; // 星期多选值
-  monthChoseValue: string; // 月份某一天
-  startTimeValue: number; // 范围的开始时间
-  endTimeValue: number; // 范围的结束时间
-  minValue: string; // 最小
-  maxValue: string; // 最大
-  weatherValue: string; // 天气值
-  deviceGroupId: string; // 设备分组id
-  triggerParamOptions: object | any; // 动作标识菜单下拉列表数据选项
-}
-
-const ifGroups: Array<Array<JudgeItem>> = reactive([]);
+const ifGroups = ref([] as any);
 
 // 给某个条件中增加条件
 const addIfGroupsSubItem = (ifGroupIndex: any) => {
@@ -415,20 +415,20 @@ const deleteIfGroupsSubItem = (ifGroupIndex: any, ifIndex: any) => {
 };
 // 删除某个条件组
 const deleteIfGroupsItem = (ifIndex: any) => {
-  ifGroups.splice(ifIndex, 1);
+  ifGroups.value.splice(ifIndex, 1);
 };
 // 新增一个条件组
 const addIfGroupItem = async () => {
   const groupObj: any = [];
   groupObj.push(JSON.parse(JSON.stringify(judgeItem.value)));
-  ifGroups.push(groupObj);
+  ifGroups.value.push(groupObj);
 };
 
 const ifGroupsData = () => {
-  return ifGroups;
+  return ifGroups.value;
 };
 const formData = ref({
-  ifGroups: ifGroupsData()
+  ifGroups: ifGroups.value
 });
 
 defineExpose({
@@ -441,11 +441,35 @@ const triggerParamChange = (ifItem: any, data: any) => {
   // ifItem.trigger_param = data[1].value;
 };
 const formInstRef = ref<FormInst | null>(null);
+
+interface Props {
+  // eslint-disable-next-line vue/no-unused-properties
+  conditionData?: object | any;
+}
+const props = withDefaults(defineProps<Props>(), {
+  // eslint-disable-next-line vue/require-valid-default-prop
+  conditionData: []
+});
+
+watch(
+  () => props.conditionData,
+  newValue => {
+    if (newValue) {
+      console.log(props.conditionData);
+      ifGroups.value = props.conditionData;
+    }
+  }
+);
 onMounted(() => {
   getGroup();
   getDevice('', '');
   getDeviceConfig('');
-  addIfGroupItem();
+  // console.log(props.conditionData);
+  // if (props.conditionData.length > 0) {
+  //   ifGroups = props.conditionData;
+  // } else {
+  //   addIfGroupItem();
+  // }
 });
 </script>
 
@@ -453,7 +477,7 @@ onMounted(() => {
   <NFlex vertical class="mt-1 w-100%">
     <NForm ref="formInstRef" :model="formData" size="small">
       (满足以下任意一组条件即可触发)
-      <NFlex v-for="(ifGroupItem, ifGroupIndex) in formData.ifGroups" :key="ifGroupIndex" class="w-100%">
+      <NFlex v-for="(ifGroupItem, ifGroupIndex) in ifGroups" :key="ifGroupIndex" class="w-100%">
         <NCard class="mb-4 w-[calc(100%-78px)]">
           <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-6 w-100%">
             <NFlex class="flex-1">
@@ -596,7 +620,7 @@ onMounted(() => {
                   class="max-w-40"
                   placeholder="请选择时间条件"
                 />
-                <template v-if="ifItem.trigger_conditions_type === 'once'">
+                <template v-if="ifItem.trigger_conditions_type === '20'">
                   <!--  时间条件下->单次->输入时间-->
                   <NFlex class="w-150" align="center">
                     <n-date-picker
@@ -620,7 +644,7 @@ onMounted(() => {
                     />
                   </NFlex>
                 </template>
-                <template v-if="ifItem.trigger_conditions_type === 'repeat'">
+                <template v-if="ifItem.trigger_conditions_type === '21'">
                   <!--  时间条件下->重复->选择周期-->
                   <NSelect
                     v-model:value="ifItem.task_type"

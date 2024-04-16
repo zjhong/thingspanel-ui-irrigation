@@ -6,7 +6,10 @@ import { NButton, NCard, useDialog, useMessage } from 'naive-ui';
 import moment from 'moment';
 import EditAction from '@/views/automation/linkage-edit/modules/edit-action.vue';
 import EditPremise from '@/views/automation/linkage-edit/modules/edit-premise.vue';
-import { sceneAutomationsAdd, sceneAutomationsEdit } from '@/service/api/automation';
+import { sceneAutomationsAdd, sceneAutomationsEdit, sceneAutomationsInfo } from '@/service/api/automation';
+import { useRouterPush } from '@/hooks/common/router';
+const { routerBack } = useRouterPush();
+
 const dialog = useDialog();
 const message = useMessage();
 const route = useRoute();
@@ -56,17 +59,19 @@ const submitData = async () => {
         ifItem.weekChoseValue.map((item: any) => {
           trigger_value += item;
         });
+        console.log(ifItem.startTimeValue);
+        console.log(ifItem.endTimeValue);
+        console.log(moment(ifItem.startTimeValue).format('yyyy-MM-DD HH:mm:ss'));
         trigger_value += `|${moment(ifItem.startTimeValue).format('HH:mm:ssZ')}`;
         trigger_value += `|${moment(ifItem.endTimeValue).format('HH:mm:ssZ')}`;
         ifItem.trigger_value = trigger_value;
       }
-      if (ifItem.trigger_conditions_type === 'once') {
+      if (ifItem.trigger_conditions_type === '20') {
         ifItem.execution_time = moment(ifItem.onceTimeValue).format();
       }
-      if (ifItem.trigger_conditions_type === 'repeat') {
+      if (ifItem.trigger_conditions_type === '21') {
         if (ifItem.task_type === 'HOUR') {
           ifItem.params = moment(ifItem.hourTimeValue).format('mm:00Z');
-          console.log(ifItem.params);
         }
         if (ifItem.task_type === 'DAY') {
           ifItem.params = moment(ifItem.dayTimeValue).format('HH:mm:00Z');
@@ -113,24 +118,86 @@ const submitData = async () => {
         const res = await sceneAutomationsEdit(configForm.value);
         if (!res.error) {
           message.success('编辑成功');
+          routerBack();
         }
       } else {
         const res = await sceneAutomationsAdd(configForm.value);
         if (!res.error) {
           message.success('新增成功');
+          routerBack();
         }
       }
     }
   });
 };
 
-const conditionsType = ref(null);
+const conditionsType = ref(null as any);
 const conditionChose = data => {
   if (data) {
     conditionsType.value = data;
   }
 };
-const getSceneAutomationsInfo = () => {};
+const automationsInfo = ref(null as any);
+const getSceneAutomationsInfo = async () => {
+  const res = await sceneAutomationsInfo(configId.value);
+  if (res.data) {
+    automationsInfo.value = res.data;
+    configForm.value = res.data;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    echoData();
+  }
+};
+const conditionData = ref([] as any);
+const echoData = () => {
+  // eslint-disable-next-line array-callback-return
+  automationsInfo.value.trigger_condition_groups.map((citem: any) => {
+    console.log(citem);
+    // eslint-disable-next-line array-callback-return
+    citem.map((ifItem: any) => {
+      if (ifItem.trigger_conditions_type === '10' || ifItem.trigger_conditions_type === '11') {
+        ifItem.ifType = '1';
+        if (ifItem.trigger_operator === 'between') {
+          ifItem.minValue = ifItem.trigger_value.split('-')[0];
+          ifItem.maxValue = ifItem.trigger_value.split('-')[1];
+        }
+      }
+      if (ifItem.trigger_conditions_type === '22') {
+        ifItem.ifType = '2';
+        const weekChoseValue = ifItem.trigger_value.split('|')[0];
+        ifItem.weekChoseValue = weekChoseValue.split('');
+        const startTimeValue = `${String(moment().format('yyyy-MM-DD'))} ${ifItem.trigger_value.split('|')[1]}`;
+        const endTimeValue = `${String(moment().format('yyyy-MM-DD'))} ${ifItem.trigger_value.split('|')[2]}`;
+        ifItem.startTimeValue = moment(startTimeValue).valueOf();
+        ifItem.endTimeValue = moment(endTimeValue).valueOf();
+      }
+      if (ifItem.trigger_conditions_type === 'once') {
+        ifItem.ifType = '2';
+        ifItem.onceTimeValue = moment(ifItem.execution_time).valueOf();
+      }
+      if (ifItem.trigger_conditions_type === 'repeat') {
+        //   if (ifItem.task_type === 'HOUR') {
+        //     ifItem.params = moment(ifItem.hourTimeValue).format('mm:00Z');
+        //     console.log(ifItem.params);
+        //   }
+        //   if (ifItem.task_type === 'DAY') {
+        //     ifItem.params = moment(ifItem.dayTimeValue).format('HH:mm:00Z');
+        //   }
+        //   if (ifItem.task_type === 'WEEK') {
+        //     let params = '';
+        //     // eslint-disable-next-line array-callback-return
+        //     ifItem.weekChoseValue.map((item: any) => {
+        //       params += item;
+        //     });
+        //     ifItem.params = `${params}|${moment(ifItem.weekTimeValue).format('HH:mm:00Z')}`;
+        //   }
+        //   if (ifItem.task_type === 'MONTH') {
+        //     ifItem.params = `${ifItem.monthChoseValue}T${moment(ifItem.monthTimeValue).format(`HH:mm:00Z`)}`;
+        //   }
+      }
+    });
+  });
+  conditionData.value = automationsInfo.value.trigger_condition_groups;
+};
 onMounted(() => {
   if (configId.value) {
     // eslint-disable-next-line no-unused-expressions
@@ -160,7 +227,7 @@ onMounted(() => {
           </NFormItem>
         </NFlex>
         <NFormItem label="如果:" class="w-100%">
-          <EditPremise ref="editPremise" @condition-chose="conditionChose" />
+          <EditPremise ref="editPremise" :condition-data="conditionData" @condition-chose="conditionChose" />
         </NFormItem>
         <NFormItem label=" ">
           <n-divider dashed class="divider-class" />

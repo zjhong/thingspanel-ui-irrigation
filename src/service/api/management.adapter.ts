@@ -39,7 +39,6 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
       }
     }
     if (item.route_path === 'layout.base' && item.children.length === 0) {
-      console.log(item);
       item.route_path += '$home';
     }
     return {

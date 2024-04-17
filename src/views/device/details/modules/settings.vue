@@ -151,7 +151,7 @@ const selectConfig = v => {
   <div>
     <NFlex justify="space-between" class="mb-24px mt-8 h-50px items-center">
       <div class="w-320px flex items-center">
-        <div>设备配置22：</div>
+        <div>设备配置：</div>
         <NSelect
           v-model:value="selectedValues"
           filterable

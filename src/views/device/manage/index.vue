@@ -23,6 +23,7 @@ const addKey = ref();
 const deviceNumber = ref();
 const configOptions = ref();
 const deviceId = ref();
+const deviceObj = ref();
 const configId = ref();
 const formData = ref();
 const tablePageRef = ref();
@@ -32,9 +33,10 @@ const getFormJson = async id => {
 
   formData.value = res.data;
 };
-const setUpId = (dId, cId) => {
+const setUpId = (dId, cId, dobj) => {
   deviceId.value = dId;
   configId.value = cId;
+  deviceObj.value = JSON.parse(dobj);
   getFormJson(dId);
 };
 const getDeviceGroupOptions = async () => {
@@ -300,6 +302,7 @@ watch(
             <AddDevicesStep2
               :set-is-success="setIsSuccess"
               :device_id="deviceId"
+              :form-data="deviceObj"
               :form-elements="formData"
               :next-callback="
                 () => {

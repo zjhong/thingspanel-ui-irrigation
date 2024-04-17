@@ -8,7 +8,7 @@ import { $t } from '@/locales';
 const props = defineProps<{
   configOptions: any[];
   nextCallback: () => void;
-  setIdCallback: (dId, cId) => void;
+  setIdCallback: (dId, cId, dobj) => void;
 }>();
 const formRef = ref<FormInst | null>(null);
 const message = useMessage();
@@ -32,7 +32,7 @@ function handleValidateClick(e: MouseEvent) {
       const res = await deviceAdd({ ...formValue.value, lable: formValue.value.lable.join(','), access_way: 'A' });
       const configId = formValue.value.device_config_id;
       const deviceId = res.data.id;
-      props.setIdCallback(deviceId, configId);
+      props.setIdCallback(deviceId, configId, res.data.voucher);
       props.nextCallback();
     } else {
       console.log(errors);

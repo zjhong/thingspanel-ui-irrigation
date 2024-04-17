@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps, onMounted, reactive, ref, watchEffect } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui';
 import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 import { devicCeonnectForm, getDeviceConnectInfo, updateDeviceVoucher } from '@/service/api/device';
@@ -7,6 +8,9 @@ import { useDeviceDataStore } from '@/store/modules/device';
 
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
+const formRef = ref<FormInst | null>(null);
+
+const formRules = ref<FormRules>({});
 
 // 定义选项接口，适用于 select 类型的表单元素
 interface Option {
@@ -65,9 +69,11 @@ watchEffect(() => {
     formElements.value.forEach(element => {
       if (element.type === 'table' && Array.isArray(element.array)) {
         element.array.forEach(subElement => {
+          formRules.value[element.dataKey] = subElement.validate || {};
           formData[subElement.dataKey] ??= thejson[subElement.dataKey] || '';
         });
       } else {
+        formRules.value[element.dataKey] = element.validate || {};
         formData[element.dataKey] ??= thejson[element.dataKey] || '';
       }
     });
@@ -75,15 +81,11 @@ watchEffect(() => {
 });
 
 const handleSubmit = async () => {
-  const res = await updateDeviceVoucher({
+  await formRef.value?.validate();
+  await updateDeviceVoucher({
     device_id: props.id,
     voucher: JSON.stringify(formData)
   });
-  if (!res.error) {
-    console.log(res);
-  } else {
-    console.log(res);
-  }
 };
 </script>
 
@@ -99,15 +101,15 @@ const handleSubmit = async () => {
     </n-descriptions>
 
     <NCard title="凭证" class="mb-6 mt-6">
-      <NForm>
+      <NForm ref="formRef" :rules="formRules" :model="formData">
         <template v-for="element in formElements" :key="element.dataKey">
           <div v-if="element.type === 'input'" class="form-item">
-            <NFormItem :label="element.label">
+            <NFormItem :label="element.label" :path="element.dataKey">
               <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
             </NFormItem>
           </div>
           <div v-if="element.type === 'select'" class="form-item">
-            <NFormItem :label="element.label">
+            <NFormItem :label="element.label" :path="element.dataKey">
               <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
             </NFormItem>
           </div>
@@ -116,12 +118,12 @@ const handleSubmit = async () => {
             <div class="table-content">
               <template v-for="subElement in element.array" :key="subElement.dataKey">
                 <div v-if="subElement.type === 'input'" class="table-item">
-                  <NFormItem :label="subElement.label">
+                  <NFormItem :label="subElement.label" :path="subElement.dataKey">
                     <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
                   </NFormItem>
                 </div>
                 <div v-if="subElement.type === 'select'" class="table-item">
-                  <NFormItem :label="subElement.label">
+                  <NFormItem :label="subElement.label" :path="subElement.dataKey">
                     <NSelect
                       v-model:value="formData[subElement.dataKey]"
                       :options="subElement.options as SelectMixedOption[]"

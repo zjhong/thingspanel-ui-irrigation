@@ -9,7 +9,6 @@ import App from './App.vue';
 
 async function setupApp() {
   const app = createApp(App);
-
   setupStore(app);
   setupI18n(app);
   const sysSettingStore = useSysSettingStore();

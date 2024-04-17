@@ -2,11 +2,14 @@
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { NConfigProvider, darkTheme } from 'naive-ui';
 import { useFullscreen } from '@vueuse/core';
+import json from 'highlight.js/lib/languages/json';
+import hljs from 'highlight.js/lib/core';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
 import Content from './components/content/index.vue';
 
+hljs.registerLanguage('json', json);
 defineOptions({
   name: 'App'
 });
@@ -46,6 +49,7 @@ onBeforeUnmount(() => {
     <Content />
   </NMessageProvider>
   <NConfigProvider
+    :hljs="hljs"
     :theme="naiveDarkTheme"
     :theme-overrides="themeStore.naiveTheme"
     :locale="naiveLocale"

@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { FormInst } from 'naive-ui';
-import { NButton, NCard, useDialog, useMessage } from 'naive-ui';
+import { NButton, NCard, useDialog } from 'naive-ui';
 import moment from 'moment';
 import EditAction from '@/views/automation/linkage-edit/modules/edit-action.vue';
 import EditPremise from '@/views/automation/linkage-edit/modules/edit-premise.vue';
@@ -11,7 +11,6 @@ import { useRouterPush } from '@/hooks/common/router';
 const { routerBack } = useRouterPush();
 
 const dialog = useDialog();
-const message = useMessage();
 const route = useRoute();
 const configFormRules = ref({
   name: {
@@ -23,6 +22,14 @@ const configFormRules = ref({
     required: true,
     message: '请输入场景联动描述',
     trigger: 'blur'
+  },
+  trigger_condition_groups: {
+    required: true,
+    message: '请添加执行条件'
+  },
+  actions: {
+    required: true,
+    message: '请添加执行动作'
   }
 });
 const configFormRef = ref<HTMLElement & FormInst>();
@@ -41,10 +48,66 @@ function defaultConfigForm() {
 const editPremise = ref();
 const editAction = ref();
 const submitData = async () => {
-  // 处理条件的数据
-  const TriggerConditionData = JSON.parse(JSON.stringify(editPremise.value.ifGroupsData()));
+  // 处理条件的数据保存
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  configForm.value.trigger_condition_groups = handleIfData();
+  // 处理动作数据保存
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  configForm.value.actions = handleActionData();
+
+  await configFormRef?.value?.validate();
+  await editPremise.value.premiseFormRefReturn()?.validate();
+  await editAction.value.actionFormRefReturn()?.validate();
+  dialog.warning({
+    title: '提示',
+    content: '请确认是否保存该场景信息？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      if (configId.value) {
+        const res = await sceneAutomationsEdit(configForm.value);
+        if (!res.error) {
+          routerBack();
+        }
+      } else {
+        const res = await sceneAutomationsAdd(configForm.value);
+        if (!res.error) {
+          routerBack();
+        }
+      }
+    }
+  });
+};
+
+const conditionsType = ref(null as any);
+const conditionChose = (data: any) => {
+  if (data) {
+    conditionsType.value = data;
+  }
+};
+const automationsInfo = ref(null as any);
+const conditionData = ref([] as any);
+const actionData = ref([] as any);
+
+const getSceneAutomationsInfo = async () => {
+  const res = await sceneAutomationsInfo(configId.value);
+  if (res.data) {
+    automationsInfo.value = res.data;
+    configForm.value = res.data;
+    // 条件数据回显
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    conditionData.value = echoIfData(automationsInfo.value.trigger_condition_groups);
+    // 动作数据回显
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    actionData.value = echoActionData(automationsInfo.value.actions);
+  }
+};
+
+// 提交时处理条件数据
+const handleIfData = () => {
+  const ifGroupsData = JSON.parse(JSON.stringify(editPremise.value.ifGroupsData()));
   // eslint-disable-next-line array-callback-return
-  TriggerConditionData.map((ifGroupItem: any) => {
+  ifGroupsData.map((ifGroupItem: any) => {
     // eslint-disable-next-line array-callback-return
     ifGroupItem.map((ifItem: any) => {
       // ifItem.expiration_time = moment().format();
@@ -59,9 +122,6 @@ const submitData = async () => {
         ifItem.weekChoseValue.map((item: any) => {
           trigger_value += item;
         });
-        console.log(ifItem.startTimeValue);
-        console.log(ifItem.endTimeValue);
-        console.log(moment(ifItem.startTimeValue).format('yyyy-MM-DD HH:mm:ss'));
         trigger_value += `|${moment(ifItem.startTimeValue).format('HH:mm:ssZ')}`;
         trigger_value += `|${moment(ifItem.endTimeValue).format('HH:mm:ssZ')}`;
         ifItem.trigger_value = trigger_value;
@@ -90,7 +150,11 @@ const submitData = async () => {
       }
     });
   });
-  configForm.value.trigger_condition_groups = TriggerConditionData;
+  return ifGroupsData;
+};
+
+// 提交时处理动作数据
+const handleActionData = () => {
   // 处理动作的数据
   const actionGroupsData = JSON.parse(JSON.stringify(editAction.value.actionGroupsReturn()));
   const actionsData = [] as any;
@@ -106,54 +170,15 @@ const submitData = async () => {
       actionsData.push(item);
     }
   });
-  configForm.value.actions = actionsData;
-  await configFormRef?.value?.validate();
-  dialog.warning({
-    title: '提示',
-    content: '请确认是否保存该场景信息？',
-    positiveText: '确定',
-    negativeText: '取消',
-    onPositiveClick: async () => {
-      if (configId.value) {
-        const res = await sceneAutomationsEdit(configForm.value);
-        if (!res.error) {
-          message.success('编辑成功');
-          routerBack();
-        }
-      } else {
-        const res = await sceneAutomationsAdd(configForm.value);
-        if (!res.error) {
-          message.success('新增成功');
-          routerBack();
-        }
-      }
-    }
-  });
+  return actionsData;
 };
 
-const conditionsType = ref(null as any);
-const conditionChose = data => {
-  if (data) {
-    conditionsType.value = data;
-  }
-};
-const automationsInfo = ref(null as any);
-const getSceneAutomationsInfo = async () => {
-  const res = await sceneAutomationsInfo(configId.value);
-  if (res.data) {
-    automationsInfo.value = res.data;
-    configForm.value = res.data;
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    echoData();
-  }
-};
-const conditionData = ref([] as any);
-const echoData = () => {
+// 回显时处理条件数据
+const echoIfData = (ifData: any) => {
   // eslint-disable-next-line array-callback-return
-  automationsInfo.value.trigger_condition_groups.map((citem: any) => {
-    console.log(citem);
+  ifData.map((item: any) => {
     // eslint-disable-next-line array-callback-return
-    citem.map((ifItem: any) => {
+    item.map((ifItem: any) => {
       if (ifItem.trigger_conditions_type === '10' || ifItem.trigger_conditions_type === '11') {
         ifItem.ifType = '1';
         if (ifItem.trigger_operator === 'between') {
@@ -170,33 +195,60 @@ const echoData = () => {
         ifItem.startTimeValue = moment(startTimeValue).valueOf();
         ifItem.endTimeValue = moment(endTimeValue).valueOf();
       }
-      if (ifItem.trigger_conditions_type === 'once') {
+      if (ifItem.trigger_conditions_type === '20') {
         ifItem.ifType = '2';
         ifItem.onceTimeValue = moment(ifItem.execution_time).valueOf();
       }
-      if (ifItem.trigger_conditions_type === 'repeat') {
-        //   if (ifItem.task_type === 'HOUR') {
-        //     ifItem.params = moment(ifItem.hourTimeValue).format('mm:00Z');
-        //     console.log(ifItem.params);
-        //   }
-        //   if (ifItem.task_type === 'DAY') {
-        //     ifItem.params = moment(ifItem.dayTimeValue).format('HH:mm:00Z');
-        //   }
-        //   if (ifItem.task_type === 'WEEK') {
-        //     let params = '';
-        //     // eslint-disable-next-line array-callback-return
-        //     ifItem.weekChoseValue.map((item: any) => {
-        //       params += item;
-        //     });
-        //     ifItem.params = `${params}|${moment(ifItem.weekTimeValue).format('HH:mm:00Z')}`;
-        //   }
-        //   if (ifItem.task_type === 'MONTH') {
-        //     ifItem.params = `${ifItem.monthChoseValue}T${moment(ifItem.monthTimeValue).format(`HH:mm:00Z`)}`;
-        //   }
+      if (ifItem.trigger_conditions_type === '21') {
+        ifItem.ifType = '2';
+        if (ifItem.task_type === 'HOUR') {
+          const hourTimeValue = `${String(moment().format('yyyy-MM-DD HH'))}:${ifItem.params}`;
+          ifItem.hourTimeValue = moment(hourTimeValue).valueOf();
+        }
+        if (ifItem.task_type === 'DAY') {
+          const dayTimeValue = `${String(moment().format('yyyy-MM-DD'))} ${ifItem.params}`;
+          ifItem.dayTimeValue = moment(dayTimeValue).valueOf();
+        }
+        if (ifItem.task_type === 'WEEK') {
+          const weekStr = ifItem.params.split('|')[0] || null;
+          const timStr = ifItem.params.split('|')[1] || null;
+          ifItem.weekChoseValue = weekStr.split('');
+          const weekTimeValue = `${String(moment().format('yyyy-MM-DD'))} ${timStr}`;
+          ifItem.weekTimeValue = moment(weekTimeValue).valueOf();
+        }
+        if (ifItem.task_type === 'MONTH') {
+          ifItem.monthChoseValue = ifItem.params.split('T')[0] || null;
+          const monthTimeStr = ifItem.params.split('T')[1] || null;
+          const monthTimeValue = `${String(moment().format('yyyy-MM-DD'))} ${monthTimeStr}`;
+          ifItem.monthTimeValue = moment(monthTimeValue).valueOf();
+        }
       }
     });
   });
-  conditionData.value = automationsInfo.value.trigger_condition_groups;
+  return ifData;
+};
+
+// 回显时处理条件数据
+const echoActionData = (actionsData: any) => {
+  const actionGroupsData = [] as any;
+  const actionInstructList = [] as any;
+  // eslint-disable-next-line array-callback-return
+  actionsData.map((item: any) => {
+    if (item.action_type === '10' || item.action_type === '11') {
+      actionInstructList.push(item);
+    } else {
+      item.actionType = item.action_type;
+      actionGroupsData.push(item);
+    }
+  });
+  if (actionInstructList.length > 0) {
+    const type1Data = {
+      actionType: '1',
+      actionInstructList
+    };
+    actionGroupsData.push(type1Data);
+  }
+  return actionGroupsData;
 };
 onMounted(() => {
   if (configId.value) {
@@ -226,19 +278,19 @@ onMounted(() => {
             <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
           </NFormItem>
         </NFlex>
-        <NFormItem label="如果:" class="w-100%">
+        <NFormItem label="如果:" class="w-100%" path="trigger_condition_groups">
           <EditPremise ref="editPremise" :condition-data="conditionData" @condition-chose="conditionChose" />
         </NFormItem>
         <NFormItem label=" ">
           <n-divider dashed class="divider-class" />
         </NFormItem>
-        <NFormItem label="那么:" class="w-100%">
-          <EditAction ref="editAction" :conditions-type="conditionsType" />
+        <NFormItem label="那么:" class="w-100%" path="actions">
+          <EditAction ref="editAction" :conditions-type="conditionsType" :action-data="actionData" />
         </NFormItem>
       </NForm>
       <n-divider class="divider-class" />
       <NFlex justify="center" class="mt-5">
-        <NButton type="primary" @click="submitData">保存</NButton>
+        <NButton type="primary" @click="submitData">保存场景联动</NButton>
       </NFlex>
     </NCard>
   </div>

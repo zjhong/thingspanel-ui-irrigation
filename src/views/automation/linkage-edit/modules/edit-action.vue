@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { NButton, NCard, NFlex } from 'naive-ui';
+import { type FormInst, NButton, NCard, NFlex } from 'naive-ui';
 import { deviceConfig, deviceGroupTree } from '@/service/api';
 import { warningMessageList } from '@/service/api/alarm';
 import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
@@ -11,15 +11,17 @@ const route = useRoute();
 interface Props {
   // eslint-disable-next-line vue/no-unused-properties
   conditionsType?: object | any;
+  actionData?: any;
 }
 const props = withDefaults(defineProps<Props>(), {
-  conditionsType: null
+  conditionsType: null,
+  actionData: []
 });
 
 // 条件中单个/单类设备变化时,重置操作动作中的设备内容
 const resetActionData = () => {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define,array-callback-return
-  actionGroups.map((item: any) => {
+  actionForm.value.actionGroups.map((item: any) => {
     if (item.actionInstructList.length > 0) {
       const data = [] as any;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -39,6 +41,17 @@ watch(
     }
   }
 );
+watch(
+  () => props.actionData,
+  newValue => {
+    if (newValue) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      actionForm.value.actionGroups = [];
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      actionForm.value.actionGroups = JSON.parse(JSON.stringify(props.actionData));
+    }
+  }
+);
 
 const configId = ref(route.query.id || null);
 
@@ -50,30 +63,50 @@ const newEdit = () => {
   getAlarmList('');
 };
 // 场景表单实例
-const configFormRef = ref(null);
+const configFormRef = ref<FormInst | null>(null);
 const actionGroupsReturn = () => {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  return actionGroups;
+  return actionForm.value.actionGroups;
+};
+const actionFormRefReturn = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return configFormRef.value;
 };
 // 场景表单数据
 const actionForm = ref({
-  actionGroups: actionGroupsReturn
+  actionGroups: [] as any
 });
 
 defineExpose({
-  actionGroupsReturn
+  actionGroupsReturn,
+  actionFormRefReturn
 });
 
 // 场景表单规则
 const configFormRules = ref({
-  name: {
+  actionType: {
     required: true,
-    message: '请输入场景名称',
-    trigger: 'blur'
+    message: '请选择',
+    trigger: 'change'
   },
-  description: {
+  action_type: {
     required: true,
-    message: '请输入场景描述',
+    message: '请选择',
+    trigger: 'change'
+  },
+  action_target: {
+    required: true,
+    message: '请选择',
+    trigger: 'change'
+  },
+  actionParamOptions: {
+    required: true,
+    message: '请选择',
+    trigger: 'change'
+  },
+  action_value: {
+    required: true,
+    message: '请输入',
     trigger: 'blur'
   }
 });
@@ -279,80 +312,60 @@ const instructListItem = ref({
   actionParamOptions: [] // 动作标识菜单下拉列表数据选项
 });
 
-interface ActionInstructItem {
-  action_target: string;
-  action_type: string;
-  action_param_type: string;
-  action_param: string; // 动作标识符类型
-  action_value: string; // 参数值
-  deviceGroupId: string;
-  actionParamOptions: object | any;
-}
+// interface ActionInstructItem {
+//   action_target: string;
+//   action_type: string;
+//   action_param_type: string;
+//   action_param: string; // 动作标识符类型
+//   action_value: string; // 参数值
+//   deviceGroupId: string;
+//   actionParamOptions: object | any;
+// }
 
 // 动作数组的item
 const actionItem = ref({
   actionType: null,
   action_type: null, // 动作类型后端
   action_target: null, // 动作目标id   设备id、设备配置id，场景id、告警id
-  actionInstructList: [],
-  actions: []
+  actionInstructList: []
 });
-interface ActionItem {
-  actionType: string;
-  action_type: string;
-  action_target: string;
-  actionInstructList: Array<ActionInstructItem>;
-  actions: any;
-}
+// interface ActionItem {
+//   actionType: string;
+//   action_type: string;
+//   action_target: string;
+//   actionInstructList: Array<ActionInstructItem>;
+//   actions: any;
+// }
 
 // 动作数组的值
-let actionGroups: Array<ActionItem> = reactive([] as any);
+// const state = reactive({
+//   actionGroups: [] as any
+// });
+// let actionForm.value.actionGroups: Array<ActionItem> = reactive([] as any);
 
 // 新增一个动作组
-const addActionGroupItem = () => {
+const addActionGroupItem = async () => {
+  await configFormRef.value?.validate();
   const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
   // actionItemData.actionInstructList.push(JSON.parse(JSON.stringify(instructListItem.value)));
-  actionGroups.push(actionItemData);
+  actionForm.value.actionGroups.push(actionItemData);
 };
 // 删除一个动作组
 const deleteActionGroupItem = (actionGroupIndex: any) => {
-  actionGroups.splice(actionGroupIndex, 1);
+  actionForm.value.actionGroups.splice(actionGroupIndex, 1);
 };
 
 // 给某个动作组中增加指令
-const addIfGroupsSubItem = (actionGroupIndex: any) => {
-  actionGroups[actionGroupIndex].actionInstructList.push(JSON.parse(JSON.stringify(instructListItem.value)));
+const addIfGroupsSubItem = async (actionGroupIndex: any) => {
+  await configFormRef.value?.validate();
+  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.push(
+    JSON.parse(JSON.stringify(instructListItem.value))
+  );
 };
 // 删除某个动作组中的某个指令
 const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
-  actionGroups[actionGroupIndex].actionInstructList.splice(ifIndex, 1);
+  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.splice(ifIndex, 1);
 };
-
-// const getSceneInfo = async () => {
-//   const res = await sceneInfo(configId.value);
-//   actionForm.value = { ...actionForm.value, ...res.data.info };
-//   actionForm.value.actions = res.data.actions;
-//   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//   dataEcho();
-// };
-
-// 处理页面回去回显
-// const dataEcho = () => {
-//   const actionGroupsData = [] as any;
-//   const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
-//   actionItemData.actionType = '1';
-//   // eslint-disable-next-line array-callback-return
-//   actionForm.value.actions.map((item: any) => {
-//     if (item.action_type === '10' || item.action_type === '11') {
-//       actionItemData.actionInstructList.push(item);
-//     } else {
-//       item.actionType = item.action_type;
-//       actionGroupsData.push(item);
-//     }
-//   });
-//   actionGroups.push(ctionItemData);
-//   actionGroups = actionGroups.concat(actionGroupsData);
-// };
 
 onMounted(() => {
   getGroup();
@@ -360,10 +373,7 @@ onMounted(() => {
   getDeviceConfig('');
   getAlarmList('');
   getSceneList('');
-  if (configId.value) {
-    // actionForm.value.id = configId.value;
-    // getSceneInfo();
-  } else {
+  if (!configId.value) {
     addActionGroupItem();
   }
 });
@@ -378,158 +388,214 @@ onMounted(() => {
       label-placement="left"
       label-width="150"
       size="small"
+      :show-feedback="false"
     >
       <NFlex vertical class="mt-1 w-100%">
-        <NFlex v-for="(actionGroupItem, actionGroupIndex) in actionGroups" :key="actionGroupIndex" class="mt-1 w-100%">
-          <NSelect
-            v-model:value="actionGroupItem.actionType"
-            :options="actionOptions"
-            class="max-w-40"
-            @update:value="data => actionChange(actionGroupItem, actionGroupIndex, data)"
-          />
-          <template v-if="actionGroupItem.actionType === '1'">
-            <!--          执行动作是操作设备->添加指令--->
-            <NCard class="w-[calc(100%-248px)]">
-              <NFlex
-                v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
-                :key="instructIndex"
-                class="mb-6"
-              >
-                <template v-if="props.conditionsType !== '11'">
-                  <NSelect
-                    v-model:value="instructItem.action_type"
-                    :options="actionTypeOptions"
-                    class="max-w-40"
-                    @update:value="data => actionTypeChange(instructItem, data)"
-                  />
-                </template>
-                <template v-if="instructItem.action_type === '10'">
-                  <NSelect
-                    v-model:value="instructItem.action_target"
-                    :options="deviceOptions"
-                    value-field="id"
-                    label-field="name"
-                    :consistent-menu-width="false"
-                    :loading="loadingSelect"
-                    class="max-w-40"
-                    @update:value="() => actionTargetChange(instructItem)"
+        <NFlex
+          v-for="(actionGroupItem, actionGroupIndex) in actionForm.actionGroups"
+          :key="actionGroupIndex"
+          class="mt-1 w-100%"
+        >
+          <NFormItem
+            :show-label="false"
+            :path="`actionGroups[${actionGroupIndex}].actionType`"
+            :rule="configFormRules.actionType"
+            class="w-100%"
+          >
+            <NFlex class="w-100%">
+              <NSelect
+                v-model:value="actionGroupItem.actionType"
+                :options="actionOptions"
+                class="max-w-40"
+                @update:value="data => actionChange(actionGroupItem, actionGroupIndex, data)"
+              />
+              <template v-if="actionGroupItem.actionType === '1'">
+                <!--          执行动作是操作设备->添加指令--->
+                <NCard class="flex-1">
+                  <NFlex
+                    v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
+                    :key="instructIndex"
+                    class="mb-6 mr-30"
                   >
-                    <template #header>
-                      <NFlex align="center" class="w-500px">
-                        分组
-                        <n-select
-                          v-model:value="instructItem.deviceGroupId"
-                          :options="deviceGroupOptions"
+                    <template v-if="props.conditionsType !== '11'">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_type`"
+                        :rule="configFormRules.action_type"
+                        class="w-40"
+                      >
+                        <NSelect
+                          v-model:value="instructItem.action_type"
+                          :options="actionTypeOptions"
+                          class="max-w-40"
+                          @update:value="data => actionTypeChange(instructItem, data)"
+                        />
+                      </NFormItem>
+                    </template>
+                    <template v-if="instructItem.action_type === '10'">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_target`"
+                        :rule="configFormRules.action_target"
+                        class="w-40"
+                      >
+                        <NSelect
+                          v-model:value="instructItem.action_target"
+                          :options="deviceOptions"
+                          value-field="id"
+                          label-field="name"
+                          :consistent-menu-width="false"
+                          :loading="loadingSelect"
+                          class="max-w-40"
+                          @update:value="() => actionTargetChange(instructItem)"
+                        >
+                          <template #header>
+                            <NFlex align="center" class="w-500px">
+                              分组
+                              <n-select
+                                v-model:value="instructItem.deviceGroupId"
+                                :options="deviceGroupOptions"
+                                label-field="name"
+                                value-field="id"
+                                class="max-w-40"
+                                clearable
+                                @update:value="data => getDevice(data, queryDevice.name)"
+                              />
+                              <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
+                              <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                                搜索
+                              </NButton>
+                            </NFlex>
+                          </template>
+                        </NSelect>
+                      </NFormItem>
+                    </template>
+                    <template v-if="instructItem.action_type === '11'">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_target`"
+                        :rule="configFormRules.action_target"
+                        class="w-40"
+                      >
+                        <NSelect
+                          v-model:value="instructItem.action_target"
+                          :options="deviceConfigOption"
                           label-field="name"
                           value-field="id"
                           class="max-w-40"
-                          clearable
-                          @update:value="data => getDevice(data, queryDevice.name)"
+                          placeholder="请选择"
+                          filterable
+                          remote
+                          :loading="loadingSelect"
+                          @search="getDeviceConfig"
+                          @update:value="() => actionTargetChange(instructItem)"
                         />
-                        <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
-                        <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
-                          搜索
-                        </NButton>
-                      </NFlex>
+                      </NFormItem>
                     </template>
-                  </NSelect>
-                </template>
-                <template v-if="instructItem.action_type === '11'">
-                  <NSelect
-                    v-model:value="instructItem.action_target"
-                    :options="deviceConfigOption"
-                    label-field="name"
-                    value-field="id"
-                    class="max-w-40"
-                    placeholder="请选择"
-                    filterable
-                    remote
-                    :loading="loadingSelect"
-                    @search="getDeviceConfig"
-                    @update:value="() => actionTargetChange(instructItem)"
-                  />
-                </template>
-                <template v-if="instructItem.action_type">
-                  <NCascader
-                    v-model:value="instructItem.action_param"
-                    placeholder="请选择"
-                    :options="instructItem.actionParamOptions"
-                    check-strategy="child"
-                    children-field="options"
-                    size="small"
-                    class="max-w-40"
-                    @update:show="data => actionParamShow(instructItem, data)"
-                    @update:value="(value, option, pathValues) => actionParamChange(instructItem, pathValues)"
-                  />
-                  <NInput
-                    v-model:value="instructItem.action_value"
-                    placeholder="参数，如：{'param1':1}"
-                    class="max-w-40"
-                  />
-                </template>
+                    <template v-if="instructItem.action_type">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].actionParamOptions`"
+                        :rule="configFormRules.actionParamOptions"
+                        class="w-40"
+                      >
+                        <NCascader
+                          v-model:value="instructItem.action_param"
+                          placeholder="请选择"
+                          :options="instructItem.actionParamOptions"
+                          check-strategy="child"
+                          children-field="options"
+                          size="small"
+                          class="max-w-40"
+                          @update:show="data => actionParamShow(instructItem, data)"
+                          @update:value="(value, option, pathValues) => actionParamChange(instructItem, pathValues)"
+                        />
+                      </NFormItem>
+                      <NFormItem
+                        :show-label="false"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].actionParamOptions`"
+                        :rule="configFormRules.actionParamOptions"
+                        class="w-40"
+                      >
+                        <NInput
+                          v-model:value="instructItem.action_value"
+                          placeholder="参数，如：{'param1':1}"
+                          class="max-w-40"
+                        />
+                      </NFormItem>
+                    </template>
 
-                <NButton
-                  v-if="instructIndex === 0"
-                  type="primary"
-                  class="absolute right-5"
-                  @click="addIfGroupsSubItem(actionGroupIndex)"
-                >
-                  新增一个操作
-                </NButton>
-                <NButton
-                  v-if="instructIndex !== 0"
-                  type="error"
-                  class="absolute right-5"
-                  @click="deleteIfGroupsSubItem(actionGroupIndex, instructIndex)"
-                >
-                  删除一个操作
-                </NButton>
-              </NFlex>
-            </NCard>
-          </template>
-          <template v-if="actionGroupItem.actionType === '20'">
-            <NFlex class="ml-6" align="center">
-              激活
-              <NSelect
-                v-model:value="actionGroupItem.action_target"
-                :options="sceneList"
-                label-field="name"
-                value-field="id"
-                class="max-w-40"
-                placeholder="请选择"
-                :loading="loadingSelect"
-                filterable
-                remote
-                @search="getSceneList"
-              />
+                    <NButton
+                      v-if="instructIndex === 0"
+                      type="primary"
+                      class="absolute right-5"
+                      @click="addIfGroupsSubItem(actionGroupIndex)"
+                    >
+                      新增一个操作
+                    </NButton>
+                    <NButton
+                      v-if="instructIndex !== 0"
+                      type="error"
+                      class="absolute right-5"
+                      @click="deleteIfGroupsSubItem(actionGroupIndex, instructIndex)"
+                    >
+                      删除一个操作
+                    </NButton>
+                  </NFlex>
+                </NCard>
+              </template>
+              <template v-if="actionGroupItem.actionType === '20'">
+                <NFlex class="ml-6" align="center">
+                  <NFormItem
+                    label-width="60"
+                    label="激活"
+                    :path="`actionGroups[${actionGroupIndex}].action_target`"
+                    :rule="configFormRules.action_target"
+                  >
+                    <NSelect
+                      v-model:value="actionGroupItem.action_target"
+                      :options="sceneList"
+                      label-field="name"
+                      value-field="id"
+                      placeholder="请选择"
+                      class="max-w-60"
+                      :loading="loadingSelect"
+                      filterable
+                      remote
+                      @search="getSceneList"
+                    />
+                  </NFormItem>
+                </NFlex>
+              </template>
+              <template v-if="actionGroupItem.actionType === '30'">
+                <NFlex class="ml-6">
+                  <NFormItem
+                    label-width="60"
+                    label="触发"
+                    :path="`actionGroups[${actionGroupIndex}].action_target`"
+                    :rule="configFormRules.action_target"
+                  >
+                    <NSelect
+                      v-model:value="actionGroupItem.action_target"
+                      :options="alarmList"
+                      label-field="name"
+                      value-field="id"
+                      class="max-w-60"
+                      placeholder="请选择"
+                      filterable
+                      remote
+                      :loading="loadingSelect"
+                      @search="getAlarmList"
+                    />
+                  </NFormItem>
+                  <NButton class="w-20" dashed type="info" @click="popUpVisible = true">创建告警</NButton>
+                </NFlex>
+              </template>
+              <NButton v-if="actionGroupIndex > 0" type="error" @click="deleteActionGroupItem(actionGroupIndex)">
+                删除执行动作
+              </NButton>
             </NFlex>
-          </template>
-          <template v-if="actionGroupItem.actionType === '30'">
-            <NFlex class="ml-6" align="center">
-              触发
-              <NSelect
-                v-model:value="actionGroupItem.action_target"
-                :options="alarmList"
-                label-field="name"
-                value-field="id"
-                class="max-w-40"
-                placeholder="请选择"
-                filterable
-                remote
-                :loading="loadingSelect"
-                @search="getAlarmList"
-              />
-              <NButton class="ml-4 w-30" @click="popUpVisible = true">创建告警</NButton>
-            </NFlex>
-          </template>
-          <NButton
-            v-if="actionGroupIndex > 0"
-            type="error"
-            class="ml-4"
-            @click="deleteActionGroupItem(actionGroupIndex)"
-          >
-            删除执行动作
-          </NButton>
+          </NFormItem>
         </NFlex>
         <NButton type="primary" class="w-30" @click="addActionGroupItem()">新增执行动作</NButton>
       </NFlex>

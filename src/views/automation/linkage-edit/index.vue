@@ -55,7 +55,7 @@ const submitData = async () => {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   configForm.value.actions = handleActionData();
 
-  // await configFormRef?.value?.validate();
+  await configFormRef?.value?.validate();
   await editPremise.value.premiseFormRefReturn()?.validate();
   await editAction.value.actionFormRefReturn()?.validate();
   dialog.warning({
@@ -290,7 +290,7 @@ onMounted(() => {
       </NForm>
       <n-divider class="divider-class" />
       <NFlex justify="center" class="mt-5">
-        <NButton type="primary" @click="submitData">保存</NButton>
+        <NButton type="primary" @click="submitData">保存场景联动</NButton>
       </NFlex>
     </NCard>
   </div>

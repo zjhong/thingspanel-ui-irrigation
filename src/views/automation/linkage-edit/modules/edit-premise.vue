@@ -22,35 +22,43 @@ const premiseForm = ref({
 const premiseFormRules = ref({
   ifType: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   trigger_conditions_type: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   trigger_source: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   trigger_param: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   trigger_operator: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   trigger_value: {
     required: true,
-    message: '请输入'
+    message: '请输入',
+    trigger: 'blur'
   },
   minValue: {
     required: true,
-    message: '请输入'
+    message: '请输入',
+    trigger: 'blur'
   },
   maxValue: {
     required: true,
-    message: '请输入'
+    message: '请输入',
+    trigger: 'blur'
   },
   onceTimeValue: {
     required: true,
@@ -62,7 +70,8 @@ const premiseFormRules = ref({
   },
   task_type: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   hourTimeValue: {
     required: true,
@@ -74,7 +83,8 @@ const premiseFormRules = ref({
   },
   weekChoseValue: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   weekTimeValue: {
     required: true,
@@ -98,7 +108,8 @@ const premiseFormRules = ref({
   },
   weatherValue: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   }
 });
 
@@ -445,7 +456,7 @@ const judgeItem = ref({
   monthTimeValue: null, // 时间值-选择月
 
   // eslint-disable-next-line no-bitwise
-  weekChoseValue: Array<string | number>, // 星期多选值
+  weekChoseValue: null, // 星期多选值
   monthChoseValue: null, // 月份某一天
 
   startTimeValue: null, // 范围的开始时间
@@ -558,12 +569,19 @@ onMounted(() => {
 
 <template>
   <NFlex vertical class="mt-1 w-100%">
-    <NForm ref="premiseFormRef" :model="premiseForm" :rules="premiseFormRules" size="small" :show-feedback="false">
+    <NForm
+      ref="premiseFormRef"
+      :model="premiseForm"
+      :rules="premiseFormRules"
+      label-placement="left"
+      size="small"
+      :show-feedback="false"
+    >
       (满足以下任意一组条件即可触发)
       <NFlex v-for="(ifGroupItem, ifGroupIndex) in premiseForm.ifGroups" :key="ifGroupIndex" class="w-100%">
         <NCard class="mb-4 w-[calc(100%-78px)]">
           <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-6 w-100%">
-            <NFlex class="flex-1">
+            <NFlex class="flex-1" align="center">
               <NTag v-if="ifIndex !== 0" type="success" class="tag-class" size="small">并且</NTag>
               <!-- 选项1条件类型下拉-->
               <NFormItem
@@ -788,17 +806,18 @@ onMounted(() => {
                       <IosRefresh />
                     </n-icon>
                   </NButton>
-                  <span class="ml-4">过期时间</span>
+                  <span class="ml-4"></span>
                   <NFormItem
-                    :show-label="false"
+                    label="过期时间"
+                    label-width="80px"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                     :rule="premiseFormRules.expiration_time"
-                    class="max-w-40 w-full"
                   >
                     <NSelect
                       v-model:value="ifItem.expiration_time"
                       :options="expirationTimeOptions"
                       placeholder="请选择过期时间"
+                      class="w-30"
                     />
                   </NFormItem>
                 </template>
@@ -813,6 +832,7 @@ onMounted(() => {
                     <NSelect v-model:value="ifItem.task_type" :options="cycleOptions" placeholder="请选择重复周期" />
                   </NFormItem>
                   <template v-if="ifItem.task_type === 'HOUR'">
+                    <!--  时间条件下->重复->每小时->选择分-->
                     <NFormItem
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].hourTimeValue`"
@@ -821,17 +841,17 @@ onMounted(() => {
                     >
                       <NTimePicker v-model:value="ifItem.hourTimeValue" placeholder="请选择" format="mm" />
                     </NFormItem>
-                    <span class="ml-4">过期时间</span>
                     <NFormItem
-                      :show-label="false"
+                      label="过期时间"
+                      label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
-                      class="max-w-40 w-full"
                     >
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
+                        class="w-30"
                       />
                     </NFormItem>
                   </template>
@@ -850,17 +870,17 @@ onMounted(() => {
                         format="HH:mm"
                       />
                     </NFormItem>
-                    <span class="ml-4">过期时间</span>
                     <NFormItem
-                      :show-label="false"
+                      label="过期时间"
+                      label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
-                      class="max-w-40 w-full"
                     >
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
+                        class="w-30"
                       />
                     </NFormItem>
                   </template>
@@ -870,7 +890,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
                       :rule="premiseFormRules.weekChoseValue"
-                      class="max-w-40 w-full"
+                      class="w-130 w-full"
                     >
                       <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
                         <NSpace item-style="display: flex;">
@@ -896,22 +916,23 @@ onMounted(() => {
                         format="HH:mm"
                       />
                     </NFormItem>
-                    <span class="ml-4">过期时间</span>
+                    <span class="ml-4"></span>
                     <NFormItem
-                      :show-label="false"
+                      label="过期时间"
+                      label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
-                      class="max-w-40 w-full"
                     >
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
-                        class="max-w-40"
+                        class="w-30"
                       />
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.task_type === 'MONTH'">
+                    <!--  时间条件下->重复->每月->选择日期和时分-->
                     <NFormItem
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].monthChoseValue`"
@@ -937,17 +958,17 @@ onMounted(() => {
                         format="HH:mm"
                       />
                     </NFormItem>
-                    <span class="ml-4">过期时间</span>
                     <NFormItem
-                      :show-label="false"
+                      label="过期时间"
+                      label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
-                      class="max-w-40 w-full"
                     >
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
+                        class="w-30"
                       />
                     </NFormItem>
                   </template>
@@ -958,7 +979,7 @@ onMounted(() => {
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
                     :rule="premiseFormRules.weekChoseValue"
-                    class="max-w-40 w-full"
+                    class="w-130 w-full"
                   >
                     <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
                       <NSpace item-style="display: flex;">

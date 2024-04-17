@@ -86,23 +86,28 @@ defineExpose({
 const configFormRules = ref({
   actionType: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   action_type: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   action_target: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   actionParamOptions: {
     required: true,
-    message: '请选择'
+    message: '请选择',
+    trigger: 'change'
   },
   action_value: {
     required: true,
-    message: '请输入'
+    message: '请输入',
+    trigger: 'blur'
   }
 });
 // 下拉选择器加载状态
@@ -546,7 +551,6 @@ onMounted(() => {
                     label="激活"
                     :path="`actionGroups[${actionGroupIndex}].action_target`"
                     :rule="configFormRules.action_target"
-                    class="w-60"
                   >
                     <NSelect
                       v-model:value="actionGroupItem.action_target"
@@ -554,6 +558,7 @@ onMounted(() => {
                       label-field="name"
                       value-field="id"
                       placeholder="请选择"
+                      class="max-w-60"
                       :loading="loadingSelect"
                       filterable
                       remote
@@ -569,14 +574,13 @@ onMounted(() => {
                     label="触发"
                     :path="`actionGroups[${actionGroupIndex}].action_target`"
                     :rule="configFormRules.action_target"
-                    class="w-60"
                   >
                     <NSelect
                       v-model:value="actionGroupItem.action_target"
                       :options="alarmList"
                       label-field="name"
                       value-field="id"
-                      class="max-w-40"
+                      class="max-w-60"
                       placeholder="请选择"
                       filterable
                       remote
@@ -584,15 +588,10 @@ onMounted(() => {
                       @search="getAlarmList"
                     />
                   </NFormItem>
-                  <NButton class="ml-4 w-20" dashed type="info" @click="popUpVisible = true">创建告警</NButton>
+                  <NButton class="w-20" dashed type="info" @click="popUpVisible = true">创建告警</NButton>
                 </NFlex>
               </template>
-              <NButton
-                v-if="actionGroupIndex > 0"
-                type="error"
-                class="ml-4 w-25"
-                @click="deleteActionGroupItem(actionGroupIndex)"
-              >
+              <NButton v-if="actionGroupIndex > 0" type="error" @click="deleteActionGroupItem(actionGroupIndex)">
                 删除执行动作
               </NButton>
             </NFlex>

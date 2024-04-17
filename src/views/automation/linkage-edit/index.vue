@@ -54,7 +54,10 @@ const submitData = async () => {
   // 处理动作数据保存
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   configForm.value.actions = handleActionData();
-  await configFormRef?.value?.validate();
+
+  // await configFormRef?.value?.validate();
+  await editPremise.value.premiseFormRefReturn()?.validate();
+  await editAction.value.actionFormRefReturn()?.validate();
   dialog.warning({
     title: '提示',
     content: '请确认是否保存该场景信息？',

@@ -2,37 +2,37 @@
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace, useDialog } from 'naive-ui';
-import type {PaginationProps } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import {
   getIrrigationGroupList,
-  irrigationGroupExcute,
   irrigationGroupCancle,
-  irrigationGroupDel
+  irrigationGroupDel,
+  irrigationGroupExcute
 } from '@/service/api';
+import {
+  irrigationControlType,
+  irrigationControlTypeOption,
+  irrigationPlanStatus,
+  irrigationScheduleType,
+  irrigationScheduleTypeOption
+} from '@/constants/business';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import { $t } from '~/src/locales';
-import {
-  irrigationPlanStatus,
-  irrigationControlType,
-  irrigationControlTypeOption,
-  irrigationScheduleType,
-  irrigationScheduleTypeOption
-} from '@/constants/business';
 // import ColumnSetting from './components/column-setting.vue'
-const dialog = useDialog()
+const dialog = useDialog();
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: logVisible, setTrue: openLogModal } = useBoolean();
 
-interface QueryFormModel  {
-  schedule_type:string|null
-  control_type:string|null
-  page: number
-  page_size: number
-};
+interface QueryFormModel {
+  schedule_type: string | null;
+  control_type: string | null;
+  page: number;
+  page_size: number;
+}
 
 const queryParams = reactive<QueryFormModel>({
   schedule_type: null,
@@ -58,36 +58,36 @@ async function getTableData() {
 }
 
 // 下发
-const runDistribute = (rowId:string, status:number)=>{
+const runDistribute = (rowId: string, status: number) => {
   dialog.warning({
-    title:'提示',
-    content: status ===4 ? '确定将计划下发给设备吗' :'确定取消计划吗',
+    title: '提示',
+    content: status === 4 ? '确定将计划下发给设备吗' : '确定取消计划吗',
     positiveText: '确定',
     negativeText: '取消',
-    onPositiveClick: async() => {
-      if(status===4){
-        await irrigationGroupExcute(rowId)
-      }else{
-        await irrigationGroupCancle(rowId)
+    onPositiveClick: async () => {
+      if (status === 4) {
+        await irrigationGroupExcute(rowId);
+      } else {
+        await irrigationGroupCancle(rowId);
       }
-      init()
+      init();
     }
-  })
-}
+  });
+};
 
 // 删除
-const runDel = (rowId:string)=>{
+const runDel = (rowId: string) => {
   dialog.warning({
-    title:'提示',
-    content:'确定删除计划吗',
+    title: '提示',
+    content: '确定删除计划吗',
     positiveText: '确定',
     negativeText: '取消',
-    onPositiveClick: async() => {
-      await irrigationGroupDel(rowId)
-      init()
+    onPositiveClick: async () => {
+      await irrigationGroupDel(rowId);
+      init();
     }
-  })
-}
+  });
+};
 
 const columns: Ref<any> = ref([
   {
@@ -99,8 +99,8 @@ const columns: Ref<any> = ref([
     key: 'schedule_type',
     title: () => $t('page.irrigation.group.controlModel'),
     align: 'center',
-    render:row=>{
-      return irrigationScheduleType[row.schedule_type]
+    render: row => {
+      return irrigationScheduleType[row.schedule_type];
     }
   },
   {
@@ -114,30 +114,30 @@ const columns: Ref<any> = ref([
     align: 'center',
     ellipsis: {
       tooltip: true
-    },
+    }
   },
   {
     key: 'valve_opening',
     title: () => $t('page.irrigation.time.doorOpeing'),
     align: 'center',
-    render:row=>{
-      return `${row.valve_opening}%`
+    render: row => {
+      return `${row.valve_opening}%`;
     }
   },
   {
     key: 'status',
     title: () => $t('page.irrigation.planStatus'),
     align: 'center',
-    render:row=>{
-      return irrigationPlanStatus[row.status]
+    render: row => {
+      return irrigationPlanStatus[row.status];
     }
   },
   {
     key: 'control_type',
     title: () => $t('page.irrigation.controlType'),
     align: 'center',
-    render:row=>{
-      return irrigationControlType[row.schedule_type]
+    render: row => {
+      return irrigationControlType[row.schedule_type];
     }
   },
   {
@@ -148,7 +148,13 @@ const columns: Ref<any> = ref([
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton  v-show={row.status === 'PND' ||  row.status === 'CNL'}   quaternary type="info" size={'small'}  onClick={() => runDistribute(row.id,4)}>
+          <NButton
+            v-show={row.status === 'PND' || row.status === 'CNL'}
+            quaternary
+            type="info"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 4)}
+          >
             {$t('page.irrigation.distribute')}
           </NButton>
           <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
@@ -160,7 +166,13 @@ const columns: Ref<any> = ref([
           <NButton quaternary type="primary" size={'small'} onClick={() => handOpenLogModal(row.id)}>
             {$t('page.irrigation.log')}
           </NButton>
-          <NButton v-show={row.status === 'ISS'}  quaternary type="primary" size={'small'} onClick={() => runDistribute(row.id,0)}>
+          <NButton
+            v-show={row.status === 'ISS'}
+            quaternary
+            type="primary"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 0)}
+          >
             {$t('common.cancel')}
           </NButton>
         </NSpace>
@@ -202,7 +214,6 @@ function handOpenLogModal(rowId: string) {
   }
   openLogModal();
 }
-
 
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -250,10 +261,20 @@ init();
       <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.irrigation.group.controlModel')" path="status">
-            <NSelect v-model:value="queryParams.schedule_type" clearable class="w-200px" :options="irrigationScheduleTypeOption" />
+            <NSelect
+              v-model:value="queryParams.schedule_type"
+              clearable
+              class="w-200px"
+              :options="irrigationScheduleTypeOption"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.controlType')" path="status">
-            <NSelect v-model:value="queryParams.control_type" clearable class="w-200px" :options="irrigationControlTypeOption" />
+            <NSelect
+              v-model:value="queryParams.control_type"
+              clearable
+              class="w-200px"
+              :options="irrigationControlTypeOption"
+            />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -276,7 +297,13 @@ init();
           :flex-height="true"
           class="flex-1-hidden"
         />
-        <TableActionModal v-if="visible" v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-if="visible"
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
         <TableLogModal v-if="logVisible" v-model:visible="logVisible" :edit-data="editData"></TableLogModal>
       </div>
     </NCard>

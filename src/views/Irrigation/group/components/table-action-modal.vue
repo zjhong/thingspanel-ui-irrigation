@@ -1,16 +1,13 @@
 <script setup lang="tsx">
-import dayjs from 'dayjs';
-import { computed, reactive, ref, watch , onMounted} from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
-import type {FormInst, FormItemRule } from 'naive-ui';
+import type { FormInst, FormItemRule } from 'naive-ui';
+import dayjs from 'dayjs';
 import { useBoolean } from '@sa/hooks';
 // import { genderOptions } from '@/constants'
 // import { controlModalLabels } from '@/constants/business';
-import {
-  addIrrigationGroup,
-  irrigationGroupDeviceDetail
-} from '@/service/api';
-import { createRequiredFormRule} from '@/utils/form/rule';
+import { addIrrigationGroup, irrigationGroupDeviceDetail } from '@/service/api';
+import { createRequiredFormRule } from '@/utils/form/rule';
 import DevicesModal from './devices-modal.vue';
 import { $t } from '~/src/locales';
 
@@ -64,22 +61,22 @@ const title = computed(() => {
 const formRef = ref<HTMLElement & FormInst>();
 
 interface FormModel {
-  id?:string
-  name: string
-  start_irrigation_datetime: number|null
-  device_ids: string
-  control_type: 'A'|'B'
-  irrigation_duration: number|null
-  durationH?:number|null
-  durationM?:number|null
-  valve_opening: number|null
-  schedule_type: 'A'|'B'
-  cycle_index: number|null
-  interval_time: number|null,
-  durationSH?:number|null
-  durationSM?:number|null
-  status: 'PND',
-};
+  id?: string;
+  name: string;
+  start_irrigation_datetime: number | null;
+  device_ids: string;
+  control_type: 'A' | 'B';
+  irrigation_duration: number | null;
+  durationH?: number | null;
+  durationM?: number | null;
+  valve_opening: number | null;
+  schedule_type: 'A' | 'B';
+  cycle_index: number | null;
+  interval_time: number | null;
+  durationSH?: number | null;
+  durationSM?: number | null;
+  status: 'PND';
+}
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
@@ -90,7 +87,7 @@ const rules: Record<any, FormItemRule | FormItemRule[]> = {
   control_type: createRequiredFormRule($t('common.pleaseCheckValue')),
   irrigation_duration: createRequiredFormRule($t('common.pleaseCheckValue')),
   valve_opening: createRequiredFormRule($t('common.pleaseCheckValue')),
-  schedule_type: createRequiredFormRule($t('common.pleaseCheckValue')),
+  schedule_type: createRequiredFormRule($t('common.pleaseCheckValue'))
 };
 
 function openDevicesModalFn() {
@@ -104,15 +101,15 @@ function createDefaultFormModel(): FormModel {
     device_ids: '',
     control_type: 'A',
     irrigation_duration: null,
-    durationH:null,
-    durationM:null,
+    durationH: null,
+    durationM: null,
     valve_opening: null,
     schedule_type: 'A',
     cycle_index: null,
-    interval_time:null,
+    interval_time: null,
     status: 'PND',
-    durationSH:null,
-    durationSM:null
+    durationSH: null,
+    durationSM: null
   };
 }
 
@@ -145,8 +142,8 @@ const formatTime = (time: string | null) => {
 
 async function handleSubmit() {
   await formRef.value?.validate();
-  const params = JSON.parse(JSON.stringify(formModel))
-  params.start_irrigation_datetime = formatTime(params.start_irrigation_datetime)
+  const params = JSON.parse(JSON.stringify(formModel));
+  params.start_irrigation_datetime = formatTime(params.start_irrigation_datetime);
   let data: any;
   if (props.type === 'add') {
     data = await addIrrigationGroup(params);
@@ -164,7 +161,7 @@ const columns: Ref<any> = ref([
     title: () => $t('page.irrigation.group.detail.spaceOrArea'),
     align: 'center',
     render: row => {
-      return row.spaceAndDistrictName||`${row.spaces_name}|${row.disticts_name}`
+      return row.spaceAndDistrictName || `${row.spaces_name}|${row.disticts_name}`;
     }
   },
   {
@@ -172,50 +169,50 @@ const columns: Ref<any> = ref([
     title: () => $t('page.irrigation.group.deviceName'),
     align: 'center',
     render: row => {
-      return row.name||row.disticts_name
+      return row.name || row.disticts_name;
     }
   }
 ]) as Ref<any>;
 
-//选择设备
-const tabelDeviceData = ref<any>([])
-const handleChooseDevice = (list:any)=>{
-  tabelDeviceData.value = list
-}
-//详情
-const loadDetail = async ()=>{
-  const { data } = await irrigationGroupDeviceDetail(props.editData?.id)
-    formModel.id = data.id
-    formModel.name = data.name
-    formModel.start_irrigation_datetime = dayjs(data.start_irrigation_datetime).valueOf()
-    formModel.device_ids = ''
+// 选择设备
+const tabelDeviceData = ref<any>([]);
+const handleChooseDevice = (list: any) => {
+  tabelDeviceData.value = list;
+};
+// 详情
+const loadDetail = async () => {
+  const { data } = await irrigationGroupDeviceDetail(props.editData?.id);
+  formModel.id = data.id;
+  formModel.name = data.name;
+  formModel.start_irrigation_datetime = dayjs(data.start_irrigation_datetime).valueOf();
+  formModel.device_ids = '';
 
-    formModel.control_type = data.control_type
-    formModel.irrigation_duration = null
-    formModel.durationH = Number((data.irrigation_duration / 60).toFixed(0)) || null
-    formModel.durationM = data.irrigation_duration % 60  || null
-    formModel.valve_opening = data.valve_opening
-    formModel.schedule_type = data.schedule_type
-    if(formModel.schedule_type === 'B'){
-      formModel.interval_time = null
-      formModel.durationSH = Number((data.interval_time / 60).toFixed(0)) || null
-      formModel.durationSM = data.interval_time % 60  || null
-      formModel.cycle_index = data.cycle_index
-    }
-    formModel.status = data.status
-    tabelDeviceData.value = data.devices
-}
-
-onMounted(()=>{
-  if(props.type === 'edit'){
-    loadDetail()
+  formModel.control_type = data.control_type;
+  formModel.irrigation_duration = null;
+  formModel.durationH = Number((data.irrigation_duration / 60).toFixed(0)) || null;
+  formModel.durationM = data.irrigation_duration % 60 || null;
+  formModel.valve_opening = data.valve_opening;
+  formModel.schedule_type = data.schedule_type;
+  if (formModel.schedule_type === 'B') {
+    formModel.interval_time = null;
+    formModel.durationSH = Number((data.interval_time / 60).toFixed(0)) || null;
+    formModel.durationSM = data.interval_time % 60 || null;
+    formModel.cycle_index = data.cycle_index;
   }
-})
+  formModel.status = data.status;
+  tabelDeviceData.value = data.devices;
+};
 
-watch(tabelDeviceData,()=>{
-  const list:any = tabelDeviceData.value.map(i=>i.id || i.device_id)
-  formModel.device_ids =list
-})
+onMounted(() => {
+  if (props.type === 'edit') {
+    loadDetail();
+  }
+});
+
+watch(tabelDeviceData, () => {
+  const list: any = tabelDeviceData.value.map(i => i.id || i.device_id);
+  formModel.device_ids = list;
+});
 
 watch(
   () => props.visible,
@@ -226,45 +223,45 @@ watch(
   }
 );
 watch(
-  ()=>formModel.durationH,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationH,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
+);
 watch(
-  ()=>formModel.durationM,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationM,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
+);
 watch(
-  ()=>formModel.durationSH,
-  ()=>{
-    if(!!formModel.durationSH && !!formModel.durationSM){
-      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH)*60
-    }else{
-      formModel.interval_time=null
+  () => formModel.durationSH,
+  () => {
+    if (Boolean(formModel.durationSH) && Boolean(formModel.durationSM)) {
+      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH) * 60;
+    } else {
+      formModel.interval_time = null;
     }
   }
-)
+);
 watch(
-  ()=>formModel.durationSM,
-  ()=>{
-    if(!!formModel.durationSH && !!formModel.durationSM){
-      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH)*60
-    }else{
-      formModel.interval_time=null
+  () => formModel.durationSM,
+  () => {
+    if (Boolean(formModel.durationSH) && Boolean(formModel.durationSM)) {
+      formModel.interval_time = Number(formModel.durationSM) + Number(formModel.durationSH) * 60;
+    } else {
+      formModel.interval_time = null;
     }
   }
-)
+);
 const valveOpenOptions = [
   {
     label: '100%',
@@ -305,15 +302,15 @@ const valveOpenOptions = [
   {
     label: '10%',
     value: 10
-  },
-]
+  }
+];
 </script>
 
 <template>
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-1000px">
     <NForm ref="formRef" label-placement="left" :label-width="100" :model="formModel" :rules="rules">
       <NGrid :cols="24">
-        <NGridItem  :span="14">
+        <NGridItem :span="14">
           <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.planName')" path="name">
             <NInput v-model:value="formModel.name" class="important-w-200px" />
           </NFormItemGridItem>
@@ -333,7 +330,12 @@ const valveOpenOptions = [
               </NSpace>
             </NRadioGroup>
           </NFormItemGridItem>
-          <NFormItemGridItem v-if="formModel.control_type=== 'A'" :span="24" :label="$t('page.irrigation.group.duration')" path="irrigation_duration">
+          <NFormItemGridItem
+            v-if="formModel.control_type === 'A'"
+            :span="24"
+            :label="$t('page.irrigation.group.duration')"
+            path="irrigation_duration"
+          >
             <NInputNumber v-model:value="formModel.durationH" class="important-w-150px" />
             <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
             <NInputNumber v-model:value="formModel.durationM" class="important-w-150px" />
@@ -354,19 +356,35 @@ const valveOpenOptions = [
               </NSpace>
             </NRadioGroup>
           </NFormItemGridItem>
-          <NFormItemGridItem v-if="formModel.schedule_type==='B'" :span="24" :label="$t('page.irrigation.group.cycleNumber')" path="cycle_index">
-            <NInputNumber v-model:value="formModel.cycle_index"  class="important-w-200px" />
+          <NFormItemGridItem
+            v-if="formModel.schedule_type === 'B'"
+            :span="24"
+            :label="$t('page.irrigation.group.cycleNumber')"
+            path="cycle_index"
+          >
+            <NInputNumber v-model:value="formModel.cycle_index" class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem v-if="formModel.schedule_type==='B'" :span="24" :label="$t('page.irrigation.group.intervalDuration')" path="interval_time">
+          <NFormItemGridItem
+            v-if="formModel.schedule_type === 'B'"
+            :span="24"
+            :label="$t('page.irrigation.group.intervalDuration')"
+            path="interval_time"
+          >
             <NInputNumber v-model:value="formModel.durationSH" class="important-w-150px" />
             <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
             <NInputNumber v-model:value="formModel.durationSM" class="important-w-150px" />
             <label class="ml-10px text-nowrap">{{ $t('page.irrigation.minute') }}</label>
           </NFormItemGridItem>
         </NGridItem>
-        <NGridItem :span="10" class="flex-col ml-50px  ">
+        <NGridItem :span="10" class="ml-50px flex-col">
           <div class="mb-5px">{{ $t('page.irrigation.group.choosedDevice') }}：</div>
-          <NDataTable :columns="columns" :data="tabelDeviceData" :pagination="false" :flex-height="true" class="flex-1-hidden" />
+          <NDataTable
+            :columns="columns"
+            :data="tabelDeviceData"
+            :pagination="false"
+            :flex-height="true"
+            class="flex-1-hidden"
+          />
         </NGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
@@ -374,7 +392,13 @@ const valveOpenOptions = [
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
-    <DevicesModal v-if="devicesVisible" v-model:visible="devicesVisible" :type="modalType" :ids="formModel.device_ids" @success="handleChooseDevice" />
+    <DevicesModal
+      v-if="devicesVisible"
+      v-model:visible="devicesVisible"
+      :type="modalType"
+      :ids="formModel.device_ids"
+      @success="handleChooseDevice"
+    />
   </NModal>
 </template>
 

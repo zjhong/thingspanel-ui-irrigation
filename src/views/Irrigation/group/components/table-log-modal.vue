@@ -1,7 +1,7 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, onMounted } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import type {PaginationProps } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { irrigationGroupHistorys } from '@/service/api/irrigation';
@@ -32,13 +32,15 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-interface QueryFormModel  {
-  group_irrigation_id:string
+
+interface QueryFormModel {
+  group_irrigation_id: string;
   page: number;
   page_size: number;
-};
+}
+
 const queryParams = reactive<QueryFormModel>({
-  group_irrigation_id:'',
+  group_irrigation_id: '',
   page: 1,
   page_size: 10
 });
@@ -52,6 +54,7 @@ const modalVisible = computed({
   }
 });
 
+// eslint-disable-next-line vue/no-dupe-keys
 const editData = ref<any>(null);
 const tableData = ref<any>([]);
 
@@ -60,19 +63,19 @@ function setTableData(data: any) {
 }
 
 async function getTableData() {
-  startLoading()
-  queryParams.group_irrigation_id = props.editData?.id||""
+  startLoading();
+  queryParams.group_irrigation_id = props.editData?.id || '';
   const { data } = await irrigationGroupHistorys(queryParams);
-  endLoading()
+  endLoading();
   if (data) {
     const list: any = data.list;
     setTableData(list);
   }
 }
 
-function openDevicesModalFn(rowId:string) {
+function openDevicesModalFn(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
-  editData.value = findItem
+  editData.value = findItem;
   openDevicesModal();
 }
 
@@ -136,9 +139,10 @@ const pagination: PaginationProps = reactive({
 function init() {
   getTableData();
 }
-onMounted(async ()=>{
-  init()
-})
+
+onMounted(async () => {
+  init();
+});
 </script>
 
 <template>

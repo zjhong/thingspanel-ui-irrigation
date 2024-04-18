@@ -7,4 +7,4 @@ export * from './rlesList';
 export * from './protocol-plugin';
 export * from './notification-services';
 export * from './device';
-export * from './irrigation'
+export * from './irrigation';

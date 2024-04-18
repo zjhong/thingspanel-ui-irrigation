@@ -1,13 +1,13 @@
 <script setup lang="tsx">
-import { computed, reactive, ref ,onMounted} from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton,CascaderOption } from 'naive-ui';
-import type {PaginationProps } from 'naive-ui';
+import { NButton } from 'naive-ui';
+import type { CascaderOption, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import {
-  irrigationGroupDeviceList,
-  getIrrigationSpaces,
   getIrrigationDistricts,
+  getIrrigationSpaces,
+  irrigationGroupDeviceList,
   irrigationGroupDeviceTypes
 } from '@/service/api';
 import { $t } from '~/src/locales';
@@ -19,25 +19,24 @@ export interface Props {
   ids?: any;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-});
+const props = withDefaults(defineProps<Props>(), {});
 
 const { loading, startLoading, endLoading } = useLoading(false);
 
-interface QueryFormModel  {
-  deviceName:string;
-  deviceNumber:string;
-  productType:string;
-  districtId:string
+interface QueryFormModel {
+  deviceName: string;
+  deviceNumber: string;
+  productType: string;
+  districtId: string;
   page: number;
   page_size: number;
-};
+}
 
 const queryParams = reactive<QueryFormModel>({
-  deviceName:'',
-  deviceNumber:'',
-  productType:'',
-  districtId:'',
+  deviceName: '',
+  deviceNumber: '',
+  productType: '',
+  districtId: '',
   page: 1,
   page_size: 10
 });
@@ -89,7 +88,7 @@ interface Emits {
   (e: 'update:visible', visible: boolean): void;
 
   /** 点击协议 */
-  (e: 'success',list:any): void;
+  (e: 'success', list: any): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -128,57 +127,63 @@ function handleQuery() {
 
 function handleReset() {
   Object.assign(queryParams, {
-    deviceName:'',
-    deviceNumber:'',
-    productType:'',
-    districtId:'',
+    deviceName: '',
+    deviceNumber: '',
+    productType: '',
+    districtId: '',
     page: 1
   });
   handleQuery();
 }
 
-const diveceTypesOption = ref<any>([])
+const diveceTypesOption = ref<any>([]);
+
 async function init() {
   getTableData();
- const {data} =  await irrigationGroupDeviceTypes()
- data.forEach(i=>{i.label=i.translation,i.value=i.dict_value})
- diveceTypesOption.value = data
+  const { data } = await irrigationGroupDeviceTypes();
+  data.forEach(i => {
+    // eslint-disable-next-line no-sequences,no-unused-expressions
+    (i.label = i.translation), (i.value = i.dict_value);
+  });
+  diveceTypesOption.value = data;
 }
 
 const closeModal = () => {
   modalVisible.value = false;
 };
 
-const spaceOptions = ref<any>([])
-onMounted(async ()=>{
-  const {data}  = await getIrrigationSpaces()
-  data.rows.forEach(i=>{
-    i.depth= 1
-    i.isLeaf= false
-  })
-  spaceOptions.value = data.rows
-  checkedRowKeys.value = props.ids||[]
-})
+const spaceOptions = ref<any>([]);
+onMounted(async () => {
+  const { data } = await getIrrigationSpaces();
+  data.rows.forEach(i => {
+    i.depth = 1;
+    i.isLeaf = false;
+  });
+  spaceOptions.value = data.rows;
+  checkedRowKeys.value = props.ids || [];
+});
+
 // 区域选择请求空间
-async function handleSpaceLoad(option: CascaderOption){
-  const { data } = await getIrrigationDistricts({ limit:100, space_id:option.id })
-  data.rows.forEach(i=>{
-  i.depth= 2
-  i.isLeaf= true
-  })
-  option.children = data.rows
-  return data.rows
+async function handleSpaceLoad(option_f: CascaderOption) {
+  const { data } = await getIrrigationDistricts({ limit: 100, space_id: option_f.id });
+  data.rows.forEach(i => {
+    i.depth = 2;
+    i.isLeaf = true;
+  });
+  // eslint-disable-next-line require-atomic-updates
+  option_f.children = data.rows;
+  return data.rows;
 }
 
-const onSave = ()=>{
-  if(checkedRowKeys.value.length===0){
+const onSave = () => {
+  if (checkedRowKeys.value.length === 0) {
     window.$message?.error('请勾选设备');
-  }else{
-    const items = tableData.value.filter(i=>checkedRowKeys.value.includes(i.id))
-    emit('success',items)
-    closeModal()
+  } else {
+    const items = tableData.value.filter(i => checkedRowKeys.value.includes(i.id));
+    emit('success', items);
+    closeModal();
   }
-}
+};
 // 初始化
 init();
 </script>
@@ -233,9 +238,9 @@ init();
           class="flex-1-hidden"
         />
         <NSpace class="w-full pt-16px" :size="24" justify="end">
-            <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
-            <NButton class="w-72px" type="primary" @click="onSave">{{ $t('common.confirm') }}</NButton>
-          </NSpace>
+          <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
+          <NButton class="w-72px" type="primary" @click="onSave">{{ $t('common.confirm') }}</NButton>
+        </NSpace>
       </div>
     </NModal>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, reactive, ref,onMounted } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
@@ -30,13 +30,13 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-interface QueryFormModel  {
-  id:string;
+interface QueryFormModel {
+  id: string;
   page: number;
   page_size: number;
-};
+}
 const queryParams = reactive<QueryFormModel>({
-  id:'',
+  id: '',
   page: 1,
   page_size: 10
 });
@@ -55,10 +55,10 @@ function setTableData(data: any) {
   tableData.value = data;
 }
 async function getTableData() {
-  startLoading()
-  queryParams.id = props.editData?.id||''
+  startLoading();
+  queryParams.id = props.editData?.id || '';
   const { data } = await irrigationRotationHistorysDetail(queryParams);
-  endLoading()
+  endLoading();
   if (data) {
     const list: any = data.list;
     setTableData(list);
@@ -147,11 +147,9 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
-onMounted(()=>{
-  getTableData()
-})
-
-
+onMounted(() => {
+  getTableData();
+});
 </script>
 
 <template>

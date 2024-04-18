@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
-import {TimeOutline} from '@vicons/ionicons5';
-import {Circle24Regular, Target20Regular} from '@vicons/fluent';
-import {addYears, differenceInDays, differenceInHours, differenceInMonths} from 'date-fns';
+import { onMounted, ref } from 'vue';
+import { TimeOutline } from '@vicons/ionicons5';
+import { Circle24Regular, Target20Regular } from '@vicons/fluent';
+import { addYears, differenceInDays, differenceInHours, differenceInMonths } from 'date-fns';
 
 const emit = defineEmits<{
   (event: 'update:value', value): void;
@@ -26,27 +26,27 @@ const aggregation_data = ref<AggregationData>({
   device_id: props.device_id,
   key: props.thekey,
   aggregate_window: 'no_aggregate',
-  time_range: 'last_1h',
+  time_range: 'last_1h'
 });
 const dateRange = ref<[number, number] | null>(null);
 const timeOptions = [
-  {label: '自定义', value: 'custom'},
-  {label: '最近5分钟', value: 'last_5m'},
-  {label: '最近15分钟', value: 'last_15m'},
-  {label: '最近30分钟', value: 'last_30m'},
-  {label: '最近1小时', value: 'last_1h'},
-  {label: '最近3小时', value: 'last_3h'},
-  {label: '最近6小时', value: 'last_6h'},
-  {label: '最近12小时', value: 'last_12h'},
-  {label: '最近24小时', value: 'last_24h'},
-  {label: '最近3天', value: 'last_3d'},
-  {label: '最近7天', value: 'last_7d'},
-  {label: '最近15天', value: 'last_15d'},
-  {label: '最近30天', value: 'last_30d'},
-  {label: '最近60天', value: 'last_60d'},
-  {label: '最近90天', value: 'last_90d'},
-  {label: '最近半年', value: 'last_6m'},
-  {label: '最近1年', value: 'last_1y'}
+  { label: '自定义', value: 'custom' },
+  { label: '最近5分钟', value: 'last_5m' },
+  { label: '最近15分钟', value: 'last_15m' },
+  { label: '最近30分钟', value: 'last_30m' },
+  { label: '最近1小时', value: 'last_1h' },
+  { label: '最近3小时', value: 'last_3h' },
+  { label: '最近6小时', value: 'last_6h' },
+  { label: '最近12小时', value: 'last_12h' },
+  { label: '最近24小时', value: 'last_24h' },
+  { label: '最近3天', value: 'last_3d' },
+  { label: '最近7天', value: 'last_7d' },
+  { label: '最近15天', value: 'last_15d' },
+  { label: '最近30天', value: 'last_30d' },
+  { label: '最近60天', value: 'last_60d' },
+  { label: '最近90天', value: 'last_90d' },
+  { label: '最近半年', value: 'last_6m' },
+  { label: '最近1年', value: 'last_1y' }
 ];
 const timeWeighting = {
   custom: 0,
@@ -68,23 +68,23 @@ const timeWeighting = {
   last_1y: 12
 };
 const aggregationIntervalOptions = [
-  {label: '不聚合', value: 'no_aggregate', disabled: false},
-  {label: '30秒', value: '30s', disabled: false},
-  {label: '1分钟', value: '1m', disabled: false},
-  {label: '2分钟', value: '2m', disabled: false},
-  {label: '5分钟', value: '5m', disabled: false},
-  {label: '10分钟', value: '10m', disabled: false},
-  {label: '30分钟', value: '30m', disabled: false},
-  {label: '1小时', value: '1h', disabled: false},
-  {label: '3小时', value: '3h', disabled: false},
-  {label: '6小时', value: '6h', disabled: false},
-  {label: '1天', value: '1d', disabled: false},
-  {label: '7天', value: '7d', disabled: false},
-  {label: '1个月', value: '1mo', disabled: false}
+  { label: '不聚合', value: 'no_aggregate', disabled: false },
+  { label: '30秒', value: '30s', disabled: false },
+  { label: '1分钟', value: '1m', disabled: false },
+  { label: '2分钟', value: '2m', disabled: false },
+  { label: '5分钟', value: '5m', disabled: false },
+  { label: '10分钟', value: '10m', disabled: false },
+  { label: '30分钟', value: '30m', disabled: false },
+  { label: '1小时', value: '1h', disabled: false },
+  { label: '3小时', value: '3h', disabled: false },
+  { label: '6小时', value: '6h', disabled: false },
+  { label: '1天', value: '1d', disabled: false },
+  { label: '7天', value: '7d', disabled: false },
+  { label: '1个月', value: '1mo', disabled: false }
 ];
 const statisticsOptions = [
-  {label: '平均数 ', value: 'avg', disabled: false},
-  {label: '最大值', value: 'max', disabled: false}
+  { label: '平均数 ', value: 'avg', disabled: false },
+  { label: '最大值', value: 'max', disabled: false }
 ];
 
 const aggregationTtemToFalse = (weight: number) => {
@@ -96,6 +96,12 @@ const aggregationTtemToFalse = (weight: number) => {
     }
     if (index < weight + 1) {
       aggregation_data.value.aggregate_window = item.value;
+      if (aggregation_data.value.aggregate_window !== 'no_aggregate' && !aggregation_data.value.aggregate_function) {
+        aggregation_data.value.aggregate_function = 'avg';
+      }
+      if (aggregation_data.value.aggregate_window === 'no_aggregate') {
+        aggregation_data.value.aggregate_function = undefined;
+      }
     }
   });
 };
@@ -105,7 +111,7 @@ function onChangeTime(v) {
   if (v !== 'custom') {
     aggregation_data.value.start_time = undefined;
     aggregation_data.value.end_time = undefined;
-    dateRange.value = null
+    dateRange.value = null;
   }
   aggregationTtemToFalse(timeWeighting[v]);
   if (v) emit('update:value', aggregation_data.value);
@@ -170,18 +176,17 @@ onMounted(() => {
 <template>
   <NFlex justify="start" :size="4">
     <n-popselect
-      scrollable
       v-model:value="aggregation_data.time_range"
+      scrollable
       :options="timeOptions"
       trigger="click"
       @update:value="onChangeTime"
     >
       <n-icon size="24" :color="aggregation_data.time_range !== 'custom' ? '#0e7a0d' : ''">
-        <TimeOutline/>
+        <TimeOutline />
       </n-icon>
     </n-popselect>
     <n-date-picker
-
       v-if="aggregation_data.time_range === 'custom'"
       v-model:value="dateRange"
       size="small"
@@ -190,14 +195,14 @@ onMounted(() => {
       @update:value="checkDateRange"
     />
     <n-popselect
-      scrollable
       v-model:value="aggregation_data.aggregate_window"
+      scrollable
       :options="aggregationIntervalOptions"
       trigger="click"
       @update:value="onChangeAggregation"
     >
       <n-icon size="24" :color="aggregation_data.aggregate_window !== 'no_aggregate' ? '#0e7a0d' : ''">
-        <Target20Regular/>
+        <Target20Regular />
       </n-icon>
     </n-popselect>
 
@@ -210,7 +215,7 @@ onMounted(() => {
       @update:value="onChangeStatistics"
     >
       <n-icon size="24" :color="aggregation_data.aggregate_function ? '#0e7a0d' : ''">
-        <Circle24Regular/>
+        <Circle24Regular />
       </n-icon>
     </n-popselect>
   </NFlex>

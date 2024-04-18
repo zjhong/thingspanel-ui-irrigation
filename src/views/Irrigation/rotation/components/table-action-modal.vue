@@ -1,18 +1,19 @@
 <script setup lang="tsx">
-import dayjs from 'dayjs';
-import { computed, reactive, ref, watch,onMounted } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
+import dayjs from 'dayjs';
 import { useBoolean } from '@sa/hooks';
 // import { genderOptions } from '@/constants'
 import { createRequiredFormRule } from '@/utils/form/rule';
+import {
+  addIrrigationRotation,
+  editIrrigationRotation,
+  irrigationRotationDetail,
+  irrigationRotationDeviceList
+} from '@/service/api';
 import DevicesModal from './devices-modal.vue';
 import { $t } from '~/src/locales';
-import {
-  irrigationRotationDeviceList,
-  addIrrigationRotation,
-  irrigationRotationDetail,
-  editIrrigationRotation
-} from '@/service/api';
+
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -21,6 +22,7 @@ export interface Props {
   /** 编辑的表格行数据 */
   editData?: any;
 }
+
 const { bool: devicesVisible, setTrue: openDevicesModal } = useBoolean();
 export type ModalType = NonNullable<Props['type']>;
 
@@ -33,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }
@@ -62,27 +65,28 @@ const title = computed(() => {
 const formRef = ref<HTMLElement & FormInst>();
 
 interface FormModel {
-  id?:string
-  name: string
-  water_pump_device_id: string
-  water_pump_valve_opening: number|null
-  water_pump_pressure: number|null
-  irrigation_duration: number|null
-  durationH:number|null
-  durationM:number|null
-  start_irrigation_datetime: number|null
-  start_datetime: string
+  id?: string;
+  name: string;
+  water_pump_device_id: string;
+  water_pump_valve_opening: number | null;
+  water_pump_pressure: number | null;
+  irrigation_duration: number | null;
+  durationH: number | null;
+  durationM: number | null;
+  start_irrigation_datetime: number | null;
+  start_datetime: string;
   tasks: Array<{
-    device_id: string
-    sort: number|null
-    valve_opening: number|null
-    irrigation_duration: number|null
-    pressure: number|null
-    durationH:number|null
-    durationM:number|null
-    [key:string]:any
-  }>
+    device_id: string;
+    sort: number | null;
+    valve_opening: number | null;
+    irrigation_duration: number | null;
+    pressure: number | null;
+    durationH: number | null;
+    durationM: number | null;
+    [key: string]: any;
+  }>;
 }
+
 // type FormModel = Pick<UserManagement.User, 'name'> & {
 //   deviceList: Array<any>;
 //   time: number;
@@ -96,7 +100,7 @@ const rules: Record<string, FormItemRule | FormItemRule[]> = {
   water_pump_valve_opening: createRequiredFormRule($t('common.pleaseCheckValue')),
   water_pump_pressure: createRequiredFormRule($t('common.pleaseCheckValue')),
   irrigation_duration: createRequiredFormRule($t('common.pleaseCheckValue')),
-  start_irrigation_datetime: createRequiredFormRule($t('common.pleaseCheckValue')),
+  start_irrigation_datetime: createRequiredFormRule($t('common.pleaseCheckValue'))
 };
 
 function openDevicesModalFn() {
@@ -110,8 +114,8 @@ function createDefaultFormModel(): FormModel {
     water_pump_valve_opening: null,
     water_pump_pressure: null,
     irrigation_duration: null,
-    durationH:null,
-    durationM:null,
+    durationH: null,
+    durationM: null,
     start_irrigation_datetime: null,
     start_datetime: '',
     tasks: []
@@ -141,9 +145,10 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
-  const prams = JSON.parse(JSON.stringify(formModel))
-  prams.start_irrigation_datetime = formatTime(prams.start_irrigation_datetime)
-  prams.start_datetime = prams.start_irrigation_datetime
+  const prams = JSON.parse(JSON.stringify(formModel));
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  prams.start_irrigation_datetime = formatTime(prams.start_irrigation_datetime);
+  prams.start_datetime = prams.start_irrigation_datetime;
   if (props.type === 'add') {
     data = await addIrrigationRotation(prams);
   } else if (props.type === 'edit') {
@@ -155,27 +160,27 @@ async function handleSubmit() {
   closeModal();
 }
 
-const onAddDivece = (device:any)=>{
+const onAddDivece = (device: any) => {
   formModel.tasks.push({
     device_id: device.value,
-    deviceName:device.label,
-    sort: formModel.tasks.length+1,
+    deviceName: device.label,
+    sort: formModel.tasks.length + 1,
     valve_opening: null,
     irrigation_duration: null,
     pressure: null,
-    durationH:null,
-    durationM:null,
-  })
-}
-const rotationDeviceOption = ref<any>([])
-const loadRotationDeviceList = async()=>{
-  const { data } = await irrigationRotationDeviceList()
-  data.list.forEach(i=>{
-    i.label = i.name
-    i.value = i.id
-  })
-  rotationDeviceOption.value = data.list
-}
+    durationH: null,
+    durationM: null
+  });
+};
+const rotationDeviceOption = ref<any>([]);
+const loadRotationDeviceList = async () => {
+  const { data } = await irrigationRotationDeviceList();
+  data.list.forEach(i => {
+    i.label = i.name;
+    i.value = i.id;
+  });
+  rotationDeviceOption.value = data.list;
+};
 const formatTime = (time: string | null) => {
   if (time) {
     return new Date(time + 8 * 60 * 60 * 1000).toISOString().toString();
@@ -183,74 +188,71 @@ const formatTime = (time: string | null) => {
   return '';
 };
 
-const delteTask = (index:number)=>{
-  formModel.tasks.splice(index,1)
-}
-//详情
-const loadDetail = async ()=>{
-  const { data } = await irrigationRotationDetail(props.editData?.id)
-  formModel.id = data.plan.id
-  formModel.name = data.plan.name
-  formModel.water_pump_device_id= data.plan.water_pump_device_id
-  formModel.water_pump_valve_opening= data.plan.water_pump_valve_opening
-  formModel.water_pump_pressure = data.plan.water_pump_pressure
-  formModel.irrigation_duration= null
-  formModel.durationH = Number((data.plan.irrigation_duration / 60).toFixed(0)) || null
-  formModel.durationM = data.plan.irrigation_duration % 60  || null
-  formModel.start_irrigation_datetime = dayjs(data.plan.start_irrigation_datetime).valueOf()
-  formModel.start_datetime = data.plan.start_datetime
-  data.task.forEach(i=>{
+const delteTask = (index: number) => {
+  formModel.tasks.splice(index, 1);
+};
+// 详情
+const loadDetail = async () => {
+  const { data } = await irrigationRotationDetail(props.editData?.id);
+  formModel.id = data.plan.id;
+  formModel.name = data.plan.name;
+  formModel.water_pump_device_id = data.plan.water_pump_device_id;
+  formModel.water_pump_valve_opening = data.plan.water_pump_valve_opening;
+  formModel.water_pump_pressure = data.plan.water_pump_pressure;
+  formModel.irrigation_duration = null;
+  formModel.durationH = Number((data.plan.irrigation_duration / 60).toFixed(0)) || null;
+  formModel.durationM = data.plan.irrigation_duration % 60 || null;
+  formModel.start_irrigation_datetime = dayjs(data.plan.start_irrigation_datetime).valueOf();
+  formModel.start_datetime = data.plan.start_datetime;
+  data.task.forEach(i => {
     formModel.tasks.push({
       device_id: i.device_id,
-      deviceName:i.spaceAndDistrictName,
+      deviceName: i.spaceAndDistrictName,
       sort: i.sort,
       valve_opening: i.valve_opening,
       irrigation_duration: null,
-      pressure: i.pressure||0,
-      durationH:Number((i.irrigation_duration / 60).toFixed(0)) || 0,
-      durationM:i.irrigation_duration % 60  || 0,
-    })
-  })
-}
+      pressure: i.pressure || 0,
+      durationH: Number((i.irrigation_duration / 60).toFixed(0)) || 0,
+      durationM: i.irrigation_duration % 60 || 0
+    });
+  });
+};
 
-onMounted(()=>{
-  loadRotationDeviceList()
-  if(props.type === 'edit'){
-    loadDetail()
+onMounted(() => {
+  loadRotationDeviceList();
+  if (props.type === 'edit') {
+    loadDetail();
   }
-})
+});
 watch(
-  ()=>formModel.durationH,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationH,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
+);
 watch(
-  ()=>formModel.durationM,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationM,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
-watch(
-  formModel.tasks,
-  ()=>{
-    formModel.tasks.forEach(i=>{
-      if(!!i.durationH && !!i.durationM){
-        i.irrigation_duration = Number(i.durationM) + Number(i.durationH)*60
-      }else{
-        i.irrigation_duration=null
-      }
-    })
-  }
-)
+);
+watch(formModel.tasks, () => {
+  formModel.tasks.forEach(i => {
+    if (Boolean(i.durationH) && Boolean(i.durationM)) {
+      i.irrigation_duration = Number(i.durationM) + Number(i.durationH) * 60;
+    } else {
+      i.irrigation_duration = null;
+    }
+  });
+});
 watch(
   () => props.visible,
   newValue => {
@@ -299,8 +301,8 @@ const valveOpenOptions = [
   {
     label: '10%',
     value: 10
-  },
-]
+  }
+];
 </script>
 
 <template>
@@ -311,25 +313,44 @@ const valveOpenOptions = [
           <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.planName')" path="name">
             <NInput v-model:value="formModel.name" class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.rotation.waterPumpEquipment')" path="water_pump_device_id">
-            <NSelect v-model:value="formModel.water_pump_device_id" class="important-w-200px" clearable :options="rotationDeviceOption" />
+          <NFormItemGridItem
+            :span="24"
+            :label="$t('page.irrigation.rotation.waterPumpEquipment')"
+            path="water_pump_device_id"
+          >
+            <NSelect
+              v-model:value="formModel.water_pump_device_id"
+              class="important-w-200px"
+              clearable
+              :options="rotationDeviceOption"
+            />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.rotation.waterPumpDoorOpening')" path="water_pump_valve_opening">
+          <NFormItemGridItem
+            :span="24"
+            :label="$t('page.irrigation.rotation.waterPumpDoorOpening')"
+            path="water_pump_valve_opening"
+          >
             <NInputNumber v-model:value="formModel.water_pump_valve_opening" class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.rotation.waterPumpPressure')" path="water_pump_pressure">
+          <NFormItemGridItem
+            :span="24"
+            :label="$t('page.irrigation.rotation.waterPumpPressure')"
+            path="water_pump_pressure"
+          >
             <NInputNumber v-model:value="formModel.water_pump_pressure" class="important-w-200px" />
           </NFormItemGridItem>
-          <NFormItemGridItem :span="24" :label="$t('page.irrigation.rotation.rotationDuration')" path="irrigation_duration">
+          <NFormItemGridItem
+            :span="24"
+            :label="$t('page.irrigation.rotation.rotationDuration')"
+            path="irrigation_duration"
+          >
             <NInputNumber v-model:value="formModel.durationH" class="important-w-100px" />
             <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
             <NInputNumber v-model:value="formModel.durationM" class="important-w-100px" />
             <label class="ml-10px text-nowrap">{{ $t('page.irrigation.minute') }}</label>
           </NFormItemGridItem>
           <NFormItemGridItem :span="24" :label="$t('page.irrigation.group.startTime')" path="start_irrigation_datetime">
-            <NDatePicker
-              v-model:value="formModel.start_irrigation_datetime"
-              type="datetime" clearable />
+            <NDatePicker v-model:value="formModel.start_irrigation_datetime" type="datetime" clearable />
           </NFormItemGridItem>
         </NGrid>
         <div class="flex flex-justify-right">
@@ -338,10 +359,10 @@ const valveOpenOptions = [
           </NButton>
         </div>
         <NDivider></NDivider>
-        <NFlex justify="space-between" v-for="(item,index) in formModel.tasks" class="mb-20px">
+        <NFlex v-for="(item, index) in formModel.tasks" :key="index" justify="space-between" class="mb-20px">
           <NFlex class="w-140px">
-            <div>{{item.deviceName}}</div>
-            <div>序号{{item.sort}}</div>
+            <div>{{ item.deviceName }}</div>
+            <div>序号{{ item.sort }}</div>
           </NFlex>
           <n-input-group class="w-200px">
             <n-input-group-label>{{ $t('page.irrigation.rotation.valveStatus') }}</n-input-group-label>
@@ -351,7 +372,7 @@ const valveOpenOptions = [
             <n-input-group-label>{{ $t('page.irrigation.rotation.rotationDuration') }}</n-input-group-label>
             <n-input-number v-model:value="item.durationH" />
             <n-input-group-label>{{ $t('page.irrigation.hour') }}</n-input-group-label>
-            <n-input-number v-model:value="item.durationM"  />
+            <n-input-number v-model:value="item.durationM" />
             <n-input-group-label>{{ $t('page.irrigation.minute') }}</n-input-group-label>
           </n-input-group>
           <n-input-group class="w-250px">
@@ -367,7 +388,7 @@ const valveOpenOptions = [
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </NForm>
-    <DevicesModal v-if="devicesVisible" v-model:visible="devicesVisible"  @success="onAddDivece" />
+    <DevicesModal v-if="devicesVisible" v-model:visible="devicesVisible" @success="onAddDivece" />
   </NModal>
 </template>
 

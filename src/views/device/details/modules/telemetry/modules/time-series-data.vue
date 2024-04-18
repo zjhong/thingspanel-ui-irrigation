@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { defineProps, reactive, ref, watch } from 'vue';
-import { useFullscreen } from '@vueuse/core';
+import {defineProps, reactive, ref, watch} from 'vue';
+import {useFullscreen} from '@vueuse/core';
 import dayjs from 'dayjs';
-import { deviceTelemetryList } from '@/card/chart-card/curve/api';
+import {deviceTelemetryList} from '@/card/chart-card/curve/api';
 import ChartComponent from './ChartComponent.vue';
 import AggregationSelector from './AggregationSelector.vue';
-import { useLoading } from '~/packages/hooks';
+import {useLoading} from '~/packages/hooks';
 
 const tableData = ref<any[]>([]);
 
 const chartRef = ref();
-const { isFullscreen, toggle } = useFullscreen(chartRef);
+const {isFullscreen, toggle} = useFullscreen(chartRef);
 
 interface Created {
   deviceId: string;
@@ -19,10 +19,10 @@ interface Created {
 
 const props = defineProps<Created>();
 const selectedOption = ref();
-const { loading, startLoading, endLoading } = useLoading();
+const {loading, startLoading, endLoading} = useLoading();
 const columns = [
-  { title: '时间', key: 'x', render: row => dayjs(row.x).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '值', key: 'y' }
+  {title: '时间', key: 'x', render: row => dayjs(row.x).format('YYYY-MM-DD HH:mm:ss')},
+  {title: '值', key: 'y'}
 ];
 const pagination = reactive({
   page: 1,
@@ -124,7 +124,7 @@ watch(
       return;
     }
     startLoading();
-    const { data, error } = await deviceTelemetryList({
+    const {data, error} = await deviceTelemetryList({
       ...v
     });
     if (!error && data && initialOptions.value.series) {
@@ -139,26 +139,26 @@ watch(
 
     // 这里可以放置当 selectedOption 变化时需要执行的逻辑
   },
-  { deep: true }
+  {deep: true}
 );
 </script>
 
 <template>
   <n-card ref="chartRef" :bordered="false" class="m-0 p-0">
-    <div :class="`${isFullscreen ? 'm-0' : 'mb-4 mt--16'} flex items-center justify-between`">
+    <div :class="`${isFullscreen ? 'm-0' : 'mb-4 mt--16 ml--26px mr--36px'} flex items-center justify-between`">
       <div :class="`${isFullscreen ? 'top-36px' : 'top-56px'} relative  z-9999`">
-        <AggregationSelector v-model:value="selectedOption" :device_id="props.deviceId" :thekey="props.theKey" />
+        <AggregationSelector v-model:value="selectedOption" :device_id="props.deviceId" :thekey="props.theKey"/>
       </div>
       <div class="relative right-0px top-56px z-9999">
-        <FullScreen v-if="!isFullscreen" :full="isFullscreen" @click="toggle" />
+        <FullScreen v-if="!isFullscreen" :full="isFullscreen" @click="toggle"/>
       </div>
     </div>
     <div :class="`${isFullscreen ? 'h-full' : 'h-320px'}  p-2 `">
-      <ChartComponent :initial-options="initialOptions" />
+      <ChartComponent :initial-options="initialOptions"/>
     </div>
   </n-card>
   <div class="mt-8">
-    <n-data-table :loading="loading" :columns="columns" :data="tableData" :pagination="pagination" />
+    <n-data-table :loading="loading" :columns="columns" :data="tableData" :pagination="pagination"/>
   </div>
 </template>
 

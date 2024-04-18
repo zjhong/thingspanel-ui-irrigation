@@ -682,7 +682,7 @@ const local: App.I18n.Schema = {
     webChartConfiguration: 'web图表配置',
     bindTheCorrespondingChart: '绑定相对应的图表',
     appChartConfiguration: 'App图表配置',
-    editAppDetailsPage: '编辑该设备模板的App详情页',
+    editAppDetailsPage: '编辑该设备功能模板的App详情页',
     release: '发布',
     releaseAppStore: '发布到应用商店',
     enterTemplateName: '请输入模板名称',

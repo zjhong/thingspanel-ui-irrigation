@@ -114,7 +114,7 @@ const handleSubmit = async () => {
         <NFormItem label="设备配置名称" path="name">
           <NInput v-model:value="configForm.name" placeholder="请输入设备名称" />
         </NFormItem>
-        <NFormItem label="选择设备模板" path="device_template_id">
+        <NFormItem label="选择设备功能模板" path="device_template_id">
           <NSelect
             v-model:value="configForm.device_template_id"
             :options="deviceTemplateOptions"

@@ -68,12 +68,12 @@ export const getDeviceGroupRelation = async (params: any) => {
   return await request.get<any>(`/device/group/relation`, { params });
 };
 
-/** 获取设备模板列表 */
+/** 获取设备功能模板列表 */
 export const deviceTemplate = async (params: any) => {
   return await request.get<Api.BaseApi.Data | any>(`/device/template`, { params });
 };
 
-/** 获取设备模板列表 */
+/** 获取设备功能模板列表 */
 export const deviceTemplateDetail = async (params: any) => {
   return await request.get<Api.BaseApi.Data | any>(`/device/template/detail/${params.id}`);
 };

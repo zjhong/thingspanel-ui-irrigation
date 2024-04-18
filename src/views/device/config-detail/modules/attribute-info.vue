@@ -47,7 +47,7 @@ onMounted(async () => {
 <template>
   <div class="attribute-box">
     <NFlex align="center">
-      <div>绑定设备模板(方案2)</div>
+      <div>绑定设备功能模板(方案2)</div>
       <NSelect
         v-model:value="selectValue"
         class="w-300px"

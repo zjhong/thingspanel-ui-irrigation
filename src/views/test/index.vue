@@ -46,11 +46,11 @@ watch(
 
 <template>
   <div>
-    <AggregationSelector v-model:value="selectedOption" device_id="0" thekey="rere" />
-    <NCard class="w-600px">
+    <AggregationSelector v-model:value="selectedOption" device_id="test_device_id" thekey="test_device_key" />
+    <NCard class="mt-18px w-600px">
       <NCode word-wrap :code="JSON.stringify(selectedOption, null, 2)" language="json" />
     </NCard>
 
-    <ChartComponent :initial-options="initialOptions" />
+    <ChartComponent v-if="false" :initial-options="initialOptions" />
   </div>
 </template>

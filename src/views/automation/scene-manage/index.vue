@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, onMounted, reactive, ref } from 'vue';
+import { type Ref, onMounted, ref } from 'vue';
 import { type DataTableColumns, NButton, NCard, NFlex, NPagination, useDialog, useMessage } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
 import moment from 'moment';
@@ -9,13 +9,14 @@ const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
 
-interface sceneManageItem {
-  name: string;
-  description: string;
-  created_at: string;
-}
-
-let sceneManageList: Array<sceneManageItem> = reactive([] as any);
+// interface sceneManageItem {
+//   name: string;
+//   description: string;
+//   created_at: string;
+// }
+const content = ref({
+  sceneManageList: [] as any
+});
 
 // 新建场景
 const sceneAdd = () => {
@@ -54,7 +55,8 @@ const dataTotal = ref(0);
 
 const getData = async () => {
   const res = await sceneGet(queryData.value);
-  sceneManageList = res.data.list;
+  console.log(res.data);
+  content.value.sceneManageList = res.data.list;
   dataTotal.value = res.data.total;
 };
 const handleQuery = async () => {
@@ -144,7 +146,7 @@ onMounted(() => {
         </NFlex>
       </NFlex>
       <NEmpty
-        v-if="sceneManageList.length === 0"
+        v-if="content.sceneManageList.length === 0"
         size="huge"
         description="暂无数据"
         class="min-h-60 justify-center"
@@ -160,10 +162,10 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sceneItem, index) in sceneManageList" :key="index">
+            <tr v-for="(sceneItem, index) in content.sceneManageList" :key="index">
               <td>{{ sceneItem.name }}</td>
               <td>{{ sceneItem.description }}</td>
-              <td>{{ moment(sceneItem.created_at).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td>{{ moment(sceneItem['created_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
               <td class="w-320px">
                 <NFlex justify="space-around">
                   <NButton tertiary type="success" @click="sceneActivation(sceneItem)">激活</NButton>

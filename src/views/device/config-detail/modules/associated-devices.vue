@@ -118,6 +118,10 @@ const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
   queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
+  res.data.list.map(sitem => {
+    sitem.activate_flag = sitem.is_online === 0 ? '离线' : '在线';
+    return sitem;
+  });
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
 };

@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, reactive, ref ,watch, onMounted } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
@@ -25,9 +25,9 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 interface QueryFormModel {
-  page: number
-  page_size: number
-  scheduled_irrigation_id:string
+  page: number;
+  page_size: number;
+  scheduled_irrigation_id: string;
 }
 
 const queryParams = reactive<QueryFormModel>({
@@ -36,10 +36,10 @@ const queryParams = reactive<QueryFormModel>({
   page_size: 10
 });
 
-onMounted(()=>{
-  queryParams.scheduled_irrigation_id = props.editData?.id
-  getTableData()
-})
+onMounted(() => {
+  queryParams.scheduled_irrigation_id = props.editData?.id;
+  getTableData();
+});
 
 const modalVisible = computed({
   get() {
@@ -50,11 +50,10 @@ const modalVisible = computed({
   }
 });
 
-
 const tableData = ref<any>([]);
 async function getTableData() {
   const { data } = await irrigationTimeHistorys(queryParams);
-  tableData.value = data.list
+  tableData.value = data.list;
 }
 
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
@@ -109,8 +108,8 @@ watch(
   () => props.visible,
   newValue => {
     if (newValue) {
-      queryParams.scheduled_irrigation_id = props.editData?.id
-      getTableData()
+      queryParams.scheduled_irrigation_id = props.editData?.id;
+      getTableData();
     }
   }
 );

@@ -42,7 +42,7 @@ const rememberPath = e => {
 
 async function handleSubmit() {
   await validate();
-  await authStore.login(model.userName, model.password);
+  await authStore.login(model.userName.trim(), model.password);
 }
 
 // function handleLoginOtherAccount(param: { userName: string; password: string }) {

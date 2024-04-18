@@ -15,10 +15,7 @@
   "bugs": {
     "url": "https://github.com/ThingsPanel/thingspanel-ui/issues"
   },
-  "keywords": [
-    "Soybean Admin",
-    "ThingsPanel"
-  ],
+  "keywords": ["Soybean Admin", "ThingsPanel"],
   "scripts": {
     "build": "npm run typecheck && cross-env VITE_SERVICE_ENV=prod vite build",
     "build:dev": "npm run typecheck && cross-env VITE_SERVICE_ENV=dev vite build",
@@ -126,6 +123,7 @@
     "cross-env": "7.0.3",
     "eslint": "8.57.0",
     "eslint-plugin-vue": "9.22.0",
+    "highlight.js": "^11.9.0",
     "lint-staged": "15.2.2",
     "mockjs": "1.1.0",
     "npm-run-all": "4.1.5",

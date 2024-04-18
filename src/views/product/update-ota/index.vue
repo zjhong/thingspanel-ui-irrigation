@@ -129,7 +129,7 @@ const getList = async (name?: string) => {
     name
   });
   if (!error && data) {
-    deviceOptions.value = data?.list||[];
+    deviceOptions.value = data?.list || [];
   }
 };
 function init() {

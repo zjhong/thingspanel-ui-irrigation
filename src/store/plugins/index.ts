@@ -1,6 +1,6 @@
-import type {PiniaPluginContext} from 'pinia';
-import {cloneDeep} from 'lodash-es';
-import {SetupStoreId} from '@/enum';
+import type { PiniaPluginContext } from 'pinia';
+import { cloneDeep } from 'lodash-es';
+import { SetupStoreId } from '@/enum';
 
 /**
  * The plugin reset the state of the store which is written by setup syntax
@@ -10,7 +10,7 @@ import {SetupStoreId} from '@/enum';
 export function resetSetupStore(context: PiniaPluginContext) {
   const setupSyntaxIds = Object.values(SetupStoreId) as string[];
   if (setupSyntaxIds.includes(context.store.$id)) {
-    const {$state} = context.store;
+    const { $state } = context.store;
 
     const defaultStore = cloneDeep($state);
 

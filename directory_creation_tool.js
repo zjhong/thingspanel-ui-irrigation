@@ -1,9 +1,8 @@
 // views页面文件按照模板创建工具
 
-
 import fs from 'node:fs';
 import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import { fileURLToPath } from 'node:url';
 import readline from 'node:readline';
 
 // eslint-disable-next-line no-underscore-dangle
@@ -53,11 +52,11 @@ function createViewStructure(folderName) {
   const directories = ['components', 'composables', 'api', 'store', 'types', 'i18n'];
 
   // 确保基目录存在
-  fs.mkdirSync(baseDir, {recursive: true});
+  fs.mkdirSync(baseDir, { recursive: true });
 
   // 创建子目录
   directories.forEach(dir => {
-    fs.mkdirSync(path.join(baseDir, dir), {recursive: true});
+    fs.mkdirSync(path.join(baseDir, dir), { recursive: true });
   });
 
   const filesWithContent = {

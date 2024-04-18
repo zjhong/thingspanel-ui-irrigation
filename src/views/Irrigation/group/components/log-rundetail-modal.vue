@@ -1,7 +1,7 @@
 <script setup lang="tsx">
-import { computed, reactive, ref,onMounted } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import type {PaginationProps } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { irrigationGroupHistoryDetail } from '@/service/api/irrigation';
 import { $t } from '~/src/locales';
@@ -30,13 +30,13 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-interface QueryFormModel  {
-  group_irrigation_history_id:string;
+interface QueryFormModel {
+  group_irrigation_history_id: string;
   page: number;
   page_size: number;
-};
+}
 const queryParams = reactive<QueryFormModel>({
-  group_irrigation_history_id:'',
+  group_irrigation_history_id: '',
   page: 1,
   page_size: 10
 });
@@ -52,14 +52,14 @@ const modalVisible = computed({
 
 const tableData = ref<any>([]);
 function setTableData(data: any) {
-  console.error(data)
+  console.error(data);
   tableData.value = data;
 }
 async function getTableData() {
-  startLoading()
-  queryParams.group_irrigation_history_id = props.editData?.id||''
+  startLoading();
+  queryParams.group_irrigation_history_id = props.editData?.id || '';
   const { data } = await irrigationGroupHistoryDetail(queryParams);
-  endLoading()
+  endLoading();
   if (data) {
     const list: any = data.list;
     setTableData(list);
@@ -148,11 +148,9 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
-onMounted(()=>{
-  getTableData()
-})
-
-
+onMounted(() => {
+  getTableData();
+});
 </script>
 
 <template>

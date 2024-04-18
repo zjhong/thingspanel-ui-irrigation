@@ -1,16 +1,23 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch,onMounted } from 'vue';
-import type { FormInst, FormItemRule, CascaderOption  } from 'naive-ui';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import type { CascaderOption, FormInst, FormItemRule } from 'naive-ui';
 // import { genderOptions } from '@/constants'
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
 import {
-  getIrrigationSpaces,
+  addTimeIrrigation,
+  editTimeIrrigation,
   getIrrigationDistricts,
   getIrrigationDiveces,
-  addTimeIrrigation,
-  editTimeIrrigation
+  getIrrigationSpaces
 } from '@/service/api';
+import { $t } from '~/src/locales';
+
+defineOptions({ name: 'TableActionModal' });
+
+const props = withDefaults(defineProps<Props>(), {
+  type: 'add',
+  editData: null
+});
 
 export interface Props {
   /** 弹窗可见性 */
@@ -29,13 +36,6 @@ const title = computed(() => {
     edit: $t('common.edit')
   };
   return titles[props.type];
-});
-
-defineOptions({ name: 'TableActionModal' });
-
-const props = withDefaults(defineProps<Props>(), {
-  type: 'add',
-  editData: null
 });
 
 interface Emits {
@@ -59,9 +59,9 @@ const closeModal = () => {
   modalVisible.value = false;
 };
 
-const spaceOptions = ref<any>([])
+const spaceOptions = ref<any>([]);
 
-const deviceOptions = ref<any>([])
+const deviceOptions = ref<any>([]);
 
 const valveOpenOptions = [
   {
@@ -103,8 +103,8 @@ const valveOpenOptions = [
   {
     label: '10%',
     value: 10
-  },
-]
+  }
+];
 
 const formRef = ref<HTMLElement & FormInst>();
 
@@ -113,19 +113,19 @@ const formModel = reactive<Api.Irrigation.AddTimeIrrigation>(createDefaultFormMo
 function createDefaultFormModel(): Api.Irrigation.AddTimeIrrigation {
   return {
     name: '',
-    space_id:  '',
+    space_id: '',
     district_id: '',
-    device_id:  null,
+    device_id: null,
     irrigation_time: null,
     schedule: '',
-    control_type:  'A',
+    control_type: 'A',
     irrigation_duration: null,
     valve_opening: 100,
     remark: '',
-    sapceAndDistrict:null,
-    scheduleList:[],
-    durationH:'',
-    durationM:''
+    sapceAndDistrict: null,
+    scheduleList: [],
+    durationH: '',
+    durationM: ''
   };
 }
 
@@ -141,23 +141,23 @@ const rules: Record<keyof Api.Irrigation.AddTimeIrrigation, FormItemRule | FormI
 };
 
 async function handleUpdateFormModel(model: Partial<Api.Irrigation.AddTimeIrrigation>) {
-  formModel.name = model.name || ''
-  //空间区域
-  formModel.sapceAndDistrict = `${model.space_id},${model.district_id}`
-  const districts:any = await  handleSpaceLoad({id:model.space_id} as CascaderOption)
-  const space = spaceOptions.value.find(i=>i.id === model.space_id)
-  space.children = districts
-  //设备
-  formModel.device_id = model.device_id || null
-  formModel.irrigation_time = model.irrigation_time || null
-  //重复时间
-  formModel.scheduleList = model.schedule?.split(',') || []
-  //灌溉时长
-  model.irrigation_duration = 100
-  formModel.durationH = (model.irrigation_duration / 60).toFixed(0)+'' || ''
-  formModel.durationM = model.irrigation_duration % 60 + '' || ''
-  formModel.valve_opening = model.valve_opening || 100
-  formModel.id = model.id
+  formModel.name = model.name || '';
+  // 空间区域
+  formModel.sapceAndDistrict = `${model.space_id},${model.district_id}`;
+  const districts: any = await handleSpaceLoad({ id: model.space_id } as CascaderOption);
+  const space = spaceOptions.value.find(i => i.id === model.space_id);
+  space.children = districts;
+  // 设备
+  formModel.device_id = model.device_id || null;
+  formModel.irrigation_time = model.irrigation_time || null;
+  // 重复时间
+  formModel.scheduleList = model.schedule?.split(',') || [];
+  // 灌溉时长
+  model.irrigation_duration = 100;
+  formModel.durationH = `${(model.irrigation_duration / 60).toFixed(0)}` || '';
+  formModel.durationM = `${model.irrigation_duration % 60}` || '';
+  formModel.valve_opening = model.valve_opening || 100;
+  formModel.id = model.id;
 }
 
 function handleUpdateFormModelByModalType() {
@@ -175,9 +175,10 @@ function handleUpdateFormModelByModalType() {
 
   handlers[props.type]();
 }
+
 // 提交
 async function handleSubmit() {
-  console.error(formModel)
+  console.error(formModel);
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
@@ -190,78 +191,81 @@ async function handleSubmit() {
   }
   closeModal();
 }
-// 区域选择请求空间
-async function handleSpaceLoad(option: CascaderOption){
- const { data } = await getIrrigationDistricts({ limit:100, space_id:option.id })
- data.rows.forEach(i=>{
-  i.id = `${option.id},${i.id}`
-  i.depth= 2
-  i.isLeaf= true
- })
- option.children = data.rows
- return data.rows
-}
-onMounted(async ()=>{
-  const {data}  = await getIrrigationSpaces()
-  data.rows.forEach(i=>{
-    i.depth= 1
-    i.isLeaf= false
-  })
-  spaceOptions.value = data.rows
-  handleUpdateFormModelByModalType();
-})
 
-const loadDivices = async(id:string)=>{
-  const { data } = await getIrrigationDiveces({id:id})
-  const list:any = []
-  data.list.forEach(i=>{
+// 区域选择请求空间
+async function handleSpaceLoad(option_f: CascaderOption) {
+  const { data } = await getIrrigationDistricts({ limit: 100, space_id: option_f.id });
+  data.rows.forEach(i => {
+    i.id = `${option_f.id},${i.id}`;
+    i.depth = 2;
+    i.isLeaf = true;
+  });
+  // eslint-disable-next-line require-atomic-updates
+  option_f.children = data.rows;
+  return data.rows;
+}
+
+onMounted(async () => {
+  const { data } = await getIrrigationSpaces();
+  data.rows.forEach(i => {
+    i.depth = 1;
+    i.isLeaf = false;
+  });
+  spaceOptions.value = data.rows;
+  handleUpdateFormModelByModalType();
+});
+
+const loadDivices = async (id: string) => {
+  const { data } = await getIrrigationDiveces({ id });
+  const list: any = [];
+  data.list.forEach(i => {
     list.push({
       label: i.name,
       value: i.id
-    })
-  })
-  deviceOptions.value = list
-}
+    });
+  });
+  deviceOptions.value = list;
+};
 
 watch(
-  ()=>formModel.durationH,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationH,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
+);
 watch(
-  ()=>formModel.durationM,
-  ()=>{
-    if(!!formModel.durationH && !!formModel.durationM){
-      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH)*60
-    }else{
-      formModel.irrigation_duration=null
+  () => formModel.durationM,
+  () => {
+    if (Boolean(formModel.durationH) && Boolean(formModel.durationM)) {
+      formModel.irrigation_duration = Number(formModel.durationM) + Number(formModel.durationH) * 60;
+    } else {
+      formModel.irrigation_duration = null;
     }
   }
-)
+);
 
 watch(
-  ()=>formModel.scheduleList,
-  ()=>{
-    if(!!formModel.scheduleList){
-      formModel.schedule = formModel.scheduleList.join(',')
+  () => formModel.scheduleList,
+  () => {
+    if (formModel.scheduleList) {
+      formModel.schedule = formModel.scheduleList.join(',');
     }
   }
-)
+);
 watch(
-  ()=>formModel.sapceAndDistrict,
-  ()=>{
-    if(!!formModel.sapceAndDistrict){
-      formModel.space_id = formModel.sapceAndDistrict.split(',')[0]
-      formModel.district_id = formModel.sapceAndDistrict.split(',')[1]
-      loadDivices(formModel.sapceAndDistrict.split(',')[1])
+  () => formModel.sapceAndDistrict,
+  () => {
+    if (formModel.sapceAndDistrict) {
+      formModel.space_id = formModel.sapceAndDistrict.split(',')[0];
+      formModel.district_id = formModel.sapceAndDistrict.split(',')[1];
+      loadDivices(formModel.sapceAndDistrict.split(',')[1]);
     }
   }
-)
+);
 watch(
   () => props.visible,
   newValue => {
@@ -294,14 +298,21 @@ watch(
           />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.device')" path="device_id">
-          <NSelect v-model:value="formModel.device_id" placeholder="请选择" class="w-200px" clearable :options="deviceOptions" />
+          <NSelect
+            v-model:value="formModel.device_id"
+            placeholder="请选择"
+            class="w-200px"
+            clearable
+            :options="deviceOptions"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.irrigationTime')" path="irrigation_time">
           <n-time-picker
+            v-model:formatted-value="formModel.irrigation_time"
             format="HH:mm"
             value-format="HH:mm"
             placeholder="请选择"
-            v-model:formatted-value="formModel.irrigation_time"  />
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.repeatTime')" path="scheduleList">
           <n-checkbox-group v-model:value="formModel.scheduleList">
@@ -324,7 +335,12 @@ watch(
             </n-space>
           </n-radio-group>
         </NFormItemGridItem>
-        <NFormItemGridItem v-if="formModel.control_type === 'A' " :span="24" :label="$t('page.irrigation.irrigationDuration')" path="irrigation_duration">
+        <NFormItemGridItem
+          v-if="formModel.control_type === 'A'"
+          :span="24"
+          :label="$t('page.irrigation.irrigationDuration')"
+          path="irrigation_duration"
+        >
           <NInput v-model:value="formModel.durationH" class="important-w-100px" />
           <label class="ml-10px mr-20px text-nowrap">{{ $t('page.irrigation.hour') }}</label>
           <NInput v-model:value="formModel.durationM" class="important-w-100px" />

@@ -33,6 +33,7 @@ const getFormJson = async id => {
 
   formData.value = res.data;
 };
+console.log(deviceId, '43243243');
 const setUpId = (dId, cId, dobj) => {
   deviceId.value = dId;
   configId.value = cId;
@@ -131,7 +132,7 @@ const { routerPushByKey } = useRouterPush();
 const goDeviceDetails = row => {
   routerPushByKey('device_details', {
     query: {
-      id: row.id
+      d_id: row.id
     }
   });
 };

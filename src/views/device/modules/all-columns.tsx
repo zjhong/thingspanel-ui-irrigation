@@ -1,12 +1,11 @@
-import {type DataTableColumns, NButton, NFlex, NPopconfirm} from 'naive-ui';
+import { type DataTableColumns, NButton, NFlex, NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
-import {$t} from "@/locales";
-import {useAppStore} from "@/store/modules/app";
+import { $t } from '@/locales';
+import { useAppStore } from '@/store/modules/app';
 
+const appS = useAppStore();
 
-const appS = useAppStore()
-
-console.log(appS.locale, "5430954392504")
+console.log(appS.locale, '5430954392504');
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
   {
     title: () => $t('custom.groupPage.groupName'),
@@ -39,13 +38,15 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
     width: 190,
     render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
       return (
-        <div onClick={(e) => {
-          e.stopPropagation();
-        }
-        }>
+        <div
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
           <NFlex justify={'start'}>
             <NButton
-              quaternary type="primary"
+              quaternary
+              type="primary"
               size={'small'}
               onClick={() => {
                 viewDetails(row.id);
@@ -54,15 +55,18 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
               {$t('custom.groupPage.view')}
             </NButton>
             <NPopconfirm
-              onPositiveClick={(e) => {
+              onPositiveClick={e => {
                 e.stopPropagation();
                 deleteItem(row.id);
               }}
             >
               {{
                 default: () => $t('custom.groupPage.confirmDelete'),
-                trigger: () => <NButton quaternary type="primary"
-                                        size={'small'}>{$t('custom.groupPage.delete')}</NButton>
+                trigger: () => (
+                  <NButton quaternary type="primary" size={'small'}>
+                    {$t('custom.groupPage.delete')}
+                  </NButton>
+                )
               }}
             </NPopconfirm>
           </NFlex>
@@ -88,7 +92,7 @@ export const createDeviceColumns = (): DataTableColumns<DeviceManagement.DeviceD
   },
   {
     title: () => $t('custom.devicePage.deviceConfig'),
-    key: 'device_config_name',
+    key: 'device_config_name'
   }
 ];
 
@@ -109,7 +113,7 @@ export const createNoSelectDeviceColumns = (
     },
     {
       title: () => $t('custom.devicePage.deviceConfig'),
-      key: 'device_config_name',
+      key: 'device_config_name'
     },
     {
       title: () => $t('custom.groupPage.actions'),
@@ -135,8 +139,11 @@ export const createNoSelectDeviceColumns = (
             >
               {{
                 default: () => $t('custom.groupPage.confirmDelete'),
-                trigger: () => <NButton quaternary
-                                        type="primary" size={'small'}>{$t('custom.groupPage.removeFromGroup')}</NButton>
+                trigger: () => (
+                  <NButton quaternary type="primary" size={'small'}>
+                    {$t('custom.groupPage.removeFromGroup')}
+                  </NButton>
+                )
               }}
             </NPopconfirm>
           </NFlex>

@@ -100,7 +100,7 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
   console.log(pngPath.value, file);
 };
 
-// 新增设备模板
+// 新增设备功能模板
 const next: () => void = async () => {
   await formRef.value?.validate();
   if (addFrom.id) {

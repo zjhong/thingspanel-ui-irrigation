@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { BarChart, LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent } from 'echarts/components';
+import { GridComponent, LegendComponent, ToolboxComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import type { EChartsCoreOption } from 'echarts/core';
 import { useTpECharts } from '@/hooks/tp-chart/use-tp-echarts';
@@ -12,7 +12,15 @@ const props = defineProps<{
 }>();
 
 const chartRef = ref(null);
-const requiredModules = [LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer];
+const requiredModules = [
+  LineChart,
+  BarChart,
+  GridComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  LegendComponent,
+  CanvasRenderer
+];
 
 const { setOptions } = useTpECharts(chartRef, props.initialOptions, requiredModules);
 

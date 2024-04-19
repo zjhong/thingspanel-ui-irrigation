@@ -132,7 +132,7 @@ fetchData();
     <!-- 第二行 -->
     <n-card class="mb-4">
       <n-grid :x-gap="cardMargin" :y-gap="cardMargin" :cols="3">
-        <n-gi v-for="i in [...telemetryData, ...telemetryData]" :key="i.tenant_id">
+        <n-gi v-for="i in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <NH4 style="padding: 10px 0 10px">{{ i.value }}{{ i.unit }}</NH4>
             <template #header>

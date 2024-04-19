@@ -19,7 +19,7 @@ import { useAppStore } from '@/store/modules/app';
 
 const { query } = useRoute();
 const appStore = useAppStore();
-const { id } = query;
+const { d_id } = query;
 const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
 const components = [
@@ -46,7 +46,7 @@ const changeTabs = v => {
   }, 500);
 };
 onMounted(() => {
-  deviceDataStore.fetchData(id as string);
+  deviceDataStore.fetchData(d_id as string);
 });
 
 watch(
@@ -109,7 +109,7 @@ watch(
             <n-spin size="small" :show="loading">
               <component
                 :is="component.component"
-                :id="id as string"
+                :id="d_id as string"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
               />
             </n-spin>

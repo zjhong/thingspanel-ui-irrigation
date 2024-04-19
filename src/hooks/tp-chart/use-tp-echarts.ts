@@ -1,60 +1,232 @@
-import type { Ref } from 'vue';
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, effectScope, nextTick, onScopeDispose, ref, watch } from 'vue';
 import * as echarts from 'echarts/core';
-import type { ECharts } from 'echarts/core';
-import { GridComponent, TooltipComponent } from 'echarts/components';
+import { BarChart, GaugeChart, LineChart, PictorialBarChart, PieChart, RadarChart, ScatterChart } from 'echarts/charts';
+import type {
+  BarSeriesOption,
+  GaugeSeriesOption,
+  LineSeriesOption,
+  PictorialBarSeriesOption,
+  PieSeriesOption,
+  RadarSeriesOption,
+  ScatterSeriesOption
+} from 'echarts/charts';
+import {
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  TransformComponent
+} from 'echarts/components';
+import type {
+  DatasetComponentOption,
+  GridComponentOption,
+  LegendComponentOption,
+  TitleComponentOption,
+  ToolboxComponentOption,
+  TooltipComponentOption
+} from 'echarts/components';
+import { LabelLayout, UniversalTransition } from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core';
+import { useElementSize } from '@vueuse/core';
 import { useThemeStore } from '@/store/modules/theme';
 
-export function useTpECharts(
-  elRef: Ref<HTMLElement | null>,
-  options: echarts.EChartsCoreOption,
-  charts = [LineChart, PieChart, BarChart]
-) {
+export type ECOption = echarts.ComposeOption<
+  | BarSeriesOption
+  | LineSeriesOption
+  | PieSeriesOption
+  | ScatterSeriesOption
+  | PictorialBarSeriesOption
+  | RadarSeriesOption
+  | GaugeSeriesOption
+  | TitleComponentOption
+  | LegendComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | ToolboxComponentOption
+  | DatasetComponentOption
+>;
+
+echarts.use([
+  TitleComponent,
+  LegendComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  ToolboxComponent,
+  BarChart,
+  LineChart,
+  PieChart,
+  ScatterChart,
+  PictorialBarChart,
+  RadarChart,
+  GaugeChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer
+]);
+
+interface ChartHooks {
+  onRender?: (chart: echarts.ECharts) => void | Promise<void>;
+  onUpdated?: (chart: echarts.ECharts) => void | Promise<void>;
+  onDestroy?: (chart: echarts.ECharts) => void | Promise<void>;
+}
+
+/**
+ * use echarts
+ *
+ * @param optionsFactory echarts options factory function
+ * @param hooks
+ */
+export function useTpECharts<T extends ECOption>(optionsFactory: () => T, hooks: ChartHooks = {}) {
+  const scope = effectScope();
+
   const themeStore = useThemeStore();
-  const chartInstance = ref<ECharts | null>(null);
+  const darkMode = computed(() => themeStore.darkMode);
 
-  echarts.use([...charts, GridComponent, TooltipComponent, CanvasRenderer]);
+  const domRef = ref<HTMLElement | null>(null);
+  const initialSize = { width: 0, height: 0 };
+  const { width, height } = useElementSize(domRef as unknown as MaybeComputedElementRef<MaybeElement>, initialSize);
 
-  const currentTheme = computed(() => (themeStore.darkMode ? 'dark' : 'light'));
+  let chart: echarts.ECharts | null = null;
+  const chartOptions: T = optionsFactory();
 
-  const initChart = () => {
-    if (!elRef.value || chartInstance.value) return;
+  const {
+    onRender = instance => {
+      const textColor = darkMode.value ? 'rgb(224, 224, 224)' : 'rgb(31, 31, 31)';
+      const maskColor = darkMode.value ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)';
 
-    chartInstance.value = echarts.init(elRef.value, currentTheme.value, { renderer: 'canvas' });
-    chartInstance.value.setOption(options);
-  };
-
-  watch(
-    elRef,
-    () => {
-      initChart();
+      instance.showLoading({
+        color: themeStore.themeColor,
+        textColor,
+        fontSize: 14,
+        maskColor
+      });
+      setTimeout(instance.hideLoading, 500);
     },
-    { immediate: true }
-  );
+    onUpdated = instance => {
+      instance.hideLoading();
+    },
+    onDestroy
+  } = hooks;
 
-  watch(currentTheme, () => {
-    if (chartInstance.value) {
-      chartInstance.value.dispose();
-      initChart();
+  /**
+   * whether can render chart
+   *
+   * when domRef is ready and initialSize is valid
+   */
+  function canRender() {
+    return domRef.value && initialSize.width > 0 && initialSize.height > 0;
+  }
+
+  /** is chart rendered */
+  function isRendered() {
+    return Boolean(domRef.value && chart);
+  }
+
+  /**
+   * update chart options
+   *
+   * @param callback callback function
+   */
+  async function updateOptions(callback: (opts: T, optsFactory: () => T) => ECOption = () => chartOptions) {
+    if (!isRendered()) return;
+
+    const updatedOpts = callback(chartOptions, optionsFactory);
+
+    Object.assign(chartOptions, updatedOpts);
+
+    if (isRendered()) {
+      chart?.clear();
     }
+
+    chart?.setOption({ ...updatedOpts, backgroundColor: 'transparent' });
+
+    await onUpdated?.(chart!);
+  }
+
+  /** render chart */
+  async function render() {
+    if (!isRendered()) {
+      const chartTheme = darkMode.value ? 'dark' : 'light';
+
+      await nextTick();
+      console.log(chartTheme, '43243243243');
+      chart = echarts.init(domRef.value as unknown as HTMLElement, chartTheme, { renderer: 'canvas' });
+
+      chart.setOption({ ...chartOptions, backgroundColor: 'transparent' });
+
+      await onRender?.(chart);
+    }
+  }
+
+  /** resize chart */
+  function resize() {
+    chart?.resize();
+  }
+
+  /** destroy chart */
+  async function destroy() {
+    if (!chart) return;
+
+    await onDestroy?.(chart);
+    chart?.dispose();
+    chart = null;
+  }
+
+  /** change chart theme */
+  async function changeTheme() {
+    await destroy();
+    await render();
+    await onUpdated?.(chart!);
+  }
+
+  /**
+   * render chart by size
+   *
+   * @param w width
+   * @param h height
+   */
+  async function renderChartBySize(w: number, h: number) {
+    initialSize.width = w;
+    initialSize.height = h;
+
+    // size is abnormal, destroy chart
+    if (!canRender()) {
+      await destroy();
+
+      return;
+    }
+
+    // resize chart
+    if (isRendered()) {
+      resize();
+    }
+
+    // render chart
+    await render();
+  }
+
+  scope.run(() => {
+    watch([width, height], ([newWidth, newHeight]) => {
+      renderChartBySize(newWidth, newHeight);
+    });
+
+    watch(darkMode, () => {
+      changeTheme();
+    });
   });
 
-  onUnmounted(() => {
-    if (chartInstance.value) {
-      chartInstance.value.dispose();
-      chartInstance.value = null;
-    }
+  onScopeDispose(() => {
+    destroy();
+    scope.stop();
   });
 
-  const setOptions = (updateFn: (options: echarts.EChartsCoreOption) => echarts.EChartsCoreOption) => {
-    if (chartInstance.value) {
-      const currentOptions = chartInstance.value.getOption();
-      const updatedOptions = updateFn(currentOptions);
-      chartInstance.value.setOption(updatedOptions, true); // 强制完全覆盖旧配置
-    }
+  return {
+    domRef,
+    updateOptions
   };
-
-  return { chartInstance, setOptions, initChart };
 }

@@ -24,7 +24,7 @@ type Option = {
   children?: Option[];
 };
 const options = ref<Option[]>();
-const sOptions = ref<any[]>([{ name: '不绑定', id: '' }]);
+const sOptions = ref<any[]>([{ label: '不绑定', value: '' }]);
 const DeviceConfigList = async name => {
   const { data, error } = await getDeviceConfigList({ page: 1, page_size: 99, name });
   if (!error && data) {

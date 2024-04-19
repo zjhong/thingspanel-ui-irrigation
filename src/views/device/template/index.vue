@@ -97,7 +97,7 @@ const handleRemove = async (id: string) => {
                   </template>
 
                   <div class="mt-4 flex justify-end gap-2">
-                    <NButton strong secondary circle @click.stop="handleRemove(item.id)">
+                    <NButton circle strong secondary @click.stop="handleRemove(item.id)">
                       <template #icon>
                         <Delete20Regular class="text-24px text-primary" />
                       </template>

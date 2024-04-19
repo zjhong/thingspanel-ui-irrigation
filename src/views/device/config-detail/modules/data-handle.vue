@@ -94,6 +94,7 @@ const bodyStyle = ref({
 });
 const queryData = ref({
   device_config_id: '',
+  script_type: '',
   page: 1,
   page_size: 10
 });
@@ -208,7 +209,12 @@ onMounted(() => {
 
 <template>
   <NFlex class="mb-6">
-    <n-select :options="scripTypeOpt" class="max-w-40" />
+    <n-select
+      v-model:value="queryData.script_type"
+      :options="scripTypeOpt"
+      class="max-w-40"
+      @update-value="queryDataScriptList"
+    />
     <NButton type="primary" @click="openModal('新增', null)">新增数据处理</NButton>
   </NFlex>
   <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
@@ -225,7 +231,7 @@ onMounted(() => {
           @update-value="handleChange(item)"
         />
       </div>
-      <div class="item-desc description">{{ item.description }}</div>
+      <div class="description item-desc">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
         <NButton circle tertiary type="info" @click="openModal('编辑', item)">

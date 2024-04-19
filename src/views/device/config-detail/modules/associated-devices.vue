@@ -2,11 +2,11 @@
 import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
-import { NButton, NPagination, useMessage } from 'naive-ui';
+import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
 import { deviceConfigBatch, deviceList } from '@/service/api/device';
 
-const message = useMessage();
+// const message = useMessage();
 
 interface Props {
   deviceConfigId?: string;
@@ -73,7 +73,7 @@ const handleSubmit = async () => {
   associatedForm.value.device_config_id = props.deviceConfigId;
   const res = await deviceConfigBatch(associatedForm.value);
   if (!res.error) {
-    message.success('新增成功');
+    // message.success('新增成功');
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     handleClose();
   }

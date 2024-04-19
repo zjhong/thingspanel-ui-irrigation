@@ -74,7 +74,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
 
 function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) {
   const response = JSON.parse((event?.target as XMLHttpRequest).response);
-  window.$message?.success(response.message);
+  // window.$message?.success(response.message);
   emit('update:value', response.data.path);
   emit('success', file);
 }

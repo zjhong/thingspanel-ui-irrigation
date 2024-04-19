@@ -1,14 +1,14 @@
 <script setup lang="tsx">
-import { createApp, onMounted, ref, watchEffect } from 'vue';
-import { NCard } from 'naive-ui';
-import { useScriptTag } from '@vueuse/core';
-import { TENCENT_MAP_SDK_URL } from '@/constants/map-sdk';
+import {createApp, onMounted, ref, watchEffect} from 'vue';
+import {NCard} from 'naive-ui';
+import {useScriptTag} from '@vueuse/core';
+import {TENCENT_MAP_SDK_URL} from '@/constants/map-sdk';
 
-defineOptions({ name: 'TencentMap' });
+defineOptions({name: 'TencentMap'});
 
 const props = defineProps<{ devices: any[] }>();
 
-const { load } = useScriptTag(TENCENT_MAP_SDK_URL);
+const {load} = useScriptTag(TENCENT_MAP_SDK_URL);
 
 const domRef = ref<HTMLDivElement | null>(null);
 let map: any = null;
@@ -74,7 +74,7 @@ async function renderMap(devices) {
       marker: new TMap.MarkerStyle({
         width: 20,
         height: 30,
-        anchor: { x: 10, y: 30 },
+        anchor: {x: 10, y: 30},
         color: '#333'
       })
     },
@@ -85,7 +85,7 @@ async function renderMap(devices) {
   infoWindow = new TMap.InfoWindow({
     map,
     position: new TMap.LatLng(39.984104, 116.307503),
-    offset: { x: 0, y: -32 }, // 设置信息窗相对position偏移像素
+    offset: {x: 0, y: -32}, // 设置信息窗相对position偏移像素
     enableCustom: true
   });
   infoWindow.close();
@@ -103,7 +103,7 @@ async function renderMap(devices) {
         return (
           <NCard title={`设备名称：${evt.geometry.data.name}`} class="h-130px w-200px">
             上次推送时间：{evt.geometry.data.ts || '-'}
-            <br />
+            <br/>
             状态：{evt.geometry.data.ts}
           </NCard>
         );

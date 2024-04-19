@@ -59,7 +59,6 @@ const submitForm = async () => {
     await PostBoard(formData); // 新建看板
   }
 
-  message.success(isEditMode.value ? '看板更新成功' : '看板创建成功');
   showModal.value = false;
   clearFormData();
   await fetchBoards();
@@ -74,7 +73,6 @@ const editBoard = board => {
 // 删除看板
 const deleteBoard = async (id: string) => {
   await DelBoard(id); // 假设DelBoard接收看板的id
-  message.success('看板删除成功');
   await fetchBoards(); // 刷新看板列表
 };
 
@@ -140,7 +138,7 @@ onMounted(fetchBoards);
                 {{ board.description }}
               </NTooltip>
               <div class="mt-4 flex justify-end gap-2">
-                <NButton strong circle secondary @click.stop="editBoard(board)">
+                <NButton circle strong secondary @click.stop="editBoard(board)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>

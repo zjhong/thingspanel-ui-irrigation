@@ -158,7 +158,7 @@ function handleEditTable(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await deleteProduct(rowId);
   if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'));
+    // window.$message?.success($t('common.deleteSuccess'));
     getTableData();
   }
 }
@@ -203,8 +203,8 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           remote
+          flex-height
           class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />

@@ -2,19 +2,25 @@
 import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
-import { NButton, useMessage } from 'naive-ui';
+import { NButton } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
+
 const visible = ref(false);
 const extendFormRef = ref<HTMLElement & FormInst>();
 const extendForm = ref(defaultExtendForm());
-const message = useMessage();
+
+// const message = useMessage();
+
 interface Emits {
   (e: 'upDateConfig'): void;
 }
+
 const emit = defineEmits<Emits>();
+
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -27,6 +33,7 @@ function defaultExtendForm() {
     desc: null
   };
 }
+
 const extendFormRules = ref({
   name: {
     required: true,
@@ -70,7 +77,7 @@ const handleSubmit = async () => {
   postData.additional_info = JSON.stringify(extendInfoList.value);
   const res = await deviceConfigEdit(postData);
   if (!res.error) {
-    message.success('修改成功');
+    // message.success('修改成功');
     emit('upDateConfig');
   }
   handleClose();
@@ -163,6 +170,7 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
   }
+
   .m-tb-10 {
     margin: 10px;
   }

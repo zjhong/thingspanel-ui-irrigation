@@ -98,7 +98,6 @@ const handleSubmit = async () => {
     <n-scrollbar style="max-height: 360px">
       <template v-for="element in formElements" :key="element.dataKey">
         <div v-if="element.type === 'input'" class="form-item">
-          {{ element.dataKey }}
           <NFormItem :label="element.label" :path="element.dataKey">
             <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
           </NFormItem>

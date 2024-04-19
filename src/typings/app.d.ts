@@ -959,6 +959,7 @@ declare namespace App {
           deviceNameOrNumber: string;
           manualAdd: string;
           addByNumber: string;
+          addByServer: string;
           addDevice: string;
           createDevice: string;
           configureDevice: string;
@@ -980,6 +981,10 @@ declare namespace App {
           step2Desc: string;
           step3Title: string;
           step3Desc: string;
+          serverStep1Title: string;
+          serverStep1Desc: string;
+          serverStep2Title: string;
+          serverStep2Desc: string;
           enterDeviceName: string;
           validationFailed: string;
           label: string;

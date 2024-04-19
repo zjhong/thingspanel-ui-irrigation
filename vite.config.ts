@@ -48,6 +48,7 @@ export default defineConfig(configEnv => {
       commonjsOptions: {
         ignoreTryCatch: false
       }
-    }
+    },
+    lintOnSave: false
   };
 });

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
-import {useRoute} from 'vue-router';
-import {deviceConfigInfo, deviceDetail, deviceLocation} from '@/service/api';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { deviceConfigInfo, deviceDetail, deviceLocation } from '@/service/api';
 import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置调整
 const props = defineProps<{
   id: string;
@@ -10,7 +10,7 @@ const props = defineProps<{
 const latitude = ref('');
 const longitude = ref('');
 const isShow = ref(false);
-const {query} = useRoute();
+const { query } = useRoute();
 
 const onPositionSelected = position => {
   latitude.value = position.lat.toString();
@@ -27,11 +27,11 @@ const getConfigInfo = async () => {
   const locationData = location?.split(',') || [];
   latitude.value = locationData[1] || '';
   longitude.value = locationData[0] || '';
-  deviceConfigInfo({id: props.deviceConfigId});
+  deviceConfigInfo({ id: props.deviceConfigId });
 };
 
 const handleSave = () => {
-  deviceLocation({id: props.id, location: `${longitude.value},${latitude.value}`});
+  deviceLocation({ id: props.id, location: `${longitude.value},${latitude.value}` });
 };
 
 onMounted(getConfigInfo);
@@ -41,8 +41,8 @@ onMounted(getConfigInfo);
   <div>
     <NCard title="设备位置" class="mb-4">
       <n-space>
-        <NInput v-model:value="longitude" placeholder="经度" class="w-140px"/>
-        <NInput v-model:value="latitude" placeholder="纬度" class="w-140px"/>
+        <NInput v-model:value="longitude" placeholder="经度" class="w-140px" />
+        <NInput v-model:value="latitude" placeholder="纬度" class="w-140px" />
 
         <NButton @click="openMapAndGetPosition">定位</NButton>
       </n-space>
@@ -53,7 +53,7 @@ onMounted(getConfigInfo);
     <NButton @click="handleSave">保存</NButton>
     <NModal v-model:show="isShow" class="w-440px flex-center">
       <NCard>
-        <TencentMap @position-selected="onPositionSelected"/>
+        <TencentMap @position-selected="onPositionSelected" />
       </NCard>
     </NModal>
   </div>

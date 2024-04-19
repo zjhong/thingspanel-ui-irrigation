@@ -234,7 +234,7 @@ onMounted(() => {
       <div class="description item-desc">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
-        <NButton circle tertiary type="info" @click="openModal('编辑', item)">
+        <NButton tertiary circle type="info" @click="openModal('编辑', item)">
           <template #icon>
             <n-icon>
               <editIcon />

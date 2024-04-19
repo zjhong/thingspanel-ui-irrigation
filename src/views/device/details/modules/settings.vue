@@ -1,9 +1,11 @@
 <script setup lang="tsx">
 import { onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import type { TransferRenderSourceList } from 'naive-ui';
 import { NTree } from 'naive-ui';
 import {
   deleteDeviceGroupRelation,
+  deviceDetail,
   deviceGroupRelation,
   deviceGroupTree,
   deviceUpdateConfig,
@@ -25,7 +27,8 @@ type Option = {
 };
 const options = ref<Option[]>();
 const sOptions = ref<any[]>([{ label: '不绑定', value: '' }]);
-const DeviceConfigList = async name => {
+const { query } = useRoute();
+const deviceConfigList = async name => {
   const { data, error } = await getDeviceConfigList({ page: 1, page_size: 99, name });
   if (!error && data) {
     const tempSOptions = data?.list?.map(item => {
@@ -74,7 +77,7 @@ const getTreeRelationData = async () => {
   }
 };
 const deviceDataStore = useDeviceDataStore();
-const selectedValues = ref<any>(deviceDataStore?.deviceData?.device_config_id || '');
+const selectedValues = ref('');
 
 function flattenTree(list: undefined | Option[]): Option[] {
   const result: Option[] = [];
@@ -129,14 +132,16 @@ watch(
   }
 );
 
-const initData = () => {
+const initData = async () => {
+  const result = await deviceDetail(query.d_id as string);
+  selectedValues.value = result?.data?.device_config_id || '';
   getTreeData();
   getTreeRelationData();
 };
 
 onMounted(() => {
   initData();
-  DeviceConfigList('');
+  deviceConfigList('');
 });
 
 const selectConfig = v => {
@@ -158,7 +163,7 @@ const selectConfig = v => {
           class="w-200px"
           :options="sOptions"
           @update:value="selectConfig"
-          @search="DeviceConfigList"
+          @search="deviceConfigList"
         />
       </div>
 

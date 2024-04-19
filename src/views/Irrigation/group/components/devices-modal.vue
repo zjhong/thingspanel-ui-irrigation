@@ -165,7 +165,10 @@ onMounted(async () => {
 
 // 区域选择请求空间
 async function handleSpaceLoad(option_f: CascaderOption) {
-  const { data } = await getIrrigationDistricts({ limit: 100, space_id: option_f.id });
+  const { data } = await getIrrigationDistricts({
+    limit: 100,
+    space_id: option_f.id
+  });
   data.rows.forEach(i => {
     i.depth = 2;
     i.isLeaf = true;

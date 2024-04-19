@@ -993,6 +993,7 @@ declare namespace App {
           fail: string;
           deviceConfigFail: string;
           back: string;
+          saveAndNext: string;
         };
         grouping_details: {
           previousPage: string;

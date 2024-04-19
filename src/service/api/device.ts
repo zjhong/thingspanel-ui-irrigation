@@ -266,3 +266,7 @@ export const deviceConfigMenu = async (params: any) => {
 export const deviceLocation = async (params: any) => {
   return await request.put<any>(`/device`, params);
 };
+/** 修改设备名称 */
+export const deviceUpdate = async (params: any) => {
+  return await request.put<Api.BaseApi.Data>('/device', params);
+};

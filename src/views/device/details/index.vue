@@ -72,16 +72,21 @@ watch(
 
         <NFlex>
           <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceNumber') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
+            <spna class="mr-2" style="color: #ccc">ID:</spna>
+            <spna style="color: #ccc">{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
           </div>
-          <div class="mr-4">
+          <div class="mr-4" style="color: #ccc">
             <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
           </div>
-          <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna>
-            <spna>
+          <div class="mr-4" style="display: flex">
+            <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
+            <SvgIcon
+              local-icon="CellTowerRound"
+              style="color: #ccc; margin-right: 5px"
+              class="text-20px text-primary"
+            />
+            <spna style="color: #ccc">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
@@ -90,8 +95,10 @@ watch(
             </spna>
           </div>
           <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}</spna>
+            <!-- <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+            <spna style="color: #ccc">
+              {{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}
+            </spna>
           </div>
         </NFlex>
       </div>

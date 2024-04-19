@@ -22,7 +22,7 @@ const openMapAndGetPosition = () => {
   isShow.value = true;
 };
 const getConfigInfo = async () => {
-  const result = await deviceDetail(query.id as string);
+  const result = await deviceDetail(query.d_id as string);
   const location = result?.data?.location || '';
   const locationData = location?.split(',') || [];
   latitude.value = locationData[0] || '';

@@ -139,7 +139,7 @@ const handleSubmit = async () => {
       </NCard>
     </n-scrollbar>
     <div class="mt-4 w-full flex-center">
-      <NButton type="primary" @click="handleSubmit">{{ $t('custom.devicePage.submit') }}</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('custom.devicePage.saveAndNext') }}</NButton>
     </div>
   </NForm>
 </template>

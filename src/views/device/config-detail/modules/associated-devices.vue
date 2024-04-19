@@ -18,6 +18,26 @@ const props = withDefaults(defineProps<Props>(), {
 const visible = ref(false);
 const associatedFormRef = ref<HTMLElement & FormInst>();
 const associatedForm = ref(defaultAssociatedForm());
+const deviceOptions = ref([] as any[]);
+
+const queryDevice = ref<{
+  page: number;
+  page_size: number;
+  total: number;
+}>({
+  page: 1,
+  page_size: 20,
+  total: 0
+});
+
+function initQueryDevice() {
+  queryDevice.value = {
+    page: 1,
+    page_size: 20,
+    total: 0
+  };
+  deviceOptions.value = [];
+}
 
 function defaultAssociatedForm() {
   return {
@@ -25,6 +45,12 @@ function defaultAssociatedForm() {
     device_config_id: ''
   };
 }
+
+const queryData = ref({
+  device_config_id: props.deviceConfigId,
+  page: 1,
+  page_size: 10
+});
 
 const associatedFormRules = ref({
   // device_ids: {
@@ -39,7 +65,9 @@ const addDevice = () => {
   getDeviceOptions();
   visible.value = true;
 };
-const modalClose = () => {};
+const modalClose = () => {
+  initQueryDevice();
+};
 const handleSubmit = async () => {
   await associatedFormRef?.value?.validate();
   associatedForm.value.device_config_id = props.deviceConfigId;
@@ -54,17 +82,15 @@ const handleClose = () => {
   associatedFormRef.value?.restoreValidation();
   associatedForm.value = defaultAssociatedForm();
   visible.value = false;
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   queryData.value.page = 1;
+  initQueryDevice();
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   getDeviceList();
 };
 const handleScroll = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
   if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (deviceOptions.value.length <= queryDevice.value.total) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       queryDevice.value.page += 1;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       getDeviceOptions();
@@ -72,12 +98,6 @@ const handleScroll = (e: Event) => {
   }
 };
 
-const deviceOptions = ref([] as any[]);
-const queryDevice = ref({
-  page: 1,
-  page_size: 20,
-  total: 0
-});
 const getDeviceOptions = async () => {
   const res = await deviceList(queryDevice.value);
   deviceOptions.value = deviceOptions.value.concat(res.data.list);
@@ -108,11 +128,7 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-const queryData = ref({
-  device_config_id: props.deviceConfigId,
-  page: 1,
-  page_size: 10
-});
+
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {

@@ -43,7 +43,9 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
     transformBackendResponse(response) {
       if (response.config.method !== 'get') {
         window.$message?.destroyAll();
-        window.$message?.success('操作成功');
+        if (response?.request?.responseURL?.indexOf('login') === -1) {
+          window.$message?.success('操作成功');
+        }
       }
       if ((response as any).config?.needMessage) {
         return response.data;

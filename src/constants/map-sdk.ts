@@ -5,5 +5,5 @@ export const BAIDU_MAP_SDK_URL = `https://api.map.baidu.com/getscript?v=3.0&ak=K
 export const AMAP_SDK_URL = 'https://webapi.amap.com/maps?v=2.0&key=e7bd02bd504062087e6563daf4d6721d';
 
 /** 腾讯地图sdk地址 */
-// export const TENCENT_MAP_SDK_URL = 'https://map.qq.com/api/gljs?v=1.exp&key=A6DBZ-KXPLW-JKSRY-ONZF4-CPHY3-K6BL7';
-export const TENCENT_MAP_SDK_URL = 'https://map.qq.com/api/gljs?v=1.exp&key=FFIBZ-EYKLB-WGFU6-NHQ5U-CUH77-S2B7O';
+export const TENCENT_MAP_SDK_URL = 'https://map.qq.com/api/gljs?v=1.exp&key=A6DBZ-KXPLW-JKSRY-ONZF4-CPHY3-K6BL7';
+// export const TENCENT_MAP_SDK_URL = 'https://map.qq.com/api/gljs?v=1.exp&key=FFIBZ-EYKLB-WGFU6-NHQ5U-CUH77-S2B7O';

@@ -271,10 +271,10 @@ onMounted(() => {
         size="small"
       >
         <NFlex>
-          <NFormItem label="名称" path="name" class="w-150">
+          <NFormItem label="名称:" path="name" class="w-150">
             <NInput v-model:value="configForm.name" placeholder="请输入场景联动名称" />
           </NFormItem>
-          <NFormItem label="描述" path="description" class="w-150">
+          <NFormItem label="描述:" path="description" class="w-150">
             <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
           </NFormItem>
         </NFlex>

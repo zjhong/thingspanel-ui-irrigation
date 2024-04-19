@@ -74,7 +74,7 @@ const getTreeRelationData = async () => {
   }
 };
 const deviceDataStore = useDeviceDataStore();
-const selectedValues = ref<any>(deviceDataStore?.deviceData?.device_config_id);
+const selectedValues = ref<any>(deviceDataStore?.deviceData?.device_config_id || '');
 
 function flattenTree(list: undefined | Option[]): Option[] {
   const result: Option[] = [];

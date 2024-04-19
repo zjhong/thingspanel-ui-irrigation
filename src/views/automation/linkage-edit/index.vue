@@ -267,37 +267,31 @@ onMounted(() => {
         :model="configForm"
         :rules="configFormRules"
         label-placement="left"
-        label-width="150"
+        label-width="80"
         size="small"
       >
         <NFlex>
-          <NFormItem label="场景联动名称" path="name" class="w-150">
+          <NFormItem label="名称:" path="name" class="w-150">
             <NInput v-model:value="configForm.name" placeholder="请输入场景联动名称" />
           </NFormItem>
-          <NFormItem label="描述" path="description" class="w-150">
+          <NFormItem label="描述:" path="description" class="w-150">
             <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
           </NFormItem>
         </NFlex>
-        <NFormItem label="如果:" class="w-100%" path="trigger_condition_groups">
+        <NFormItem label="如果:" class="w-100%" path="trigger_condition_groups" :show-feedback="false">
           <EditPremise ref="editPremise" :condition-data="conditionData" @condition-chose="conditionChose" />
         </NFormItem>
-        <NFormItem label=" ">
-          <n-divider dashed class="divider-class" />
-        </NFormItem>
-        <NFormItem label="那么:" class="w-100%" path="actions">
+        <n-divider dashed class="divider-class" />
+        <NFormItem label="那么:" class="w-100%" path="actions" :show-feedback="false">
           <EditAction ref="editAction" :conditions-type="conditionsType" :action-data="actionData" />
         </NFormItem>
       </NForm>
       <n-divider class="divider-class" />
-      <NFlex justify="center" class="mt-5">
+      <NFlex justify="center">
         <NButton type="primary" @click="submitData">保存场景联动</NButton>
       </NFlex>
     </NCard>
   </div>
 </template>
 
-<style scoped>
-.divider-class {
-  margin: 0;
-}
-</style>
+<style scoped></style>

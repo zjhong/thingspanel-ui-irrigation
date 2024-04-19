@@ -13,6 +13,7 @@ defineOptions({ name: 'UploadFile' });
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
+
 enum SourceType {
   image = 'image',
   upgradePackage = 'upgradePackage',
@@ -20,6 +21,7 @@ enum SourceType {
   plugin = 'plugin',
   other = 'other'
 }
+
 export interface Props {
   /** 选取文件的类型 */
   accept: string;
@@ -40,6 +42,7 @@ const dataList: Ref<UploadFileInfo[]> = ref(
 
 interface Emits {
   (e: 'update:value', val: string): void;
+
   (e: 'success', file: UploadFileInfo): void;
 }
 
@@ -69,7 +72,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
 
 function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) {
   const response = JSON.parse((event?.target as XMLHttpRequest).response);
-  window.$message?.success(response.message);
+  // window.$message?.success(response.message);
   emit('update:value', response.data.path);
   emit('success', file);
 }

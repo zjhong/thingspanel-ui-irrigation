@@ -50,7 +50,9 @@ export const deviceGroupDetail = async (params: any) => {
 
 /** 获取设备列表 */
 export const deviceList = async (params: any) => {
-  return await request.get<DeviceManagement.DeviceDatas | any>(`/device`, { params });
+  return await request.get<DeviceManagement.DeviceDatas | any>(`/device`, {
+    params
+  });
 };
 
 /** 获取设备详情 */
@@ -70,7 +72,9 @@ export const getDeviceGroupRelation = async (params: any) => {
 
 /** 获取设备功能模板列表 */
 export const deviceTemplate = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`/device/template`, { params });
+  return await request.get<Api.BaseApi.Data | any>(`/device/template`, {
+    params
+  });
 };
 
 /** 获取设备功能模板列表 */
@@ -80,7 +84,9 @@ export const deviceTemplateDetail = async (params: any) => {
 
 /** 获取设备配置列表 */
 export const deviceConfig = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`/device_config`, { params });
+  return await request.get<Api.BaseApi.Data | any>(`/device_config`, {
+    params
+  });
 };
 
 /** 创建设备配置 */
@@ -121,12 +127,16 @@ export const deleteDeviceGroupRelation = async (params: any) => {
 
 /** 获取设备连接信息 */
 export const getDeviceConnectInfo = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`/device/connect/info`, { params });
+  return await request.get<Api.BaseApi.Data | any>(`/device/connect/info`, {
+    params
+  });
 };
 
 /** 获取设备配置列表 */
 export const getDeviceConfigList = async (params: any) => {
-  return await request.get<DeviceManagement.ConfigDatas>(`/device_config`, { params });
+  return await request.get<DeviceManagement.ConfigDatas>(`/device_config`, {
+    params
+  });
 };
 
 /** 更新设备凭证 */
@@ -147,9 +157,16 @@ export const checkDevice = async (deviceNumber: { deviceNumber: any }) => {
 export const deleteDevice = async (params: any) => {
   return await request.delete<Api.BaseApi.Data | any>(`/device/${params.id}`);
 };
+
+export const setDeviceScriptEnable = async (params: any) => {
+  return await request.put<any>(`/data_script/enable`, params);
+};
+
 /** 获取数据处理列表 */
 export const getDataScriptList = async (params: any) => {
-  return await request.get<DeviceManagement.ConfigDatas | any>(`/data_script`, { params });
+  return await request.get<DeviceManagement.ConfigDatas | any>(`/data_script`, {
+    params
+  });
 };
 
 /** 创建数据处理 */
@@ -232,7 +249,9 @@ export const deviceTemplateSelect = async () => {
 };
 
 export const telemetryHistoryData = async (params: any) => {
-  return await request.get<any>(`/telemetry/datas/history/pagination`, { params });
+  return await request.get<any>(`/telemetry/datas/history/pagination`, {
+    params
+  });
 };
 
 export const deviceUpdateConfig = async (params: any) => {
@@ -246,4 +265,8 @@ export const deviceConfigMenu = async (params: any) => {
 // 保存设备位置
 export const deviceLocation = async (params: any) => {
   return await request.put<any>(`/device`, params);
+};
+/** 修改设备名称 */
+export const deviceUpdate = async (params: any) => {
+  return await request.put<Api.BaseApi.Data>('/device', params);
 };

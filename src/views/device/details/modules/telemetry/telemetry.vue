@@ -38,14 +38,26 @@ const resultOptions = [
   // 其他发送结果选项...
 ];
 const cardHeight = ref(160); // 卡片的高度
-const cardMargin = ref(10); // 卡片的间距
+const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
 const columns = [
   { title: '指令', key: 'data' },
-  { title: '操作类型', key: 'operation_type' },
+  {
+    title: '操作类型',
+    key: 'operation_type',
+    render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
+  },
   { title: '操作用户', key: 'user_id' },
-  { title: '操作时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '发送结果', key: 'status', render: row => (row.status === 1 ? '成功' : '失败') }
+  {
+    title: '操作时间',
+    key: 'created_at',
+    render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+  },
+  {
+    title: '发送结果',
+    key: 'status',
+    render: row => (row.status === '1' ? '成功' : '失败')
+  }
 ];
 
 const openDialog = () => {
@@ -58,8 +70,8 @@ const fetchData = async () => {
     page: log_page.value,
     page_size: 5,
     device_id: props.id,
-    operationType: operationType.value,
-    sendResult: sendResult.value
+    operation_type: operationType.value,
+    status: sendResult.value
   });
   if (!error) {
     tableData.value = data?.value || data.list;
@@ -119,50 +131,53 @@ fetchData();
     </n-modal>
     <!-- 第二行 -->
     <n-card class="mb-4">
-      <n-scrollbar style="max-height: 190px">
-        <n-grid :x-gap="cardMargin" :y-gap="cardMargin" :cols="4">
-          <n-gi v-for="i in telemetryData" :key="i.tenant_id">
-            <n-card header-class="border-b h-36px mb-4" :title="i.key" hoverable :style="{ height: cardHeight + 'px' }">
-              <NH4>{{ i.value }}{{ i.unit }}</NH4>
-              <template #footer>
-                <div class="flex justify-end">{{ dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}</div>
-              </template>
-              <template #header-extra>
-                <div class="h-24px w-120px flex items-center justify-end">
-                  <NIcon
-                    size="24"
-                    @click="
-                      () => {
-                        modelType = '历史';
-                        telemetryKey = i.key;
-                        telemetryId = i.device_id;
-                        showHistory = true;
-                      }
-                    "
-                  >
-                    <DocumentOnePage24Regular />
-                  </NIcon>
+      <n-grid :x-gap="cardMargin" :y-gap="cardMargin" :cols="3">
+        <n-gi v-for="i in telemetryData" :key="i.tenant_id">
+          <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
+            <NH4 style="padding: 10px 0 10px">{{ i.value }}{{ i.unit }}</NH4>
+            <template #header>
+              <div class="line1" :title="i.key">{{ i.key }}</div>
+            </template>
+            <template #footer>
+              <div class="flex justify-end">
+                {{ dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
+              </div>
+            </template>
+            <template #header-extra>
+              <div class="h-24px w-120px flex items-center justify-end">
+                <NIcon
+                  size="24"
+                  @click="
+                    () => {
+                      modelType = '历史';
+                      telemetryKey = i.key;
+                      telemetryId = i.device_id;
+                      showHistory = true;
+                    }
+                  "
+                >
+                  <DocumentOnePage24Regular />
+                </NIcon>
 
-                  <NDivider vertical />
-                  <NIcon
-                    size="24"
-                    @click="
-                      () => {
-                        modelType = '时序';
-                        telemetryKey = i.key;
-                        telemetryId = i.device_id;
-                        showHistory = true;
-                      }
-                    "
-                  >
-                    <Timer16Regular />
-                  </NIcon>
-                </div>
-              </template>
-            </n-card>
-          </n-gi>
-        </n-grid>
-      </n-scrollbar>
+                <NDivider vertical />
+                <NIcon
+                  size="24"
+                  @click="
+                    () => {
+                      modelType = '时序';
+                      telemetryKey = i.key;
+                      telemetryId = i.device_id;
+                      showHistory = true;
+                    }
+                  "
+                >
+                  <Timer16Regular />
+                </NIcon>
+              </div>
+            </template>
+          </n-card>
+        </n-gi>
+      </n-grid>
     </n-card>
     <!-- 第三行 -->
     <n-space>
@@ -193,4 +208,10 @@ fetchData();
   </n-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.line1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>

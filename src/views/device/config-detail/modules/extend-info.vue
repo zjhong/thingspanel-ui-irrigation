@@ -1,10 +1,12 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
-import { NButton, useMessage } from 'naive-ui';
+import { NButton, NPopconfirm, NSpace, NSwitch, useMessage } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
 const visible = ref(false);
+const isEdit = ref(false);
+const editIndex = ref(-1);
 const extendFormRef = ref<HTMLElement & FormInst>();
 const extendForm = ref(defaultExtendForm());
 const message = useMessage();
@@ -24,7 +26,8 @@ function defaultExtendForm() {
     name: null,
     type: null,
     default_value: null,
-    desc: null
+    desc: null,
+    enable: false
   };
 }
 const extendFormRules = ref({
@@ -62,10 +65,11 @@ const handleClose = () => {
   extendFormRef.value?.restoreValidation();
   extendForm.value = defaultExtendForm();
   visible.value = false;
+  isEdit.value = false;
+  editIndex.value = -1;
 };
-const handleSubmit = async () => {
-  await extendFormRef?.value?.validate();
-  extendInfoList.value.push(extendForm.value);
+
+const handleSave = async () => {
   const postData = props.configInfo;
   postData.additional_info = JSON.stringify(extendInfoList.value);
   const res = await deviceConfigEdit(postData);
@@ -74,6 +78,62 @@ const handleSubmit = async () => {
     emit('upDateConfig');
   }
   handleClose();
+};
+
+const handleSubmit = async () => {
+  await extendFormRef?.value?.validate();
+  if (editIndex.value >= 0) {
+    extendInfoList.value[editIndex.value] = extendForm.value;
+  } else {
+    extendForm.value.enable = false;
+    extendInfoList.value.push(extendForm.value);
+  }
+  handleSave();
+};
+
+const handleSwitchChange = async row => {
+  const index = (extendInfoList.value || []).findIndex(item => {
+    return (
+      item.name === row.name &&
+      item.type === row.type &&
+      item.default_value === row.default_value &&
+      item.desc === row.desc
+    );
+  });
+  if (index >= 0) {
+    extendInfoList.value[index].enable = !extendInfoList.value[index].enable;
+    handleSave();
+  }
+};
+
+const handleDeleteTable = async row => {
+  const index = (extendInfoList.value || []).findIndex(item => {
+    return (
+      item.name === row.name &&
+      item.type === row.type &&
+      item.default_value === row.default_value &&
+      item.desc === row.desc
+    );
+  });
+  if (index >= 0) {
+    extendInfoList.value.splice(index, 1);
+    handleSave();
+  }
+  window.$message?.info('已删除当前扩展信息');
+};
+const handleEditTable = async row => {
+  editIndex.value = (extendInfoList.value || []).findIndex(item => {
+    return (
+      item.name === row.name &&
+      item.type === row.type &&
+      item.default_value === row.default_value &&
+      item.desc === row.desc
+    );
+  });
+
+  extendForm.value = row;
+  isEdit.value = true;
+  visible.value = true;
 };
 
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
@@ -100,12 +160,34 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'enable',
     title: '启用',
-    align: 'center'
+    align: 'center',
+    render: (row: any) => {
+      return <NSwitch value={Boolean(row.enable)} onChange={() => handleSwitchChange(row)} />;
+    }
   },
   {
     key: 'operate',
     title: '操作',
-    align: 'center'
+    align: 'center',
+    render: (row: any) => {
+      return (
+        <NSpace justify={'center'}>
+          <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
+            编辑
+          </NButton>
+          <NPopconfirm onPositiveClick={() => handleDeleteTable(row)}>
+            {{
+              default: () => '确认删除',
+              trigger: () => (
+                <NButton type="error" size={'small'}>
+                  删除
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        </NSpace>
+      );
+    }
   }
 ]);
 
@@ -130,7 +212,7 @@ onMounted(() => {
     <NModal
       v-model:show="visible"
       :mask-closable="false"
-      title="添加扩展信息"
+      :title="isEdit ? '编辑扩展信息' : '添加扩展信息'"
       class="w-400px"
       preset="card"
       @after-leave="modalClose"
@@ -163,6 +245,7 @@ onMounted(() => {
     display: flex;
     justify-content: flex-end;
   }
+
   .m-tb-10 {
     margin: 10px;
   }

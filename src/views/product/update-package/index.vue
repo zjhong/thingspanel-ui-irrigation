@@ -10,6 +10,7 @@ import { getDeviceConfigList } from '@/service/api/device';
 import TablePackageModal from './components/table-package-modal.vue';
 import type { ModalType } from './components/table-package-modal.vue';
 import ColumnSetting from './components/column-setting.vue';
+
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
@@ -29,6 +30,7 @@ watch(
   { deep: true }
 );
 const tableData = ref<productPackageRecord[]>([]);
+
 function setTableData(data: productPackageRecord[]) {
   tableData.value = data;
 }
@@ -51,9 +53,11 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
+
 function handleQuery() {
   init();
 }
+
 function handleReset() {
   Object.assign(queryParams, {
     name: '',
@@ -62,6 +66,7 @@ function handleReset() {
   });
   handleQuery();
 }
+
 async function getTableData() {
   startLoading();
   const { data } = await getOtaPackageList(queryParams);
@@ -163,10 +168,11 @@ function handleEditTable(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await deleteOtaPackage(rowId);
   if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'));
+    // window.$message?.success($t('common.deleteSuccess'));
     getTableData();
   }
 }
+
 const deviceOptions = ref();
 const getList = async (name?: string) => {
   const { data, error } = await getDeviceConfigList({
@@ -180,6 +186,7 @@ const getList = async (name?: string) => {
     });
   }
 };
+
 function init() {
   getList();
   getTableData();

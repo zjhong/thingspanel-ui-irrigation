@@ -1,16 +1,25 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { type FormInst, NButton, useDialog, useMessage } from 'naive-ui';
+import { type FormInst, NButton, useDialog } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import Codemirror from 'codemirror-editor-vue3';
 import 'codemirror/mode/javascript/javascript.js';
-import { dataScriptAdd, dataScriptDel, dataScriptEdit, dataScriptQuiz, getDataScriptList } from '@/service/api/device';
-const message = useMessage();
+import {
+  dataScriptAdd,
+  dataScriptDel,
+  dataScriptEdit,
+  dataScriptQuiz,
+  getDataScriptList,
+  setDeviceScriptEnable
+} from '@/service/api/device';
+
+// const message = useMessage();
 const dialog = useDialog();
 
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -36,6 +45,7 @@ const scripTypeOpt = ref([
     value: 'D'
   }
 ]);
+
 function defaultConfigForm() {
   return {
     id: null,
@@ -47,9 +57,11 @@ function defaultConfigForm() {
     last_analog_input: null,
     name: null,
     remark: null,
-    script_type: null
+    script_type: null,
+    resolt_analog_input: ''
   };
 }
+
 const configFormRules = ref({
   name: {
     required: true,
@@ -82,6 +94,7 @@ const bodyStyle = ref({
 });
 const queryData = ref({
   device_config_id: '',
+  script_type: '',
   page: 1,
   page_size: 10
 });
@@ -95,6 +108,7 @@ interface DataScriptItem {
   enable_flag: string;
   script_type: string;
 }
+
 const dataScriptList = ref<Array<DataScriptItem>>([]);
 const dataScriptTotal = ref(0);
 const queryDataScriptList = async () => {
@@ -115,6 +129,11 @@ const searchDataScript = () => {
   queryData.value.page = 1;
   queryDataScriptList();
 };
+
+const handleChange = async (item: object) => {
+  console.log(item);
+  await setDeviceScriptEnable(item);
+};
 const handleClose = () => {
   configFormRef.value?.restoreValidation();
   configForm.value = defaultConfigForm();
@@ -127,13 +146,13 @@ const handleSubmit = async () => {
   if (!configForm.value.id) {
     const res = await dataScriptAdd(configForm.value);
     if (!res.error) {
-      message.success('新增成功');
+      // message.success('新增成功');
       searchDataScript();
     }
   } else {
     const res = await dataScriptEdit(configForm.value);
     if (!res.error) {
-      message.success('修改成功');
+      // message.success('修改成功');
       searchDataScript();
     }
   }
@@ -147,7 +166,7 @@ const deleteData = async (item: any) => {
     negativeText: '取消',
     onPositiveClick: async () => {
       await dataScriptDel({ id: item.id });
-      message.success('操作成功');
+      // message.success('操作成功');
       searchDataScript();
     }
   });
@@ -160,7 +179,7 @@ const doQuiz = async () => {
   };
   const result = await dataScriptQuiz(postData);
   if (result?.data?.code === 200) {
-    configForm.value.last_analog_input = result?.data?.message || '';
+    configForm.value.resolt_analog_input = result?.data?.message || '';
   }
 };
 
@@ -169,6 +188,7 @@ const cmOptions = {
   mode: 'text/javascript',
   lineNumbers: false
 };
+
 const onChange = (val, cm) => {
   console.log(val);
   console.log(cm.getValue());
@@ -189,7 +209,12 @@ onMounted(() => {
 
 <template>
   <NFlex class="mb-6">
-    <n-select :options="scripTypeOpt" class="max-w-40" />
+    <n-select
+      v-model:value="queryData.script_type"
+      :options="scripTypeOpt"
+      class="max-w-40"
+      @update-value="queryDataScriptList"
+    />
     <NButton type="primary" @click="openModal('新增', null)">新增数据处理</NButton>
   </NFlex>
   <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
@@ -199,12 +224,17 @@ onMounted(() => {
         <div>
           {{ item.name }}
         </div>
-        <NSwitch v-model:value="item.enable_flag" checked-value="Y" unchecked-value="N" />
+        <NSwitch
+          v-model:value="item.enable_flag"
+          checked-value="Y"
+          unchecked-value="N"
+          @update-value="handleChange(item)"
+        />
       </div>
-      <div class="item-desc description">{{ item.description }}</div>
+      <div class="description item-desc">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
-        <NButton circle tertiary type="info" @click="openModal('编辑', item)">
+        <NButton tertiary circle type="info" @click="openModal('编辑', item)">
           <template #icon>
             <n-icon>
               <editIcon />
@@ -252,14 +282,14 @@ onMounted(() => {
         ></Codemirror>
         <!--        <NInput v-model:value="configForm.content" type="textarea" placeholder="请输入解析脚本" />-->
       </NFormItem>
-      <NFormItem label="是否启用" path="enable_flag">
+      <NFormItem v-if="0" label="是否启用" path="enable_flag">
         <NSwitch v-model:value="configForm.enable_flag" checked-value="Y" unchecked-value="N" />
       </NFormItem>
-      <NFormItem label="模拟输入" path="analog_input">
-        <NInput v-model:value="configForm.analog_input" type="textarea" />
-      </NFormItem>
-      <NFormItem label="调试运行结果" path="last_analog_input">
+      <NFormItem label="模拟输入" path="last_analog_input">
         <NInput v-model:value="configForm.last_analog_input" type="textarea" />
+      </NFormItem>
+      <NFormItem label="调试运行结果" path="resolt_analog_input">
+        <NInput v-model:value="configForm.resolt_analog_input" :disabled="true" type="textarea" />
       </NFormItem>
       <NButton type="primary" @click="doQuiz">调试</NButton>
     </NForm>

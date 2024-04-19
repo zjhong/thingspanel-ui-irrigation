@@ -579,8 +579,8 @@ onMounted(() => {
     >
       (满足以下任意一组条件即可触发)
       <NFlex v-for="(ifGroupItem, ifGroupIndex) in premiseForm.ifGroups" :key="ifGroupIndex" class="w-100%">
-        <NCard class="mb-4 w-[calc(100%-78px)]">
-          <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-6 w-100%">
+        <NCard class="w-[calc(100%-78px)]">
+          <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-2 w-100%">
             <NFlex class="flex-1" align="center">
               <NTag v-if="ifIndex !== 0" type="success" class="tag-class" size="small">并且</NTag>
               <!-- 选项1条件类型下拉-->
@@ -1085,5 +1085,8 @@ onMounted(() => {
 .refresh-class {
   height: 30px;
   font-size: 24px;
+}
+:deep(.n-card__content) {
+  padding: 10px 10px 4px 10px !important;
 }
 </style>

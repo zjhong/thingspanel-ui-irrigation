@@ -132,19 +132,19 @@ function onChangeStatistics() {
 }
 
 function getWeightNumber(diffHours, diffDays, diffMonths) {
-  if (diffHours < 1) return timeWeighting.last_1h; // 处理小于1小时的情况
-  if (diffHours < 3) return timeWeighting.last_3h;
-  if (diffHours < 6) return timeWeighting.last_6h;
-  if (diffHours < 12) return timeWeighting.last_12h;
-  if (diffHours < 24) return timeWeighting.last_24h;
-  if (diffDays < 3) return timeWeighting.last_3d;
-  if (diffDays < 7) return timeWeighting.last_7d;
-  if (diffDays < 15) return timeWeighting.last_15d;
-  if (diffDays < 30) return timeWeighting.last_30d;
-  if (diffDays < 60) return timeWeighting.last_60d;
-  if (diffDays < 90) return timeWeighting.last_90d;
-  if (diffMonths < 6) return timeWeighting.last_6m;
-  if (diffMonths < 12) return timeWeighting.last_1y;
+  if (diffHours <= 1) return timeWeighting.last_1h; // 处理小于1小时的情况
+  if (diffHours <= 3) return timeWeighting.last_3h;
+  if (diffHours <= 6) return timeWeighting.last_6h;
+  if (diffHours <= 12) return timeWeighting.last_12h;
+  if (diffHours <= 24) return timeWeighting.last_24h;
+  if (diffDays <= 3) return timeWeighting.last_3d;
+  if (diffDays <= 7) return timeWeighting.last_7d;
+  if (diffDays <= 15) return timeWeighting.last_15d;
+  if (diffDays <= 30) return timeWeighting.last_30d;
+  if (diffDays <= 60) return timeWeighting.last_60d;
+  if (diffDays <= 90) return timeWeighting.last_90d;
+  if (diffMonths <= 6) return timeWeighting.last_6m;
+  if (diffMonths <= 12) return timeWeighting.last_1y;
 
   return timeWeighting.last_1y; // 对于超过1年的情况，默认返回最后一个权重
 }

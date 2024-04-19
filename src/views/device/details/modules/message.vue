@@ -22,16 +22,16 @@ const openMapAndGetPosition = () => {
   isShow.value = true;
 };
 const getConfigInfo = async () => {
-  const result = await deviceDetail(query.id as string);
+  const result = await deviceDetail(query.d_id as string);
   const location = result?.data?.location || '';
   const locationData = location?.split(',') || [];
-  latitude.value = locationData[0] || '';
-  longitude.value = locationData[1] || '';
+  latitude.value = locationData[1] || '';
+  longitude.value = locationData[0] || '';
   deviceConfigInfo({ id: props.deviceConfigId });
 };
 
 const handleSave = () => {
-  deviceLocation({ id: props.id, location: `${latitude.value},${longitude.value}` });
+  deviceLocation({ id: props.id, location: `${longitude.value},${latitude.value}` });
 };
 
 onMounted(getConfigInfo);
@@ -41,8 +41,9 @@ onMounted(getConfigInfo);
   <div>
     <NCard title="设备位置" class="mb-4">
       <n-space>
-        <NInput v-model:value="latitude" placeholder="纬度" class="w-140px" />
         <NInput v-model:value="longitude" placeholder="经度" class="w-140px" />
+        <NInput v-model:value="latitude" placeholder="纬度" class="w-140px" />
+
         <NButton @click="openMapAndGetPosition">定位</NButton>
       </n-space>
     </NCard>

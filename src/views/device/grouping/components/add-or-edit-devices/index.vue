@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue';
 import type { FormInst, FormRules } from 'naive-ui';
-import { useMessage } from 'naive-ui';
+// import {useMessage} from 'naive-ui';
 import { deviceGroup, deviceGroupTree, putDeviceGroup } from '@/service/api/device';
 import { $t } from '@/locales';
 
@@ -34,7 +34,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-const message = useMessage();
+// const message = useMessage();
 const formRef = ref<HTMLElement & FormInst>();
 const formItem = ref({
   id: '', // Used for identification in edit mode
@@ -101,10 +101,10 @@ const handleSubmit = async () => {
   showModal.value = false;
   if (props.isEdit) {
     await putDeviceGroup(formItem.value);
-    message.success($t('custom.groupPage.modificationSuccess'));
+    // message.success($t('custom.groupPage.modificationSuccess'));
   } else {
     await deviceGroup(formItem.value);
-    message.success($t('custom.groupPage.additionSuccess'));
+    // message.success($t('custom.groupPage.additionSuccess'));
   }
 
   await getOptions();

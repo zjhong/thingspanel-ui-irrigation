@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
 import { useDeviceDataStore } from '@/store/modules/device';
@@ -16,10 +16,11 @@ import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
+import { deviceUpdate } from '@/service/api/device';
 
 const { query } = useRoute();
 const appStore = useAppStore();
-const { id } = query;
+const { d_id } = query;
 const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
 const components = [
@@ -37,6 +38,13 @@ const components = [
 ];
 
 const tabValue = ref<any>('telemetry');
+const showDialog = ref(false);
+const queryParams = reactive({
+  deviceName: deviceDataStore?.deviceData?.name,
+  device_number: deviceDataStore?.deviceData?.device_number,
+  deviceDescribe: deviceDataStore?.deviceData?.device_config?.description,
+  lable: []
+});
 const changeTabs = v => {
   startLoading();
 
@@ -45,8 +53,14 @@ const changeTabs = v => {
     endLoading();
   }, 500);
 };
+const editConfig = () => {
+  showDialog.value = true;
+};
+const save = () => {
+  deviceUpdate(queryParams);
+};
 onMounted(() => {
-  deviceDataStore.fetchData(id as string);
+  deviceDataStore.fetchData(d_id as string);
 });
 
 watch(
@@ -68,20 +82,55 @@ watch(
   <div>
     <n-card>
       <div>
-        <NH3>{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
+        <div style="display: flex">
+          <NH3 style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
+          <NButton v-show="false" type="primary" @click="editConfig">编辑</NButton>
+        </div>
+
+        <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+          <n-card>
+            <n-form>
+              <div>
+                <NH3>修改设备信息</NH3>
+              </div>
+              <n-form-item label="设备名称*">
+                <n-input v-model:value="queryParams.deviceName" />
+              </n-form-item>
+              <n-form-item label="设备编号*">
+                <n-input v-model:value="queryParams.device_number" />
+              </n-form-item>
+              <n-form-item :label="$t('custom.devicePage.label')" path="lable">
+                <n-dynamic-tags v-model:value="queryParams.lable" />
+              </n-form-item>
+              <n-form-item label="设备描述">
+                <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
+                <NInput v-model:value="queryParams.deviceDescribe" type="textarea" />
+              </n-form-item>
+              <n-space>
+                <n-button @click="showDialog = false">取消</n-button>
+                <n-button @click="save">保存</n-button>
+              </n-space>
+            </n-form>
+          </n-card>
+        </n-modal>
 
         <NFlex>
           <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceNumber') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
+            <spna class="mr-2" style="color: #ccc">ID:</spna>
+            <spna style="color: #ccc">{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
           </div>
-          <div class="mr-4">
+          <div class="mr-4" style="color: #ccc">
             <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
           </div>
-          <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna>
-            <spna>
+          <div class="mr-4" style="display: flex">
+            <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
+            <SvgIcon
+              local-icon="CellTowerRound"
+              style="color: #ccc; margin-right: 5px"
+              class="text-20px text-primary"
+            />
+            <spna style="color: #ccc">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
@@ -90,8 +139,10 @@ watch(
             </spna>
           </div>
           <div class="mr-4">
-            <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna>
-            <spna>{{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}</spna>
+            <!-- <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+            <spna style="color: #ccc">
+              {{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}
+            </spna>
           </div>
         </NFlex>
       </div>
@@ -109,7 +160,7 @@ watch(
             <n-spin size="small" :show="loading">
               <component
                 :is="component.component"
-                :id="id as string"
+                :id="d_id as string"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
               />
             </n-spin>

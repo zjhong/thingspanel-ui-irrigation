@@ -4,6 +4,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { fetchGetAllRoles } from '@/service/api';
 import { $t } from '@/locales';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
+
 defineOptions({
   name: 'UserOperateDrawer'
 });
@@ -114,7 +115,7 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   // requestTs
-  window.$message?.success($t('common.updateSuccess'));
+  // window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

@@ -140,11 +140,11 @@ async function handleSubmit() {
     await putNotificationGroup({ ...params, tenant_id: props.editData?.tenant_id || '' }, props.editData?.id || '');
   }
 
-  const titles: Record<ModalType, string> = {
-    add: '添加',
-    edit: '编辑'
-  };
-  window.$message?.success(`${titles[props.type]}成功!`);
+  // const titles: Record<ModalType, string> = {
+  //   add: '添加',
+  //   edit: '编辑'
+  // };
+  // window.$message?.success(`${titles[props.type]}成功!`);
   emit('getTableData');
   closeModal();
 }

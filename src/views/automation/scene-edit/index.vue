@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { type FormInst, NButton, NCard, NFlex, useDialog, useMessage } from 'naive-ui';
+import { type FormInst, NButton, NCard, NFlex, useDialog } from 'naive-ui';
 import { deviceConfig, deviceGroupTree } from '@/service/api';
 import { warningMessageList } from '@/service/api/alarm';
 import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
@@ -14,9 +14,10 @@ import {
   sceneGet,
   sceneInfo
 } from '@/service/api/automation';
+import { useRouterPush } from '@/hooks/common/router';
 const route = useRoute();
 const dialog = useDialog();
-const message = useMessage();
+const { routerBack } = useRouterPush();
 
 const configId = ref(route.query.id || '');
 
@@ -40,13 +41,11 @@ const configForm = ref({
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入场景名称',
-    trigger: 'blur'
+    message: '请输入场景名称'
   },
   description: {
     required: true,
-    message: '请输入场景描述',
-    trigger: 'blur'
+    message: '请输入场景描述'
   },
   actionType: {
     required: true,
@@ -305,7 +304,9 @@ const actionItem = ref({
 
 // 新增一个动作组
 const addActionGroupItem = async () => {
-  await configFormRef.value?.validate();
+  if (configForm.value.actions.length !== 0) {
+    await configFormRef.value?.validate();
+  }
   const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
   // actionItemData.actionInstructList.push(JSON.parse(JSON.stringify(instructListItem.value)));
   configForm.value.actions.push(actionItemData);
@@ -317,7 +318,9 @@ const deleteActionGroupItem = (actionGroupIndex: any) => {
 
 // 给某个动作组中增加指令
 const addIfGroupsSubItem = async (actionGroupIndex: any) => {
-  await configFormRef.value?.validate();
+  // if (configForm.value.actions[actionGroupIndex].actionInstructList.length != 0) {
+  //   await configFormRef.value?.validate();
+  // }
   configForm.value.actions[actionGroupIndex].actionInstructList.push(
     JSON.parse(JSON.stringify(instructListItem.value))
   );
@@ -353,12 +356,12 @@ const submitData = async () => {
       if (configId.value) {
         const res = await sceneEdit(configForm.value);
         if (!res.error) {
-          message.success('编辑成功');
+          routerBack();
         }
       } else {
         const res = await sceneAdd(configForm.value);
         if (!res.error) {
-          message.success('新增成功');
+          routerBack();
         }
       }
     }
@@ -370,25 +373,30 @@ const getSceneInfo = async () => {
   configForm.value = { ...configForm.value, ...res.data.info };
   configForm.value.actions = res.data.actions;
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  dataEcho();
+  dataEcho(configForm.value.actions);
 };
 
 // 处理页面回去回显
-const dataEcho = () => {
+const dataEcho = actionsData => {
   const actionGroupsData = [] as any;
-  const actionItemData = JSON.parse(JSON.stringify(actionItem.value));
-  actionItemData.actionType = '1';
+  const actionInstructList = [] as any;
   // eslint-disable-next-line array-callback-return
-  configForm.value.actions.map((item: any) => {
+  actionsData.map((item: any) => {
     if (item.action_type === '10' || item.action_type === '11') {
-      actionItemData.actionInstructList.push(item);
+      actionInstructList.push(item);
     } else {
       item.actionType = item.action_type;
       actionGroupsData.push(item);
     }
   });
-  configForm.value.actions.push(actionItemData);
-  configForm.value.actions = configForm.value.actions.concat(actionGroupsData);
+  if (actionInstructList.length > 0) {
+    const type1Data = {
+      actionType: '1',
+      actionInstructList
+    };
+    actionGroupsData.push(type1Data);
+  }
+  configForm.value.actions = actionGroupsData;
 };
 
 onMounted(() => {
@@ -415,16 +423,16 @@ onMounted(() => {
         :model="configForm"
         :rules="configFormRules"
         label-placement="left"
-        label-width="150"
+        label-width="100"
         size="small"
       >
-        <NFormItem label="场景名称" path="name" class="w-150">
+        <NFormItem label="名称:" path="name" class="w-150">
           <NInput v-model:value="configForm.name" placeholder="请输入场景名称" />
         </NFormItem>
-        <NFormItem label="描述" path="description" class="w-150">
+        <NFormItem label="描述:" path="description" class="w-150">
           <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
         </NFormItem>
-        <NFormItem label="场景动作" class="w-100%">
+        <NFormItem label="动作:" required class="w-100%" :show-feedback="false">
           <NFlex vertical class="mt-1 w-100%">
             <NFlex
               v-for="(actionGroupItem, actionGroupIndex) in configForm.actions"
@@ -450,7 +458,7 @@ onMounted(() => {
                   <NFlex
                     v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
                     :key="instructIndex"
-                    class="mb-6 mr-30"
+                    class="mb-2 mr-30"
                   >
                     <NFormItem
                       :show-label="false"
@@ -632,7 +640,8 @@ onMounted(() => {
           </NFlex>
         </NFormItem>
       </NForm>
-      <NFlex justify="center" class="mt-20">
+      <n-divider class="divider-class" />
+      <NFlex justify="center" class="mb-5">
         <NButton type="primary" @click="submitData">保存场景配置</NButton>
       </NFlex>
     </NCard>
@@ -640,4 +649,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.n-card__content) {
+  padding: 10px 10px 4px 10px !important;
+}
+</style>

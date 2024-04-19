@@ -59,8 +59,8 @@ async function renderMap(devices) {
 
   const markers = devices.map(device => {
     const locations = device.location && device.location.split(',');
-    const latitude = !Number.isNaN(Number(locations[1])) ? Number(locations[1]) : undefined;
-    const longitude = !Number.isNaN(Number(locations[0])) ? Number(locations[0]) : undefined;
+    const latitude = !Number.isNaN(Number(locations[0])) ? Number(locations[0]) : undefined;
+    const longitude = !Number.isNaN(Number(locations[1])) ? Number(locations[1]) : undefined;
     return {
       position: new TMap.LatLng(latitude, longitude),
       id: device.id,

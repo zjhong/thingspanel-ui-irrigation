@@ -25,8 +25,8 @@ const getConfigInfo = async () => {
   const result = await deviceDetail(query.d_id as string);
   const location = result?.data?.location || '';
   const locationData = location?.split(',') || [];
-  latitude.value = locationData[0] || '';
-  longitude.value = locationData[1] || '';
+  latitude.value = locationData[1] || '';
+  longitude.value = locationData[0] || '';
   deviceConfigInfo({id: props.deviceConfigId});
 };
 

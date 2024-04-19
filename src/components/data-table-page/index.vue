@@ -297,7 +297,7 @@ loadOptionsOnMount2();
               />
             </template>
           </div>
-          <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
+          <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">搜索</NButton>
           <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
         </div>
         <!-- 新建与返回按钮 -->

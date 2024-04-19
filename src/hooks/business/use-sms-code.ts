@@ -45,7 +45,6 @@ export default function useSmsCode() {
     startLoading();
     const { data } = await fetchSmsCode(phone);
     if (data) {
-      window.$message?.success('验证码发送成功！');
       start();
     }
     endLoading();

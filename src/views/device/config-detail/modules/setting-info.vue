@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { NButton, useDialog, useMessage } from 'naive-ui';
+import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
 import { deviceConfigDel } from '@/service/api/device';
+
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
 const dialog = useDialog();
-const message = useMessage();
+// const message = useMessage();
 const deleteConfig = () => {
   dialog.warning({
     title: '提示',
@@ -19,7 +21,7 @@ const deleteConfig = () => {
     negativeText: '取消',
     onPositiveClick: async () => {
       await deviceConfigDel({ id: props.configInfo.id });
-      message.success('操作成功');
+      // message.success('操作成功');
       router.back();
     }
   });

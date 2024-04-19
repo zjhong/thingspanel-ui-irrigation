@@ -73,7 +73,7 @@ const handleRemove = async (id: string) => {
             </div>
             <!-- 搜索部分 -->
             <div class="flex items-center gap-2">
-              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称22" />
+              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
               <NButton type="primary" @click="handleQuery">搜索</NButton>
             </div>
           </div>
@@ -97,7 +97,7 @@ const handleRemove = async (id: string) => {
                   </template>
 
                   <div class="mt-4 flex justify-end gap-2">
-                    <NButton strong secondary circle @click.stop="handleRemove(item.id)">
+                    <NButton circle strong secondary @click.stop="handleRemove(item.id)">
                       <template #icon>
                         <Delete20Regular class="text-24px text-primary" />
                       </template>

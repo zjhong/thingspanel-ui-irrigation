@@ -193,7 +193,7 @@ const checkedRowKeys = ref<string[]>([]);
 
 async function handleBatchDelete() {
   // requestTs
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -219,7 +219,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

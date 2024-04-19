@@ -2,12 +2,12 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { FormInst } from 'naive-ui';
-import { useMessage } from 'naive-ui';
+// import {useMessage} from 'naive-ui';
 import { router } from '@/router';
 import { deviceConfigAdd, deviceConfigEdit, deviceConfigInfo, deviceTemplate } from '@/service/api/device';
 
 const route = useRoute();
-const message = useMessage();
+// const message = useMessage();
 const configId = ref(route.query.id || null);
 const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
@@ -79,13 +79,13 @@ const handleSubmit = async () => {
   if (!configId.value) {
     const res = await deviceConfigAdd(configForm.value);
     if (!res.error) {
-      message.success('新增成功');
+      // message.success('新增成功');
       handleClose();
     }
   } else {
     const res = await deviceConfigEdit(configForm.value);
     if (!res.error) {
-      message.success('修改成功');
+      // message.success('修改成功');
       handleClose();
     }
   }

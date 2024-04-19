@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { type FormInst, NButton, useDialog, useMessage } from 'naive-ui';
+import { type FormInst, NButton, useDialog } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import Codemirror from 'codemirror-editor-vue3';
 import 'codemirror/mode/javascript/javascript.js';
@@ -12,12 +12,14 @@ import {
   getDataScriptList,
   setDeviceScriptEnable
 } from '@/service/api/device';
-const message = useMessage();
+
+// const message = useMessage();
 const dialog = useDialog();
 
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -43,6 +45,7 @@ const scripTypeOpt = ref([
     value: 'D'
   }
 ]);
+
 function defaultConfigForm() {
   return {
     id: null,
@@ -58,6 +61,7 @@ function defaultConfigForm() {
     resolt_analog_input: ''
   };
 }
+
 const configFormRules = ref({
   name: {
     required: true,
@@ -104,6 +108,7 @@ interface DataScriptItem {
   enable_flag: string;
   script_type: string;
 }
+
 const dataScriptList = ref<Array<DataScriptItem>>([]);
 const dataScriptTotal = ref(0);
 const queryDataScriptList = async () => {
@@ -141,13 +146,13 @@ const handleSubmit = async () => {
   if (!configForm.value.id) {
     const res = await dataScriptAdd(configForm.value);
     if (!res.error) {
-      message.success('新增成功');
+      // message.success('新增成功');
       searchDataScript();
     }
   } else {
     const res = await dataScriptEdit(configForm.value);
     if (!res.error) {
-      message.success('修改成功');
+      // message.success('修改成功');
       searchDataScript();
     }
   }
@@ -161,7 +166,7 @@ const deleteData = async (item: any) => {
     negativeText: '取消',
     onPositiveClick: async () => {
       await dataScriptDel({ id: item.id });
-      message.success('操作成功');
+      // message.success('操作成功');
       searchDataScript();
     }
   });

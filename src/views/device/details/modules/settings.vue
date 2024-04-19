@@ -24,14 +24,14 @@ type Option = {
   children?: Option[];
 };
 const options = ref<Option[]>();
-const sOptions = ref<any[]>();
+const sOptions = ref<any[]>([{ label: '不绑定', value: '' }]);
 const DeviceConfigList = async name => {
   const { data, error } = await getDeviceConfigList({ page: 1, page_size: 99, name });
   if (!error && data) {
-    sOptions.value = data?.list?.map(item => {
+    const tempSOptions = data?.list?.map(item => {
       return { label: item.name, value: item.id };
     });
-    console.log(sOptions.value);
+    sOptions.value = sOptions.value.concat(tempSOptions);
   }
 };
 

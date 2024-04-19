@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { NButton, useMessage } from 'naive-ui';
+import { NButton } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
 import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
 
-const message = useMessage();
+// const message = useMessage();
 
 interface Emits {
   (e: 'upDateConfig'): void;
@@ -32,7 +32,7 @@ const handleSubmit = async () => {
   postData.voucher_type = extendForm.value.voucher_type;
   const res = await deviceConfigEdit(postData);
   if (!res.error) {
-    message.success('修改成功');
+    // message.success('修改成功');
     emit('upDateConfig');
   }
 };

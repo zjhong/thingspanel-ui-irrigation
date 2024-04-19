@@ -2,14 +2,11 @@
 import { watch } from 'vue';
 import type { EChartsCoreOption } from 'echarts/core';
 import { useTpECharts } from '@/hooks/tp-chart/use-tp-echarts';
-
 // Props
 const props = defineProps<{
   initialOptions: EChartsCoreOption;
 }>();
-
 const { domRef, updateOptions } = useTpECharts(() => props.initialOptions);
-
 watch(
   () => props.initialOptions,
   newOptions => {

@@ -105,7 +105,7 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   // requestTs
-  window.$message?.success($t('common.updateSuccess'));
+  // window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

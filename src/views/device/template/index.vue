@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
-import { CalendarEdit20Regular, Delete20Regular } from '@vicons/fluent';
+import { Delete20Regular } from '@vicons/fluent';
 import { deleteDeviceTemplate, deviceTemplate } from '@/service/api/device-template-model';
 import TemplateModal from './components/template-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks/src';
@@ -73,14 +73,14 @@ const handleRemove = async (id: string) => {
             </div>
             <!-- 搜索部分 -->
             <div class="flex items-center gap-2">
-              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称22" />
+              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
               <NButton type="primary" @click="handleQuery">搜索</NButton>
             </div>
           </div>
 
           <n-spin size="small" :show="loading">
             <NGrid x-gap="24" y-gap="16" :cols="24">
-              <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
+              <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6" @click="handleEdit(item.id)">
                 <NCard hoverable>
                   <div class="flex-col justify-between">
                     <div class="title text-16px font-600">
@@ -97,12 +97,7 @@ const handleRemove = async (id: string) => {
                   </template>
 
                   <div class="mt-4 flex justify-end gap-2">
-                    <NButton circle strong secondary @click.stop="handleEdit(item.id)">
-                      <template #icon>
-                        <CalendarEdit20Regular class="text-24px text-primary" />
-                      </template>
-                    </NButton>
-                    <NButton strong secondary circle @click.stop="handleRemove(item.id)">
+                    <NButton circle strong secondary @click.stop="handleRemove(item.id)">
                       <template #icon>
                         <Delete20Regular class="text-24px text-primary" />
                       </template>

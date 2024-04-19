@@ -15,13 +15,13 @@ const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
 
-const plugList = ref([]);
+const plugList = ref([{ name: '不绑定', id: '' }]);
 
 const selectValue = ref();
 
 const getTableData = async name => {
   const res = await deviceConfigMenu({ device_config_name: name });
-  plugList.value = res.data;
+  plugList.value = plugList.value.concat(res.data);
 };
 const searchPlug = v => {
   getTableData(v);
@@ -47,7 +47,7 @@ onMounted(async () => {
 <template>
   <div class="attribute-box">
     <NFlex align="center">
-      <div>绑定设备功能模板(方案2)</div>
+      <div>绑定设备功能模板</div>
       <NSelect
         v-model:value="selectValue"
         class="w-300px"

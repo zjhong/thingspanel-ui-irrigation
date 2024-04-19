@@ -9,6 +9,7 @@ import { $t } from '@/locales';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import UserOperateDrawer, { type OperateType } from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
+
 const appStore = useAppStore();
 const { bool: drawerVisible, setTrue: openDrawer } = useBoolean();
 
@@ -155,7 +156,7 @@ const checkedRowKeys = ref<string[]>([]);
 async function handleBatchDelete() {
   // requestTs
   console.log(checkedRowKeys.value);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -175,7 +176,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

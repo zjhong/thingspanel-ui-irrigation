@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }
@@ -110,6 +111,7 @@ function handleUpdateFormModelByModalType() {
 
   handlers[props.type]();
 }
+
 const productOptions = ref([]);
 const getProductList = async (name?: string) => {
   const res: any = await dictQuery({
@@ -120,6 +122,7 @@ const getProductList = async (name?: string) => {
   });
   productOptions.value = res.data || [];
 };
+
 async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
@@ -132,7 +135,7 @@ async function handleSubmit() {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
+    // window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();

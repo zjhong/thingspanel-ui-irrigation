@@ -2,11 +2,11 @@
 import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
-import { NButton, NPagination, useMessage } from 'naive-ui';
+import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
 import { deviceConfigBatch, deviceList } from '@/service/api/device';
 
-const message = useMessage();
+// const message = useMessage();
 
 interface Props {
   deviceConfigId?: string;
@@ -18,6 +18,26 @@ const props = withDefaults(defineProps<Props>(), {
 const visible = ref(false);
 const associatedFormRef = ref<HTMLElement & FormInst>();
 const associatedForm = ref(defaultAssociatedForm());
+const deviceOptions = ref([] as any[]);
+
+const queryDevice = ref<{
+  page: number;
+  page_size: number;
+  total: number;
+}>({
+  page: 1,
+  page_size: 20,
+  total: 0
+});
+
+function initQueryDevice() {
+  queryDevice.value = {
+    page: 1,
+    page_size: 20,
+    total: 0
+  };
+  deviceOptions.value = [];
+}
 
 function defaultAssociatedForm() {
   return {
@@ -25,6 +45,12 @@ function defaultAssociatedForm() {
     device_config_id: ''
   };
 }
+
+const queryData = ref({
+  device_config_id: props.deviceConfigId,
+  page: 1,
+  page_size: 10
+});
 
 const associatedFormRules = ref({
   // device_ids: {
@@ -39,13 +65,15 @@ const addDevice = () => {
   getDeviceOptions();
   visible.value = true;
 };
-const modalClose = () => {};
+const modalClose = () => {
+  initQueryDevice();
+};
 const handleSubmit = async () => {
   await associatedFormRef?.value?.validate();
   associatedForm.value.device_config_id = props.deviceConfigId;
   const res = await deviceConfigBatch(associatedForm.value);
   if (!res.error) {
-    message.success('新增成功');
+    // message.success('新增成功');
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     handleClose();
   }
@@ -54,17 +82,15 @@ const handleClose = () => {
   associatedFormRef.value?.restoreValidation();
   associatedForm.value = defaultAssociatedForm();
   visible.value = false;
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   queryData.value.page = 1;
+  initQueryDevice();
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   getDeviceList();
 };
 const handleScroll = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
   if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (deviceOptions.value.length <= queryDevice.value.total) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       queryDevice.value.page += 1;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       getDeviceOptions();
@@ -72,12 +98,6 @@ const handleScroll = (e: Event) => {
   }
 };
 
-const deviceOptions = ref([] as any[]);
-const queryDevice = ref({
-  page: 1,
-  page_size: 20,
-  total: 0
-});
 const getDeviceOptions = async () => {
   const res = await deviceList(queryDevice.value);
   deviceOptions.value = deviceOptions.value.concat(res.data.list);
@@ -108,16 +128,16 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-const queryData = ref({
-  device_config_id: props.deviceConfigId,
-  page: 1,
-  page_size: 10
-});
+
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
   queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
+  res.data.list.map(sitem => {
+    sitem.activate_flag = sitem.is_online === 0 ? '离线' : '在线';
+    return sitem;
+  });
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
 };

@@ -9,6 +9,7 @@ import { $t } from '@/locales';
 import { enableStatusRecord } from '@/constants/business';
 import RoleOperateDrawer, { type OperateType } from './modules/role-operate-drawer.vue';
 import RoleSearch from './modules/role-search.vue';
+
 const appStore = useAppStore();
 const { bool: drawerVisible, setTrue: openDrawer } = useBoolean();
 
@@ -124,7 +125,7 @@ const checkedRowKeys = ref<string[]>([]);
 
 async function handleBatchDelete() {
   // requestTs
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -144,7 +145,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

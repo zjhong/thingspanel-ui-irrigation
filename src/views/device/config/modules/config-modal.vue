@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { useMessage } from 'naive-ui';
+// import {useMessage} from 'naive-ui';
 import { deviceConfigAdd, deviceConfigEdit, deviceTemplate } from '@/service/api/device';
 
-const message = useMessage();
+// const message = useMessage();
 
 interface Props {
   modalVisible?: boolean;
   modalType?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   modalVisible: false,
   modalType: 'add'
@@ -31,6 +32,7 @@ function defaultConfigForm() {
     voucher_type: null
   };
 }
+
 const configFormRules = ref({
   name: {
     required: true,
@@ -58,10 +60,13 @@ const getDeviceTemplate = () => {
     deviceTemplateOptions.value = res.data.list;
   });
 };
+
 interface Emits {
   (e: 'modalClose'): void;
+
   (e: 'submitted'): void;
 }
+
 const emit = defineEmits<Emits>();
 const visible = ref(false);
 watch(
@@ -94,12 +99,14 @@ const handleSubmit = async () => {
   if (props.modalType === 'add') {
     const res = await deviceConfigAdd(configForm.value);
     if (!res.error) {
-      message.success('新增成功');
+      console.log(res);
+      // message.success('新增成功');
     }
   } else {
     const res = await deviceConfigEdit(configForm.value);
     if (!res.error) {
-      message.success('修改成功');
+      console.log(res);
+      // message.success('修改成功');
     }
   }
   handleClose();

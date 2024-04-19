@@ -101,8 +101,7 @@ const configFormRules = ref({
   },
   actionParamOptions: {
     required: true,
-    message: '请选择',
-    trigger: 'change'
+    message: '请选择'
   },
   action_value: {
     required: true,
@@ -380,7 +379,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-100%">
+  <div class="actions-box w-100%">
     <NForm
       ref="configFormRef"
       :model="actionForm"
@@ -415,7 +414,7 @@ onMounted(() => {
                   <NFlex
                     v-for="(instructItem, instructIndex) in actionGroupItem.actionInstructList"
                     :key="instructIndex"
-                    class="mb-6 mr-30"
+                    class="mb-2 mr-30"
                   >
                     <template v-if="props.conditionsType !== '11'">
                       <NFormItem
@@ -513,8 +512,8 @@ onMounted(() => {
                       </NFormItem>
                       <NFormItem
                         :show-label="false"
-                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].actionParamOptions`"
-                        :rule="configFormRules.actionParamOptions"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_value`"
+                        :rule="configFormRules.action_value"
                         class="w-40"
                       >
                         <NInput
@@ -604,4 +603,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+:deep(.n-card__content) {
+  padding: 10px 10px 4px 10px !important;
+}
+</style>

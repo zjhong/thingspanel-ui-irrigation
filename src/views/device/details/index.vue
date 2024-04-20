@@ -40,6 +40,7 @@ const components = [
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
 const lables = ref<string[]>([]);
+const device_color = deviceDataStore?.deviceData?.is_online === 1 ? '#00ff00' : '#CCC';
 
 const queryParams = reactive({
   lable: '',
@@ -106,9 +107,9 @@ watch(
   <div>
     <n-card>
       <div>
-        <div style="display: flex">
-          <NH3 style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
-          <NButton v-show="true" type="primary" @click="editConfig">编辑</NButton>
+        <div style="display: flex; margin-top: -5px">
+          <spna style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</spna>
+          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
         </div>
 
         <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -138,7 +139,7 @@ watch(
           </n-card>
         </n-modal>
 
-        <NFlex>
+        <NFlex style="margin-top: 8px">
           <div class="mr-4">
             <spna class="mr-2" style="color: #ccc">ID:</spna>
             <spna style="color: #ccc">{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
@@ -154,7 +155,7 @@ watch(
               style="color: #ccc; margin-right: 5px"
               class="text-20px text-primary"
             />
-            <spna style="color: #ccc">
+            <spna :style="{ color: device_color }">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
@@ -170,8 +171,8 @@ watch(
           </div>
         </NFlex>
       </div>
-      <n-divider title-placement="left"></n-divider>
-      <div>
+      <n-divider title-placement="left" style="margin-top: 10px"></n-divider>
+      <div style="margin-top: -15px">
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane
             v-for="component in components.filter(

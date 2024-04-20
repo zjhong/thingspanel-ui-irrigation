@@ -39,11 +39,14 @@ const components = [
 
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
+const lables = ref<string[]>([]);
+
 const queryParams = reactive({
-  deviceName: deviceDataStore?.deviceData?.name,
-  device_number: deviceDataStore?.deviceData?.device_number,
-  deviceDescribe: deviceDataStore?.deviceData?.device_config?.description,
-  lable: []
+  lable: '',
+  id: '',
+  name: '',
+  device_number: '',
+  description: ''
 });
 const changeTabs = v => {
   startLoading();
@@ -56,8 +59,29 @@ const changeTabs = v => {
 const editConfig = () => {
   showDialog.value = true;
 };
-const save = () => {
-  deviceUpdate(queryParams);
+const close = async () => {
+  showDialog.value = false;
+  deviceDataStore.fetchData(d_id as string);
+};
+const save = async () => {
+  if (!deviceDataStore?.deviceData?.name) {
+    window.NMessage.error('请输入设备名称');
+    return;
+  }
+  if (!deviceDataStore?.deviceData?.device_number) {
+    window.NMessage.error('请输入设备编号');
+    return;
+  }
+  queryParams.id = deviceDataStore?.deviceData?.id;
+  queryParams.name = deviceDataStore?.deviceData?.name;
+  queryParams.device_number = deviceDataStore?.deviceData?.device_number;
+  queryParams.lable = lables.value.join(',');
+  queryParams.description = deviceDataStore?.deviceData?.description;
+  const res = await deviceUpdate(queryParams);
+  if (!res.error) {
+    showDialog.value = false;
+    deviceDataStore.fetchData(d_id as string);
+  }
 };
 onMounted(() => {
   deviceDataStore.fetchData(d_id as string);
@@ -84,7 +108,7 @@ watch(
       <div>
         <div style="display: flex">
           <NH3 style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</NH3>
-          <NButton v-show="false" type="primary" @click="editConfig">编辑</NButton>
+          <NButton v-show="true" type="primary" @click="editConfig">编辑</NButton>
         </div>
 
         <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -94,20 +118,20 @@ watch(
                 <NH3>修改设备信息</NH3>
               </div>
               <n-form-item label="设备名称*">
-                <n-input v-model:value="queryParams.deviceName" />
+                <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
               <n-form-item label="设备编号*">
-                <n-input v-model:value="queryParams.device_number" />
+                <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="lable">
-                <n-dynamic-tags v-model:value="queryParams.lable" />
+                <n-dynamic-tags v-model:value="lables" />
               </n-form-item>
               <n-form-item label="设备描述">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
-                <NInput v-model:value="queryParams.deviceDescribe" type="textarea" />
+                <NInput v-model:value="deviceDataStore.deviceData.description" type="textarea" />
               </n-form-item>
               <n-space>
-                <n-button @click="showDialog = false">取消</n-button>
+                <n-button @click="close">取消</n-button>
                 <n-button @click="save">保存</n-button>
               </n-space>
             </n-form>

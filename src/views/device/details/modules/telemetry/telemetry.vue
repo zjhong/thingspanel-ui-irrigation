@@ -131,12 +131,18 @@ fetchData();
     </n-modal>
     <!-- 第二行 -->
     <n-card class="mb-4">
-      <n-grid :x-gap="cardMargin" :y-gap="cardMargin" :cols="3">
+      <n-grid :x-gap="cardMargin" :y-gap="cardMargin" cols="1 600:2 900:3 1200:4 1500:5">
         <n-gi v-for="i in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
-            <NH4 style="padding: 10px 0 10px">{{ i.value }}{{ i.unit }}</NH4>
+            <div class="card-body">
+              <span>{{ i.value }}</span>
+              <span>{{ i.unit }}</span>
+            </div>
             <template #header>
-              <div class="line1" :title="i.key">{{ i.key }}</div>
+              <div class="line1" :title="i.key">
+                <span v-if="i.lable">({{ i.lable }})</span>
+                <span>{{ i.key }}</span>
+              </div>
             </template>
             <template #footer>
               <div class="flex justify-end">
@@ -213,5 +219,24 @@ fetchData();
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  span {
+    &:last-child {
+      color: #ccc;
+      padding-left: 5px;
+    }
+  }
+}
+
+.card-body {
+  padding: 10px 0 10px;
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  span {
+    &:first-child {
+      font-size: 32px;
+      line-height: 1;
+    }
+  }
 }
 </style>

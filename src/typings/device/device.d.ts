@@ -95,6 +95,7 @@ declare namespace DeviceManagement {
     ts: string;
     value: number;
     unit: string;
+    lable: string;
     name: string;
   }
 

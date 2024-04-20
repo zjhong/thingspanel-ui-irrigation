@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { type FormInst, NButton, useDialog } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import Codemirror from 'codemirror-editor-vue3';
@@ -199,7 +199,19 @@ const onInput = val => {
 };
 
 const onReady = cm => {
-  console.log(cm.focus());
+  const lastLine = cm.lineCount() - 1;
+  const lastCh = cm.getLine(lastLine).length;
+  cm.focus();
+  cm.setCursor({ line: lastLine, ch: lastCh });
+  console.log(cm);
+};
+const setupEditor = () => {
+  nextTick(() => {
+    if (cmRef.value) {
+      console.log(cmRef.value);
+      cmRef.value.refresh(); // ensure the editor is correctly refreshed
+    }
+  });
 };
 
 onMounted(() => {
@@ -258,6 +270,7 @@ onMounted(() => {
     :show-icon="false"
     :style="bodyStyle"
     :closable="false"
+    @after-enter="setupEditor"
   >
     <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
       <NFormItem label="标题" path="name">
@@ -274,8 +287,9 @@ onMounted(() => {
           ref="cmRef"
           v-model:value="configForm.content"
           :options="cmOptions"
-          border
           height="200"
+          keepcursorinend
+          border
           @change="onChange"
           @input="onInput"
           @ready="onReady"
@@ -316,18 +330,15 @@ onMounted(() => {
     flex: 0 0 23%;
     margin-right: calc(30% / 3);
     margin-bottom: 30px;
-
     .item-name {
       display: flex;
       flex-flow: row;
       align-items: center;
       justify-content: space-between;
     }
-
     .item-desc {
       margin: 15px 0;
     }
-
     .item-operate {
       display: flex;
       flex-flow: row;

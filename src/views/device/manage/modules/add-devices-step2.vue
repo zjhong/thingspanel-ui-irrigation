@@ -91,6 +91,12 @@ const handleSubmit = async () => {
     props.nextCallback();
   }
 };
+const copy = event => {
+  const input = event.target;
+  input.select();
+  document.execCommand('copy');
+  window.$message?.success('复制成功');
+};
 </script>
 
 <template>
@@ -99,7 +105,12 @@ const handleSubmit = async () => {
       <template v-for="element in formElements" :key="element.dataKey">
         <div v-if="element.type === 'input'" class="form-item">
           <NFormItem :label="element.label" :path="element.dataKey">
-            <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
+            <NInput
+              id="input"
+              v-model:value="formData[element.dataKey]"
+              :placeholder="element.placeholder"
+              @click="copy"
+            />
           </NFormItem>
         </div>
         <div v-if="element.type === 'select'" class="form-item">
@@ -129,7 +140,7 @@ const handleSubmit = async () => {
         </div>
       </template>
 
-      <NCard :title="$t('custom.devicePage.connectInfo')">
+      <NCard style="margin-top: -15px" :title="$t('custom.devicePage.connectInfo')">
         <NDescriptions :column="1">
           <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
             <span class="font-600">{{ value }}</span>

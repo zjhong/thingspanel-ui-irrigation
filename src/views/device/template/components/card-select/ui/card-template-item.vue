@@ -7,7 +7,10 @@ const props = defineProps<{
   view?: boolean;
   data: ICardData;
 }>();
-const cardId = computed(() => props.data?.cardId);
+const cardId = computed(() => {
+  const arr = props.data?.cardId?.split('-') || [];
+  return `${arr[0]}-${arr[1]}`;
+});
 const store = usePanelStore();
 const findCardComponent = (id: string) => {
   return store.$state.cardMap.get(id)?.component || null;

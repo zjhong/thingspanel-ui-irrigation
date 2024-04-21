@@ -87,6 +87,16 @@ const handleSubmit = async () => {
     voucher: JSON.stringify(formData)
   });
 };
+const copy = async param => {
+  const element = document.getElementById(param.toString());
+  const range = document.createRange();
+  range.selectNodeContents(element!);
+  const selection = document.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  document.execCommand('Copy');
+  window.$message?.success('复制成功');
+};
 </script>
 
 <template>
@@ -104,7 +114,7 @@ const handleSubmit = async () => {
       <NForm ref="formRef" :rules="formRules" :model="formData">
         <template v-for="element in formElements" :key="element.dataKey">
           <div v-if="element.type === 'input'" class="form-item">
-            <NFormItem :label="element.label" :path="element.dataKey">
+            <NFormItem :label="element.label" :path="element.dataKey" style="height: 50px">
               <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
             </NFormItem>
           </div>
@@ -139,8 +149,8 @@ const handleSubmit = async () => {
     <n-scrollbar class="h-400px">
       <NCard title="连接信息">
         <NDescriptions :column="1">
-          <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
-            <span class="font-600">{{ value }}</span>
+          <NDescriptionsItem v-for="(value, key, index) in connectInfo" :key="key" :index="index" :label="key">
+            <span :id="index.toString()" class="font-600" @click="copy(index)">{{ value }}</span>
           </NDescriptionsItem>
         </NDescriptions>
       </NCard>

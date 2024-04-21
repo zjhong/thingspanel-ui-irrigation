@@ -8,10 +8,11 @@ defineProps<{
 }>();
 
 const columns = [
-  { title: '事件名称', key: 'id' },
   { title: '事件标识符', key: 'identify' },
+  { title: '事件名称', key: '' },
   { title: '事件上报时间', key: 'ts', render: row => dayjs(row.ts).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '事件参数', key: 'data' }
+  { title: '事件参数', key: 'data' },
+  { title: '错误信息', key: 'error_message' }
 ];
 </script>
 

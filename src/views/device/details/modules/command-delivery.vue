@@ -25,7 +25,7 @@ const formatStatus = status => {
 
 const columns = [
   { title: '命令标识符', key: 'identify' },
-  { title: '命名名称', key: '' },
+  { title: '命令名称', key: '' },
   {
     title: '命令下发时间',
     key: 'created_at',

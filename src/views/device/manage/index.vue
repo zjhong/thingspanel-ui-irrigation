@@ -205,6 +205,11 @@ const searchConfigs = ref<SearchConfig[]>([
     key: 'search',
     label: $t('custom.devicePage.deviceNameOrNumber'),
     type: 'input'
+  },
+  {
+    key: 'label',
+    label: $t('custom.devicePage.label'),
+    type: 'input'
   }
 ]);
 const dropOption = [

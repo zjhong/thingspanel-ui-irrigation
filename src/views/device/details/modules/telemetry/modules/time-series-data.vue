@@ -123,6 +123,10 @@ watch(
     const { data, error } = await deviceTelemetryList({
       ...v
     });
+    if (typeof data === 'object' && data === null) {
+      endLoading();
+      tableData.value = [];
+    }
     if (!error && data && initialOptions.value.series) {
       tableData.value = data;
       initialOptions.value.series.forEach(series => {
@@ -150,7 +154,10 @@ watch(
       </div>
     </div>
     <div :class="`${isFullscreen ? 'h-full' : 'h-320px'}  p-2 `">
-      <ChartComponent :initial-options="initialOptions" />
+      <ChartComponent v-if="tableData?.length > 0" :initial-options="initialOptions" />
+      <div class="h-full flex items-center justify-center">
+        <n-empty v-if="tableData?.length === 0" description="无数据"></n-empty>
+      </div>
     </div>
   </n-card>
   <div class="mt-8">

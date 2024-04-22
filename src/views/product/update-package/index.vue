@@ -55,6 +55,9 @@ const pagination: PaginationProps = reactive({
 });
 
 function handleQuery() {
+  Object.assign(queryParams, {
+    page: 1
+  });
   init();
 }
 

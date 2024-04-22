@@ -105,7 +105,7 @@ export function useTpECharts<T extends ECOption>(optionsFactory: () => T, hooks:
         fontSize: 14,
         maskColor
       });
-      setTimeout(instance.hideLoading, 500);
+      instance.hideLoading();
     },
     onUpdated = instance => {
       instance.hideLoading();
@@ -171,7 +171,6 @@ export function useTpECharts<T extends ECOption>(optionsFactory: () => T, hooks:
   /** destroy chart */
   async function destroy() {
     if (!chart) return;
-
     await onDestroy?.(chart);
     chart?.dispose();
     chart = null;

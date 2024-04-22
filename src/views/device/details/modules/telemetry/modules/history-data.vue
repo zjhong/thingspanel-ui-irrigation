@@ -30,14 +30,19 @@ interface HistoryData {
 const { loading, startLoading, endLoading } = useLoading();
 const currentDate = new Date();
 const startTime = new Date(currentDate);
-startTime.setDate(1);
-startTime.setMonth(startTime.getMonth() - 1);
-startTime.setHours(0, 0, 0, 0);
+
+// 获取上一天的时间戳（毫秒）
+currentDate.setDate(currentDate.getDate() - 1); // 设置日期为上一天
+// 获取当前具体时间的毫秒数
+const end_time = dayjs().valueOf();
+
+// 获取上一天当前时刻的毫秒数
+const start_time = dayjs().subtract(1, 'day').valueOf();
 
 const params = reactive<Params>({
   device_id: props.deviceId,
-  end_time: currentDate.getTime(),
-  start_time: startTime.getTime(),
+  end_time,
+  start_time,
   export_excel: false,
   key: props.theKey
 });
@@ -54,7 +59,7 @@ const pagination = reactive({
 const dateRange = ref<[number, number] | null>(null);
 const tableData = ref<HistoryData[]>([]);
 const columns = [
-  { title: '时间', key: 'time', render: row => dayjs(row.time).format('YYYY-MM-DD HH:mm:ss') },
+  { title: '时间', key: 'time', render: row => dayjs(row.ts).format('YYYY-MM-DD HH:mm:ss') },
   { title: '数据标识符', key: 'key' },
   { title: '值', key: 'value' }
 ];
@@ -120,7 +125,7 @@ onMounted(getTelemetryHistoryData);
       </n-button>
     </n-flex>
     <div class="mt-4">
-      <n-text v-if="!dateRange" depth="3">！默认值为最近一个月数据</n-text>
+      <n-text v-if="!dateRange" depth="3">！默认查询最近24小时的数据</n-text>
       <n-data-table :loading="loading" :columns="columns" :data="tableData" :pagination="pagination" />
     </div>
   </n-card>

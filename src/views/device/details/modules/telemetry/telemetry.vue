@@ -1,15 +1,32 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import type { NumberAnimationInst } from 'naive-ui';
 import dayjs from 'dayjs';
 import { DocumentOnePage24Regular, Timer16Regular } from '@vicons/fluent';
+import { useWebSocket } from '@vueuse/core';
 import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
+import { localStg } from '@/utils/storage';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
+import { createServiceConfig } from '~/env.config';
 
 const props = defineProps<{
   id: string;
 }>();
+
+const { otherBaseURL } = createServiceConfig(import.meta.env);
+let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
+wsUrl += `/telemetry/datas/current/ws`;
+// eslint-disable-next-line no-constant-binary-expression
+
+const { data, status, send, close } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  }
+});
 const showDialog = ref(false);
 const showHistory = ref(false);
 const telemetryId = ref();
@@ -22,6 +39,9 @@ const sendResult = ref('');
 const tableData = ref([]);
 
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
+const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
+const telemetry = ref<any>({});
+const nowTime = ref<any>();
 const { loading, startLoading, endLoading } = useLoading();
 const total = ref(0);
 
@@ -65,7 +85,7 @@ const openDialog = () => {
 };
 const fetchData = async () => {
   startLoading();
-  console.log(props.id);
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const { data, error } = await getTelemetryLogList({
     page: log_page.value,
     page_size: 5,
@@ -80,7 +100,7 @@ const fetchData = async () => {
   }
 };
 
-const send = async () => {
+const sends = async () => {
   // 发送属性的逻辑...
   const { error } = await telemetryDataPub({
     device_id: props.id,
@@ -92,17 +112,53 @@ const send = async () => {
   }
 };
 
+const token = localStg.get('token');
+
 const fetchTelemetry = async () => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   const { data, error } = await telemetryDataCurrent(props.id);
-  if (!error) {
+  if (!error && data) {
     telemetryData.value = data;
+
+    const dataw = {
+      // eslint-disable-next-line no-constant-binary-expression
+      device_id: props.id,
+      token
+    };
+    send(JSON.stringify(dataw));
+  }
+};
+const setItemRef = el => {
+  console.log(el);
+
+  if (el) {
+    const index = el.$attrs['data-index'];
+    numberAnimationInstRef.value[index] = el;
   }
 };
 onMounted(() => {
   fetchData();
   fetchTelemetry();
 });
-fetchData();
+onUnmounted(() => {
+  if (status.value === 'OPEN') {
+    close();
+  }
+});
+watch(
+  () => data.value,
+  newVal => {
+    if (newVal === 'pong') {
+      console.log('心跳');
+    } else {
+      telemetry.value = JSON.parse(newVal);
+      nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+      numberAnimationInstRef.value.forEach(i => {
+        i?.play();
+      });
+    }
+  }
+);
 </script>
 
 <template>
@@ -117,7 +173,7 @@ fetchData();
           </n-form-item>
           <n-space align="end">
             <n-button @click="showDialog = false">取消</n-button>
-            <n-button @click="send">发送</n-button>
+            <n-button @click="sends">发送</n-button>
           </n-space>
         </n-form>
       </n-card>
@@ -131,22 +187,38 @@ fetchData();
     </n-modal>
     <!-- 第二行 -->
     <n-card class="mb-4">
-      <n-grid :x-gap="cardMargin" :y-gap="cardMargin" cols="1 600:2 900:3 1200:4 1500:5">
-        <n-gi v-for="i in telemetryData" :key="i.tenant_id">
+      <n-grid :x-gap="cardMargin" :y-gap="cardMargin" cols="1 600:2 900:3 1200:4">
+        <n-gi v-for="(i, index) in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
-              <span>{{ i.value }}</span>
+              <!--              <span>{{ telemetry[i.key] || i.value }}</span>-->
+              <span>
+                <n-number-animation
+                  :ref="setItemRef"
+                  :data-index="index"
+                  :precision="1"
+                  :duration="800"
+                  :from="0.0"
+                  :to="telemetry[i.key] || i.value"
+                />
+              </span>
+
               <span>{{ i.unit }}</span>
             </div>
             <template #header>
               <div class="line1" :title="i.key">
-                <span v-if="i.lable">({{ i.lable }})</span>
-                <span>{{ i.key }}</span>
+                <template v-if="i.lable">
+                  <span v-if="i.lable">{{ i.lable }}</span>
+                  <span>({{ i.key }})</span>
+                </template>
+                <template v-else>
+                  <span>{{ i.key }}</span>
+                </template>
               </div>
             </template>
             <template #footer>
               <div class="flex justify-end">
-                {{ dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
+                {{ telemetry[i.key] ? nowTime : dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
               </div>
             </template>
             <template #header-extra>
@@ -219,8 +291,9 @@ fetchData();
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
   span {
-    &:last-child {
+    &:nth-child(2) {
       color: #ccc;
       padding-left: 5px;
     }
@@ -232,6 +305,7 @@ fetchData();
   display: flex;
   align-items: end;
   gap: 4px;
+
   span {
     &:first-child {
       font-size: 32px;

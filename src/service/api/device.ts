@@ -270,3 +270,21 @@ export const deviceLocation = async (params: any) => {
 export const deviceUpdate = async (params: any) => {
   return await request.put<Api.BaseApi.Data>('/device', params);
 };
+/** 网关下子设备列表 */
+export const childDeviceTableList = async (params: any) => {
+  return await request.get<any>(`/device/sub-list/${params.id}`, {
+    params
+  });
+};
+/** 添加子设备选择列表 */
+export const childDeviceSelectList = async () => {
+  return await request.get<any>(`/device/list`, {});
+};
+/** 添加子设备 */
+export const addChildDevice = async (params: any) => {
+  return await request.post<any>(`/device/son/add`, params);
+};
+/** 移除子设备 */
+export const removeChildDevice = async (params: any) => {
+  return await request.put<any>(`/device/sub-remove`, params);
+};

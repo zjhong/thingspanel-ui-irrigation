@@ -39,7 +39,7 @@ const sendResult = ref('');
 const tableData = ref([]);
 
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
-const numberAnimationInstRef = ref<NumberAnimationInst | null>(null);
+const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
 const telemetry = ref<any>({});
 const nowTime = ref<any>();
 const { loading, startLoading, endLoading } = useLoading();
@@ -134,6 +134,14 @@ const fetchTelemetry = async () => {
     }
   }
 };
+const setItemRef = el => {
+  console.log(el);
+
+  if (el) {
+    const index = el.$attrs['data-index'];
+    numberAnimationInstRef.value[index] = el;
+  }
+};
 onMounted(() => {
   fetchData();
   fetchTelemetry();
@@ -151,8 +159,9 @@ watch(
     } else {
       telemetry.value = newVal;
       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
-
-      numberAnimationInstRef.value?.play();
+      numberAnimationInstRef.value.forEach(i => {
+        i?.play();
+      });
     }
   }
 );
@@ -185,13 +194,14 @@ watch(
     <!-- 第二行 -->
     <n-card class="mb-4">
       <n-grid :x-gap="cardMargin" :y-gap="cardMargin" cols="1 600:2 900:3 1200:4 1500:5">
-        <n-gi v-for="i in telemetryData" :key="i.tenant_id">
+        <n-gi v-for="(i, index) in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
               <!--              <span>{{ telemetry[i.key] || i.value }}</span>-->
               <span>
                 <n-number-animation
-                  ref="numberAnimationInstRef"
+                  :ref="setItemRef"
+                  :data-index="index"
                   :duration="800"
                   :from="0"
                   :to="telemetry[i.key] || i.value"

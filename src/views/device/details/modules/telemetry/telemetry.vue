@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
-import type { NumberAnimationInst } from 'naive-ui';
+import {onMounted, onUnmounted, ref, watch} from 'vue';
+import type {NumberAnimationInst} from 'naive-ui';
 import dayjs from 'dayjs';
-import { DocumentOnePage24Regular, Timer16Regular } from '@vicons/fluent';
-import { useWebSocket } from '@vueuse/core';
-import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
-import { localStg } from '@/utils/storage';
+import {DocumentOnePage24Regular, Timer16Regular} from '@vicons/fluent';
+import {useWebSocket} from '@vueuse/core';
+import {getTelemetryLogList, telemetryDataCurrent, telemetryDataPub} from '@/service/api';
+import {localStg} from '@/utils/storage';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
-import { useLoading } from '~/packages/hooks';
-import { createServiceConfig } from '~/env.config';
+import {useLoading} from '~/packages/hooks';
+import {createServiceConfig} from '~/env.config';
 
 const props = defineProps<{
   id: string;
 }>();
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
+const {otherBaseURL} = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/keys/ws`;
 // eslint-disable-next-line no-constant-binary-expression
 
-const { data, status, send, close } = useWebSocket(wsUrl, {
+const {data, status, send, close} = useWebSocket(wsUrl, {
   heartbeat: {
     message: 'ping',
     interval: 8000,
@@ -42,32 +42,32 @@ const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
 const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
 const telemetry = ref<any>({});
 const nowTime = ref<any>();
-const { loading, startLoading, endLoading } = useLoading();
+const {loading, startLoading, endLoading} = useLoading();
 const total = ref(0);
 
 const operationOptions = [
-  { label: '全部', value: '' },
-  { label: '手动操作', value: '1' },
-  { label: '触发操作', value: '2' }
+  {label: '全部', value: ''},
+  {label: '手动操作', value: '1'},
+  {label: '触发操作', value: '2'}
   // 其他操作类型选项...
 ];
 const resultOptions = [
-  { label: '全部', value: '' },
-  { label: '成功', value: '1' },
-  { label: '失败', value: '2' }
+  {label: '全部', value: ''},
+  {label: '成功', value: '1'},
+  {label: '失败', value: '2'}
   // 其他发送结果选项...
 ];
 const cardHeight = ref(160); // 卡片的高度
 const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
 const columns = [
-  { title: '指令', key: 'data' },
+  {title: '指令', key: 'data'},
   {
     title: '操作类型',
     key: 'operation_type',
     render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
   },
-  { title: '操作用户', key: 'user_id' },
+  {title: '操作用户', key: 'user_id'},
   {
     title: '操作时间',
     key: 'created_at',
@@ -86,7 +86,7 @@ const openDialog = () => {
 const fetchData = async () => {
   startLoading();
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const { data, error } = await getTelemetryLogList({
+  const {data, error} = await getTelemetryLogList({
     page: log_page.value,
     page_size: 5,
     device_id: props.id,
@@ -102,7 +102,7 @@ const fetchData = async () => {
 
 const sends = async () => {
   // 发送属性的逻辑...
-  const { error } = await telemetryDataPub({
+  const {error} = await telemetryDataPub({
     device_id: props.id,
     value: formValue.value
   });
@@ -116,7 +116,7 @@ const token = localStg.get('token');
 
 const fetchTelemetry = async () => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
-  const { data, error } = await telemetryDataCurrent(props.id);
+  const {data, error} = await telemetryDataCurrent(props.id);
   if (!error && data) {
     telemetryData.value = data;
     const keys: any[] = [];
@@ -134,8 +134,8 @@ const fetchTelemetry = async () => {
     }
   }
 };
-const setItemRef = el => {
-  console.log(el);
+const setItemRef = (el) => {
+  console.log(el)
 
   if (el) {
     const index = el.$attrs['data-index'];
@@ -156,12 +156,13 @@ watch(
   newVal => {
     if (newVal === 'pong') {
       console.log('心跳');
+
     } else {
       telemetry.value = newVal;
       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
       numberAnimationInstRef.value.forEach(i => {
-        i?.play();
-      });
+        i?.play()
+      })
     }
   }
 );
@@ -175,7 +176,7 @@ watch(
       <n-card>
         <n-form>
           <n-form-item label="属性">
-            <n-input v-model:value="formValue" type="textarea" />
+            <n-input v-model:value="formValue" type="textarea"/>
           </n-form-item>
           <n-space align="end">
             <n-button @click="showDialog = false">取消</n-button>
@@ -187,8 +188,8 @@ watch(
 
     <n-modal v-model:show="showHistory" title="遥测历史数据" class="w-[600px]">
       <NCard>
-        <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
-        <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />
+        <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey"/>
+        <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey"/>
       </NCard>
     </n-modal>
     <!-- 第二行 -->
@@ -200,10 +201,11 @@ watch(
               <!--              <span>{{ telemetry[i.key] || i.value }}</span>-->
               <span>
                 <n-number-animation
-                  :ref="setItemRef"
                   :data-index="index"
+                  :ref="setItemRef"
+                  :precision="1"
                   :duration="800"
-                  :from="0"
+                  :from="0.0"
                   :to="telemetry[i.key] || i.value"
                 />
               </span>
@@ -234,10 +236,10 @@ watch(
                     }
                   "
                 >
-                  <DocumentOnePage24Regular />
+                  <DocumentOnePage24Regular/>
                 </NIcon>
 
-                <NDivider vertical />
+                <NDivider vertical/>
                 <NIcon
                   size="24"
                   @click="
@@ -249,7 +251,7 @@ watch(
                     }
                   "
                 >
-                  <Timer16Regular />
+                  <Timer16Regular/>
                 </NIcon>
               </div>
             </template>
@@ -265,12 +267,12 @@ watch(
         style="width: 200px"
         @update:value="fetchData"
       />
-      <n-select v-model:value="sendResult" :options="resultOptions" style="width: 200px" @update:value="fetchData" />
+      <n-select v-model:value="sendResult" :options="resultOptions" style="width: 200px" @update:value="fetchData"/>
     </n-space>
 
     <!-- 第四行 -->
 
-    <n-data-table :loading="loading" class="mt-4" :columns="columns" :data="tableData" :pagination="false" />
+    <n-data-table :loading="loading" class="mt-4" :columns="columns" :data="tableData" :pagination="false"/>
     <div class="mt-4 w-full flex justify-end">
       <n-pagination
         :page-count="total"

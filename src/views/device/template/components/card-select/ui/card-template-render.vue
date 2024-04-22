@@ -69,6 +69,7 @@ const removeLayout = (i: any) => {
               </template>
               <span>确认删除看板。</span>
             </NPopconfirm>
+
             <CardTemplateItem :data="item.data!" />
           </div>
         </n-gi>

@@ -5,7 +5,7 @@ import { NButton } from 'naive-ui';
 import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
-import { getDeviceList } from '~/src/service/product/list';
+import { getPreProductList } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -113,9 +113,9 @@ const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
   name: '',
-  // product_id: props.editData?.id,
   current_version: '',
   page: 1,
+  activate_flag: 'active',
   is_enabled: 'enabled',
   page_size: 10
 });
@@ -126,6 +126,9 @@ function setTableData(data: productPackageRecord[]) {
 }
 
 function handleQuery() {
+  Object.assign(queryParams, {
+    page: 1
+  });
   init();
 }
 
@@ -159,7 +162,7 @@ const pagination: PaginationProps = reactive({
 
 async function getTableData() {
   startLoading();
-  const { data } = await getDeviceList(queryParams);
+  const { data } = await getPreProductList(queryParams);
   if (data) {
     const list: productPackageRecord[] = data.list;
     setTableData(list);

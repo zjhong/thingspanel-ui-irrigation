@@ -17,6 +17,7 @@ export interface ICardData {
     systemSource?: { type?: number; name?: string }[];
     deviceCount?: number;
     deviceSource?: {
+      cardId?: string;
       deviceId?: string;
       deviceMetrics?: string;
       name?: string;

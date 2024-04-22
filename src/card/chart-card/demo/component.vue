@@ -13,7 +13,7 @@ const props = defineProps<{
   card: ICardData;
   // mode: IConfigCtx['view'];
 }>();
-console.log(props.card);
+
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/keys/ws`;
@@ -38,17 +38,11 @@ if (props?.card?.dataSource?.deviceSource && props?.card?.dataSource?.deviceSour
   send(JSON.stringify(dataw));
 }
 
-function useRandomInt(min, max) {
-  const randomInt = ref(Math.floor(Math.random() * (max - min + 1)) + min);
-  return randomInt;
-}
-
 watch(
   () => data.value,
   newVal => {
     if (newVal === 'pong') {
       console.log('心跳');
-      value.value = useRandomInt(1, 24).value as number;
     } else {
       value.value = JSON.parse(newVal)[keys[0]] as number;
       console.log(newVal);

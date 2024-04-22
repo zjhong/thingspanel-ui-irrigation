@@ -46,6 +46,9 @@ const save = () => {
   }
 
   emit('update:open', false);
+  const deviceSource = state.curCardData.dataSource.deviceSource[0];
+  const cardId = state.curCardData.cardId;
+  state.curCardData.cardId = `${cardId}-${deviceSource.metricsId}`;
   emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
 watch(props, pr => {

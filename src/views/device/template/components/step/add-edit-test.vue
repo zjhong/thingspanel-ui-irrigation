@@ -73,7 +73,7 @@ watch(
         device_template_id: deviceTemplateId,
         data_name: '',
         data_identifier: '',
-        read_write_flag: 'String',
+        read_write_flag: 'Number',
         unit: '',
         description: ''
       });
@@ -83,7 +83,7 @@ watch(
 );
 
 const generalOptions: any = reactive(
-  ['String', 'Number', 'Boolean'].map(v => ({
+  ['Number', 'String', 'Boolean'].map(v => ({
     label: v,
     value: v
   }))

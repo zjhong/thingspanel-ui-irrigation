@@ -6,7 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import moment from 'moment';
 import { $t } from '@/locales';
-import { exportDevice, getDeviceList } from '@/service/product/list';
+import { exportDevice, getPreProductList } from '@/service/product/list';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
@@ -60,6 +60,9 @@ const pagination: PaginationProps = reactive({
   }
 });
 function handleQuery() {
+  Object.assign(queryParams, {
+    page: 1
+  });
   init();
 }
 function handleReset() {
@@ -72,7 +75,7 @@ function handleReset() {
 }
 async function getTableData() {
   startLoading();
-  const { data } = await getDeviceList(queryParams);
+  const { data } = await getPreProductList(queryParams);
   if (data) {
     const list: PreproductDeviceRecord[] = data.list;
     setTableData(list);

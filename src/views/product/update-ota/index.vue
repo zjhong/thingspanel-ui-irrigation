@@ -24,6 +24,9 @@ function setTableData(data: productPackageRecord[]) {
   tableData.value = data;
 }
 function handleQuery() {
+  Object.assign(queryParams, {
+    page: 1
+  });
   init();
 }
 function handleReset() {

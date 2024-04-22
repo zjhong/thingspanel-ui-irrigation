@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const {otherBaseURL} = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
-wsUrl += `/telemetry/datas/current/keys/ws`;
+wsUrl += `/telemetry/datas/current/ws`;
 // eslint-disable-next-line no-constant-binary-expression
 
 const {data, status, send, close} = useWebSocket(wsUrl, {
@@ -119,19 +119,14 @@ const fetchTelemetry = async () => {
   const {data, error} = await telemetryDataCurrent(props.id);
   if (!error && data) {
     telemetryData.value = data;
-    const keys: any[] = [];
-    telemetryData.value.forEach(i => {
-      keys.push(i.key);
-    });
-    if (keys.length > 0) {
-      const dataw = {
-        // eslint-disable-next-line no-constant-binary-expression
-        device_id: props.id,
-        keys,
-        token
-      };
-      send(JSON.stringify(dataw));
+
+    const dataw = {
+      // eslint-disable-next-line no-constant-binary-expression
+      device_id: props.id,
+      token
     }
+    send(JSON.stringify(dataw));
+
   }
 };
 const setItemRef = (el) => {
@@ -158,7 +153,7 @@ watch(
       console.log('心跳');
 
     } else {
-      telemetry.value = newVal;
+      telemetry.value = JSON.parse(newVal);
       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
       numberAnimationInstRef.value.forEach(i => {
         i?.play()

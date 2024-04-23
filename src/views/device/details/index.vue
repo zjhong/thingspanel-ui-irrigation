@@ -16,14 +16,14 @@ import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
-import { deviceUpdate } from '@/service/api/device';
+import { deviceDetail, deviceUpdate } from '@/service/api/device';
 
 const { query } = useRoute();
 const appStore = useAppStore();
 const { d_id } = query;
 const { loading, startLoading, endLoading } = useLoading();
 const deviceDataStore = useDeviceDataStore();
-const components = [
+let components = [
   { key: 'telemetry', name: () => $t('custom.device_details.telemetry'), component: Telemetry },
   { key: 'join', name: () => $t('custom.device_details.join'), component: Join },
   { key: 'device-analysis', name: () => $t('custom.device_details.deviceAnalysis'), component: DeviceAnalysis },
@@ -40,7 +40,9 @@ const components = [
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
 const lables = ref<string[]>([]);
-const device_color = deviceDataStore?.deviceData?.is_online === 1 ? '#00ff00' : '#CCC';
+const device_color = ref('#ccc');
+const device_type = ref('');
+const icon_type = ref('');
 
 const queryParams = reactive({
   lable: '',
@@ -84,10 +86,43 @@ const save = async () => {
     deviceDataStore.fetchData(d_id as string);
   }
 };
+const rules = {
+  name: {
+    required: true,
+    message: $t('custom.devicePage.enterDeviceName'),
+    trigger: 'blur'
+  },
+  device_number: {
+    required: true,
+    message: $t('custom.devicePage.enterDeviceNumber'),
+    trigger: 'blur'
+  }
+};
+const getDeviceDetail = async () => {
+  const res = await deviceDetail(d_id);
+  if (res.data) {
+    if (res.data.is_online === 0) {
+      // device_color.value = 'rgb(255,0,0)'
+      // icon_type.value = 'rgb(255,0,0)'
+    } else {
+      device_color.value = 'rgb(2,153,52)';
+      icon_type.value = 'rgb(2,153,52)';
+    }
+
+    if (res.data.device_config !== undefined) {
+      device_type.value = res.data.device_config.device_type;
+      if (device_type.value !== '2') {
+        components = components.filter(item => item.key !== 'device-analysis');
+      }
+    } else {
+      components = components.filter(item => item.key !== 'device-analysis');
+    }
+  }
+};
 onMounted(() => {
+  getDeviceDetail();
   deviceDataStore.fetchData(d_id as string);
 });
-
 watch(
   () => appStore.locale,
   () => {
@@ -114,14 +149,14 @@ watch(
 
         <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
           <n-card>
-            <n-form>
+            <n-form :model="deviceDataStore.deviceData" :rules="rules">
               <div>
                 <NH3>修改设备信息</NH3>
               </div>
-              <n-form-item label="设备名称*">
+              <n-form-item label="设备名称" path="name">
                 <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
-              <n-form-item label="设备编号*">
+              <n-form-item label="设备编号" path="device_number">
                 <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="lable">
@@ -154,6 +189,7 @@ watch(
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
               class="text-20px text-primary"
+              :stroke="icon_type"
             />
             <spna :style="{ color: device_color }">
               {{
@@ -164,7 +200,7 @@ watch(
             </spna>
           </div>
           <div class="mr-4">
-            <!-- <spna class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+            <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna>
             <spna style="color: #ccc">
               {{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}
             </spna>
@@ -174,14 +210,7 @@ watch(
       <n-divider title-placement="left" style="margin-top: 10px"></n-divider>
       <div style="margin-top: -15px">
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
-          <n-tab-pane
-            v-for="component in components.filter(
-              i => !(i.key === 'device-analysis') || deviceDataStore?.deviceData?.parent_id
-            )"
-            :key="component.key"
-            :tab="component.name"
-            :name="component.key"
-          >
+          <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
             <n-spin size="small" :show="loading">
               <component
                 :is="component.component"

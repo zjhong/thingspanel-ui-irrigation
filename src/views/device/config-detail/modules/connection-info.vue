@@ -59,17 +59,18 @@ const getConfigForm = async data => {
 };
 const choseProtocolType = async data => {
   extendForm.value.voucher_type = null;
-  connectOptions.value = [];
+  // connectOptions.value = [];
   await getVoucherType(data);
   await getConfigForm(data);
 };
-onMounted(() => {
+onMounted(async () => {
   if (props.configInfo.device_type === '1') {
     getDict('DRIECT_ATTACHED_PROTOCOL');
   } else {
     getDict('GATEWAY_PROTOCOL');
   }
   extendForm.value = props.configInfo;
+  await getVoucherType(extendForm.value.protocol_type);
 });
 </script>
 

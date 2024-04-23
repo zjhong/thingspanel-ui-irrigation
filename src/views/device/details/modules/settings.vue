@@ -166,13 +166,12 @@ const selectConfig = v => {
           @search="deviceConfigList"
         />
       </div>
-
-      <div>
-        <span>设备编码:</span>
-        <span>{{ device_coding }}</span>
-        <NButton type="primary" text class="ml-4">查看</NButton>
-      </div>
     </NFlex>
+    <div>
+      <span>设备编码:</span>
+      <span>{{ device_coding }}</span>
+      <NButton type="primary" text class="ml-4">查看</NButton>
+    </div>
     <div class="mt-4 h-60px">
       设备固件:
       <spna class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</spna>

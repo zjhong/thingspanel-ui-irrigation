@@ -102,9 +102,6 @@ const copy = async param => {
 <template>
   <div>
     <n-descriptions label-placement="left" :column="1" class="mt-6">
-      <n-descriptions-item label="设备ID">
-        {{ deviceDataStore?.deviceData?.id || '--' }}
-      </n-descriptions-item>
       <n-descriptions-item label="接入方式/服务">
         {{ deviceDataStore?.deviceData?.device_config?.protocol_type || '--' }}
       </n-descriptions-item>

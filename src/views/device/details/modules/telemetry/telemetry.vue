@@ -196,7 +196,7 @@ watch(
                 <n-number-animation
                   :ref="setItemRef"
                   :data-index="index"
-                  :precision="1"
+                  :precision="2"
                   :duration="800"
                   :from="0.0"
                   :to="telemetry[i.key] || i.value"

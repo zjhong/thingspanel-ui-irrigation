@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { NButton } from 'naive-ui';
-import { dictQuery } from '@/service/api/setting';
-import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
+import {onMounted, ref} from 'vue';
+import {NButton} from 'naive-ui';
+import {dictQuery} from '@/service/api/setting';
+import {deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm} from '@/service/api/device';
 
 // const message = useMessage();
 
@@ -46,30 +46,31 @@ const getDict = async dictCode => {
 const connectOptions = ref([] as any);
 
 const getVoucherType = async data => {
-  const res = await deviceConfigVoucherType({ device_type: props.configInfo.device_type, protocol_type: data });
+  const res = await deviceConfigVoucherType({device_type: props.configInfo.device_type, protocol_type: data});
   if (res.data) {
     connectOptions.value = Object.keys(res.data).map(key => {
-      return { label: key, value: res.data[key] };
+      return {label: key, value: res.data[key]};
     });
   }
 };
 const getConfigForm = async data => {
-  const res = await protocolPluginConfigForm({ device_type: props.configInfo.device_type, protocol_type: data });
+  const res = await protocolPluginConfigForm({device_type: props.configInfo.device_type, protocol_type: data});
   console.log(res.data);
 };
 const choseProtocolType = async data => {
   extendForm.value.voucher_type = null;
-  connectOptions.value = [];
+  // connectOptions.value = [];
   await getVoucherType(data);
   await getConfigForm(data);
 };
-onMounted(() => {
+onMounted(async () => {
   if (props.configInfo.device_type === '1') {
     getDict('DRIECT_ATTACHED_PROTOCOL');
   } else {
     getDict('GATEWAY_PROTOCOL');
   }
   extendForm.value = props.configInfo;
+  await getVoucherType(extendForm.value.protocol_type);
 });
 </script>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from 'vue';
 import { useWebSocket } from '@vueuse/core';
+import { ClipboardCode20Regular } from '@vicons/fluent';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
 import icons from './icon';
@@ -66,12 +67,71 @@ onUnmounted(() => {
   <div class="h-full">
     <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
     <div class="h-full flex-col items-center">
-      <div v-if="card.dataSource?.origin === 'system'" class="ml-2">
-        数据名：{{ card.dataSource.deviceSource?.[0]?.metricsName }}
-      </div>
-      <NCard :bordered="false">
-        <div class="text-center text-24px">{{ value }}</div>
+      <NCard v-if="card.dataSource?.origin === 'system'" class="box">
+        <div class="top-data">
+          <span class="name">
+            {{ card.dataSource.deviceSource?.[0]?.metricsName }}
+          </span>
+          <!--
+ <span class="unit">{{
+            card.dataSource.unit ? card.dataSource.unit : "_/_"
+          }}</span> 
+-->
+          <span class="unit">_/_</span>
+        </div>
+        <div class="bt-data">
+          <NIcon size="34"><ClipboardCode20Regular /></NIcon>
+          <span class="value">{{ card.dataSource.sourceNum }}</span>
+        </div>
       </NCard>
+      <!--
+ <div v-if="card.dataSource?.origin === 'system'">
+        <div class="bt-data">
+          <NIcon size="24"><ClipboardCode20Filled /></NIcon>
+          <div class="text-center text-24px">{{ value }}</div>
+        </div>
+        数据名：{{ card.dataSource.deviceSource?.[0]?.metricsName }}
+      </div> 
+-->
+      <!--
+ <NCard :bordered="false">
+        <div class="text-center text-24px">{{ value }}</div>
+      </NCard> 
+-->
     </div>
   </div>
 </template>
+
+<style scoped>
+.items-center {
+  padding: 0;
+}
+.box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 50px;
+  border-radius: 10px;
+}
+.top-data,
+.bt-data {
+  display: flex;
+  padding: 0 40px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bt-data {
+  margin-top: 30px;
+}
+
+.name {
+  font-size: 20px;
+}
+
+.value {
+  font-size: 38px;
+  margin-right: 40px;
+}
+</style>

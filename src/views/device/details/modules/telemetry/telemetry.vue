@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
-import { DocumentOnePage24Regular, Timer16Regular } from '@vicons/fluent';
+import { Activity } from '@vicons/tabler';
+import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
@@ -177,7 +178,7 @@ fetchData();
                     }
                   "
                 >
-                  <Timer16Regular />
+                  <Activity />
                 </NIcon>
               </div>
             </template>

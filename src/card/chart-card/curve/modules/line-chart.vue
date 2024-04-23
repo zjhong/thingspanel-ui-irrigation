@@ -146,9 +146,9 @@ const getTelemetryList = async (device_id, key, index) => {
       ...params
     });
     if (!error) {
-      if (data && data.time_series && data.time_series.length > 0) {
+      if (data) {
         // eslint-disable-next-line require-atomic-updates
-        option.value.series[index].data = data.time_series.map(item => {
+        option.value.series[index].data = data.map(item => {
           return [item.x, item.y];
         });
       } else {
@@ -366,7 +366,8 @@ const setSeries = dataSource => {
     option.value.series =
       dataSource.deviceSource?.slice(0, dataSource.deviceCount || 1).map((i, index) => {
         let str: any = '';
-        str = `${i?.metricsId || '-'}_${i?.metricsName || '-'}`;
+        // str = `${i?.metricsId || '-'}_${i?.metricsName || '-'}`;
+        str = `${i?.metricsName || '-'}`;
         legendData.value.push(str as string);
         getTelemetryList(i.deviceId, i.metricsId, index);
         return {

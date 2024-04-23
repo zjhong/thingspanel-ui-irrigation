@@ -1,6 +1,8 @@
 <script setup lang="tsx">
 import { ref, watch } from 'vue';
+import type { Ref } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
+import { NSpace, NTag } from 'naive-ui';
 import _ from 'lodash';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
 import {
@@ -90,7 +92,7 @@ const getDeviceConfigOptions = async pattern => {
   return options;
 };
 
-const columns_to_show = [
+const columns_to_show: Ref<any> = ref([
   {
     key: 'name',
     label: () => $t('custom.devicePage.deviceName')
@@ -103,25 +105,40 @@ const columns_to_show = [
     key: 'is_online',
     label: () => $t('custom.devicePage.onlineStatus'),
     render: row => {
-      // if(row?.is_online === 1 ){
-      //    return <div>
-      //    <NTag type="success">{$t('custom.devicePage.online')}</NTag></div>
-      // }else {
-      //    return <div><NTag type="warning">{$t('custom.devicePage.offline')}</NTag></div>
-      // }
-      return row?.is_online === 1 ? $t('custom.devicePage.online') : $t('custom.devicePage.offline');
+      if (row?.is_online === 1) {
+        return (
+          <NSpace>
+            <NTag type="success">{$t('custom.devicePage.online')}</NTag>
+          </NSpace>
+        );
+      }
+      return (
+        <NSpace>
+          <NTag type="warning">{$t('custom.devicePage.offline')}</NTag>
+        </NSpace>
+      );
+
+      // return row?.is_online === 1 ? $t('custom.devicePage.online') : $t('custom.devicePage.offline');
     }
   },
   {
     key: 'warn_status',
     label: () => $t('custom.devicePage.alarmStatus'),
     render: row => {
-      // if(row?.warn_status === 'Y'){
-      //    return <div><NTag type="success">{$t('custom.devicePage.alarmed')}</NTag></div>
-      // }else {
-      //    return <div><NTag type="warning">{$t('custom.devicePage.notAlarmed')}</NTag></div>
-      // }
-      return row?.warn_status === 'Y' ? $t('custom.devicePage.alarmed') : $t('custom.devicePage.notAlarmed');
+      if (row?.warn_status === 'Y') {
+        return (
+          <NSpace>
+            <NTag type="success">{$t('custom.devicePage.alarmed')}</NTag>
+          </NSpace>
+        );
+      }
+      return (
+        <NSpace>
+          <NTag type="warning">{$t('custom.devicePage.notAlarmed')}</NTag>
+        </NSpace>
+      );
+
+      // return row?.warn_status === 'Y' ? $t('custom.devicePage.alarmed') : $t('custom.devicePage.notAlarmed');
     }
   },
   {
@@ -142,7 +159,8 @@ const columns_to_show = [
         : `${$t('custom.devicePage.byService')}(${row?.protocol_type || '-'})`;
     }
   }
-];
+]) as Ref<any>;
+
 const { routerPushByKey } = useRouterPush();
 const goDeviceDetails = row => {
   routerPushByKey('device_details', {

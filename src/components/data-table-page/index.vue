@@ -138,7 +138,7 @@ const generatedColumns = computed(() => {
                   >
                     {{
                       trigger: () => (
-                        <NButton text size="small">
+                        <NButton type="error" size="small">
                           {typeof action.label === 'function' ? action.label() : action.label || ''}
                         </NButton>
                       ),
@@ -148,7 +148,7 @@ const generatedColumns = computed(() => {
                 );
               }
               return (
-                <NButton text size="small" onClick={() => action.callback(row)}>
+                <NButton type="primary" size="small" onClick={() => action.callback(row)}>
                   {typeof action.label === 'function' ? action.label() : action.label || ''}
                 </NButton>
               );

@@ -34,7 +34,6 @@ const getFormJson = async id => {
 
   formData.value = res.data;
 };
-console.log(deviceId, '43243243');
 const setUpId = (dId, cId, dobj) => {
   deviceId.value = dId;
   configId.value = cId;
@@ -104,6 +103,12 @@ const columns_to_show = [
     key: 'is_online',
     label: () => $t('custom.devicePage.onlineStatus'),
     render: row => {
+      // if(row?.is_online === 1 ){
+      //    return <div>
+      //    <NTag type="success">{$t('custom.devicePage.online')}</NTag></div>
+      // }else {
+      //    return <div><NTag type="warning">{$t('custom.devicePage.offline')}</NTag></div>
+      // }
       return row?.is_online === 1 ? $t('custom.devicePage.online') : $t('custom.devicePage.offline');
     }
   },
@@ -111,6 +116,11 @@ const columns_to_show = [
     key: 'warn_status',
     label: () => $t('custom.devicePage.alarmStatus'),
     render: row => {
+      // if(row?.warn_status === 'Y'){
+      //    return <div><NTag type="success">{$t('custom.devicePage.alarmed')}</NTag></div>
+      // }else {
+      //    return <div><NTag type="warning">{$t('custom.devicePage.notAlarmed')}</NTag></div>
+      // }
       return row?.warn_status === 'Y' ? $t('custom.devicePage.alarmed') : $t('custom.devicePage.notAlarmed');
     }
   },

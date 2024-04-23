@@ -108,14 +108,14 @@ const getDeviceDetail = async () => {
       device_color.value = 'rgb(2,153,52)';
       icon_type.value = 'rgb(2,153,52)';
     }
-    console.log(res.data.device_config);
+
     if (res.data.device_config !== undefined) {
       device_type.value = res.data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
     } else {
-      // components = components.filter(item => item.key !== 'device-analysis')
+      components = components.filter(item => item.key !== 'device-analysis');
     }
   }
 };

@@ -130,6 +130,6 @@ const removeLayout = (i: number) => {
 
 <style scoped>
 .relative {
-  width: 400px;
+  width: 100%;
 }
 </style>

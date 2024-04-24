@@ -51,7 +51,8 @@ const name = ref('');
 
 const option = ref<EChartsOption>({
   tooltip: {
-    trigger: 'axis'
+    trigger: 'axis',
+    formatter: '{c}_/_'
   },
   legend: {
     data: legendData.value
@@ -72,10 +73,7 @@ const option = ref<EChartsOption>({
     type: 'time' as 'category'
   },
   yAxis: {
-    type: 'value',
-    axisLabel: {
-      formatter: '{value} _/_'
-    }
+    type: 'value'
   },
   series: [] as any[]
 });

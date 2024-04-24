@@ -679,7 +679,7 @@ const local: App.I18n.Schema = {
     addDeviceInfo: '添加设备的基本信息',
     modelDefinition: '模型定义',
     deviceParameterDescribe: '根据系统提供的模型来配置参数以及设备类型',
-    webChartConfiguration: 'web图表配置',
+    webChartConfiguration: 'Web图表配置',
     bindTheCorrespondingChart: '绑定相对应的图表',
     appChartConfiguration: 'App图表配置',
     editAppDetailsPage: '编辑该设备功能模板的App详情页',

@@ -248,11 +248,11 @@ const dropOption = [
   {
     label: () => $t('custom.devicePage.addByNumber'),
     key: 'number'
-  },
-  {
-    label: () => $t('custom.devicePage.addByServer'),
-    key: 'server'
   }
+  // {
+  //   label: () => $t('custom.devicePage.addByServer'),
+  //   key: 'server'
+  // }
 ];
 const topActions = [
   {

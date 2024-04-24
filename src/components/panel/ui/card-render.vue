@@ -127,3 +127,9 @@ const removeLayout = (i: number) => {
     </template>
   </GridLayout>
 </template>
+
+<style scoped>
+.relative {
+  width: 400px;
+}
+</style>

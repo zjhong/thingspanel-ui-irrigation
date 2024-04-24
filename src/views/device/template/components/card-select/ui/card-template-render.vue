@@ -43,7 +43,7 @@ const removeLayout = (i: any) => {
 </script>
 
 <template>
-  <div :class="props.isApp ? 'screena overflow-auto h-[600px]' : ''">
+  <div :class="props.isApp ? 'screena overflow-auto h-[600px]' : 'window-screen'">
     <div :class="props.isApp ? 'm-auto w-480px smartphone overflow-auto' : 'w-full relative'">
       <n-grid :cols="props.isApp ? 1 : 2" x-gap="12" y-gap="12" class="screena relative w-full overflow-auto">
         <n-gi v-for="item in layout" :key="item?.data?.cardId">

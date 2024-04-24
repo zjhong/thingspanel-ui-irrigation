@@ -47,6 +47,7 @@ const deviceList = ref<any[]>([
   [920, 1032, 1001, 1034, 1390, 1430, 1420]
 ]);
 const legendData = ref<any[]>([]);
+const name = ref('');
 
 const option = ref<EChartsOption>({
   tooltip: {
@@ -71,7 +72,10 @@ const option = ref<EChartsOption>({
     type: 'time' as 'category'
   },
   yAxis: {
-    type: 'value'
+    type: 'value',
+    axisLabel: {
+      formatter: '{value} _/_'
+    }
   },
   series: [] as any[]
 });
@@ -368,6 +372,7 @@ const setSeries = dataSource => {
         let str: any = '';
         // str = `${i?.metricsId || '-'}_${i?.metricsName || '-'}`;
         str = `${i?.metricsName || '-'}`;
+        name.value = str;
         legendData.value.push(str as string);
         getTelemetryList(i.deviceId, i.metricsId, index);
         return {
@@ -384,11 +389,11 @@ const setSeries = dataSource => {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
               {
                 offset: 0,
-                color: props.colorGroup[index].top
+                color: props.colorGroup[1].top
               },
               {
                 offset: 1,
-                color: props.colorGroup[index].bottom
+                color: props.colorGroup[1].bottom
               }
             ])
           },
@@ -423,7 +428,9 @@ onMounted(() => {
 <template>
   <div class="m--6">
     <div class="mb-4 mt-4 flex justify-between">
-      <div>曲线</div>
+      <div>
+        {{ name + ' (_/_)' }}
+      </div>
       <div class="flex justify-end">
         <n-popselect
           v-model:value="timeOptionsValue"

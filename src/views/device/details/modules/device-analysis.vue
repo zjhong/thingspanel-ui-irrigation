@@ -1,7 +1,13 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { NButton } from 'naive-ui';
-import { addChildDevice, childDeviceSelectList, deviceUpdate, removeChildDevice } from '@/service/api/device';
+import {
+  addChildDevice,
+  childDeviceSelectList,
+  childDeviceTableList,
+  deviceUpdate,
+  removeChildDevice
+} from '@/service/api/device';
 
 const props = defineProps<{
   id: string;
@@ -14,11 +20,10 @@ const deviceSetName = ref();
 const deviceSetId = ref();
 
 const tableData = ref([]);
-const childTableData = ref([]);
-// const options = ref<string[]>(['查看','设置子设备地址','删除'])
 const total = ref(0);
 const log_page = ref(1);
 const selectChild = ref<string[]>([]);
+const sOptions = ref<any[]>([]);
 const columns = ref([
   {
     title: '设备名称',
@@ -66,20 +71,36 @@ const columns = ref([
 //      deviceSetId.value = row.id
 //    }
 // };
-
-const addSure = async () => {
+const getData = async () => {
+  console.log('start111');
+  console.log(props.id);
+  const res = await childDeviceTableList({
+    page: log_page.value,
+    page_size: 5,
+    id: props.id
+  });
+  console.log(res.data.list);
+  if (res.data.list !== null) {
+    tableData.value = tableData.value.concat(res.data.list);
+  }
+  total.value = res.data.total;
+};
+const selectConfig = v => {
+  selectChild.value = v;
+};
+const addSure = () => {
   if (selectChild.value.length === 0) {
     window.$message?.error('请先选择子设备');
     return;
   }
-  console.log(selectChild.value.join(','));
-
-  const res = await addChildDevice({
+  const res = addChildDevice({
     id: props.id,
     son_id: selectChild.value.join(',')
   });
   showAddDialog.value = false;
-  // getData()
+  selectChild.value = [];
+  sOptions.value = [];
+  getData();
   console.log(res);
 };
 const setSure = async () => {
@@ -102,10 +123,10 @@ const setSure = async () => {
 const getDeviceList = async () => {
   const res = await childDeviceSelectList();
   if (res.data.length !== 0) {
-    // for(var i=0;i < 4;i++){
-    //   res.data.push({name:'AAAA'+i,device_config_id:i})
-    // }
-    childTableData.value = res.data;
+    const tempSOptions = res.data?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+    sOptions.value = sOptions.value.concat(tempSOptions);
   }
 };
 
@@ -125,67 +146,8 @@ const deleteSure = async () => {
   }
 };
 
-// const getData = async() => {
-//    console.log(props.id)
-//    const res = await childDeviceTableList({
-//     page: log_page.value,
-//     page_size: 5,
-//     id: props.id,
+getData();
 
-//   });
-//   console.log(res.data.list)
-//     if(res.data.list !== null){
-//        tableData.value = tableData.value.concat(res.data.list);
-//     }
-// };
-// const renderMultipleSelectTag: SelectRenderTag = (option: any) => {
-//  return h(
-//         'div',
-//         {
-//           style: {
-//             display: 'flex',
-//             alignItems: 'center'
-//           }
-//         },
-//         [
-
-//          h("div", null, option.name),
-//         ]
-//       )
-// };
-// const renderLabel = (option: any) => {
-//     return h(
-//         "div",
-//         {
-//           style: {
-//             display: "flex",
-//             alignItems: "center"
-//           }
-//         },
-//         [
-//           h("div", {
-//             style: {
-//               width:'100px'
-//             }
-//           }, [option.name]),
-//           h(
-//             "div",
-//             {
-//               style: {
-//                 marginLeft: "12px",
-//                 padding: "4px 0"
-//               }
-//             },
-//             [
-//            //   h("div", null, [option.device_config_name]),
-
-//             ]
-//           )
-//         ]
-//       );
-
-// };
-// getData()
 onMounted(() => {});
 </script>
 
@@ -196,14 +158,7 @@ onMounted(() => {});
       <n-card>
         <n-form>
           <n-form-item label="添加子设备">
-            <n-select
-              v-model:value="selectChild"
-              :options="childTableData"
-              label-field="name"
-              value-field="device_config_id"
-              filterable
-              multiple
-            >
+            <n-select v-model:value="selectChild" multiple :options="sOptions" @update:value="selectConfig">
               <template #header>设备名称</template>
             </n-select>
           </n-form-item>
@@ -249,7 +204,7 @@ onMounted(() => {});
           page => {
             log_page = page;
             log_page = page;
-            //getData();
+            getData();
           }
         "
       />

@@ -199,8 +199,15 @@ watch(
               }}
             </spna>
           </div>
-          <div class="mr-4">
-            <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna>
+          <div class="mr-4" style="display: flex">
+            <SvgIcon
+              local-icon="AlertFilled"
+              style="color: #ccc; margin-right: 5px"
+              class="text-20px text-primary"
+              :stroke="icon_type"
+            />
+            <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+
             <spna style="color: #ccc">
               {{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}
             </spna>

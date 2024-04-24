@@ -44,6 +44,7 @@ const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
+const showLog = ref(false);
 
 const queryParams = reactive({
   lable: '',
@@ -122,7 +123,13 @@ const getDeviceDetail = async () => {
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
+      if (res.data.device_config.protocol_type === 'MQTT') {
+        showLog.value = true;
+      } else {
+        showLog.value = false;
+      }
     } else {
+      showLog.value = true;
       components = components.filter(item => item.key !== 'device-analysis');
     }
   }
@@ -230,6 +237,7 @@ watch(
               <component
                 :is="component.component"
                 :id="d_id as string"
+                :show-log="showLog"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
               />
             </n-spin>

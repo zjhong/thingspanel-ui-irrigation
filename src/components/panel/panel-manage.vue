@@ -107,7 +107,7 @@ onMounted(fetchBroad);
         <NEmpty description="暂未添加组件"></NEmpty>
       </div>
 
-      <CardRender ref="cr" v-model:layout="layout" :col-num="24" :default-card-col="4" :row-height="65" @edit="edit" />
+      <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="85" @edit="edit" />
     </div>
     <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>

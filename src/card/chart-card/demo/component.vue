@@ -69,13 +69,15 @@ onUnmounted(() => {
           <!--
  <span class="unit">{{
             card.dataSource.unit ? card.dataSource.unit : "_/_"
-          }}</span> 
+          }}</span>
 -->
-          <span class="unit">_/_</span>
         </div>
         <div class="bt-data">
-          <NIcon size="34"><ClipboardCode20Regular /></NIcon>
-          <span class="value">{{ card.dataSource.sourceNum }}</span>
+          <NIcon size="44"><ClipboardCode20Regular /></NIcon>
+          <div>
+            <span class="value">{{ card.dataSource.sourceNum }}</span>
+          </div>
+          <span class="unit">_/_</span>
         </div>
       </NCard>
       <!--
@@ -85,12 +87,12 @@ onUnmounted(() => {
           <div class="text-center text-24px">{{ value }}</div>
         </div>
         数据名：{{ card.dataSource.deviceSource?.[0]?.metricsName }}
-      </div> 
+      </div>
 -->
       <!--
  <NCard :bordered="false">
         <div class="text-center text-24px">{{ value }}</div>
-      </NCard> 
+      </NCard>
 -->
     </div>
   </div>
@@ -110,7 +112,7 @@ onUnmounted(() => {
 .top-data,
 .bt-data {
   display: flex;
-  padding: 0 40px;
+  padding: 0 30px;
   width: 100%;
   justify-content: space-between;
   align-items: center;
@@ -118,6 +120,13 @@ onUnmounted(() => {
 
 .bt-data {
   margin-top: 30px;
+  position: relative;
+}
+
+.unit {
+  position: absolute;
+  top: 0;
+  right: 30px;
 }
 
 .name {
@@ -125,7 +134,7 @@ onUnmounted(() => {
 }
 
 .value {
-  font-size: 38px;
+  font-size: 48px;
   margin-right: 40px;
 }
 </style>

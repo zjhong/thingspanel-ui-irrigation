@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
-import { deviceDatas } from './api';
+import { deviceDatas, deviceDetails } from './api';
+import { localStg } from '@/utils/storage';
+
 const active: any = ref(false);
 const props = defineProps<{
   card: ICardData;
@@ -21,6 +23,24 @@ const clickSwitch: () => void = async () => {
   const res = await deviceDatas(obj);
   console.log(res, ' 相信');
 };
+const setSeries: (obj: any) => void = async (obj) => {
+  const data = {
+    device_id: obj.deviceSource[0]?.deviceId ?? '',
+    token: localStg.get('token')
+  }
+  const res = await deviceDetails(data);
+  console.log(data, res, ' 详情');
+};
+watch(
+  () => props.card?.dataSource?.deviceSource,
+  () => {
+    setSeries(props?.card?.dataSource);
+  },
+  { deep: true }
+);
+onMounted(() => {
+  setSeries(props?.card?.dataSource);
+});
 </script>
 
 <template>

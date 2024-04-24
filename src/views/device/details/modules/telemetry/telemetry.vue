@@ -29,6 +29,7 @@ const { data, status, send, close } = useWebSocket(wsUrl, {
   }
 });
 const showDialog = ref(false);
+const showLogDialog = ref(false);
 const showHistory = ref(false);
 const telemetryId = ref();
 const telemetryKey = ref();
@@ -83,6 +84,9 @@ const columns = [
 
 const openDialog = () => {
   showDialog.value = true;
+};
+const openUpLog = () => {
+  showLogDialog.value = true;
 };
 const fetchData = async () => {
   startLoading();
@@ -165,7 +169,12 @@ watch(
 <template>
   <n-card class="w-full">
     <!-- 第一行 -->
-    <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
+    <NFlex justify="space-between">
+      <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
+
+      <n-button v-show="false" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
+    </NFlex>
+
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
       <n-card>
         <n-form>

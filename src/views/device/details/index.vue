@@ -43,6 +43,7 @@ const lables = ref<string[]>([]);
 const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
+const device_number = ref('');
 
 const queryParams = reactive({
   lable: '',
@@ -75,11 +76,17 @@ const save = async () => {
     window.NMessage.error('请输入设备编号');
     return;
   }
+  if (deviceDataStore?.deviceData?.device_number.length > 36) {
+    window.NMessage.error('设备编号不能超过36位');
+    return;
+  }
+  device_number.value = deviceDataStore.deviceData.device_number;
   queryParams.id = deviceDataStore?.deviceData?.id;
   queryParams.name = deviceDataStore?.deviceData?.name;
   queryParams.device_number = deviceDataStore?.deviceData?.device_number;
   queryParams.lable = lables.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
+
   const res = await deviceUpdate(queryParams);
   if (!res.error) {
     showDialog.value = false;
@@ -101,6 +108,7 @@ const rules = {
 const getDeviceDetail = async () => {
   const res = await deviceDetail(d_id);
   if (res.data) {
+    device_number.value = res.data.device_number;
     if (res.data.is_online === 0) {
       // device_color.value = 'rgb(255,0,0)'
       // icon_type.value = 'rgb(255,0,0)'
@@ -177,7 +185,7 @@ watch(
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
             <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ deviceDataStore?.deviceData?.device_number || '--' }}</spna>
+            <spna style="color: #ccc">{{ device_number || '--' }}</spna>
           </div>
           <div class="mr-4" style="color: #ccc">
             <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
@@ -214,8 +222,8 @@ watch(
           </div>
         </NFlex>
       </div>
-      <n-divider title-placement="left" style="margin-top: 10px"></n-divider>
-      <div style="margin-top: -15px">
+      <n-divider title-placement="left" style=""></n-divider>
+      <div style="">
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
             <n-spin size="small" :show="loading">

@@ -196,16 +196,21 @@ const getGroup = async () => {
 // 设备列表
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
-  group_id: '',
-  name: ''
+  group_id: null,
+  name: null
 });
 
 // 获取设备列表
-const getDevice = async (groupId: string, name: string) => {
-  queryDevice.value.group_id = groupId || '';
-  queryDevice.value.name = name || '';
+const getDevice = async (groupId: any, name: any) => {
+  queryDevice.value.group_id = groupId || null;
+  queryDevice.value.name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
+};
+
+const queryDeviceName = ref([] as any);
+const handleFocus = (ifIndex: any) => {
+  queryDeviceName.value[ifIndex].focus();
 };
 
 // 设备配置列表
@@ -217,8 +222,8 @@ const queryDeviceConfig = ref({
   name: ''
 });
 // 获取设备配置列表
-const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
+const getDeviceConfig = async (name: any) => {
+  queryDevice.value.name = name || null;
   loadingSelect.value = true;
   const res = await deviceConfig(queryDeviceConfig.value);
   deviceConfigOption.value = res.data.list;
@@ -357,9 +362,11 @@ const deleteActionGroupItem = (actionGroupIndex: any) => {
 // 给某个动作组中增加指令
 const addIfGroupsSubItem = async (actionGroupIndex: any) => {
   await configFormRef.value?.validate();
-  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.push(
-    JSON.parse(JSON.stringify(instructListItem.value))
-  );
+  const data = JSON.parse(JSON.stringify(instructListItem.value));
+  if (props.conditionsType === '11') {
+    data.action_type = '11';
+  }
+  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.push(data);
 };
 // 删除某个动作组中的某个指令
 const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
@@ -368,7 +375,7 @@ const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
 
 onMounted(() => {
   getGroup();
-  getDevice('', '');
+  getDevice(null, null);
   getDeviceConfig('');
   getAlarmList('');
   getSceneList('');
@@ -452,7 +459,7 @@ onMounted(() => {
                             <NFlex align="center" class="w-500px">
                               分组
                               <n-select
-                                v-model:value="instructItem.deviceGroupId"
+                                v-model:value="queryDevice.group_id"
                                 :options="deviceGroupOptions"
                                 label-field="name"
                                 value-field="id"
@@ -460,7 +467,13 @@ onMounted(() => {
                                 clearable
                                 @update:value="data => getDevice(data, queryDevice.name)"
                               />
-                              <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
+                              <NInput
+                                ref="queryDeviceName"
+                                v-model:value="queryDevice.name"
+                                class="flex-1"
+                                clearable
+                                @click="handleFocus(instructIndex)"
+                              ></NInput>
                               <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
                                 搜索
                               </NButton>
@@ -494,7 +507,7 @@ onMounted(() => {
                     <template v-if="instructItem.action_type">
                       <NFormItem
                         :show-label="false"
-                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].actionParamOptions`"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_param`"
                         :rule="configFormRules.actionParamOptions"
                         class="w-40"
                       >

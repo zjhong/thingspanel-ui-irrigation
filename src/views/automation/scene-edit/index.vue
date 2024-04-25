@@ -138,7 +138,7 @@ const actionTypeChange = (instructItem: any, data: any) => {
 
   if (data === '10') {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDevice('', '');
+    getDevice(null, null);
   } else if (data === '11') {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     getDeviceConfig('');
@@ -160,16 +160,23 @@ const getGroup = async () => {
 // 设备列表
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
-  group_id: '',
-  name: ''
+  group_id: null,
+  name: null
 });
 
 // 获取设备列表
-const getDevice = async (groupId: string, name: string) => {
-  queryDevice.value.group_id = groupId || '';
-  queryDevice.value.name = name || '';
+const getDevice = async (groupId: any, name: any) => {
+  queryDevice.value.group_id = groupId || null;
+  queryDevice.value.name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
+};
+
+const queryDeviceName = ref([] as any);
+const handleFocus = (ifIndex: any) => {
+  console.log(queryDeviceName.value);
+  console.log(ifIndex);
+  queryDeviceName.value[ifIndex].focus();
 };
 
 // 设备配置列表
@@ -181,8 +188,8 @@ const queryDeviceConfig = ref({
   name: ''
 });
 // 获取设备配置列表
-const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
+const getDeviceConfig = async (name: any) => {
+  queryDevice.value.name = name || null;
   loadingSelect.value = true;
   const res = await deviceConfig(queryDeviceConfig.value);
   deviceConfigOption.value = res.data.list;
@@ -401,7 +408,7 @@ const dataEcho = actionsData => {
 
 onMounted(() => {
   getGroup();
-  getDevice('', '');
+  getDevice(null, null);
   getAlarmList('');
   getSceneList('');
   getDeviceConfig('');
@@ -494,7 +501,7 @@ onMounted(() => {
                             <NFlex align="center" class="w-500px">
                               分组
                               <n-select
-                                v-model:value="instructItem.deviceGroupId"
+                                v-model:value="queryDevice.group_id"
                                 :options="deviceGroupOptions"
                                 label-field="name"
                                 value-field="id"
@@ -502,7 +509,14 @@ onMounted(() => {
                                 clearable
                                 @update:value="data => getDevice(data, queryDevice.name)"
                               />
-                              <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
+                              <NInput
+                                ref="queryDeviceName"
+                                v-model:value="queryDevice.name"
+                                class="flex-1"
+                                clearable
+                                autofocus
+                                @click="handleFocus(instructIndex)"
+                              ></NInput>
                               <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
                                 搜索
                               </NButton>

@@ -143,9 +143,9 @@ onMounted(async () => {
         <NFormItem label="设备接入类型" path="device_type">
           <n-radio-group v-model:value="configForm.device_type" name="device_type">
             <n-space>
-              <n-radio value="1">直连设备</n-radio>
-              <n-radio value="2">网关</n-radio>
-              <n-radio value="3">网关子设备</n-radio>
+              <n-radio value="1" disabled>直连设备</n-radio>
+              <n-radio value="2" disabled>网关</n-radio>
+              <n-radio value="3" disabled>网关子设备</n-radio>
             </n-space>
           </n-radio-group>
         </NFormItem>

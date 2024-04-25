@@ -315,9 +315,13 @@ const local: App.I18n.Schema = {
         userGender: '性别',
         nickName: '昵称',
         userPhone: '手机号',
+        accountStatus: '账户状态',
+        remark: '备注',
         userEmail: '邮箱',
         userStatus: '租户状态',
+        userStatus2: '用户状态',
         userRole: '租户角色',
+        userRole2: '用户角色',
         password: '密码',
         confirmPwd: '确认密码',
         enter: '进入',
@@ -328,7 +332,8 @@ const local: App.I18n.Schema = {
           userPhone: '请输入手机号',
           userEmail: '请输入邮箱',
           userStatus: '请选择租户状态',
-          userRole: '请选择租户角色'
+          userRole: '请选择租户角色',
+          userRole2: '请选择用户角色'
         },
         addUser: '新增用户',
         editUser: '编辑用户',

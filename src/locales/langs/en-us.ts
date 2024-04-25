@@ -316,9 +316,13 @@ const local: App.I18n.Schema = {
         userGender: 'Gender',
         nickName: 'Nick Name',
         userPhone: 'Phone Number',
+        accountStatus: 'Account status',
+        remark: 'Notes',
         userEmail: 'Email',
         userStatus: 'User Status',
+        userStatus2: 'User Status',
         userRole: 'User Role',
+        userRole2: 'User Role',
         password: 'Password',
         confirmPwd: 'Confirm Password',
         enter: 'Enter',
@@ -329,7 +333,8 @@ const local: App.I18n.Schema = {
           userPhone: 'Please enter phone number',
           userEmail: 'Please enter email',
           userStatus: 'Please select user status',
-          userRole: 'Please select user role'
+          userRole: 'Please select user role',
+          userRole2: 'Please select user role'
         },
         addUser: 'Add User',
         editUser: 'Edit User',

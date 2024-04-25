@@ -12,20 +12,6 @@ const props = defineProps<{
 }>();
 const socket: any = ref(null);
 // sendMessage()
-const clickSwitch: () => void = async () => {
-  const arr: any = props?.card?.dataSource;
-  const device_id = arr.deviceSource[0]?.deviceId ?? '';
-  console.log(arr.deviceSource[0].metricsOptions[0].options[0].key, '测试4');
-  const obj = {
-    device_id,
-    value: JSON.stringify({
-      switch: false
-    })
-  };
-  const res = await deviceDatas(obj);
-  console.log(res, ' 相信');
-};
-
 const setSeries: (obj: any) => void = async obj => {
   const arr: any = props?.card?.dataSource;
   const queryInfo = {
@@ -33,20 +19,15 @@ const setSeries: (obj: any) => void = async obj => {
     keys: [arr.deviceSource[0].metricsId || 'externalVol'],
     token: localStg.get('token')
   };
+  console.log(arr.deviceSource[0].metricsId, '11');
   if (socket.value && socket.value.readyState === WebSocket.OPEN) {
     socket.value.send(JSON.stringify(queryInfo)); // 将对象转换为JSON字符串后发送
   } else {
     console.error('WebSocket连接未建立或已关闭');
   }
 };
-watch(
-  () => props.card?.dataSource?.deviceSource,
-  () => {
-    setSeries(props?.card?.dataSource);
-  },
-  { deep: true }
-);
-onMounted(() => {
+
+const fun: () => void = () => {
   const { otherBaseURL } = createServiceConfig(import.meta.env);
   let wsUrl = otherBaseURL.demo.replace('http', 'ws');
   wsUrl += `/telemetry/datas/current/keys/ws`;
@@ -59,6 +40,7 @@ onMounted(() => {
 
   socket.value.onmessage = event => {
     const receivedData = JSON.parse(event.data);
+    active.value = receivedData.LightIntensity !== 0;
     console.log('接收到数据:', receivedData);
     // 在这里处理接收到的数据
   };
@@ -70,6 +52,31 @@ onMounted(() => {
   socket.value.onclose = () => {
     console.log('WebSocket连接已关闭');
   };
+};
+
+const clickSwitch: () => void = async () => {
+  const arr: any = props?.card?.dataSource;
+  const device_id = arr.deviceSource[0]?.deviceId ?? '';
+  console.log(arr.deviceSource[0], '测试4');
+  const obj = {
+    device_id,
+    value: JSON.stringify({
+      switch: active.value
+    })
+  };
+  await deviceDatas(obj);
+  fun();
+};
+
+watch(
+  () => props.card?.dataSource?.deviceSource,
+  () => {
+    setSeries(props?.card?.dataSource);
+  },
+  { deep: true }
+);
+onMounted(() => {
+  fun();
 });
 onUnmounted(() => {
   if (socket.value) {

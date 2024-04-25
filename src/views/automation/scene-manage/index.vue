@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Ref, onMounted, ref } from 'vue';
-import { type DataTableColumns, NButton, NCard, NFlex, NPagination, useDialog, useMessage } from 'naive-ui';
+import { onMounted, ref } from 'vue';
+import { NButton, NCard, NFlex, NPagination, useDialog, useMessage } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
 import moment from 'moment';
 import { sceneActive, sceneDel, sceneGet, sceneLog } from '@/service/api/automation';
@@ -68,38 +68,49 @@ const bodyStyle = ref({
 });
 const showLog = ref(false);
 
-const logColumnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
+const execution_result_options = ref([
   {
-    key: 'executed_at',
-    title: '执行时间',
-    align: 'center'
+    label: '全部',
+    value: ''
   },
   {
-    key: 'detail',
-    title: '执行说明',
-    align: 'center'
+    label: '执行成功',
+    value: 'S'
   },
   {
-    key: 'execution_result',
-    title: '执行状态',
-    align: 'center'
+    label: '执行失败',
+    value: 'F'
   }
 ]);
 const logQuery = ref({
+  id: '',
   page: 1,
-  page_size: 12,
-  time: ref<[number, number]>([Date.now(), Date.now()]),
-  status: ''
+  page_size: 10,
+  time: ref<[number, number]>([moment().subtract(7, 'days').valueOf(), moment().valueOf()]),
+  execution_start_time: '',
+  execution_end_time: '',
+  execution_result: ''
 });
-const logDataTotal = 0;
+const logDataTotal = ref(0);
 const logData = ref([]);
-const getLogList = async (item: any) => {
-  const res = await sceneLog(item.id);
-  logData.value = res.data;
+const queryLog = () => {
+  logQuery.value.page = 1;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  getLogList();
+};
+const getLogList = async () => {
+  if (logQuery.value.time) {
+    logQuery.value.execution_start_time = moment(logQuery.value.time[0]).format();
+    logQuery.value.execution_end_time = moment(logQuery.value.time[1]).format();
+  }
+  const res = await sceneLog(logQuery.value);
+  logData.value = res.data.list;
+  logDataTotal.value = res.data.total;
 };
 // 查看日志
 const openLog = (item: any) => {
-  getLogList(item);
+  logQuery.value.id = item.id;
+  getLogList();
   showLog.value = true;
 };
 // 删除场景
@@ -117,6 +128,17 @@ const deleteScene = async (item: any) => {
       }
     }
   });
+};
+const logClose = () => {
+  logQuery.value = {
+    id: '',
+    page: 1,
+    page_size: 10,
+    time: [moment().subtract(7, 'days').valueOf(), moment().valueOf()],
+    execution_start_time: '',
+    execution_end_time: '',
+    execution_result: ''
+  };
 };
 onMounted(() => {
   getData();
@@ -187,20 +209,56 @@ onMounted(() => {
         </NFlex>
       </template>
     </NCard>
-    <n-modal v-model:show="showLog" :style="bodyStyle" preset="card" title="日志" size="huge" :bordered="false">
-      <NFlex class="mb-10">
-        <n-date-picker v-model:value="logQuery.time" type="datetimerange" clearable />
-        <n-select v-model:value="logQuery.status" class="max-w-40" />
+    <n-modal
+      v-model:show="showLog"
+      :style="bodyStyle"
+      preset="card"
+      title="日志"
+      size="huge"
+      :bordered="false"
+      @close="logClose()"
+    >
+      <NFlex class="mb-6">
+        <n-date-picker v-model:value="logQuery.time" type="datetimerange" @update:value="queryLog" />
+        <n-select
+          v-model:value="logQuery.execution_result"
+          :options="execution_result_options"
+          class="max-w-40"
+          placeholder="请选择执行状态"
+          @update:value="queryLog"
+        ></n-select>
+        <NButton type="primary" @click="queryLog()">搜索</NButton>
       </NFlex>
-      <NDataTable :columns="logColumnsData" :data="logData" size="small" class="mb-10" />
-      <NFlex justify="end">
-        <NPagination
-          v-model:page="logQuery.page"
-          :page-size="logQuery.page_size"
-          :item-count="logDataTotal"
-          @update:page="getLogList"
-        />
-      </NFlex>
+      <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
+      <template v-else>
+        <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
+          <thead>
+            <tr>
+              <th class="w-180px">执行时间</th>
+              <th>执行说明</th>
+              <th class="w-120px">执行状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sceneItem, index) in logData" :key="index">
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td>{{ sceneItem['detail'] }}</td>
+              <td>
+                <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>
+                <span v-if="sceneItem['execution_result'] === 'F'">执行失败</span>
+              </td>
+            </tr>
+          </tbody>
+        </NTable>
+        <NFlex justify="end">
+          <NPagination
+            v-model:page="logQuery.page"
+            :page-size="logQuery.page_size"
+            :item-count="logDataTotal"
+            @update:page="getLogList"
+          />
+        </NFlex>
+      </template>
     </n-modal>
   </div>
 </template>

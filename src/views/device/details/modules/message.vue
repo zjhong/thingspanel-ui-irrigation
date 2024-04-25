@@ -27,7 +27,7 @@ const getConfigInfo = async () => {
   const locationData = location?.split(',') || [];
   latitude.value = locationData[1] || '';
   longitude.value = locationData[0] || '';
-  deviceConfigInfo({ id: props.deviceConfigId });
+  props.deviceConfigId && deviceConfigInfo({ id: props.deviceConfigId });
 };
 
 const handleSave = () => {

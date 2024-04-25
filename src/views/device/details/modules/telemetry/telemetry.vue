@@ -200,6 +200,20 @@ onUnmounted(() => {
     close();
   }
 });
+// watch(
+//   () => data.value,
+//   newVal => {
+//     if (newVal === 'pong') {
+//       console.log('心跳');
+//     } else {
+//       telemetry.value = JSON.parse(newVal);
+//       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+//       numberAnimationInstRef.value.forEach(i => {
+//         i?.play();
+//       });
+//     }
+//   }
+// );
 </script>
 
 <template>

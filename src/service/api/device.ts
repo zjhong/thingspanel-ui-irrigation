@@ -288,3 +288,11 @@ export const addChildDevice = async (params: any) => {
 export const removeChildDevice = async (params: any) => {
   return await request.put<any>(`/device/sub-remove`, params);
 };
+/** 获取设备获取遥测数据命令 */
+export const getSimulation = async (params: any) => {
+  return await request.get<any>(`/telemetry/datas/simulation`, { params });
+};
+/** 获取设备发送遥测数据命令 */
+export const sendSimulation = async (params: any) => {
+  return await request.post<any>(`/telemetry/datas/simulation`, params);
+};

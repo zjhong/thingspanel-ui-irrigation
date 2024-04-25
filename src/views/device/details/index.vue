@@ -218,8 +218,8 @@ watch(
           </div>
         </NFlex>
       </div>
-      <n-divider title-placement="left" style="margin-top: 10px"></n-divider>
-      <div style="margin-top: -15px">
+      <n-divider title-placement="left"></n-divider>
+      <div>
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
             <n-spin size="small" :show="loading">

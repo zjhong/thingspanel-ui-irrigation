@@ -181,7 +181,7 @@ watch(
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
             <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ device_number || '--' }}</spna>
+            <spna style="color: #ccc">{{ d_id || '--' }}</spna>
           </div>
           <div class="mr-4" style="color: #ccc">
             <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>

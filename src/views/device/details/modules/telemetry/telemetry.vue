@@ -104,6 +104,7 @@ const openDialog = () => {
   showDialog.value = true;
 };
 const openUpLog = () => {
+  showError.value = false;
   showLogDialog.value = true;
   requestSimulationList();
 };
@@ -118,6 +119,7 @@ const sendSimulationList = async () => {
   });
   if (!error) {
     showLogDialog.value = false;
+    showError.value = false;
   } else {
     showError.value = true;
     erroMessage.value = error?.response?.data?.message;
@@ -222,7 +224,7 @@ onUnmounted(() => {
     <NFlex justify="space-between">
       <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
 
-      <n-button v-model:v-show="showLog" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
+      <n-button v-model:show="showLog" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
     </NFlex>
 
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -238,24 +240,39 @@ onUnmounted(() => {
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[400px]">
+    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[500px]">
       <n-card>
         <n-form>
-          <n-form-item label="上报数据">
-            <n-input v-model:value="device_order" type="textarea" />
-          </n-form-item>
-          <div class="mr-4" style="display: flex"></div>
+          <div style="display: flex">
+            <n-form-item label="上报数据">
+              <n-input v-model:value="device_order" type="textarea" style="width: 300px" />
+            </n-form-item>
 
-          <NFlex justify="space-between">
-            <div v-show="showError" style="display: flex">
-              <SvgIcon local-icon="AlertFilled" style="color: red; margin-right: 5px" class="text-20px text-primary" />
-              <span class="mr-2">{{ erroMessage }}</span>
-            </div>
-
-            <n-button @click="sendSimulationList">发送</n-button>
-          </NFlex>
-
-          <n-space align="end"></n-space>
+            <n-button style="width: 100px; margin-left: 20px; margin-top: 40px" @click="sendSimulationList">
+              发送
+            </n-button>
+          </div>
+          <div v-if="showError" style="display: flex; width: 300px; border: 2px solid #eee; border-radius: 5px">
+            <SvgIcon
+              local-icon="AlertFilled"
+              style="margin-left: 5px; color: red; margin-right: 5px; margin-top: 5px; margin-bottom: 5px"
+              class="text-20px text-primary"
+            />
+            <span
+              style="
+                display: inline-block;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                width: 300px;
+                wite-space: nowrap;
+                overflow: hidden;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ erroMessage }}
+            </span>
+          </div>
         </n-form>
       </n-card>
     </n-modal>

@@ -1,11 +1,17 @@
-<script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+<script setup lang="tsx">
+import { onMounted, onUnmounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
 import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { useWebSocket } from '@vueuse/core';
-import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
+import {
+  getSimulation,
+  getTelemetryLogList,
+  sendSimulation,
+  telemetryDataCurrent,
+  telemetryDataPub
+} from '@/service/api';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '@/service/api/device';
 import HistoryData from './modules/history-data.vue';
@@ -22,7 +28,7 @@ let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/ws`;
 // eslint-disable-next-line no-constant-binary-expression
 
-const { data, status, send, close } = useWebSocket(wsUrl, {
+const { status, send, close } = useWebSocket(wsUrl, {
   heartbeat: {
     message: 'ping',
     interval: 8000,
@@ -48,7 +54,7 @@ const nowTime = ref<any>();
 const { loading, startLoading, endLoading } = useLoading();
 const total = ref(0);
 const showLog = ref(false);
-
+const device_order = ref('');
 const operationOptions = [
   { label: '全部', value: '' },
   { label: '手动操作', value: '1' },
@@ -64,6 +70,8 @@ const resultOptions = [
 const cardHeight = ref(160); // 卡片的高度
 const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
+const showError = ref(false);
+const erroMessage = ref('');
 const columns = [
   { title: '指令', key: 'data' },
   {
@@ -83,12 +91,37 @@ const columns = [
     render: row => (row.status === '1' ? '成功' : '失败')
   }
 ];
+const requestSimulationList = async () => {
+  const { data, error } = await getSimulation({
+    device_id: props.id
+  });
+  if (!error) {
+    device_order.value = data;
+  }
+};
 
 const openDialog = () => {
   showDialog.value = true;
 };
 const openUpLog = () => {
   showLogDialog.value = true;
+  requestSimulationList();
+};
+
+const sendSimulationList = async () => {
+  if (!device_order.value) {
+    window.$message?.error('请输入发送数据');
+    return;
+  }
+  const { error } = await sendSimulation({
+    command: device_order.value
+  });
+  if (!error) {
+    showLogDialog.value = false;
+  } else {
+    showError.value = true;
+    erroMessage.value = error?.response?.data?.message;
+  }
 };
 const fetchData = async () => {
   startLoading();
@@ -144,10 +177,10 @@ const setItemRef = el => {
   }
 };
 const getDeviceDetail = async () => {
-  const res = await deviceDetail(props.id);
-  if (res.data) {
-    if (res.data.device_config !== undefined) {
-      if (res.data.device_config.protocol_type === 'MQTT') {
+  const { data, error } = await deviceDetail(props.id);
+  if (!error) {
+    if (data.device_config !== undefined) {
+      if (data.device_config.protocol_type === 'MQTT') {
         showLog.value = true;
       } else {
         showLog.value = false;
@@ -157,30 +190,30 @@ const getDeviceDetail = async () => {
     }
   }
 };
+getDeviceDetail();
 onMounted(() => {
   fetchData();
   fetchTelemetry();
-  getDeviceDetail();
 });
 onUnmounted(() => {
   if (status.value === 'OPEN') {
     close();
   }
 });
-watch(
-  () => data.value,
-  newVal => {
-    if (newVal === 'pong') {
-      console.log('心跳');
-    } else {
-      telemetry.value = JSON.parse(newVal);
-      nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      numberAnimationInstRef.value.forEach(i => {
-        i?.play();
-      });
-    }
-  }
-);
+// watch(
+//   () => data.value,
+//   newVal => {
+//     if (newVal === 'pong') {
+//       console.log('心跳');
+//     } else {
+//       telemetry.value = JSON.parse(newVal);
+//       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
+//       numberAnimationInstRef.value.forEach(i => {
+//         i?.play();
+//       });
+//     }
+//   }
+// );
 </script>
 
 <template>
@@ -189,7 +222,7 @@ watch(
     <NFlex justify="space-between">
       <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
 
-      <n-button v-model:v-show="showLog" type="primary" class="mb-4" hidden @click="openUpLog">上报日志</n-button>
+      <n-button v-model:v-show="showLog" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
     </NFlex>
 
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -209,17 +242,17 @@ watch(
       <n-card>
         <n-form>
           <n-form-item label="上报数据">
-            <n-input v-model:value="formValue" type="textarea" />
+            <n-input v-model:value="device_order" type="textarea" />
           </n-form-item>
           <div class="mr-4" style="display: flex"></div>
 
           <NFlex justify="space-between">
-            <div v-if="true" style="display: flex">
+            <div v-show="showError" style="display: flex">
               <SvgIcon local-icon="AlertFilled" style="color: red; margin-right: 5px" class="text-20px text-primary" />
-              <spna class="mr-2">我是错误信息</spna>
+              <span class="mr-2">{{ erroMessage }}</span>
             </div>
 
-            <n-button @click="sends">发送</n-button>
+            <n-button @click="sendSimulationList">发送</n-button>
           </NFlex>
 
           <n-space align="end"></n-space>

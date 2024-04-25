@@ -7,6 +7,7 @@ import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { useWebSocket } from '@vueuse/core';
 import { getTelemetryLogList, telemetryDataCurrent, telemetryDataPub } from '@/service/api';
 import { localStg } from '@/utils/storage';
+import { deviceDetail } from '@/service/api/device';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
@@ -46,6 +47,7 @@ const telemetry = ref<any>({});
 const nowTime = ref<any>();
 const { loading, startLoading, endLoading } = useLoading();
 const total = ref(0);
+const showLog = ref(false);
 
 const operationOptions = [
   { label: '全部', value: '' },
@@ -141,9 +143,24 @@ const setItemRef = el => {
     numberAnimationInstRef.value[index] = el;
   }
 };
+const getDeviceDetail = async () => {
+  const res = await deviceDetail(props.id);
+  if (res.data) {
+    if (res.data.device_config !== undefined) {
+      if (res.data.device_config.protocol_type === 'MQTT') {
+        showLog.value = true;
+      } else {
+        showLog.value = false;
+      }
+    } else {
+      showLog.value = true;
+    }
+  }
+};
 onMounted(() => {
   fetchData();
   fetchTelemetry();
+  getDeviceDetail();
 });
 onUnmounted(() => {
   if (status.value === 'OPEN') {
@@ -172,7 +189,7 @@ watch(
     <NFlex justify="space-between">
       <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
 
-      <n-button v-show="false" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
+      <n-button v-model:v-show="showLog" type="primary" class="mb-4" hidden @click="openUpLog">上报日志</n-button>
     </NFlex>
 
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -185,6 +202,27 @@ watch(
             <n-button @click="showDialog = false">取消</n-button>
             <n-button @click="sends">发送</n-button>
           </n-space>
+        </n-form>
+      </n-card>
+    </n-modal>
+    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[400px]">
+      <n-card>
+        <n-form>
+          <n-form-item label="上报数据">
+            <n-input v-model:value="formValue" type="textarea" />
+          </n-form-item>
+          <div class="mr-4" style="display: flex"></div>
+
+          <NFlex justify="space-between">
+            <div v-if="true" style="display: flex">
+              <SvgIcon local-icon="AlertFilled" style="color: red; margin-right: 5px" class="text-20px text-primary" />
+              <spna class="mr-2">我是错误信息</spna>
+            </div>
+
+            <n-button @click="sends">发送</n-button>
+          </NFlex>
+
+          <n-space align="end"></n-space>
         </n-form>
       </n-card>
     </n-modal>

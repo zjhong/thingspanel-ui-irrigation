@@ -44,7 +44,6 @@ const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
-const showLog = ref(false);
 
 const queryParams = reactive({
   lable: '',
@@ -110,26 +109,16 @@ const getDeviceDetail = async () => {
   const res = await deviceDetail(d_id);
   if (res.data) {
     device_number.value = res.data.device_number;
-    if (res.data.is_online === 0) {
-      // device_color.value = 'rgb(255,0,0)'
-      // icon_type.value = 'rgb(255,0,0)'
-    } else {
+    if (res.data.is_online !== 0) {
       device_color.value = 'rgb(2,153,52)';
       icon_type.value = 'rgb(2,153,52)';
     }
-
     if (res.data.device_config !== undefined) {
       device_type.value = res.data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
-      if (res.data.device_config.protocol_type === 'MQTT') {
-        showLog.value = true;
-      } else {
-        showLog.value = false;
-      }
     } else {
-      showLog.value = true;
       components = components.filter(item => item.key !== 'device-analysis');
     }
   }
@@ -224,20 +213,19 @@ watch(
             <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
 
             <spna style="color: #ccc">
-              {{ deviceDataStore?.deviceData?.is_online || $t('custom.device_details.noAlarm') }}
+              {{ $t('custom.device_details.noAlarm') }}
             </spna>
           </div>
         </NFlex>
       </div>
-      <n-divider title-placement="left" style=""></n-divider>
-      <div style="">
+      <n-divider title-placement="left" style="margin-top: 10px"></n-divider>
+      <div style="margin-top: -15px">
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
             <n-spin size="small" :show="loading">
               <component
                 :is="component.component"
                 :id="d_id as string"
-                :show-log="showLog"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
               />
             </n-spin>

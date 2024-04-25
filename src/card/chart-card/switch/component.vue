@@ -15,11 +15,12 @@ const detail: any = ref(null);
 // sendMessage()
 const setSeries: (obj: any) => void = async obj => {
   const arr: any = props?.card?.dataSource;
-
   const querDetail = {
     device_id: obj.deviceSource[0]?.deviceId ?? '',
     keys: arr.deviceSource[0].metricsId
   };
+  if (!querDetail.device_id || !arr.deviceSource[0].metricsId) return;
+
   detail.value = await deviceDetail(querDetail);
   const queryInfo = {
     device_id: obj.deviceSource[0]?.deviceId ?? '',

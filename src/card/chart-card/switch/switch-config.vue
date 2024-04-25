@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { inject, reactive, watch } from 'vue';
+import { inject, ref, watch } from 'vue';
 import type { ICardData, IConfigCtx } from '@/components/panel/card';
 import { deviceDatas } from './api';
-const form: any = reactive({
-  active0: '',
-  active1: ''
-});
+const flag: any = ref(false);
+const active0: any = ref('');
+const active1: any = ref('');
 const ctx = inject<IConfigCtx>('config-ctx')!;
 
 const props = defineProps<{
@@ -16,19 +15,25 @@ const props = defineProps<{
 const clickSwitch: () => void = async () => {
   const arr: any = props?.data?.dataSource;
   const device_id = arr.deviceSource[0]?.deviceId ?? '';
-  const obj = {
-    device_id,
-    value: JSON.stringify({
-      switch: form.active1 ?? form.active0
-    })
-  };
-  await deviceDatas(obj);
-  form.active1 = () => {
-    return '';
-  };
-  form.active0 = () => {
-    return '';
-  };
+  if (device_id) {
+    const obj = {
+      device_id,
+      value: JSON.stringify({
+        switch: flag.value ? 1 : 0
+      })
+    };
+    await deviceDatas(obj);
+  }
+};
+
+const blurClick: () => void = () => {
+  console.log(active0.value === '0', active1.value);
+  if (active0.value === '1' || active1.value === '0') {
+    flag.value = active0.value === '1';
+    clickSwitch();
+  } else {
+    window.$message?.error('查询不到设备');
+  }
 };
 
 watch(
@@ -45,23 +50,13 @@ watch(
     <div class="title">设置设备默认的开启状态</div>
     <NForm :model="ctx.config">
       <NFormItem label="开启：">
-        <n-input-number
-          v-model:value="form.active1"
-          placeholder="开启是1"
-          min="1"
-          max="1"
-          :disabled="form.active0 === 0"
-        />
+        <n-input v-model:value="active0" placeholder="开启是1" />
       </NFormItem>
       <NFormItem label="关闭：">
-        <n-input-number
-          v-model:value="form.active0"
-          placeholder="关闭是0"
-          min="0"
-          max="0"
-          :disabled="form.active1 === 1"
-        />
-        <n-button type="info" class="btn" @click="clickSwitch">确定</n-button>
+        <n-input v-model:value="active1" placeholder="关闭是0" />
+      </NFormItem>
+      <NFormItem>
+        <n-button type="info" class="btn" @click="blurClick">确定</n-button>
       </NFormItem>
     </NForm>
   </div>

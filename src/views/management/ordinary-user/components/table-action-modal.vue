@@ -11,6 +11,7 @@ defineOptions({ name: 'TableActionModal' });
 
 const props = withDefaults(
   defineProps<{
+    visible?: boolean;
     type: string;
     editData: any;
   }>(),

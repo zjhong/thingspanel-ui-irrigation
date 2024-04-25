@@ -488,8 +488,12 @@ declare namespace App {
             nickName: string;
             userPhone: string;
             userEmail: string;
+            remark: string;
+            accountStatus: string;
             userStatus: string;
+            userStatus2: string;
             userRole: string;
+            userRole2: string;
             password: string;
             confirmPwd: string;
             enter: string;
@@ -501,6 +505,7 @@ declare namespace App {
               userEmail: string;
               userStatus: string;
               userRole: string;
+              userRole2: string;
             };
             addUser: string;
             editUser: string;

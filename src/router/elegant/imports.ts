@@ -60,6 +60,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   manage_user: () => import("@/views/manage/user/index.vue"),
   management_auth: () => import("@/views/management/auth/index.vue"),
   management_notification: () => import("@/views/management/notification/index.vue"),
+  "management_ordinary-user": () => import("@/views/management/ordinary-user/index.vue"),
   management_role: () => import("@/views/management/role/index.vue"),
   management_route: () => import("@/views/management/route/index.vue"),
   management_setting: () => import("@/views/management/setting/index.vue"),

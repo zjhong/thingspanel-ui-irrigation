@@ -61,7 +61,7 @@ onUnmounted(() => {
   <div class="h-full">
     <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
     <div class="h-full flex-col items-center">
-      <NCard v-if="card.dataSource?.origin === 'system'" class="box">
+      <NCard v-if="card.dataSource?.origin === 'system'" :bordered="false" class="box">
         <div class="top-data">
           <span class="name">
             {{ card.dataSource.deviceSource?.[0]?.metricsName }}
@@ -112,7 +112,7 @@ onUnmounted(() => {
 .top-data,
 .bt-data {
   display: flex;
-  padding: 0 30px;
+  padding: 0 20px;
   width: 100%;
   justify-content: space-between;
   align-items: center;

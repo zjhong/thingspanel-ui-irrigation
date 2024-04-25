@@ -161,13 +161,13 @@ const getGroup = async () => {
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
   group_id: null,
-  name: null
+  device_name: null
 });
 
 // 获取设备列表
 const getDevice = async (groupId: any, name: any) => {
   queryDevice.value.group_id = groupId || null;
-  queryDevice.value.name = name || null;
+  queryDevice.value.device_name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
 };
@@ -189,7 +189,7 @@ const queryDeviceConfig = ref({
 });
 // 获取设备配置列表
 const getDeviceConfig = async (name: any) => {
-  queryDevice.value.name = name || null;
+  queryDevice.value.device_name = name || null;
   loadingSelect.value = true;
   const res = await deviceConfig(queryDeviceConfig.value);
   deviceConfigOption.value = res.data.list;
@@ -507,17 +507,20 @@ onMounted(() => {
                                 value-field="id"
                                 class="max-w-40"
                                 clearable
-                                @update:value="data => getDevice(data, queryDevice.name)"
+                                @update:value="data => getDevice(data, queryDevice.device_name)"
                               />
                               <NInput
                                 ref="queryDeviceName"
-                                v-model:value="queryDevice.name"
+                                v-model:value="queryDevice.device_name"
                                 class="flex-1"
                                 clearable
                                 autofocus
                                 @click="handleFocus(instructIndex)"
                               ></NInput>
-                              <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                              <NButton
+                                type="primary"
+                                @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
+                              >
                                 搜索
                               </NButton>
                             </NFlex>

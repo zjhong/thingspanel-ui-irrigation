@@ -196,13 +196,13 @@ const getGroup = async () => {
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
   group_id: null as any,
-  name: null as any
+  device_name: null as any
 });
 
 // 获取设备列表
 const getDevice = async (groupId: any, name: any) => {
   queryDevice.value.group_id = groupId || null;
-  queryDevice.value.name = name || null;
+  queryDevice.value.device_name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
 };
@@ -227,7 +227,7 @@ const triggerSourceChange = (ifItem: any) => {
 //   }, 100);
 // };
 const triggerSourceShow = () => {
-  queryDevice.value.name = '';
+  queryDevice.value.device_name = '';
   queryDevice.value.group_id = '';
   getDevice(null, null);
 };
@@ -245,7 +245,7 @@ const queryDeviceConfig = ref({
 });
 // 获取设备配置列表
 const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
+  queryDevice.value.device_name = name || '';
   loadingSelect.value = true;
   const res = await deviceConfig(queryDeviceConfig.value);
   deviceConfigOption.value = res.data.list;
@@ -657,17 +657,20 @@ onMounted(() => {
                             class="max-w-40"
                             clearable
                             placeholder="请选择"
-                            @update:value="data => getDevice(data, queryDevice.name)"
+                            @update:value="data => getDevice(data, queryDevice.device_name)"
                           />
                           <NInput
                             ref="queryDeviceName"
-                            v-model:value="queryDevice.name"
+                            v-model:value="queryDevice.device_name"
                             class="flex-1"
                             clearable
                             placeholder="请输入"
                             @click="handleFocus(ifIndex)"
                           ></NInput>
-                          <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                          <NButton
+                            type="primary"
+                            @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
+                          >
                             搜索
                           </NButton>
                         </NFlex>

@@ -8,7 +8,6 @@ export default {
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
   title: '设备开关控制',
-  configForm: defineAsyncComponent(() => import('./card-config.vue')),
   preset: {
     dataSource: {
       origin: 'device',

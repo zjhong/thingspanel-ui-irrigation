@@ -145,3 +145,5 @@ export const cen = {
   'new-area': 'New Area',
   'automation_scene-edit': `场景编辑`
 };
+
+

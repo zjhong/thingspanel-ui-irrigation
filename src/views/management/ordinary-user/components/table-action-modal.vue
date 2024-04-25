@@ -9,10 +9,16 @@ export type ModalType = NonNullable<any['type']>;
 
 defineOptions({ name: 'TableActionModal' });
 
-const props = withDefaults(defineProps<any>(), {
-  type: 'add',
-  editData: null
-});
+const props = withDefaults(
+  defineProps<{
+    type: string;
+    editData: any;
+  }>(),
+  {
+    type: 'add',
+    editData: null
+  }
+);
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;

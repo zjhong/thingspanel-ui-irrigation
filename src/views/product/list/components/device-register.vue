@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+/* ————————————————————————————————————————————— 产品预注册列表 ——————————————————————————————————————————————— */
 import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
@@ -38,6 +39,12 @@ function setTableData(data: PreproductDeviceRecord[]) {
   tableData.value = data;
 }
 const exportFile = () => {
+  // return '88'
+  // if (!queryParams.batch_number) {
+  //   return window.$message?.error(
+  //     $t("common.input") + $t("page.product.list.batchNumber"),
+  //   );
+  // }
   exportDevice({ ...queryParams, page: undefined, page_size: undefined });
 };
 
@@ -101,7 +108,7 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     key: 'activate_flag',
     title: $t('page.product.list.activeStatus'),
     render: row => {
-      return row.activate_flag === 'inactive' ? '未激活' : '已激活';
+      return row.activate_flag === 'inactive' ? $t('page.product.list.noActive') : $t('page.product.list.active');
     }
   },
   {
@@ -193,11 +200,11 @@ init();
           </NSpace>
         </NSpace>
         <NDataTable
-          remote
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
+          remote
           flex-height
           class="flex-1-hidden"
         />

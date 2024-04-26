@@ -220,7 +220,12 @@ const handleSelect = (key, item) => {
     handleDeleteTable();
   }
 };
-
+const copy = event => {
+  const input = event.target;
+  input.select();
+  document.execCommand('copy');
+  window.$message?.success('复制成功');
+};
 onMounted(() => {
   fetchData();
   fetchTelemetry();
@@ -238,7 +243,7 @@ onUnmounted(() => {
     <NFlex justify="space-between">
       <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
 
-      <n-button v-model:show="showLog" type="primary" class="mb-4" @click="openUpLog">上报日志</n-button>
+      <n-button v-model:show="showLog" type="primary" class="mb-4" @click="openUpLog">模拟上报数据</n-button>
     </NFlex>
 
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
@@ -254,19 +259,21 @@ onUnmounted(() => {
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[500px]">
+    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[900px]">
       <n-card>
         <n-form>
-          <div style="display: flex">
-            <n-form-item label="上报数据">
-              <n-input v-model:value="device_order" type="textarea" style="width: 300px" />
-            </n-form-item>
+          <div style="display: flex; width: 700px; justify-content: space-between">
+            <span>模拟使用MQTT客户端上报数据</span>
+            <span>可复制以上命令到本地电脑模拟上报数据</span>
+          </div>
+          <div style="display: flex; margin-top: 15px; margin-bottom: 15px">
+            <n-input v-model:value="device_order" type="textarea" style="width: 700px" @click="copy" />
 
             <n-button style="width: 100px; margin-left: 20px; margin-top: 40px" @click="sendSimulationList">
               发送
             </n-button>
           </div>
-          <div v-if="showError" style="display: flex; width: 300px; border: 2px solid #eee; border-radius: 5px">
+          <div v-if="showError" style="display: flex; width: 700px; border: 2px solid #eee; border-radius: 5px">
             <SvgIcon
               local-icon="AlertFilled"
               style="margin-left: 5px; color: red; margin-right: 5px; margin-top: 5px; margin-bottom: 5px"

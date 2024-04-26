@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* ————————————————————————————————————————————— 预注册新增弹窗 ——————————————————————————————————————————————— */
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';

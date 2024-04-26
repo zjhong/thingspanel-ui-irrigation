@@ -38,6 +38,8 @@ export const productLocaleZhCn: ProductLocal = {
     deviceNumberPlaceholder: '请输入设备数量',
     addType: '添加方式',
     batchUpload: '批量上传',
+    active: '已激活',
+    noActive: '未激活',
     autoGenerate: '自动生成'
   },
   'update-package': {

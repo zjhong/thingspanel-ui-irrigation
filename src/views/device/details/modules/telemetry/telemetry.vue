@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, onUnmounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
+import { NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
@@ -199,17 +200,28 @@ const options = ref([
   }
 ]);
 
-const handleSelectDelete = async (key, item) => {
-  if (String(key) === '1') {
-    const { error }: any = await telemetryDataDel({
-      key: item.key,
-      device_id: props.id
-    });
+const delparam: any = ref({});
 
-    if (!error) {
-      fetchTelemetry();
-    }
+const handleDeleteTable = async () => {
+  const { error }: any = await telemetryDataDel(delparam.value);
+
+  if (!error) {
+    fetchTelemetry();
   }
+};
+const renderOption = ({ option }: any) => {
+  delparam.value = {
+    key: option.key,
+    device_id: props.id
+  };
+  return (
+    <NPopconfirm onPositiveClick={handleDeleteTable}>
+      {{
+        default: () => '确认删除',
+        trigger: () => <div class="h-22px w-90px text-center">删除</div>
+      }}
+    </NPopconfirm>
+  );
 };
 onMounted(() => {
   fetchData();
@@ -338,7 +350,7 @@ onUnmounted(() => {
                   <Activity />
                 </NIcon>
                 <NDivider vertical />
-                <n-dropdown trigger="click" :options="options" @select="handleSelectDelete($event, i)">
+                <n-dropdown trigger="click" :render-option="renderOption" :options="options">
                   <svg
                     style="width: 20px"
                     xmlns="http://www.w3.org/2000/svg"
@@ -416,3 +428,4 @@ onUnmounted(() => {
   }
 }
 </style>
+type type type type , NButtontype type type type , NButton

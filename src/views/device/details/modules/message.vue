@@ -53,7 +53,7 @@ onMounted(getConfigInfo);
     <NButton @click="handleSave">保存</NButton>
     <NModal v-model:show="isShow" class="w-440px flex-center">
       <NCard>
-        <TencentMap @position-selected="onPositionSelected" />
+        <TencentMap v-if="isShow" :longitude="longitude" :latitude="latitude" @position-selected="onPositionSelected" />
       </NCard>
     </NModal>
   </div>

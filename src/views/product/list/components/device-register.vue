@@ -40,7 +40,7 @@ function setTableData(data: PreproductDeviceRecord[]) {
 }
 const exportFile = () => {
   if(!queryParams.batch_number){
-    return $message.error($t("common.input"  )+$t("page.product.list.batchNumber"));
+    return window.$message.error($t("common.input"  )+$t("page.product.list.batchNumber"));
   }
   exportDevice({ ...queryParams, page: undefined, page_size: undefined });
 };
@@ -105,7 +105,7 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     key: 'activate_flag',
     title: $t('page.product.list.activeStatus'),
     render: row => {
-      return row.activate_flag === 'inactive' ? '未激活' : '已激活';
+      return row.activate_flag === 'inactive' ? $t('page.product.list.inactive') :$t('page.product.list.active');
     }
   },
   {

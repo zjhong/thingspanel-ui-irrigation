@@ -13,7 +13,7 @@ let map;
 async function renderMap() {
   await load(true);
   if (!domRef.value) return;
-  const center = new TMap.LatLng(props.latitude ?? 39.98412, props.latitude ?? 116.307484);
+  const center = new TMap.LatLng(props.latitude ?? 39.98412, props.longitude ?? 116.307484);
   map = new TMap.Map(domRef.value, {
     center,
     zoom: 10,

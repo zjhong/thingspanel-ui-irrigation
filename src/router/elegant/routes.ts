@@ -303,6 +303,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'device_details-child',
+        path: '/device/details-child',
+        component: 'view.device_details-child',
+        meta: {
+          title: 'device_details-child',
+          i18nKey: 'route.device_details-child'
+        }
+      },
+      {
         name: 'device_grouping',
         path: '/device/grouping',
         component: 'view.device_grouping',

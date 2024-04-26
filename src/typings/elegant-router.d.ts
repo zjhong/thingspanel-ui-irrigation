@@ -52,6 +52,7 @@ declare module "@elegant-router/types" {
     "device_config-detail": "/device/config-detail";
     "device_config-edit": "/device/config-edit";
     "device_details": "/device/details";
+    "device_details-child": "/device/details-child";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
@@ -228,6 +229,7 @@ declare module "@elegant-router/types" {
     | "device_config-detail"
     | "device_config-edit"
     | "device_config"
+    | "device_details-child"
     | "device_details"
     | "device_grouping-details"
     | "device_grouping"

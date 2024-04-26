@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+/* ————————————————————————————————————————————— 产品预注册列表 ——————————————————————————————————————————————— */
 import { reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
@@ -38,6 +39,9 @@ function setTableData(data: PreproductDeviceRecord[]) {
   tableData.value = data;
 }
 const exportFile = () => {
+  if(!queryParams.batch_number){
+    return $message.error($t("common.input"  )+$t("page.product.list.batchNumber"));
+  }
   exportDevice({ ...queryParams, page: undefined, page_size: undefined });
 };
 

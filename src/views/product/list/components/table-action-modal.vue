@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* ————————————————————————————————————————————— 产品编辑与新增弹窗 ——————————————————————————————————————————————— */
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
@@ -49,8 +50,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.deviceConfig'),
-    edit: $t('page.product.list.deviceConfig')
+    add: $t('page.product.list.addProduct'), // 新增产品
+    edit: $t('page.product.list.editProduct') // 编辑产品
   };
   return titles[props.type];
 });
@@ -168,7 +169,7 @@ watch(
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productName')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceType')" path="device_type">
+        <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceType')" path="product_type">
           <NSelect
             v-model:value="formModel.device_type"
             filterable

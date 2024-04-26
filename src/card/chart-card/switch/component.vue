@@ -48,7 +48,7 @@ const fun: () => void = () => {
 
   socket.value.onmessage = event => {
     const receivedData = JSON.parse(event.data);
-    active.value = receivedData.LightIntensity !== 0;
+    active.value = receivedData.switch !== 0;
     console.log('接收到数据:', receivedData);
     // 在这里处理接收到的数据
   };

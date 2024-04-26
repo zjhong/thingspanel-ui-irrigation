@@ -11,6 +11,7 @@ const route = useRoute();
 const configId = ref(route.query.id || null);
 const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
+const isEdit = ref(false)
 
 function defaultConfigForm() {
   return {
@@ -108,9 +109,12 @@ onMounted(async () => {
   // configId.value=<string>route.query.id || ''
   if (configId.value) {
     modalTitle.value = '编辑';
+    isEdit.value = true;
     await getConfig();
+    
   } else {
-    modalTitle.value = '添加';
+    isEdit.value = false;
+    modalTitle.value = '添加';   
   }
   getDeviceTemplate();
 });
@@ -143,9 +147,9 @@ onMounted(async () => {
         <NFormItem label="设备接入类型" path="device_type">
           <n-radio-group v-model:value="configForm.device_type" name="device_type">
             <n-space>
-              <n-radio value="1" disabled>直连设备</n-radio>
-              <n-radio value="2" disabled>网关</n-radio>
-              <n-radio value="3" disabled>网关子设备</n-radio>
+              <n-radio value="1" :disabled="isEdit">直连设备</n-radio>
+              <n-radio value="2" :disabled="isEdit">网关</n-radio>
+              <n-radio value="3" :disabled="isEdit">网关子设备</n-radio>
             </n-space>
           </n-radio-group>
         </NFormItem>

@@ -45,7 +45,9 @@ const exportFile = () => {
   //     $t("common.input") + $t("page.product.list.batchNumber"),
   //   );
   // }
-  exportDevice({ ...queryParams, page: undefined, page_size: undefined });
+  if (queryParams.batch_number) {
+    exportDevice({ ...queryParams, page: undefined, page_size: undefined });
+  }
 };
 
 const pagination: PaginationProps = reactive({

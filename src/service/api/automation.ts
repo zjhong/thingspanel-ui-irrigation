@@ -50,8 +50,8 @@ export const sceneInfo = async (id: any) => {
 };
 
 /** 获取场景日志 */
-export const sceneLog = async (id: any) => {
-  return await request.get<any>(`/scene/log/${id}`);
+export const sceneLog = async (params: any) => {
+  return await request.get<any>(`/scene/log`, { params });
 };
 
 /** 激活场景 */

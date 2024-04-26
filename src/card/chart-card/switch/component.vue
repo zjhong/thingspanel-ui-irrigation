@@ -1,36 +1,87 @@
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
-import { deviceDatas, deviceDetails } from './api';
 import { localStg } from '@/utils/storage';
+import { deviceDatas, deviceDetail } from './api';
+import { createServiceConfig } from '~/env.config';
 
 const active: any = ref(false);
 const props = defineProps<{
   card: ICardData;
 }>();
+const socket: any = ref(null);
+const detail: any = ref(null);
+// sendMessage()
+const setSeries: (obj: any) => void = async obj => {
+  const arr: any = props?.card?.dataSource;
+  const querDetail = {
+    device_id: obj.deviceSource[0]?.deviceId ?? '',
+    keys: arr.deviceSource[0].metricsId
+  };
+  if (querDetail.device_id && querDetail.keys) {
+    detail.value = await deviceDetail(querDetail);
+    const queryInfo = {
+      device_id: obj.deviceSource[0]?.deviceId ?? '',
+      keys: [arr.deviceSource[0].metricsId || 'externalVol'],
+      token: localStg.get('token')
+    };
+    console.log(arr.deviceSource[0].metricsId, '11');
+    if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+      socket.value.send(JSON.stringify(queryInfo)); // 将对象转换为JSON字符串后发送
+    } else {
+      console.error('WebSocket连接未建立或已关闭');
+    }
+  } else {
+    window.$message?.error('查询不到设备');
+  }
+};
+
+const fun: () => void = () => {
+  const { otherBaseURL } = createServiceConfig(import.meta.env);
+  let wsUrl = otherBaseURL.demo.replace('http', 'ws');
+  wsUrl += `/telemetry/datas/current/keys/ws`;
+  socket.value = new WebSocket(wsUrl); // 替换为你的WebSocket URL
+
+  socket.value.onopen = () => {
+    setSeries(props?.card?.dataSource);
+    console.log('WebSocket连接已打开');
+  };
+
+  socket.value.onmessage = event => {
+    const receivedData = JSON.parse(event.data);
+    active.value = receivedData.switch !== 0;
+    console.log('接收到数据:', receivedData);
+    // 在这里处理接收到的数据
+  };
+
+  socket.value.onerror = error => {
+    console.error('WebSocket错误:', error);
+  };
+
+  socket.value.onclose = () => {
+    console.log('WebSocket连接已关闭');
+  };
+};
 
 const clickSwitch: () => void = async () => {
   const arr: any = props?.card?.dataSource;
   const device_id = arr.deviceSource[0]?.deviceId ?? '';
-  console.log(props?.card, '测试4');
-  const obj = {
-    device_id,
-    value: JSON.stringify({
-      switch: false
-    })
-  };
-  const res = await deviceDatas(obj);
-  console.log(res, ' 相信');
-};
-const setSeries: (obj: any) => void = async (obj) => {
-  const data = {
-    device_id: obj.deviceSource[0]?.deviceId ?? '',
-    token: localStg.get('token')
+  if (device_id && device_id !== '') {
+    console.log(arr.deviceSource[0], '测试4');
+    const obj = {
+      device_id,
+      value: JSON.stringify({
+        switch: active.value ? 1 : 0
+      })
+    };
+    await deviceDatas(obj);
+    fun();
+  } else {
+    window.$message?.error('查询不到设备');
   }
-  const res = await deviceDetails(data);
-  console.log(data, res, ' 详情');
 };
+
 watch(
   () => props.card?.dataSource?.deviceSource,
   () => {
@@ -39,7 +90,12 @@ watch(
   { deep: true }
 );
 onMounted(() => {
-  setSeries(props?.card?.dataSource);
+  fun();
+});
+onUnmounted(() => {
+  if (socket.value) {
+    socket.value.close();
+  }
 });
 </script>
 

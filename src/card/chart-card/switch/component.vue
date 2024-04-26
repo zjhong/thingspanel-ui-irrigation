@@ -19,19 +19,21 @@ const setSeries: (obj: any) => void = async obj => {
     device_id: obj.deviceSource[0]?.deviceId ?? '',
     keys: arr.deviceSource[0].metricsId
   };
-  if (!querDetail.device_id || !arr.deviceSource[0].metricsId) return;
-
-  detail.value = await deviceDetail(querDetail);
-  const queryInfo = {
-    device_id: obj.deviceSource[0]?.deviceId ?? '',
-    keys: [arr.deviceSource[0].metricsId || 'externalVol'],
-    token: localStg.get('token')
-  };
-  console.log(arr.deviceSource[0].metricsId, '11');
-  if (socket.value && socket.value.readyState === WebSocket.OPEN) {
-    socket.value.send(JSON.stringify(queryInfo)); // 将对象转换为JSON字符串后发送
+  if (querDetail.device_id && querDetail.keys) {
+    detail.value = await deviceDetail(querDetail);
+    const queryInfo = {
+      device_id: obj.deviceSource[0]?.deviceId ?? '',
+      keys: [arr.deviceSource[0].metricsId || 'externalVol'],
+      token: localStg.get('token')
+    };
+    console.log(arr.deviceSource[0].metricsId, '11');
+    if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+      socket.value.send(JSON.stringify(queryInfo)); // 将对象转换为JSON字符串后发送
+    } else {
+      console.error('WebSocket连接未建立或已关闭');
+    }
   } else {
-    console.error('WebSocket连接未建立或已关闭');
+    window.$message?.error('查询不到设备');
   }
 };
 
@@ -65,15 +67,19 @@ const fun: () => void = () => {
 const clickSwitch: () => void = async () => {
   const arr: any = props?.card?.dataSource;
   const device_id = arr.deviceSource[0]?.deviceId ?? '';
-  console.log(arr.deviceSource[0], '测试4');
-  const obj = {
-    device_id,
-    value: JSON.stringify({
-      switch: active.value ? 1 : 0
-    })
-  };
-  await deviceDatas(obj);
-  fun();
+  if (device_id && device_id !== '') {
+    console.log(arr.deviceSource[0], '测试4');
+    const obj = {
+      device_id,
+      value: JSON.stringify({
+        switch: active.value ? 1 : 0
+      })
+    };
+    await deviceDatas(obj);
+    fun();
+  } else {
+    window.$message?.error('查询不到设备');
+  }
 };
 
 watch(

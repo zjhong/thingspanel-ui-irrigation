@@ -66,7 +66,7 @@ const getTableData = async () => {
 
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
-    key: 'send_time_start',
+    key: 'send_time',
     title: '发送时间',
     align: 'left'
   },

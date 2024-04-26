@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, onUnmounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
+import { NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
@@ -10,6 +11,7 @@ import {
   getTelemetryLogList,
   sendSimulation,
   telemetryDataCurrent,
+  telemetryDataDel,
   telemetryDataPub
 } from '@/service/api';
 import { localStg } from '@/utils/storage';
@@ -18,7 +20,6 @@ import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
 import { createServiceConfig } from '~/env.config';
-
 const props = defineProps<{
   id: string;
 }>();
@@ -193,6 +194,37 @@ const getDeviceDetail = async () => {
   }
 };
 getDeviceDetail();
+
+const options = ref([
+  {
+    label: '删除属性',
+    key: '1'
+  }
+]);
+
+const delparam: any = ref({});
+
+const handleDeleteTable = async () => {
+  const { error }: any = await telemetryDataDel(delparam.value);
+
+  if (!error) {
+    fetchTelemetry();
+  }
+};
+const renderOption = ({ option }: any) => {
+  delparam.value = {
+    key: option.key,
+    device_id: props.id
+  };
+  return (
+    <NPopconfirm onPositiveClick={handleDeleteTable}>
+      {{
+        default: () => '确认删除',
+        trigger: () => <div class="h-22px w-90px text-center">删除</div>
+      }}
+    </NPopconfirm>
+  );
+};
 onMounted(() => {
   fetchData();
   fetchTelemetry();
@@ -202,20 +234,6 @@ onUnmounted(() => {
     close();
   }
 });
-// watch(
-//   () => data.value,
-//   newVal => {
-//     if (newVal === 'pong') {
-//       console.log('心跳');
-//     } else {
-//       telemetry.value = JSON.parse(newVal);
-//       nowTime.value = dayjs().format('YYYY-MM-DD HH:mm:ss');
-//       numberAnimationInstRef.value.forEach(i => {
-//         i?.play();
-//       });
-//     }
-//   }
-// );
 </script>
 
 <template>
@@ -289,7 +307,6 @@ onUnmounted(() => {
         <n-gi v-for="(i, index) in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
-              <!--              <span>{{ telemetry[i.key] || i.value }}</span>-->
               <span>
                 <n-number-animation
                   :ref="setItemRef"
@@ -349,6 +366,22 @@ onUnmounted(() => {
                 >
                   <Activity />
                 </NIcon>
+                <NDivider vertical />
+                <n-dropdown trigger="click" :render-option="renderOption" :options="options">
+                  <svg
+                    style="width: 20px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 16 16"
+                  >
+                    <g fill="none">
+                      <path
+                        d="M5 8a1 1 0 1 1-2 0a1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0a1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2a1 1 0 0 0 0 2z"
+                        fill="currentColor"
+                      ></path>
+                    </g>
+                  </svg>
+                </n-dropdown>
               </div>
             </template>
           </n-card>
@@ -384,7 +417,7 @@ onUnmounted(() => {
   </n-card>
 </template>
 
-<style scoped>
+<style lang="scss" oped>
 .line1 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -412,3 +445,4 @@ onUnmounted(() => {
   }
 }
 </style>
+type type type type , NButtontype type type type , NButton

@@ -23,6 +23,8 @@ const clickSwitch: () => void = async () => {
       })
     };
     await deviceDatas(obj);
+  } else {
+    window.$message?.error('查询不到设备');
   }
 };
 

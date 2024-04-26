@@ -194,6 +194,11 @@ export const telemetryDataCurrent = async (id: any) => {
   const url = `/telemetry/datas/current/${id}`;
   return await request.get<DeviceManagement.telemetryCurrent | any>(url);
 };
+
+/** 遥测删除数据处理 */
+export const telemetryDataDel = async (params: any) => {
+  return await request.delete2<Api.BaseApi.Data | any>(`telemetry/datas`, params);
+};
 /** 设备遥测当前值查询 * */
 
 export const getTelemetryLogList = async (params: any) => {

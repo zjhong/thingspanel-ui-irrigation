@@ -38,6 +38,8 @@ export const productLocaleZhCn: ProductLocal = {
     deviceNumberPlaceholder: '请输入设备数量',
     addType: '添加方式',
     batchUpload: '批量上传',
+    active:"已激活",
+    noActive:"未激活",
     autoGenerate: '自动生成'
   },
   'update-package': {
@@ -64,7 +66,7 @@ export const productLocaleZhCn: ProductLocal = {
     typePlaceholder: '请选择升级包类型',
     productPlaceholder: '请选择设备配置',
     signModePlaceholder: '请选择签名算法',
-    packagePlaceholder: '请选择升级包'
+    packagePlaceholder: '请选择升级包',
   },
   'update-ota': {
     lookTask: '查看任务',

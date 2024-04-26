@@ -6,6 +6,7 @@ export default {
   id: 'chart-switch',
   type: 'chart',
   component: defineAsyncComponent(() => import('./component.vue')),
+  configForm: defineAsyncComponent(() => import('./switch-config.vue')),
   poster,
   title: '设备开关控制',
   preset: {

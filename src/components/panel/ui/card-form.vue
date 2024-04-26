@@ -238,7 +238,8 @@ watch(
         <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
           <div class="max-w-[600px]">
             <ConfigCtx v-model:config="state.data.config" mode="insert">
-              <component :is="state.selectCard?.configForm" />
+              <component :is="state.selectCard?.configForm" :data="state.data" />
+              <!-- v-model:data="state" -->
             </ConfigCtx>
           </div>
         </div>

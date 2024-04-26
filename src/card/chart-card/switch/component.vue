@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
-import { deviceDatas } from './api';
+import { deviceDatas, deviceDetail } from './api';
 import { createServiceConfig } from '~/env.config';
 
 const active: any = ref(false);
@@ -11,9 +11,17 @@ const props = defineProps<{
   card: ICardData;
 }>();
 const socket: any = ref(null);
+const detail: any = ref(null);
 // sendMessage()
 const setSeries: (obj: any) => void = async obj => {
   const arr: any = props?.card?.dataSource;
+  const querDetail = {
+    device_id: obj.deviceSource[0]?.deviceId ?? '',
+    keys: arr.deviceSource[0].metricsId
+  };
+  if (!querDetail.device_id || !arr.deviceSource[0].metricsId) return;
+
+  detail.value = await deviceDetail(querDetail);
   const queryInfo = {
     device_id: obj.deviceSource[0]?.deviceId ?? '',
     keys: [arr.deviceSource[0].metricsId || 'externalVol'],
@@ -40,7 +48,7 @@ const fun: () => void = () => {
 
   socket.value.onmessage = event => {
     const receivedData = JSON.parse(event.data);
-    active.value = receivedData.LightIntensity !== 0;
+    active.value = receivedData.switch !== 0;
     console.log('接收到数据:', receivedData);
     // 在这里处理接收到的数据
   };
@@ -61,7 +69,7 @@ const clickSwitch: () => void = async () => {
   const obj = {
     device_id,
     value: JSON.stringify({
-      switch: active.value
+      switch: active.value ? 1 : 0
     })
   };
   await deviceDatas(obj);

@@ -9,12 +9,12 @@ import {
   deviceUpdate,
   removeChildDevice
 } from '@/service/api/device';
+import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '~/src/locales';
-
+const { routerPushByKey } = useRouterPush();
 const props = defineProps<{
   id: string;
 }>();
-
 const showAddDialog = ref(false);
 const showSetDialog = ref(false);
 const showDeleteDialog = ref(false);
@@ -52,7 +52,13 @@ const deleteDevice = async id => {
   }
 };
 
-const handleLook = async () => {};
+const handleLook = async (id: string) => {
+  routerPushByKey('device_details-child', {
+    query: {
+      d_id: id
+    }
+  });
+};
 
 const handleSetAddress = async (id, subDeviceAddr) => {
   deviceSetId.value = id;
@@ -75,7 +81,7 @@ const columns: Ref<any> = ref([
     render: row => {
       return (
         <NSpace>
-          <NButton type="primary" size="small" onClick={() => handleLook()}>
+          <NButton type="primary" size="small" onClick={() => handleLook(row.id)}>
             查看
           </NButton>
           <NButton type="success" size="small" onClick={() => handleSetAddress(row.id, row.subDeviceAddr)}>

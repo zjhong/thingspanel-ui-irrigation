@@ -836,7 +836,7 @@ onMounted(() => {
                   </NButton>
                   <span class="ml-4"></span>
                   <NFormItem
-                    label="过期时间"
+                    label="过期时间1"
                     label-width="80px"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                     :rule="premiseFormRules.expiration_time"
@@ -870,7 +870,7 @@ onMounted(() => {
                       <NTimePicker v-model:value="ifItem.hourTimeValue" placeholder="请选择" format="mm" />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      label="过期时间2"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -899,7 +899,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      label="过期时间3"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -945,7 +945,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      label="过期时间4"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -986,7 +986,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      label="过期时间5"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"

@@ -72,7 +72,7 @@ const handleQuery = async () => {
   await getData();
 };
 const bodyStyle = ref({
-  width: '800px'
+  width: '1000px'
 });
 const execution_result_options = ref([
   {
@@ -275,6 +275,7 @@ onMounted(() => {
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>
             <tr>
+              <th>序号</th>
               <th class="w-180px">执行时间</th>
               <th>执行说明</th>
               <th class="w-120px">执行状态</th>
@@ -282,7 +283,8 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in logData" :key="index">
-              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-100px">{{ index + 1 }}</td>
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td>{{ sceneItem['detail'] }}</td>
               <td>
                 <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>

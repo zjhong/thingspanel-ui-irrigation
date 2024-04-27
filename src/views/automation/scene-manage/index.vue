@@ -64,7 +64,7 @@ const handleQuery = async () => {
   await getData();
 };
 const bodyStyle = ref({
-  width: '800px'
+  width: '1000px'
 });
 const showLog = ref(false);
 
@@ -177,17 +177,21 @@ onMounted(() => {
         <NTable :bordered="false" :single-line="false">
           <thead>
             <tr>
+              <th>序号</th>
               <th>场景名称</th>
               <th>场景描述</th>
               <th>创建时间</th>
+              <th>修改时间</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in content.sceneManageList" :key="index">
+              <td class="w-100px">{{ index + 1 }}</td>
               <td>{{ sceneItem.name }}</td>
               <td>{{ sceneItem.description }}</td>
-              <td>{{ moment(sceneItem['created_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-180px">{{ moment(sceneItem['created_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
+              <td class="w-180px">{{ moment(sceneItem['updated_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td class="w-320px">
                 <NFlex justify="space-around">
                   <NButton tertiary type="success" @click="sceneActivation(sceneItem)">激活</NButton>
@@ -234,6 +238,7 @@ onMounted(() => {
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>
             <tr>
+              <th>序号</th>
               <th class="w-180px">执行时间</th>
               <th>执行说明</th>
               <th class="w-120px">执行状态</th>
@@ -241,7 +246,8 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in logData" :key="index">
-              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-100px">{{ index + 1 }}</td>
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td>{{ sceneItem['detail'] }}</td>
               <td>
                 <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>

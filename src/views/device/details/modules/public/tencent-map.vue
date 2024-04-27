@@ -16,8 +16,8 @@ async function renderMap() {
   const center = new TMap.LatLng(props.latitude ?? 39.98412, props.longitude ?? 116.307484);
   map = new TMap.Map(domRef.value, {
     center,
-    zoom: 10,
-    maxZoom: 14,
+    zoom: 9,
+    maxZoom: 13,
     minZoom: 6
   });
   const MultiMarker = new TMap.MultiMarker({

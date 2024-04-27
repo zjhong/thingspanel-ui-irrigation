@@ -612,7 +612,7 @@ onMounted(() => {
                   @update-value="data => ifTypeChange(ifItem, data)"
                 />
               </NFormItem>
-              <template v-if="ifItem.ifType === '1'">
+              <NFlex v-if="ifItem.ifType === '1'" class="flex-1">
                 <!--  设备条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
@@ -796,8 +796,8 @@ onMounted(() => {
                     <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>触发消息标识符是状态-> --->
                   </template>
                 </template>
-              </template>
-              <template v-if="ifItem.ifType === '2'">
+              </NFlex>
+              <NFlex v-if="ifItem.ifType === '2'" class="flex-1">
                 <!--  时间条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
@@ -1052,8 +1052,8 @@ onMounted(() => {
                     />
                   </NFormItem>
                 </template>
-              </template>
-              <template v-if="ifItem.ifType === '3'">
+              </NFlex>
+              <NFlex v-if="ifItem.ifType === '3'" class="flex-1">
                 <!--            服务条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
@@ -1075,7 +1075,7 @@ onMounted(() => {
                 >
                   <NSelect v-model:value="ifItem.weatherValue" :options="weatherOptions" />
                 </NFormItem>
-              </template>
+              </NFlex>
             </NFlex>
             <NFlex class="w-100px">
               <NButton

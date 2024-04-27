@@ -2,10 +2,16 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { type FormInst, NButton, NCard, NFlex } from 'naive-ui';
-import { deviceConfig, deviceGroupTree } from '@/service/api';
+import { deviceGroupTree } from '@/service/api';
 import { warningMessageList } from '@/service/api/alarm';
 import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
-import { deviceConfigMetricsMenu, deviceListAll, deviceMetricsMenu, sceneGet } from '@/service/api/automation';
+import {
+  deviceConfigAll,
+  deviceConfigMetricsMenu,
+  deviceListAll,
+  deviceMetricsMenu,
+  sceneGet
+} from '@/service/api/automation';
 const route = useRoute();
 
 interface Props {
@@ -217,17 +223,13 @@ const handleFocus = (ifIndex: any) => {
 const deviceConfigOption = ref([]);
 // 设备配置列表查询条件
 const queryDeviceConfig = ref({
-  page: 1,
-  page_size: 20,
-  name: ''
+  device_config_name: ''
 });
 // 获取设备配置列表
 const getDeviceConfig = async (name: any) => {
-  queryDevice.value.device_name = name || null;
-  loadingSelect.value = true;
-  const res = await deviceConfig(queryDeviceConfig.value);
-  deviceConfigOption.value = res.data.list;
-  loadingSelect.value = false;
+  queryDeviceConfig.value.device_config_name = name || '';
+  const res = await deviceConfigAll(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data || [];
 };
 
 // 选择动作目标
@@ -501,7 +503,6 @@ onMounted(() => {
                           placeholder="请选择"
                           filterable
                           remote
-                          :loading="loadingSelect"
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />

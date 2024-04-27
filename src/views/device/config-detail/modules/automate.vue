@@ -2,7 +2,8 @@
 import sceneLinkage from '@/views/automation/scene-linkage/index.vue';
 
 defineProps<{
-  id: string;
+  // eslint-disable-next-line vue/prop-name-casing
+  config_id: string;
 }>();
 </script>
 
@@ -10,7 +11,7 @@ defineProps<{
   <NCard>
     <div class="h-500px flex-center flex-col">
       <!--      <n-empty description="暂无数据"></n-empty>-->
-      <sceneLinkage :device_id="id" />
+      <sceneLinkage :device_config_id="config_id" />
     </div>
   </NCard>
 </template>

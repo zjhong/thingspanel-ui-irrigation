@@ -5,8 +5,13 @@ import { NButton, NFlex } from 'naive-ui';
 import type { FormInst } from 'naive-ui';
 import { IosRefresh } from '@vicons/ionicons4';
 import { repeat } from 'seemly';
-import { deviceConfig, deviceGroupTree } from '@/service/api';
-import { configMetricsConditionMenu, deviceListAll, deviceMetricsConditionMenu } from '@/service/api/automation';
+import { deviceGroupTree } from '@/service/api';
+import {
+  configMetricsConditionMenu,
+  deviceConfigAll,
+  deviceListAll,
+  deviceMetricsConditionMenu
+} from '@/service/api/automation';
 interface Emits {
   (e: 'conditionChose', data: any): void;
 }
@@ -238,17 +243,13 @@ const handleFocus = (ifIndex: any) => {
 const deviceConfigOption = ref([]);
 // 设备配置列表查询条件
 const queryDeviceConfig = ref({
-  page: 1,
-  page_size: 20,
-  name: ''
+  device_config_name: ''
 });
 // 获取设备配置列表
 const getDeviceConfig = async (name: string) => {
-  queryDevice.value.device_name = name || '';
-  loadingSelect.value = true;
-  const res = await deviceConfig(queryDeviceConfig.value);
-  deviceConfigOption.value = res.data.list;
-  loadingSelect.value = false;
+  queryDeviceConfig.value.device_config_name = name || '';
+  const res = await deviceConfigAll(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data || [];
 };
 
 // 下拉获取的动作标识符
@@ -529,10 +530,15 @@ const deleteIfGroupsItem = (ifIndex: any) => {
   premiseForm.value.ifGroups.splice(ifIndex, 1);
 };
 // 新增一个条件组
-const addIfGroupItem = async () => {
+const addIfGroupItem = (data: any) => {
   // await premiseFormRef.value?.validate();
   const groupObj: any = [];
-  groupObj.push(JSON.parse(JSON.stringify(judgeItem.value)));
+  if (!data) {
+    groupObj.push(JSON.parse(JSON.stringify(judgeItem.value)));
+    premiseForm.value.ifGroups.push(groupObj);
+  } else {
+    groupObj.push(data);
+  }
   premiseForm.value.ifGroups.push(groupObj);
 };
 
@@ -557,10 +563,16 @@ const triggerParamChange = (ifItem: any, data: any) => {
 interface Props {
   // eslint-disable-next-line vue/no-unused-properties
   conditionData?: object | any;
+  // eslint-disable-next-line vue/no-unused-properties,vue/prop-name-casing
+  device_id?: string | any;
+  // eslint-disable-next-line vue/no-unused-properties,vue/prop-name-casing
+  device_config_id?: string | any;
 }
 const props = withDefaults(defineProps<Props>(), {
   // eslint-disable-next-line vue/require-valid-default-prop
-  conditionData: []
+  conditionData: [],
+  device_id: '',
+  device_config_id: ''
 });
 
 watch(
@@ -577,7 +589,27 @@ onMounted(() => {
   getDevice(null, null);
   getDeviceConfig('');
   if (!configId.value) {
-    addIfGroupItem();
+    const judgeItemData = JSON.parse(JSON.stringify(judgeItem.value));
+    if (props.device_id) {
+      judgeItemData.ifType = '1';
+      judgeItemData.trigger_conditions_type = '10';
+      judgeItemData.trigger_source = props.device_id;
+      // eslint-disable-next-line array-callback-return
+      deviceConditionOptions.value.map(item => {
+        item.disabled = item.value !== judgeItemData.trigger_conditions_type;
+      });
+    } else if (props.device_config_id) {
+      judgeItemData.ifType = '1';
+      judgeItemData.trigger_conditions_type = '11';
+      judgeItemData.trigger_source = props.device_config_id;
+      // eslint-disable-next-line array-callback-return
+      deviceConditionOptions.value.map(item => {
+        item.disabled = true;
+      });
+      deviceConfigDisabled.value = true;
+    }
+    emit('conditionChose', judgeItemData.trigger_conditions_type);
+    addIfGroupItem(judgeItemData);
   }
 });
 </script>
@@ -693,7 +725,6 @@ onMounted(() => {
                       placeholder="请选择"
                       filterable
                       remote
-                      :loading="loadingSelect"
                       @search="getDeviceConfig"
                       @update:value="() => triggerSourceChange(ifItem)"
                     />
@@ -1102,7 +1133,7 @@ onMounted(() => {
         </NButton>
       </NFlex>
     </NForm>
-    <NButton type="primary" class="w-30" @click="addIfGroupItem()">新增一个组</NButton>
+    <NButton type="primary" class="w-30" @click="addIfGroupItem(null)">新增一个组</NButton>
   </NFlex>
 </template>
 

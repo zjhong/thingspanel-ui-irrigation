@@ -14,11 +14,25 @@ const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
 
+interface Props {
+  // eslint-disable-next-line vue/prop-name-casing
+  device_id?: string;
+  // eslint-disable-next-line vue/prop-name-casing
+  device_config_id?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  // eslint-disable-next-line vue/require-valid-default-prop
+  device_id: '',
+  device_config_id: ''
+});
+
 const sceneLinkageList = ref([] as any);
 
 // 新建场景
 const linkAdd = () => {
-  routerPushByKey('automation_linkage-edit');
+  routerPushByKey('automation_linkage-edit', {
+    query: { device_id: props.device_id, device_config_id: props.device_config_id }
+  });
 };
 
 // 编辑场景
@@ -39,20 +53,24 @@ const linkActivation = async (item: any) => {
 const queryData = ref({
   name: '',
   page: 1,
-  page_size: 12
+  page_size: 12,
+  device_id: '',
+  device_config_id: ''
 });
 const dataTotal = ref(0);
 
 const getData = async () => {
+  queryData.value.device_id = props.device_id;
+  queryData.value.device_config_id = props.device_config_id;
   const res = await sceneAutomationsGet(queryData.value);
-  sceneLinkageList.value = res.data.list;
+  sceneLinkageList.value = res.data.list || [];
   dataTotal.value = res.data.total;
 };
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const handleQuery = async () => {
-//   queryData.value.page = 1;
-//   await getData();
-// };
+const handleQuery = async () => {
+  queryData.value.page = 1;
+  await getData();
+};
 const bodyStyle = ref({
   width: '800px'
 });
@@ -138,26 +156,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full">
+  <div class="h-full w-full overflow-auto">
     <NCard :bordered="false">
       <NFlex justify="space-between" class="mb-4">
-        <NButton type="primary" @click="linkAdd()">+新增联动规则</NButton>
-        <!--        <NFlex align="center" justify="flex-end" :wrap="false">-->
-        <!--          <NInput-->
-        <!--            v-model:value="queryData.name"-->
-        <!--            placeholder="请输入场景联动名称"-->
-        <!--            class="search-input"-->
-        <!--            type="text"-->
-        <!--            clearable-->
-        <!--          >-->
-        <!--            <template #prefix>-->
-        <!--              <NIcon>-->
-        <!--                <IosSearch />-->
-        <!--              </NIcon>-->
-        <!--            </template>-->
-        <!--          </NInput>-->
-        <!--          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>-->
-        <!--        </NFlex>-->
+        <NButton type="primary" @click="linkAdd()">+新增场景联动</NButton>
+        <NFlex align="center" justify="flex-end" :wrap="false">
+          <NInput
+            v-model:value="queryData.name"
+            placeholder="请输入场景联动名称"
+            class="search-input"
+            type="text"
+            clearable
+          >
+            <template #prefix>
+              <NIcon>
+                <IosSearch />
+              </NIcon>
+            </template>
+          </NInput>
+          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+        </NFlex>
       </NFlex>
       <n-empty
         v-if="sceneLinkageList.length === 0"

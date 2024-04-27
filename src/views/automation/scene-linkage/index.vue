@@ -39,7 +39,7 @@ const linkActivation = async (item: any) => {
 const queryData = ref({
   name: '',
   page: 1,
-  page_size: 10
+  page_size: 12
 });
 const dataTotal = ref(0);
 
@@ -74,7 +74,7 @@ const showLog = ref(false);
 console.log(moment().subtract(7, 'day').format());
 const logQuery = ref({
   page: 1,
-  page_size: 12,
+  page_size: 10,
   scene_automation_id: '',
   execution_result: '',
   execution_start_time: '',
@@ -123,7 +123,7 @@ const deleteLink = async (item: any) => {
 const closeLog = () => {
   logQuery.value = {
     page: 1,
-    page_size: 12,
+    page_size: 10,
     scene_automation_id: '',
     execution_result: '',
     execution_start_time: '',

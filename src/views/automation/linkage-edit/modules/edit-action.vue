@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
 const resetActionData = () => {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define,array-callback-return
   actionForm.value.actionGroups.map((item: any) => {
-    if (item.actionInstructList.length > 0) {
+    if (item.actionInstructList && item.actionInstructList.length > 0) {
       const data = [] as any;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const instructItem = JSON.parse(JSON.stringify(instructListItem.value));

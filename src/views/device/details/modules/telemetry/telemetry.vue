@@ -27,14 +27,6 @@ const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/ws`;
 // eslint-disable-next-line no-constant-binary-expression
-
-const { status, send, close } = useWebSocket(wsUrl, {
-  heartbeat: {
-    message: 'ping',
-    interval: 8000,
-    pongTimeout: 3000
-  }
-});
 const showDialog = ref(false);
 const showLogDialog = ref(false);
 const showHistory = ref(false);
@@ -72,6 +64,29 @@ const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
 const showError = ref(false);
 const erroMessage = ref('');
+
+const { status, send, close } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  },
+  onMessage(ws: WebSocket, event: MessageEvent) {
+    console.log('ws---', ws);
+    if (event.data && event.data !== 'pong') {
+      const info = JSON.parse(event.data);
+      const newData = telemetryData.value.map(item => {
+        return {
+          ...item,
+          value: info[item.key] || item.value,
+          ts: info[item.key] ? info.systime : item.ts
+        };
+      });
+      telemetryData.value = [...newData];
+    }
+  }
+});
+
 const columns = [
   { title: '指令', key: 'data' },
   {
@@ -167,6 +182,7 @@ const fetchTelemetry = async () => {
       device_id: props.id,
       token
     };
+
     send(JSON.stringify(dataw));
   }
 };

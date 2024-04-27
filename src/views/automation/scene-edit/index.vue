@@ -83,10 +83,10 @@ const actionOptions = ref([
     value: '1',
     disabled: false
   },
-  {
-    label: '激活场景',
-    value: '20'
-  },
+  // {
+  //   label: '激活场景',
+  //   value: '20'
+  // },
   {
     label: '触发告警',
     value: '30'

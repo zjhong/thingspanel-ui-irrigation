@@ -191,6 +191,7 @@ const getDeviceDetail = async () => {
       showLog.value = true;
     }
   }
+  console.log(showLog.value);
 };
 getDeviceDetail();
 
@@ -243,7 +244,7 @@ onUnmounted(() => {
     <NFlex justify="space-between">
       <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
 
-      <n-button v-model:show="showLog" type="primary" class="mb-4" @click="openUpLog">模拟上报数据</n-button>
+      <n-button v-if="showLog" type="primary" class="mb-4" @click="openUpLog">模拟上报数据</n-button>
     </NFlex>
 
     <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">

@@ -83,8 +83,7 @@ const premiseFormRules = ref({
   },
   weekChoseValue: {
     required: true,
-    message: '请选择',
-    trigger: 'change'
+    message: '请选择'
   },
   weekTimeValue: {
     required: true,
@@ -472,7 +471,7 @@ const judgeItem = ref({
   monthTimeValue: null, // 时间值-选择月
 
   // eslint-disable-next-line no-bitwise
-  weekChoseValue: null, // 星期多选值
+  weekChoseValue: [], // 星期多选值
   monthChoseValue: null, // 月份某一天
 
   startTimeValue: null, // 范围的开始时间
@@ -836,7 +835,7 @@ onMounted(() => {
                   </NButton>
                   <span class="ml-4"></span>
                   <NFormItem
-                    label="过期时间1"
+                    label="过期时间"
                     label-width="80px"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                     :rule="premiseFormRules.expiration_time"
@@ -870,7 +869,7 @@ onMounted(() => {
                       <NTimePicker v-model:value="ifItem.hourTimeValue" placeholder="请选择" format="mm" />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间2"
+                      label="过期时间"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -899,7 +898,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间3"
+                      label="过期时间"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -914,23 +913,26 @@ onMounted(() => {
                   </template>
                   <template v-if="ifItem.task_type === 'WEEK'">
                     <!--  时间条件下->重复->每周->选择星期和输入时分-->
-                    <NFormItem
-                      :show-label="false"
-                      :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
-                      :rule="premiseFormRules.weekChoseValue"
-                      class="w-120 w-full"
-                    >
-                      <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
-                        <NSpace item-style="display: flex;">
-                          <n-checkbox
-                            v-for="(weekItem, weekIndex) in weekOptions"
-                            :key="weekIndex"
-                            :value="weekItem.value"
-                            :label="weekItem.label"
-                          />
-                        </NSpace>
-                      </NCheckboxGroup>
-                    </NFormItem>
+                    <div class="weekChoseValue-box w-120">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
+                        :rule="premiseFormRules.weekChoseValue"
+                        :show-feedback="true"
+                        class="w-full"
+                      >
+                        <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
+                          <NSpace item-style="display: flex;">
+                            <n-checkbox
+                              v-for="(weekItem, weekIndex) in weekOptions"
+                              :key="weekIndex"
+                              :value="weekItem.value"
+                              :label="weekItem.label"
+                            />
+                          </NSpace>
+                        </NCheckboxGroup>
+                      </NFormItem>
+                    </div>
                     <NFormItem
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekTimeValue`"
@@ -945,7 +947,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间4"
+                      label="过期时间"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -986,7 +988,7 @@ onMounted(() => {
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间5"
+                      label="过期时间"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -1002,23 +1004,26 @@ onMounted(() => {
                 </template>
                 <template v-if="ifItem.trigger_conditions_type === '22'">
                   <!--  时间条件下->范围->选择星期和时间周期-->
-                  <NFormItem
-                    :show-label="false"
-                    :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
-                    :rule="premiseFormRules.weekChoseValue"
-                    class="w-130 w-full"
-                  >
-                    <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
-                      <NSpace item-style="display: flex;">
-                        <NCheckbox
-                          v-for="(weekItem, weekIndex) in weekOptions"
-                          :key="weekIndex"
-                          :value="weekItem.value"
-                          :label="weekItem.label"
-                        />
-                      </NSpace>
-                    </NCheckboxGroup>
-                  </NFormItem>
+                  <div class="weekChoseValue-box w-130">
+                    <NFormItem
+                      :show-label="false"
+                      :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
+                      :rule="premiseFormRules.weekChoseValue"
+                      :show-feedback="true"
+                      class="w-full"
+                    >
+                      <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
+                        <NSpace item-style="display: flex;">
+                          <NCheckbox
+                            v-for="(weekItem, weekIndex) in weekOptions"
+                            :key="weekIndex"
+                            :value="weekItem.value"
+                            :label="weekItem.label"
+                          />
+                        </NSpace>
+                      </NCheckboxGroup>
+                    </NFormItem>
+                  </div>
                   <NFormItem
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].startTimeValue`"
@@ -1115,5 +1120,11 @@ onMounted(() => {
 }
 :deep(.n-card__content) {
   padding: 10px 10px 4px 10px !important;
+}
+.weekChoseValue-box {
+  :deep(.n-form-item-feedback-wrapper) {
+    position: absolute;
+    top: 20px;
+  }
 }
 </style>

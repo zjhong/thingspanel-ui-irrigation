@@ -87,8 +87,8 @@ const save = async () => {
   queryParams.lable = lables.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
 
-  const res = await deviceUpdate(queryParams);
-  if (!res.error) {
+  const { error } = await deviceUpdate(queryParams);
+  if (!error) {
     showDialog.value = false;
     deviceDataStore.fetchData(d_id as string);
   }
@@ -106,15 +106,15 @@ const rules = {
   }
 };
 const getDeviceDetail = async () => {
-  const res = await deviceDetail(d_id);
-  if (res.data) {
-    device_number.value = res.data.device_number;
-    if (res.data.is_online !== 0) {
+  const { data, error } = await deviceDetail(d_id);
+  if (!error) {
+    device_number.value = data.device_number;
+    if (data.is_online !== 0) {
       device_color.value = 'rgb(2,153,52)';
       icon_type.value = 'rgb(2,153,52)';
     }
-    if (res.data.device_config !== undefined) {
-      device_type.value = res.data.device_config.device_type;
+    if (data.device_config !== undefined) {
+      device_type.value = data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }

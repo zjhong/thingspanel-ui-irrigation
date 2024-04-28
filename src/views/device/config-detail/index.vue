@@ -66,7 +66,7 @@ onMounted(async () => {
         <n-tab-pane name="属性与功能" tab="属性与功能">
           <AttributeInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="连接与认证" tab="连接与认证">
+        <n-tab-pane name="协议配置" tab="协议配置">
           <ConnectionInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
         <n-tab-pane name="数据处理" tab="数据处理">

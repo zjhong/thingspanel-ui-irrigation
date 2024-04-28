@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { useWebSocket } from '@vueuse/core';
+import { MovingNumbers } from 'moving-numbers-vue3';
 import {
   getSimulation,
   getTelemetryLogList,
@@ -27,14 +28,6 @@ const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/ws`;
 // eslint-disable-next-line no-constant-binary-expression
-
-const { status, send, close } = useWebSocket(wsUrl, {
-  heartbeat: {
-    message: 'ping',
-    interval: 8000,
-    pongTimeout: 3000
-  }
-});
 const showDialog = ref(false);
 const showLogDialog = ref(false);
 const showHistory = ref(false);
@@ -48,6 +41,7 @@ const sendResult = ref('');
 const tableData = ref([]);
 
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
+const initTelemetryData = ref<any>();
 const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
 const telemetry = ref<any>({});
 const nowTime = ref<any>();
@@ -72,6 +66,40 @@ const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
 const showError = ref(false);
 const erroMessage = ref('');
+
+const { status, send, close } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  },
+  onMessage(ws: WebSocket, event: MessageEvent) {
+    console.log('ws---', ws);
+    if (event.data && event.data !== 'pong') {
+      const info = JSON.parse(event.data);
+      const currTelemetryKey = telemetryData.value
+        .map(item => {
+          return item.key === 'systime' ? false : item.key;
+        })
+        .filter(item => Boolean(item));
+      const newData = telemetryData.value.map(item => {
+        return {
+          ...item,
+          value: info[item.key] || item.value,
+          ts: info.systime || item.ts
+        };
+      });
+      const newTelemetry: any[] = [];
+      for (const key in info) {
+        if (key !== 'systime' && !currTelemetryKey.includes(key)) {
+          newTelemetry.push({ ...initTelemetryData.value, key, value: info[key], ts: info.systime });
+        }
+      }
+      telemetryData.value = [...newData, ...newTelemetry];
+    }
+  }
+});
+
 const columns = [
   { title: '指令', key: 'data' },
   {
@@ -161,12 +189,13 @@ const fetchTelemetry = async () => {
   const { data, error } = await telemetryDataCurrent(props.id);
   if (!error && data) {
     telemetryData.value = data;
-
+    initTelemetryData.value = data[0] || {}; // 存储一份模板
     const dataw = {
       // eslint-disable-next-line no-constant-binary-expression
       device_id: props.id,
       token
     };
+
     send(JSON.stringify(dataw));
   }
 };
@@ -312,14 +341,13 @@ onUnmounted(() => {
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
               <span>
-                <n-number-animation
+                <MovingNumbers
                   :ref="setItemRef"
                   :data-index="index"
-                  :precision="2"
-                  :duration="800"
-                  :from="0.0"
-                  :to="telemetry[i.key] || i.value"
-                />
+                  class="c1"
+                  :m-num="telemetry[i.key] || i.value"
+                  :quantile-show="true"
+                ></MovingNumbers>
               </span>
 
               <span>{{ i.unit }}</span>
@@ -337,7 +365,7 @@ onUnmounted(() => {
             </template>
             <template #footer>
               <div class="flex justify-end">
-                {{ telemetry[i.key] ? nowTime : dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
+                {{ i.ts ? dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') : nowTime }}
               </div>
             </template>
             <template #header-extra>

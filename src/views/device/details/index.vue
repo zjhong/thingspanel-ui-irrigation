@@ -87,8 +87,8 @@ const save = async () => {
   queryParams.lable = lables.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
 
-  const res = await deviceUpdate(queryParams);
-  if (!res.error) {
+  const { error } = await deviceUpdate(queryParams);
+  if (!error) {
     showDialog.value = false;
     deviceDataStore.fetchData(d_id as string);
   }
@@ -106,15 +106,15 @@ const rules = {
   }
 };
 const getDeviceDetail = async () => {
-  const res = await deviceDetail(d_id);
-  if (res.data) {
-    device_number.value = res.data.device_number;
-    if (res.data.is_online !== 0) {
+  const { error, data } = await deviceDetail(d_id);
+  if (!error) {
+    device_number.value = data.device_number;
+    if (data.is_online !== 0) {
       device_color.value = 'rgb(2,153,52)';
       icon_type.value = 'rgb(2,153,52)';
     }
-    if (res.data.device_config !== undefined) {
-      device_type.value = res.data.device_config.device_type;
+    if (data.device_config !== undefined) {
+      device_type.value = data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
@@ -147,7 +147,7 @@ watch(
     <n-card>
       <div>
         <div style="display: flex; margin-top: -5px">
-          <spna style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</spna>
+          <span style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</span>
           <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
         </div>
 
@@ -180,12 +180,12 @@ watch(
 
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
-            <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ d_id || '--' }}</spna>
+            <span class="mr-2" style="color: #ccc">ID:</span>
+            <span style="color: #ccc">{{ d_id || '--' }}</span>
           </div>
           <div class="mr-4" style="color: #ccc">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <span class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</span>
+            <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
             <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
@@ -195,13 +195,13 @@ watch(
               class="text-20px text-primary"
               :stroke="icon_type"
             />
-            <spna :style="{ color: device_color }">
+            <span :style="{ color: device_color }">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
                   : $t('custom.device_details.offline')
               }}
-            </spna>
+            </span>
           </div>
           <div class="mr-4" style="display: flex">
             <SvgIcon
@@ -212,9 +212,9 @@ watch(
             />
             <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
 
-            <spna style="color: #ccc">
+            <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}
-            </spna>
+            </span>
           </div>
         </NFlex>
       </div>

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
 import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
+// protocolPluginConfigInput
+import FormInput from './form.vue';
 
 // const message = useMessage();
 
@@ -13,6 +15,8 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const typeOptions = ref([]);
+const active: any = ref(false);
+let dynamicForm: any = reactive({});
 
 interface Props {
   configInfo?: object | any;
@@ -55,7 +59,11 @@ const getVoucherType = async data => {
 };
 const getConfigForm = async data => {
   const res = await protocolPluginConfigForm({ device_type: props.configInfo.device_type, protocol_type: data });
-  console.log(res.data);
+  dynamicForm = reactive(res.data);
+  console.log(res.data, '表单');
+};
+const openForm = () => {
+  active.value = true;
 };
 const choseProtocolType = async data => {
   extendForm.value.voucher_type = null;
@@ -97,9 +105,15 @@ onMounted(async () => {
         ></NSelect>
       </NFormItem>
       <NFlex justify="flex-end">
+        <NButton type="primary" @click="openForm">表单配置</NButton>
         <NButton type="primary" @click="handleSubmit">保存</NButton>
       </NFlex>
     </NForm>
+    <n-drawer v-model:show="active" :width="502" placement="right">
+      <n-drawer-content title="表单配置">
+        <FormInput v-model:dynamicForm="dynamicForm"></FormInput>
+      </n-drawer-content>
+    </n-drawer>
   </div>
 </template>
 

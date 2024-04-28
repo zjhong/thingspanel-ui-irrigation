@@ -11,7 +11,7 @@ const route = useRoute();
 const configId = ref(route.query.id || null);
 const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
-const isEdit = ref(false)
+const isEdit = ref(false);
 
 function defaultConfigForm() {
   return {
@@ -51,7 +51,7 @@ const queryTemplate = ref({
   page_size: 20,
   total: 0
 });
-const deviceTemplateOptions = ref([]);
+const deviceTemplateOptions = ref([{ name: '不绑定', id: '' }]);
 const getDeviceTemplate = () => {
   deviceTemplate(queryTemplate.value).then(res => {
     deviceTemplateOptions.value = deviceTemplateOptions.value.concat(res.data.list);
@@ -62,7 +62,7 @@ const getDeviceTemplate = () => {
 const deviceTemplateScroll = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
   if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
-    if (deviceTemplateOptions.value.length <= queryTemplate.value.total) {
+    if (deviceTemplateOptions.value.length + 1 <= queryTemplate.value.total) {
       queryTemplate.value.page += 1;
       getDeviceTemplate();
     }
@@ -111,10 +111,9 @@ onMounted(async () => {
     modalTitle.value = '编辑';
     isEdit.value = true;
     await getConfig();
-    
   } else {
     isEdit.value = false;
-    modalTitle.value = '添加';   
+    modalTitle.value = '添加';
   }
   getDeviceTemplate();
 });

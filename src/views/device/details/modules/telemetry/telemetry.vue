@@ -86,7 +86,7 @@ const { status, send, close } = useWebSocket(wsUrl, {
         return {
           ...item,
           value: info[item.key] || item.value,
-          ts: info[item.key] ? info.systime : item.ts
+          ts: info.systime || item.ts
         };
       });
       const newTelemetry: any[] = [];
@@ -365,7 +365,7 @@ onUnmounted(() => {
             </template>
             <template #footer>
               <div class="flex justify-end">
-                {{ telemetry[i.key] ? nowTime : dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
+                {{ i.ts ? dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') : nowTime }}
               </div>
             </template>
             <template #header-extra>

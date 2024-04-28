@@ -147,7 +147,7 @@ watch(
     <n-card>
       <div>
         <div style="display: flex; margin-top: -5px">
-          <spna style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</spna>
+          <span style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</span>
           <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
         </div>
 
@@ -180,12 +180,12 @@ watch(
 
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
-            <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ device_number || '--' }}</spna>
+            <span class="mr-2" style="color: #ccc">ID:</span>
+            <span style="color: #ccc">{{ device_number || '--' }}</span>
           </div>
           <div class="mr-4" style="color: #ccc">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <span class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</span>
+            <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
             <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
@@ -195,13 +195,13 @@ watch(
               class="text-20px text-primary"
               :stroke="icon_type"
             />
-            <spna :style="{ color: device_color }">
+            <span :style="{ color: device_color }">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
                   : $t('custom.device_details.offline')
               }}
-            </spna>
+            </span>
           </div>
           <div class="mr-4" style="display: flex">
             <SvgIcon
@@ -212,9 +212,9 @@ watch(
             />
             <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
 
-            <spna style="color: #ccc">
+            <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}
-            </spna>
+            </span>
           </div>
         </NFlex>
       </div>

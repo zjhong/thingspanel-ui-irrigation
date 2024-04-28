@@ -144,6 +144,7 @@ const addChildDeviceSure = () => {
 const getDeviceList = async () => {
   const res = await childDeviceSelectList();
   if (res.data.length !== 0) {
+    sOptions.value = [];
     const tempSOptions = res.data?.map(item => {
       return { label: item.name, value: item.id };
     });

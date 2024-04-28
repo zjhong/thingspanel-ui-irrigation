@@ -31,7 +31,23 @@ const emit = defineEmits<{
 }>();
 
 const copy = (data: object) => JSON.parse(JSON.stringify(data));
-const selectCard = (item: ICardDefine) => {
+const selectCard = item => {
+  state.curCardData = {
+    cardId: item.cardId,
+    type: item.type,
+    title: item.title,
+    config: item.config || {},
+    basicSettings: item.basicSettings || {},
+    dataSource: item.dataSource || {
+      origin: 'system',
+      systemSource: [{}],
+      deviceSource: [{}]
+    }
+  };
+  formRef.value?.setCard(state.curCardData as any);
+};
+
+const selectFinalCard = (item: ICardDefine) => {
   state.curCardData = {
     cardId: item.id,
     type: item.type,
@@ -46,6 +62,7 @@ const selectCard = (item: ICardDefine) => {
   };
   formRef.value?.setCard(state.curCardData as any);
 };
+
 const message = useMessage();
 const widths = ref(['flex-[44]', 'flex-[54]', 'flex-[2]']);
 const count = ref<number>(2);
@@ -166,7 +183,11 @@ onMounted(() => {
     preset="dialog"
     title="配置"
     size="huge"
-    :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
+    :style="{
+      width: 'calc(100vw - 180px)',
+      height: 'calc(100vh - 50px)',
+      minWidth: '882px'
+    }"
     @close="
       () => {
         count = 2;
@@ -237,23 +258,44 @@ onMounted(() => {
             <n-scrollbar style="height: 100%; padding: 4px">
               <div v-if="item1.tab === '设备'">
                 <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
-                  <n-gi
-                    v-for="item in PanelCards.chart.filter(item9 => {
-                      return availableCardIds.includes(item9.id);
-                    })"
-                    :key="item.id"
-                    class="min-w-240px"
-                  >
+                  <n-gi v-for="item in webChartConfig" :key="item.data.cardId" class="min-w-240px">
                     <div
+                      v-if="
+                        item.data.cardId.indexOf('chart-curve') != -1 || item.data.cardId.indexOf('chart-demo') != -1
+                      "
                       class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
                       :style="
-                        item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
+                        item.data.cardId === state?.curCardData?.cardId
+                          ? 'border-color: #2d3d88'
+                          : 'border-color: #f6f9f8'
                       "
-                      @click="selectCard(item)"
+                      @click="selectCard(item.data)"
                     >
-                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                        {{ $t(item.data.title) }}
+                      </div>
                       <div class="h-148px w-full">
-                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                        <!--
+ <img
+                          :src="
+                            item.data.cardId.indexOf('chart-curve') != -1
+                              ? '../../../../card/chart-card/curve/poster.png'
+                              : '../chart-card/demo/poster.png'
+                          "
+                          alt=""
+                          style="width: 100%; height: 100%; object-fit: contain" 
+-->
+                        <!-- /> -->
+                        <img
+                          v-if="item.data.cardId.indexOf('chart-curve') != -1"
+                          src="../../../card/chart-card/curve/poster.png"
+                          style="width: 100%; height: 100%; object-fit: contain"
+                        />
+                        <img
+                          v-if="item.data.cardId.indexOf('chart-demo') != -1"
+                          src="../chart-card/demo/poster.png"
+                          style="width: 100%; height: 100%; object-fit: contain"
+                        />
                       </div>
                     </div>
                   </n-gi>
@@ -267,9 +309,11 @@ onMounted(() => {
                       :style="
                         item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
                       "
-                      @click="selectCard(item)"
+                      @click="selectFinalCard(item)"
                     >
-                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                        {{ $t(item.title) }}
+                      </div>
                       <div class="h-148px w-full">
                         <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                       </div>

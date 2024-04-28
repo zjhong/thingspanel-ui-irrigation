@@ -119,6 +119,14 @@ onMounted(fetchDataFunction);
       </n-card>
     </NModal>
     <NDataTable class="mb-4 mt-4" :loading="loading" :columns="tableColumns" :data="tableData" />
-    <NPagination v-if="!noRefresh" :page-count="page_coune" :page="the_page" :page-size="4" @update:page="updatePage" />
+    <div class="flex flex-justify-end">
+      <NPagination
+        v-if="!noRefresh"
+        :page-count="page_coune"
+        :page="the_page"
+        :page-size="4"
+        @update:page="updatePage"
+      />
+    </div>
   </div>
 </template>

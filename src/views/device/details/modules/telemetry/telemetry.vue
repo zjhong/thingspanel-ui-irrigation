@@ -79,7 +79,7 @@ const columns = [
     key: 'operation_type',
     render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
   },
-  { title: '操作用户', key: 'user_id' },
+  { title: '操作用户', key: 'username' },
   {
     title: '操作时间',
     key: 'created_at',

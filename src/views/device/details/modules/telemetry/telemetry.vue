@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { useWebSocket } from '@vueuse/core';
+import { MovingNumbers } from 'moving-numbers-vue3';
 import {
   getSimulation,
   getTelemetryLogList,
@@ -40,6 +41,7 @@ const sendResult = ref('');
 const tableData = ref([]);
 
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
+const initTelemetryData = ref<any>();
 const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
 const telemetry = ref<any>({});
 const nowTime = ref<any>();
@@ -75,6 +77,11 @@ const { status, send, close } = useWebSocket(wsUrl, {
     console.log('ws---', ws);
     if (event.data && event.data !== 'pong') {
       const info = JSON.parse(event.data);
+      const currTelemetryKey = telemetryData.value
+        .map(item => {
+          return item.key === 'systime' ? false : item.key;
+        })
+        .filter(item => Boolean(item));
       const newData = telemetryData.value.map(item => {
         return {
           ...item,
@@ -82,7 +89,13 @@ const { status, send, close } = useWebSocket(wsUrl, {
           ts: info[item.key] ? info.systime : item.ts
         };
       });
-      telemetryData.value = [...newData];
+      const newTelemetry: any[] = [];
+      for (const key in info) {
+        if (key !== 'systime' && !currTelemetryKey.includes(key)) {
+          newTelemetry.push({ ...initTelemetryData.value, key, value: info[key], ts: info.systime });
+        }
+      }
+      telemetryData.value = [...newData, ...newTelemetry];
     }
   }
 });
@@ -176,7 +189,7 @@ const fetchTelemetry = async () => {
   const { data, error } = await telemetryDataCurrent(props.id);
   if (!error && data) {
     telemetryData.value = data;
-
+    initTelemetryData.value = data[0] || {}; // 存储一份模板
     const dataw = {
       // eslint-disable-next-line no-constant-binary-expression
       device_id: props.id,
@@ -328,14 +341,13 @@ onUnmounted(() => {
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
               <span>
-                <n-number-animation
+                <MovingNumbers
                   :ref="setItemRef"
                   :data-index="index"
-                  :precision="2"
-                  :duration="800"
-                  :from="0.0"
-                  :to="telemetry[i.key] || i.value"
-                />
+                  class="c1"
+                  :m-num="telemetry[i.key] || i.value"
+                  :quantile-show="true"
+                ></MovingNumbers>
               </span>
 
               <span>{{ i.unit }}</span>

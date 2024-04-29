@@ -57,7 +57,7 @@ const handleLook = (id: string) => {
     query: {
       d_id: id
     }
-  });
+  }).catch(error => error);
 };
 
 const handleSetAddress = async (id, subDeviceAddr) => {

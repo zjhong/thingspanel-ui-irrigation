@@ -52,7 +52,7 @@ const deleteDevice = async id => {
   }
 };
 
-const handleLook = async (id: string) => {
+const handleLook = (id: string) => {
   routerPushByKey('device_details-child', {
     query: {
       d_id: id

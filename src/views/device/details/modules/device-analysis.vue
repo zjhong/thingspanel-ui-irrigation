@@ -137,6 +137,7 @@ const addChildDeviceSure = () => {
   showAddDialog.value = false;
   selectChild.value = [];
   sOptions.value = [];
+  tableData.value = [];
   getData();
   console.log(res);
 };

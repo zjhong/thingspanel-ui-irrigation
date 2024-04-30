@@ -132,8 +132,10 @@ onMounted(async () => {
       <NFormItem>
         <NButton type="primary" @click="openForm">数据解析</NButton>
       </NFormItem>
-      <NFlex justify="flex-end">
+      <NFormItem>
         <NButton type="primary" @click="handleSubmit">保存</NButton>
+      </NFormItem>
+      <NFlex justify="flex-end">
       </NFlex>
     </NForm>
     <n-drawer v-model:show="active" height="90%" placement="bottom">

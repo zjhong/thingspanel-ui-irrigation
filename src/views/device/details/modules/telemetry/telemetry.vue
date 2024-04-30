@@ -86,7 +86,7 @@ const { status, send, close } = useWebSocket(wsUrl, {
         return {
           ...item,
           value: info[item.key] || item.value,
-          ts: info.systime || item.ts
+          ts: info[item.key] ? info.systime || item.ts : item.ts
         };
       });
       const newTelemetry: any[] = [];

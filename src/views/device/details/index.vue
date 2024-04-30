@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
+import { useWebSocket } from '@vueuse/core';
 import { useDeviceDataStore } from '@/store/modules/device';
 import Telemetry from '@/views/device/details/modules/telemetry/telemetry.vue';
 import Join from '@/views/device/details/modules/join.vue';
@@ -17,6 +18,8 @@ import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { deviceDetail, deviceUpdate } from '@/service/api/device';
+import { localStg } from '@/utils/storage';
+import { createServiceConfig } from '~/env.config';
 
 const { query } = useRoute();
 const appStore = useAppStore();
@@ -40,10 +43,28 @@ let components = [
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
 const lables = ref<string[]>([]);
-const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
+const device_is_online = ref(0);
+
+const { otherBaseURL } = createServiceConfig(import.meta.env);
+let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
+
+wsUrl += `/device/online/status/ws`;
+const { send } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  },
+  onMessage(ws: WebSocket, event: MessageEvent) {
+    console.log('ws---', ws);
+    if (event.data && event.data !== 'pong') {
+      device_is_online.value = event.data.is_online;
+    }
+  }
+});
 
 const queryParams = reactive({
   lable: '',
@@ -63,7 +84,7 @@ const changeTabs = v => {
 const editConfig = () => {
   showDialog.value = true;
 };
-const close = async () => {
+const closeModal = async () => {
   showDialog.value = false;
   deviceDataStore.fetchData(d_id as string);
 };
@@ -109,10 +130,8 @@ const getDeviceDetail = async () => {
   const { error, data } = await deviceDetail(d_id);
   if (!error) {
     device_number.value = data.device_number;
-    if (data.is_online !== 0) {
-      device_color.value = 'rgb(2,153,52)';
-      icon_type.value = 'rgb(2,153,52)';
-    }
+    device_is_online.value = data.is_online;
+
     if (data.device_config !== undefined) {
       device_type.value = data.device_config.device_type;
       if (device_type.value !== '2') {
@@ -121,6 +140,13 @@ const getDeviceDetail = async () => {
     } else {
       components = components.filter(item => item.key !== 'device-analysis');
     }
+
+    send(
+      JSON.stringify({
+        device_id: d_id,
+        token: localStg.get('token')
+      })
+    );
   }
 };
 onMounted(() => {
@@ -171,7 +197,7 @@ watch(
                 <NInput v-model:value="deviceDataStore.deviceData.description" type="textarea" />
               </n-form-item>
               <n-space>
-                <n-button @click="close">取消</n-button>
+                <n-button @click="closeModal">取消</n-button>
                 <n-button @click="save">保存</n-button>
               </n-space>
             </n-form>
@@ -193,14 +219,10 @@ watch(
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
               class="text-20px text-primary"
-              :stroke="icon_type"
+              :stroke="device_is_online === 1 ? 'rgb(2,153,52)' : '#ccc'"
             />
-            <span :style="{ color: device_color }">
-              {{
-                deviceDataStore?.deviceData?.is_online === 1
-                  ? $t('custom.device_details.online')
-                  : $t('custom.device_details.offline')
-              }}
+            <span :style="{ color: device_is_online === 1 ? 'rgb(2,153,52)' : '#ccc' }">
+              {{ device_is_online === 1 ? $t('custom.device_details.online') : $t('custom.device_details.offline') }}
             </span>
           </div>
           <div class="mr-4" style="display: flex">

@@ -7,12 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <NCard>
-    <div class="h-500px flex-center flex-col">
-      <!--      <n-empty description="暂无数据"></n-empty>-->
-      <sceneLinkage :device_id="id" />
-    </div>
-  </NCard>
+  <sceneLinkage :device_id="id" />
 </template>
 
 <style scoped></style>

@@ -122,26 +122,17 @@ onMounted(async () => {
     <div class="connection-title">通过协议接入</div>
     <NForm :model="extendForm" :rules="extendFormRules" label-placement="left" label-width="auto">
       <NFormItem label="选择协议/服务" path="protocol_type" class="w-300">
-        <NSelect
-          v-model:value="extendForm.protocol_type"
-          :options="typeOptions"
-          placeholder="请选择选择协议/服务"
-          label-field="translation"
-          value-field="dict_value"
-          @change="choseProtocolType"
-        ></NSelect>
+        <NSelect v-model:value="extendForm.protocol_type" :options="typeOptions" placeholder="请选择选择协议/服务"
+          label-field="translation" value-field="dict_value" @change="choseProtocolType"></NSelect>
       </NFormItem>
-      <NFormItem label="认证类型" path="voucher_type" class="w-300">
-        <NSelect
-          v-if="props.configInfo.device_type !== 1"
-          v-model:value="extendForm.voucher_type"
-          :options="connectOptions"
-          placeholder="请选择认证类型"
-        ></NSelect>
+      <NFormItem label="认证类型" path="voucher_type" class="w-300" v-show="configInfo.device_type !== '3'">
+        <NSelect v-if="props.configInfo.device_type !== 1" v-model:value="extendForm.voucher_type"
+          :options="connectOptions" placeholder="请选择认证类型"></NSelect>
       </NFormItem>
-
-      <NFlex justify="flex-end">
+      <NFormItem>
         <NButton type="primary" @click="openForm">数据解析</NButton>
+      </NFormItem>
+      <NFlex justify="flex-end">
         <NButton type="primary" @click="handleSubmit">保存</NButton>
       </NFlex>
     </NForm>

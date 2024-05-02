@@ -36,6 +36,7 @@ type Rules = {
   data_name: Rule;
   data_identifier: Rule;
   read_write_flag: Rule;
+  data_type: Rule
 };
 
 const fromRules: Rules = {
@@ -49,10 +50,15 @@ const fromRules: Rules = {
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheAttributeIdentifier')
   },
-  read_write_flag: {
+  data_type: {
     required: true,
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheAttributeType')
+  },
+  read_write_flag: {
+    required: true,
+    trigger: ['blur', 'input'],
+    message: '请输入读写标志'
   }
 };
 
@@ -73,7 +79,7 @@ watch(
         device_template_id: deviceTemplateId,
         data_name: '',
         data_identifier: '',
-        read_write_flag: 'String',
+
         unit: '',
         description: ''
       });
@@ -84,6 +90,13 @@ watch(
 
 const generalOptions: any = reactive(
   ['String', 'Number', 'Boolean'].map(v => ({
+    label: v,
+    value: v
+  }))
+);
+
+const readAndWriteOptions: any = reactive(
+  ['R-只读', 'RW-读/写'].map(v => ({
     label: v,
     value: v
   }))
@@ -147,11 +160,18 @@ const clear: () => void = () => {
         :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeIdentifier')"
       />
     </n-form-item>
-    <n-form-item :label="$t('device_template.table_header.attributeType')" path="read_write_flag">
+    <n-form-item :label="$t('device_template.table_header.attributeType')" path="data_type">
       <n-select
-        v-model:value="addFrom.read_write_flag"
+        v-model:value="addFrom.data_type"
         :options="generalOptions"
         :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeType')"
+      />
+    </n-form-item>
+    <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
+      <n-select
+        v-model:value="addFrom.read_write_flag"
+        :options="readAndWriteOptions"
+        placeholder="请输入读写标志"
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">

@@ -5,6 +5,7 @@ import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
 import { deviceConfigBatch, deviceList } from '@/service/api/device';
+import { useRouterPush } from '@/hooks/common/router';
 
 // const message = useMessage();
 
@@ -141,6 +142,21 @@ const getDeviceList = async () => {
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
 };
+const { routerPushByKey } = useRouterPush();
+const rowProps = (row: any) => {
+  return {
+    style: 'cursor: pointer;',
+    onClick: () => {
+      console.log(row);
+      routerPushByKey('device_details', {
+        query: {
+          d_id: row.id
+        }
+      });
+    }
+  };
+};
+
 onMounted(async () => {
   await getDeviceList();
 });
@@ -149,13 +165,15 @@ onMounted(async () => {
 <template>
   <div class="associated-box">
     <NButton type="primary" @click="addDevice()">+添加设备</NButton>
-    <NDataTable
+    <n-data-table
       :columns="columnsData"
       :data="configDevice"
       size="small"
       :row-key="item => item.id"
       class="table-class"
+      :row-props="rowProps"
     />
+
     <div class="pagination-box">
       <NPagination
         v-model:page="queryData.page"

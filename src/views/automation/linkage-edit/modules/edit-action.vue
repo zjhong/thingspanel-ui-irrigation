@@ -2,10 +2,16 @@
 import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { type FormInst, NButton, NCard, NFlex } from 'naive-ui';
-import { deviceConfig, deviceGroupTree } from '@/service/api';
+import { deviceGroupTree } from '@/service/api';
 import { warningMessageList } from '@/service/api/alarm';
 import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
-import { deviceConfigMetricsMenu, deviceListAll, deviceMetricsMenu, sceneGet } from '@/service/api/automation';
+import {
+  deviceConfigAll,
+  deviceConfigMetricsMenu,
+  deviceListAll,
+  deviceMetricsMenu,
+  sceneGet
+} from '@/service/api/automation';
 const route = useRoute();
 
 interface Props {
@@ -22,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 const resetActionData = () => {
   // eslint-disable-next-line @typescript-eslint/no-use-before-define,array-callback-return
   actionForm.value.actionGroups.map((item: any) => {
-    if (item.actionInstructList.length > 0) {
+    if (item.actionInstructList && item.actionInstructList.length > 0) {
       const data = [] as any;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const instructItem = JSON.parse(JSON.stringify(instructListItem.value));
@@ -196,33 +202,34 @@ const getGroup = async () => {
 // 设备列表
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
-  group_id: '',
-  name: ''
+  group_id: null,
+  device_name: null
 });
 
 // 获取设备列表
-const getDevice = async (groupId: string, name: string) => {
-  queryDevice.value.group_id = groupId || '';
-  queryDevice.value.name = name || '';
+const getDevice = async (groupId: any, name: any) => {
+  queryDevice.value.group_id = groupId || null;
+  queryDevice.value.device_name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
+};
+
+const queryDeviceName = ref([] as any);
+const handleFocus = (ifIndex: any) => {
+  queryDeviceName.value[ifIndex].focus();
 };
 
 // 设备配置列表
 const deviceConfigOption = ref([]);
 // 设备配置列表查询条件
 const queryDeviceConfig = ref({
-  page: 1,
-  page_size: 20,
-  name: ''
+  device_config_name: ''
 });
 // 获取设备配置列表
-const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
-  loadingSelect.value = true;
-  const res = await deviceConfig(queryDeviceConfig.value);
-  deviceConfigOption.value = res.data.list;
-  loadingSelect.value = false;
+const getDeviceConfig = async (name: any) => {
+  queryDeviceConfig.value.device_config_name = name || '';
+  const res = await deviceConfigAll(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data || [];
 };
 
 // 选择动作目标
@@ -357,9 +364,11 @@ const deleteActionGroupItem = (actionGroupIndex: any) => {
 // 给某个动作组中增加指令
 const addIfGroupsSubItem = async (actionGroupIndex: any) => {
   await configFormRef.value?.validate();
-  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.push(
-    JSON.parse(JSON.stringify(instructListItem.value))
-  );
+  const data = JSON.parse(JSON.stringify(instructListItem.value));
+  if (props.conditionsType === '11') {
+    data.action_type = '11';
+  }
+  actionForm.value.actionGroups[actionGroupIndex].actionInstructList.push(data);
 };
 // 删除某个动作组中的某个指令
 const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
@@ -368,7 +377,7 @@ const deleteIfGroupsSubItem = (actionGroupIndex: any, ifIndex: any) => {
 
 onMounted(() => {
   getGroup();
-  getDevice('', '');
+  getDevice(null, null);
   getDeviceConfig('');
   getAlarmList('');
   getSceneList('');
@@ -452,16 +461,25 @@ onMounted(() => {
                             <NFlex align="center" class="w-500px">
                               分组
                               <n-select
-                                v-model:value="instructItem.deviceGroupId"
+                                v-model:value="queryDevice.group_id"
                                 :options="deviceGroupOptions"
                                 label-field="name"
                                 value-field="id"
                                 class="max-w-40"
                                 clearable
-                                @update:value="data => getDevice(data, queryDevice.name)"
+                                @update:value="data => getDevice(data, queryDevice.device_name)"
                               />
-                              <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
-                              <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                              <NInput
+                                ref="queryDeviceName"
+                                v-model:value="queryDevice.device_name"
+                                class="flex-1"
+                                clearable
+                                @click="handleFocus(instructIndex)"
+                              ></NInput>
+                              <NButton
+                                type="primary"
+                                @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
+                              >
                                 搜索
                               </NButton>
                             </NFlex>
@@ -485,7 +503,6 @@ onMounted(() => {
                           placeholder="请选择"
                           filterable
                           remote
-                          :loading="loadingSelect"
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />
@@ -494,7 +511,7 @@ onMounted(() => {
                     <template v-if="instructItem.action_type">
                       <NFormItem
                         :show-label="false"
-                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].actionParamOptions`"
+                        :path="`actionGroups[${actionGroupIndex}].actionInstructList[${instructIndex}].action_param`"
                         :rule="configFormRules.actionParamOptions"
                         class="w-40"
                       >

@@ -11,6 +11,7 @@ import ExtendInfo from './modules/extend-info.vue';
 import AttributeInfo from './modules/attribute-info.vue';
 import ConnectionInfo from './modules/connection-info.vue';
 import AlarmInfo from './modules/alarm-info.vue';
+import Automate from './modules/automate.vue';
 
 const { routerPushByKey } = useRouterPush();
 const route = useRoute();
@@ -65,13 +66,15 @@ onMounted(async () => {
         <n-tab-pane name="属性与功能" tab="属性与功能">
           <AttributeInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="连接与认证" tab="连接与认证">
+        <n-tab-pane name="协议配置" tab="协议配置">
           <ConnectionInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
         <n-tab-pane name="数据处理" tab="数据处理">
           <DataHandle :config-info="configForm" />
         </n-tab-pane>
-        <n-tab-pane name="自动化" tab="自动化" :disabled="true"></n-tab-pane>
+        <n-tab-pane name="自动化" tab="自动化">
+          <Automate :config_id="configId" />
+        </n-tab-pane>
         <n-tab-pane name="告警" tab="告警">
           <AlarmInfo />
         </n-tab-pane>

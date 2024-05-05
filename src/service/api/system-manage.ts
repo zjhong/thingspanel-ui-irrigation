@@ -14,10 +14,11 @@ export function fetchGetRoleList(params?: Api.SystemManage.RoleSearchParams) {
  *
  * these roles are all enabled
  */
-export function fetchGetAllRoles() {
-  return request<Api.SystemManage.AllRole[]>({
-    url: '/systemManage/getAllRoles',
-    method: 'get'
+export function fetchGetAllRoles(params: { page: number; page_size: number }) {
+  return request({
+    url: '/role',
+    method: 'get',
+    params
   });
 }
 

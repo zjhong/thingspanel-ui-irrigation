@@ -2,10 +2,11 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { type FormInst, NButton, NCard, NFlex, useDialog } from 'naive-ui';
-import { deviceConfig, deviceGroupTree } from '@/service/api';
+import { deviceGroupTree } from '@/service/api';
 import { warningMessageList } from '@/service/api/alarm';
 import PopUp from '@/views/alarm/warning-message/components/pop-up.vue';
 import {
+  deviceConfigAll,
   deviceConfigMetricsMenu,
   deviceListAll,
   deviceMetricsMenu,
@@ -83,10 +84,10 @@ const actionOptions = ref([
     value: '1',
     disabled: false
   },
-  {
-    label: '激活场景',
-    value: '20'
-  },
+  // {
+  //   label: '激活场景',
+  //   value: '20'
+  // },
   {
     label: '触发告警',
     value: '30'
@@ -138,7 +139,7 @@ const actionTypeChange = (instructItem: any, data: any) => {
 
   if (data === '10') {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getDevice('', '');
+    getDevice(null, null);
   } else if (data === '11') {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     getDeviceConfig('');
@@ -160,33 +161,36 @@ const getGroup = async () => {
 // 设备列表
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
-  group_id: '',
-  name: ''
+  group_id: null,
+  device_name: null
 });
 
 // 获取设备列表
-const getDevice = async (groupId: string, name: string) => {
-  queryDevice.value.group_id = groupId || '';
-  queryDevice.value.name = name || '';
+const getDevice = async (groupId: any, name: any) => {
+  queryDevice.value.group_id = groupId || null;
+  queryDevice.value.device_name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
+};
+
+const queryDeviceName = ref([] as any);
+const handleFocus = (ifIndex: any) => {
+  console.log(queryDeviceName.value);
+  console.log(ifIndex);
+  queryDeviceName.value[ifIndex].focus();
 };
 
 // 设备配置列表
 const deviceConfigOption = ref([]);
 // 设备配置列表查询条件
 const queryDeviceConfig = ref({
-  page: 1,
-  page_size: 20,
-  name: ''
+  device_config_name: ''
 });
 // 获取设备配置列表
-const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
-  loadingSelect.value = true;
-  const res = await deviceConfig(queryDeviceConfig.value);
-  deviceConfigOption.value = res.data.list;
-  loadingSelect.value = false;
+const getDeviceConfig = async (name: any) => {
+  queryDeviceConfig.value.device_config_name = name || '';
+  const res = await deviceConfigAll(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data || [];
 };
 
 // 选择动作目标
@@ -401,7 +405,7 @@ const dataEcho = actionsData => {
 
 onMounted(() => {
   getGroup();
-  getDevice('', '');
+  getDevice(null, null);
   getAlarmList('');
   getSceneList('');
   getDeviceConfig('');
@@ -494,16 +498,26 @@ onMounted(() => {
                             <NFlex align="center" class="w-500px">
                               分组
                               <n-select
-                                v-model:value="instructItem.deviceGroupId"
+                                v-model:value="queryDevice.group_id"
                                 :options="deviceGroupOptions"
                                 label-field="name"
                                 value-field="id"
                                 class="max-w-40"
                                 clearable
-                                @update:value="data => getDevice(data, queryDevice.name)"
+                                @update:value="data => getDevice(data, queryDevice.device_name)"
                               />
-                              <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
-                              <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                              <NInput
+                                ref="queryDeviceName"
+                                v-model:value="queryDevice.device_name"
+                                class="flex-1"
+                                clearable
+                                autofocus
+                                @click="handleFocus(instructIndex)"
+                              ></NInput>
+                              <NButton
+                                type="primary"
+                                @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
+                              >
                                 搜索
                               </NButton>
                             </NFlex>
@@ -527,7 +541,6 @@ onMounted(() => {
                           placeholder="请选择"
                           filterable
                           remote
-                          :loading="loadingSelect"
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />

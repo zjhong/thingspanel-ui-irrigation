@@ -194,6 +194,11 @@ export const telemetryDataCurrent = async (id: any) => {
   const url = `/telemetry/datas/current/${id}`;
   return await request.get<DeviceManagement.telemetryCurrent | any>(url);
 };
+
+/** 遥测删除数据处理 */
+export const telemetryDataDel = async (params: any) => {
+  return await request.delete2<Api.BaseApi.Data | any>(`telemetry/datas`, params);
+};
 /** 设备遥测当前值查询 * */
 
 export const getTelemetryLogList = async (params: any) => {
@@ -287,4 +292,12 @@ export const addChildDevice = async (params: any) => {
 /** 移除子设备 */
 export const removeChildDevice = async (params: any) => {
   return await request.put<any>(`/device/sub-remove`, params);
+};
+/** 获取设备获取遥测数据命令 */
+export const getSimulation = async (params: any) => {
+  return await request.get<any>(`/telemetry/datas/simulation`, { params });
+};
+/** 获取设备发送遥测数据命令 */
+export const sendSimulation = async (params: any) => {
+  return await request.post<any>(`/telemetry/datas/simulation`, params);
 };

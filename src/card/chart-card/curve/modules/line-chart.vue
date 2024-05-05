@@ -489,4 +489,7 @@ onMounted(() => {
 .chart {
   min-height: 300px;
 }
+.m--6 {
+  width: 300px;
+}
 </style>

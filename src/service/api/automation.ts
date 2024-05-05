@@ -4,6 +4,11 @@ export const deviceListAll = async (params: any) => {
   return await request.get<any>('/device/tenant/list', { params });
 };
 
+/** 获取设备配置下拉菜单 */
+export const deviceConfigAll = async (params: any) => {
+  return await request.get<any>('/device_config/menu', { params });
+};
+
 /** 单个设备动作选择下拉菜单 */
 export const deviceMetricsConditionMenu = async (params: any) => {
   return await request.get<any>(`/device/metrics/condition/menu`, { params });
@@ -50,8 +55,8 @@ export const sceneInfo = async (id: any) => {
 };
 
 /** 获取场景日志 */
-export const sceneLog = async (id: any) => {
-  return await request.get<any>(`/scene/log/${id}`);
+export const sceneLog = async (params: any) => {
+  return await request.get<any>(`/scene/log`, { params });
 };
 
 /** 激活场景 */

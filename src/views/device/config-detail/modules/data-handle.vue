@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, watch } from 'vue';
 import { type FormInst, NButton, useDialog } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import Codemirror from 'codemirror-editor-vue3';
@@ -92,7 +92,7 @@ const openModal = (type: any, item: any) => {
 const bodyStyle = ref({
   width: '600px'
 });
-const queryData = ref({
+const queryData: any = ref({
   device_config_id: '',
   script_type: '',
   page: 1,
@@ -214,6 +214,7 @@ const setupEditor = () => {
   });
 };
 
+watch(queryData.value, () => queryDataScriptList(), { deep: true });
 onMounted(() => {
   queryDataScriptList();
 });
@@ -221,12 +222,7 @@ onMounted(() => {
 
 <template>
   <NFlex class="mb-6">
-    <n-select
-      v-model:value="queryData.script_type"
-      :options="scripTypeOpt"
-      class="max-w-40"
-      @update-value="queryDataScriptList"
-    />
+    <n-select v-model:value="queryData.script_type" :options="scripTypeOpt" class="max-w-40" />
     <NButton type="primary" @click="openModal('新增', null)">新增数据处理</NButton>
   </NFlex>
   <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
@@ -330,15 +326,18 @@ onMounted(() => {
     flex: 0 0 23%;
     margin-right: calc(30% / 3);
     margin-bottom: 30px;
+
     .item-name {
       display: flex;
       flex-flow: row;
       align-items: center;
       justify-content: space-between;
     }
+
     .item-desc {
       margin: 15px 0;
     }
+
     .item-operate {
       display: flex;
       flex-flow: row;

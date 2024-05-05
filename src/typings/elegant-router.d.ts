@@ -52,6 +52,7 @@ declare module "@elegant-router/types" {
     "device_config-detail": "/device/config-detail";
     "device_config-edit": "/device/config-edit";
     "device_details": "/device/details";
+    "device_details-child": "/device/details-child";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
@@ -78,6 +79,7 @@ declare module "@elegant-router/types" {
     "management": "/management";
     "management_auth": "/management/auth";
     "management_notification": "/management/notification";
+    "management_ordinary-user": "/management/ordinary-user";
     "management_role": "/management/role";
     "management_route": "/management/route";
     "management_setting": "/management/setting";
@@ -227,6 +229,7 @@ declare module "@elegant-router/types" {
     | "device_config-detail"
     | "device_config-edit"
     | "device_config"
+    | "device_details-child"
     | "device_details"
     | "device_grouping-details"
     | "device_grouping"
@@ -245,6 +248,7 @@ declare module "@elegant-router/types" {
     | "manage_user"
     | "management_auth"
     | "management_notification"
+    | "management_ordinary-user"
     | "management_role"
     | "management_route"
     | "management_setting"

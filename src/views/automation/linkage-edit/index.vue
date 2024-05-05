@@ -9,7 +9,6 @@ import EditPremise from '@/views/automation/linkage-edit/modules/edit-premise.vu
 import { sceneAutomationsAdd, sceneAutomationsEdit, sceneAutomationsInfo } from '@/service/api/automation';
 import { useRouterPush } from '@/hooks/common/router';
 const { routerBack } = useRouterPush();
-
 const dialog = useDialog();
 const route = useRoute();
 const configFormRules = ref({
@@ -34,7 +33,13 @@ const configFormRules = ref({
 });
 const configFormRef = ref<HTMLElement & FormInst>();
 const configForm = ref(defaultConfigForm());
+
 const configId = ref(route.query.id || '');
+const propsData = ref({
+  device_id: route.query.device_id || '',
+  device_config_id: route.query.device_config_id || ''
+});
+
 function defaultConfigForm() {
   return {
     id: '',
@@ -279,7 +284,13 @@ onMounted(() => {
           </NFormItem>
         </NFlex>
         <NFormItem label="如果:" class="w-100%" path="trigger_condition_groups" :show-feedback="false">
-          <EditPremise ref="editPremise" :condition-data="conditionData" @condition-chose="conditionChose" />
+          <EditPremise
+            ref="editPremise"
+            :device_id="propsData.device_id"
+            :device_config_id="propsData.device_config_id"
+            :condition-data="conditionData"
+            @condition-chose="conditionChose"
+          />
         </NFormItem>
         <n-divider dashed class="divider-class" />
         <NFormItem label="那么:" class="w-100%" path="actions" :show-feedback="false">

@@ -5,8 +5,13 @@ import { NButton, NFlex } from 'naive-ui';
 import type { FormInst } from 'naive-ui';
 import { IosRefresh } from '@vicons/ionicons4';
 import { repeat } from 'seemly';
-import { deviceConfig, deviceGroupTree } from '@/service/api';
-import { configMetricsConditionMenu, deviceListAll, deviceMetricsConditionMenu } from '@/service/api/automation';
+import { deviceGroupTree } from '@/service/api';
+import {
+  configMetricsConditionMenu,
+  deviceConfigAll,
+  deviceListAll,
+  deviceMetricsConditionMenu
+} from '@/service/api/automation';
 interface Emits {
   (e: 'conditionChose', data: any): void;
 }
@@ -83,8 +88,7 @@ const premiseFormRules = ref({
   },
   weekChoseValue: {
     required: true,
-    message: '请选择',
-    trigger: 'change'
+    message: '请选择'
   },
   weekTimeValue: {
     required: true,
@@ -195,14 +199,14 @@ const getGroup = async () => {
 // 设备列表
 const deviceOptions = ref([] as any);
 const queryDevice = ref({
-  group_id: '',
-  name: ''
+  group_id: null as any,
+  device_name: null as any
 });
 
 // 获取设备列表
-const getDevice = async (groupId: string, name: string) => {
-  queryDevice.value.group_id = groupId || '';
-  queryDevice.value.name = name || '';
+const getDevice = async (groupId: any, name: any) => {
+  queryDevice.value.group_id = groupId || null;
+  queryDevice.value.device_name = name || null;
   const res = await deviceListAll(queryDevice.value);
   deviceOptions.value = res.data;
 };
@@ -219,21 +223,33 @@ const triggerSourceChange = (ifItem: any) => {
   // ifItem.action_value = null;
 };
 
+// const testFocus = () => {
+//   console.log(888);
+//   setTimeout(() => {
+//     console.log(queryDeviceName.value[0]);
+//     queryDeviceName.value[0].focus();
+//   }, 100);
+// };
+const triggerSourceShow = () => {
+  queryDevice.value.device_name = '';
+  queryDevice.value.group_id = '';
+  getDevice(null, null);
+};
+const queryDeviceName = ref([] as any);
+const handleFocus = (ifIndex: any) => {
+  queryDeviceName.value[ifIndex].focus();
+};
 // 设备配置列表
 const deviceConfigOption = ref([]);
 // 设备配置列表查询条件
 const queryDeviceConfig = ref({
-  page: 1,
-  page_size: 20,
-  name: ''
+  device_config_name: ''
 });
 // 获取设备配置列表
 const getDeviceConfig = async (name: string) => {
-  queryDevice.value.name = name || '';
-  loadingSelect.value = true;
-  const res = await deviceConfig(queryDeviceConfig.value);
-  deviceConfigOption.value = res.data.list;
-  loadingSelect.value = false;
+  queryDeviceConfig.value.device_config_name = name || '';
+  const res = await deviceConfigAll(queryDeviceConfig.value);
+  deviceConfigOption.value = res.data || [];
 };
 
 // 下拉获取的动作标识符
@@ -456,7 +472,7 @@ const judgeItem = ref({
   monthTimeValue: null, // 时间值-选择月
 
   // eslint-disable-next-line no-bitwise
-  weekChoseValue: null, // 星期多选值
+  weekChoseValue: [], // 星期多选值
   monthChoseValue: null, // 月份某一天
 
   startTimeValue: null, // 范围的开始时间
@@ -514,10 +530,15 @@ const deleteIfGroupsItem = (ifIndex: any) => {
   premiseForm.value.ifGroups.splice(ifIndex, 1);
 };
 // 新增一个条件组
-const addIfGroupItem = async () => {
-  await premiseFormRef.value?.validate();
+const addIfGroupItem = (data: any) => {
+  // await premiseFormRef.value?.validate();
   const groupObj: any = [];
-  groupObj.push(JSON.parse(JSON.stringify(judgeItem.value)));
+  if (!data) {
+    groupObj.push(JSON.parse(JSON.stringify(judgeItem.value)));
+    premiseForm.value.ifGroups.push(groupObj);
+  } else {
+    groupObj.push(data);
+  }
   premiseForm.value.ifGroups.push(groupObj);
 };
 
@@ -542,10 +563,16 @@ const triggerParamChange = (ifItem: any, data: any) => {
 interface Props {
   // eslint-disable-next-line vue/no-unused-properties
   conditionData?: object | any;
+  // eslint-disable-next-line vue/no-unused-properties,vue/prop-name-casing
+  device_id?: string | any;
+  // eslint-disable-next-line vue/no-unused-properties,vue/prop-name-casing
+  device_config_id?: string | any;
 }
 const props = withDefaults(defineProps<Props>(), {
   // eslint-disable-next-line vue/require-valid-default-prop
-  conditionData: []
+  conditionData: [],
+  device_id: '',
+  device_config_id: ''
 });
 
 watch(
@@ -559,10 +586,30 @@ watch(
 const configId = ref(route.query.id || null);
 onMounted(() => {
   getGroup();
-  getDevice('', '');
+  getDevice(null, null);
   getDeviceConfig('');
   if (!configId.value) {
-    addIfGroupItem();
+    const judgeItemData = JSON.parse(JSON.stringify(judgeItem.value));
+    if (props.device_id) {
+      judgeItemData.ifType = '1';
+      judgeItemData.trigger_conditions_type = '10';
+      judgeItemData.trigger_source = props.device_id;
+      // eslint-disable-next-line array-callback-return
+      deviceConditionOptions.value.map(item => {
+        item.disabled = item.value !== judgeItemData.trigger_conditions_type;
+      });
+    } else if (props.device_config_id) {
+      judgeItemData.ifType = '1';
+      judgeItemData.trigger_conditions_type = '11';
+      judgeItemData.trigger_source = props.device_config_id;
+      // eslint-disable-next-line array-callback-return
+      deviceConditionOptions.value.map(item => {
+        item.disabled = true;
+      });
+      deviceConfigDisabled.value = true;
+    }
+    emit('conditionChose', judgeItemData.trigger_conditions_type);
+    addIfGroupItem(judgeItemData);
   }
 });
 </script>
@@ -579,7 +626,7 @@ onMounted(() => {
     >
       (满足以下任意一组条件即可触发)
       <NFlex v-for="(ifGroupItem, ifGroupIndex) in premiseForm.ifGroups" :key="ifGroupIndex" class="w-100%">
-        <NCard class="w-[calc(100%-78px)]">
+        <NCard class="mb-2 w-[calc(100%-78px)]">
           <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-2 w-100%">
             <NFlex class="flex-1" align="center">
               <NTag v-if="ifIndex !== 0" type="success" class="tag-class" size="small">并且</NTag>
@@ -597,13 +644,13 @@ onMounted(() => {
                   @update-value="data => ifTypeChange(ifItem, data)"
                 />
               </NFormItem>
-              <template v-if="ifItem.ifType === '1'">
+              <NFlex v-if="ifItem.ifType === '1'" class="flex-1">
                 <!--  设备条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
                   :path="`ifGroups[${ifGroupIndex}][${ifIndex}].trigger_conditions_type`"
                   :rule="premiseFormRules.trigger_conditions_type"
-                  class="max-w-40 w-full"
+                  class="max-w-30 w-full"
                 >
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
@@ -628,21 +675,33 @@ onMounted(() => {
                       :consistent-menu-width="false"
                       :loading="loadingSelect"
                       @update:value="() => triggerSourceChange(ifItem)"
+                      @update:show="() => triggerSourceShow()"
                     >
                       <template #header>
                         <NFlex align="center" class="w-500px">
                           分组
                           <NSelect
-                            v-model:value="ifItem.deviceGroupId"
+                            v-model:value="queryDevice.group_id"
                             :options="deviceGroupOptions"
                             label-field="name"
                             value-field="id"
                             class="max-w-40"
                             clearable
-                            @@update:value="data => getDevice(data, queryDevice.name)"
+                            placeholder="请选择"
+                            @update:value="data => getDevice(data, queryDevice.device_name)"
                           />
-                          <NInput v-model:value="queryDevice.name" class="flex-1" clearable autofocus></NInput>
-                          <NButton type="primary" @click.stop="getDevice(queryDevice.group_id, queryDevice.name)">
+                          <NInput
+                            ref="queryDeviceName"
+                            v-model:value="queryDevice.device_name"
+                            class="flex-1"
+                            clearable
+                            placeholder="请输入"
+                            @click="handleFocus(ifIndex)"
+                          ></NInput>
+                          <NButton
+                            type="primary"
+                            @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
+                          >
                             搜索
                           </NButton>
                         </NFlex>
@@ -666,7 +725,6 @@ onMounted(() => {
                       placeholder="请选择"
                       filterable
                       remote
-                      :loading="loadingSelect"
                       @search="getDeviceConfig"
                       @update:value="() => triggerSourceChange(ifItem)"
                     />
@@ -769,19 +827,19 @@ onMounted(() => {
                     <!--          设备条件下->单个设备/单类设备>-设备ID/选择设备类ID>触发消息标识符是状态-> --->
                   </template>
                 </template>
-              </template>
-              <template v-if="ifItem.ifType === '2'">
+              </NFlex>
+              <NFlex v-if="ifItem.ifType === '2'" class="flex-1">
                 <!--  时间条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
                   :path="`ifGroups[${ifGroupIndex}][${ifIndex}].trigger_conditions_type`"
                   :rule="premiseFormRules.trigger_conditions_type"
-                  class="max-w-40 w-full"
+                  class="max-w-30 w-full"
                 >
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
                     :options="timeConditionOptions"
-                    placeholder="请选择时间条件"
+                    placeholder="请选择"
                   />
                 </NFormItem>
                 <template v-if="ifItem.trigger_conditions_type === '20'">
@@ -827,9 +885,9 @@ onMounted(() => {
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].task_type`"
                     :rule="premiseFormRules.task_type"
-                    class="max-w-40 w-full"
+                    class="max-w-30 w-full"
                   >
-                    <NSelect v-model:value="ifItem.task_type" :options="cycleOptions" placeholder="请选择重复周期" />
+                    <NSelect v-model:value="ifItem.task_type" :options="cycleOptions" placeholder="请选择周期" />
                   </NFormItem>
                   <template v-if="ifItem.task_type === 'HOUR'">
                     <!--  时间条件下->重复->每小时->选择分-->
@@ -886,28 +944,31 @@ onMounted(() => {
                   </template>
                   <template v-if="ifItem.task_type === 'WEEK'">
                     <!--  时间条件下->重复->每周->选择星期和输入时分-->
-                    <NFormItem
-                      :show-label="false"
-                      :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
-                      :rule="premiseFormRules.weekChoseValue"
-                      class="w-130 w-full"
-                    >
-                      <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
-                        <NSpace item-style="display: flex;">
-                          <n-checkbox
-                            v-for="(weekItem, weekIndex) in weekOptions"
-                            :key="weekIndex"
-                            :value="weekItem.value"
-                            :label="weekItem.label"
-                          />
-                        </NSpace>
-                      </NCheckboxGroup>
-                    </NFormItem>
+                    <div class="weekChoseValue-box w-120">
+                      <NFormItem
+                        :show-label="false"
+                        :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
+                        :rule="premiseFormRules.weekChoseValue"
+                        :show-feedback="true"
+                        class="w-full"
+                      >
+                        <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
+                          <NSpace item-style="display: flex;">
+                            <n-checkbox
+                              v-for="(weekItem, weekIndex) in weekOptions"
+                              :key="weekIndex"
+                              :value="weekItem.value"
+                              :label="weekItem.label"
+                            />
+                          </NSpace>
+                        </NCheckboxGroup>
+                      </NFormItem>
+                    </div>
                     <NFormItem
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekTimeValue`"
                       :rule="premiseFormRules.weekTimeValue"
-                      class="max-w-40 w-full"
+                      class="max-w-30 w-full"
                     >
                       <NTimePicker
                         v-model:value="ifItem.weekTimeValue"
@@ -916,7 +977,6 @@ onMounted(() => {
                         format="HH:mm"
                       />
                     </NFormItem>
-                    <span class="ml-4"></span>
                     <NFormItem
                       label="过期时间"
                       label-width="80px"
@@ -927,7 +987,7 @@ onMounted(() => {
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
                         placeholder="请选择过期时间"
-                        class="w-30"
+                        class="w-35"
                       />
                     </NFormItem>
                   </template>
@@ -975,23 +1035,26 @@ onMounted(() => {
                 </template>
                 <template v-if="ifItem.trigger_conditions_type === '22'">
                   <!--  时间条件下->范围->选择星期和时间周期-->
-                  <NFormItem
-                    :show-label="false"
-                    :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
-                    :rule="premiseFormRules.weekChoseValue"
-                    class="w-130 w-full"
-                  >
-                    <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
-                      <NSpace item-style="display: flex;">
-                        <NCheckbox
-                          v-for="(weekItem, weekIndex) in weekOptions"
-                          :key="weekIndex"
-                          :value="weekItem.value"
-                          :label="weekItem.label"
-                        />
-                      </NSpace>
-                    </NCheckboxGroup>
-                  </NFormItem>
+                  <div class="weekChoseValue-box w-130">
+                    <NFormItem
+                      :show-label="false"
+                      :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
+                      :rule="premiseFormRules.weekChoseValue"
+                      :show-feedback="true"
+                      class="w-full"
+                    >
+                      <NCheckboxGroup v-model:value="ifItem.weekChoseValue">
+                        <NSpace item-style="display: flex;">
+                          <NCheckbox
+                            v-for="(weekItem, weekIndex) in weekOptions"
+                            :key="weekIndex"
+                            :value="weekItem.value"
+                            :label="weekItem.label"
+                          />
+                        </NSpace>
+                      </NCheckboxGroup>
+                    </NFormItem>
+                  </div>
                   <NFormItem
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].startTimeValue`"
@@ -1020,8 +1083,8 @@ onMounted(() => {
                     />
                   </NFormItem>
                 </template>
-              </template>
-              <template v-if="ifItem.ifType === '3'">
+              </NFlex>
+              <NFlex v-if="ifItem.ifType === '3'" class="flex-1">
                 <!--            服务条件->选择类型下拉-->
                 <NFormItem
                   :show-label="false"
@@ -1043,7 +1106,7 @@ onMounted(() => {
                 >
                   <NSelect v-model:value="ifItem.weatherValue" :options="weatherOptions" />
                 </NFormItem>
-              </template>
+              </NFlex>
             </NFlex>
             <NFlex class="w-100px">
               <NButton
@@ -1070,7 +1133,7 @@ onMounted(() => {
         </NButton>
       </NFlex>
     </NForm>
-    <NButton type="primary" class="w-30" @click="addIfGroupItem()">新增一个组</NButton>
+    <NButton type="primary" class="w-30" @click="addIfGroupItem(null)">新增一个组</NButton>
   </NFlex>
 </template>
 
@@ -1088,5 +1151,11 @@ onMounted(() => {
 }
 :deep(.n-card__content) {
   padding: 10px 10px 4px 10px !important;
+}
+.weekChoseValue-box {
+  :deep(.n-form-item-feedback-wrapper) {
+    position: absolute;
+    top: 20px;
+  }
 }
 </style>

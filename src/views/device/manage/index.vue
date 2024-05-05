@@ -31,6 +31,8 @@ const configId = ref();
 const formData = ref();
 const tablePageRef = ref();
 const buttonDisabled = ref(true);
+const showMessage = ref(false);
+const messageColor = ref('');
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -298,17 +300,28 @@ const completeHandAdd = () => {
 function handleSelect(key: string | number) {
   activate('bottom', key);
 }
-
+const messageStyle = ref({
+  color: messageColor,
+  marginLeft: '10px',
+  marginTop: '5px'
+});
 watch(
   deviceNumber,
   _.debounce(async newDeviceNumber => {
     try {
+      if (!newDeviceNumber) {
+        showMessage.value = false;
+        return;
+      }
       const { data, error } = await checkDevice(newDeviceNumber);
       if (!error && data && data.is_available) {
         buttonDisabled.value = false;
+        messageColor.value = 'rgb(2,153,52)';
       } else {
         buttonDisabled.value = true;
+        messageColor.value = 'rgb(255, 26, 26)';
       }
+      showMessage.value = true;
     } catch (error) {
       console.error(error);
     }
@@ -378,7 +391,8 @@ watch(
       </n-drawer-content>
       <n-drawer-content
         v-if="addKey === 'number'"
-        class="flex-center pt-24px"
+        class="flex-left pt-24px"
+        style="margin-left: 500px"
         :title="$t('custom.devicePage.addByNumber')"
       >
         <n-h4 align-text>
@@ -386,15 +400,14 @@ watch(
             <NText strong>{{ $t('custom.devicePage.tips') }}</NText>
           </n-li>
         </n-h4>
-        <div class="mb-6">
+        <div style="display: flex; margin-bottom: 20px">
           <n-input
             v-model:value="deviceNumber"
             :placeholder="$t('custom.devicePage.enterDeviceNumber')"
             class="max-w-240px"
           ></n-input>
-          {{ buttonDisabled ? '' : $t('custom.devicePage.deviceNumberAvailable') }}
+          <NText v-if="showMessage" :style="messageStyle">{{ buttonDisabled ? '设备编号不可用' : '设备可用' }}</NText>
         </div>
-
         <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">
           {{ $t('custom.devicePage.finish') }}
         </n-button>

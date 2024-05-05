@@ -113,7 +113,7 @@ export const deviceConfigVoucherType = async (params: any) => {
 };
 /** 设备配置-获取设备配置表单 */
 export const protocolPluginConfigForm = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`/protocol_plugin/config_form`, { params });
+  return await request.get<any>(`/protocol_plugin/config_form`, { params });
 };
 /** 批量新设备配置关联的设备 */
 export const deviceConfigBatch = async (params: any) => {

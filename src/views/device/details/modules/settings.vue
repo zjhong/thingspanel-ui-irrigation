@@ -8,6 +8,7 @@ import {
   deviceDetail,
   deviceGroupRelation,
   deviceGroupTree,
+  deviceLocation,
   deviceUpdateConfig,
   getDeviceConfigList,
   getDeviceGroupRelation
@@ -19,6 +20,8 @@ const props = defineProps<{
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
+
+const is_online = ref<string>('');
 const treeData = ref();
 type Option = {
   label: string;
@@ -93,6 +96,12 @@ function flattenTree(list: undefined | Option[]): Option[] {
   return result;
 }
 
+const handleUpdateValue = async () => {
+  await deviceLocation({
+    id: props.id,
+    is_online: is_online.value
+  });
+};
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (
     <NTree
@@ -153,31 +162,53 @@ const selectConfig = v => {
 </script>
 
 <template>
-  <div>
-    <NFlex justify="space-between" class="mb-24px mt-8 h-50px items-center">
-      <div class="w-320px flex items-center">
-        <div>设备配置：</div>
-        <NSelect
-          v-model:value="selectedValues"
-          filterable
-          class="w-200px"
-          :options="sOptions"
-          @update:value="selectConfig"
-          @search="deviceConfigList"
-        />
-      </div>
-    </NFlex>
-    <div>
+  <div class="flex-col gap-16px p-t-10px">
+    <div class="flex items-center">
+      <div>设备配置：</div>
+      <NSelect
+        v-model:value="selectedValues"
+        filterable
+        class="w-200px"
+        :options="sOptions"
+        @update:value="selectConfig"
+        @search="deviceConfigList"
+      />
+    </div>
+    <div class="flex items-center">
       <span>设备编码:</span>
       <span>{{ device_coding }}</span>
       <NButton type="primary" text class="ml-4">查看</NButton>
     </div>
-    <div class="mt-4 h-60px">
+
+    <div class="flex-col gap-10px">
+      <div class="flex items-center">
+        <span class="">手动修改在线状态</span>
+        <n-popover trigger="hover" placement="right">
+          <template #trigger>
+            <span class="h-17px w-20px">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
+                <path fill="none" d="M240 304h32l6-160h-44l6 160z"></path>
+                <path
+                  d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208s208-93.31 208-208S370.69 48 256 48zm20 319.91h-40v-40h40zM272 304h-32l-6-160h44z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </span>
+          </template>
+          <span>当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间</span>
+        </n-popover>
+      </div>
+      <div class="flex items-center gap-10px">
+        <n-switch v-model:value="is_online" checked-value="1" unchecked-value="0" @update:value="handleUpdateValue" />
+        <span>{{ is_online === '1' ? '在线' : '离线' }}</span>
+      </div>
+    </div>
+    <div class="flex items-center">
       设备固件:
       <spna class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</spna>
     </div>
 
-    <div>
+    <div class="flex-1">
       <div class="mb-4">设备分组</div>
       <n-transfer
         ref="transfer"

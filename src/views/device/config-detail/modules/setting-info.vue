@@ -30,12 +30,21 @@ const showModal = ref(false);
 </script>
 
 <template>
-  <div class="p-12">
-    <div class="mb4">自动创建设备</div>
-    <div class="mb4">通过一型一密动态获取证书创建设备</div>
-    <NButton class="mb10" type="primary" @click="showModal = true">配置</NButton>
-    <div class="mb4 color-error-500">删除设备配置</div>
-    <NButton type="error" @click="deleteConfig">删除</NButton>
+  <div class="flex-col gap-30px p-10px">
+    <div class="">
+      <div class="m-b-10px">自动创建设备</div>
+      <div class="m-b-10px">通过一型一密动态获取证书创建设备</div>
+      <NButton class="" type="primary" @click="showModal = true">配置</NButton>
+    </div>
+    <div class="">
+      <div class="m-b-10px">设备在线配置</div>
+      <NButton class="" type="primary" @click="showModal = true">配置</NButton>
+    </div>
+    <div>
+      <div class="m-b-10px color-error-500">删除设备配置</div>
+      <NButton type="error" @click="deleteConfig">删除</NButton>
+    </div>
+
     <n-modal v-model:show="showModal" preset="dialog" title="配置自动创建设备" :show-icon="false">
       <div class="mb4">允许设备自动创建</div>
       <n-switch class="mb-4 mt-4" />

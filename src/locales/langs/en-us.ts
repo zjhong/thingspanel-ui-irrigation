@@ -1146,7 +1146,8 @@ const local: App.I18n.Schema = {
     randomText: 'Random text',
     firstElement: 'One',
     secondElement: 'Two',
-    thirdElement: 'Three'
+    thirdElement: 'Three',
+    individual: 'individual'
   }
 };
 

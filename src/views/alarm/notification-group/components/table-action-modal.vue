@@ -216,11 +216,11 @@ const handleAddMember = () => {
           <div style="font-size: 12px; color: #8f8e94; margin-top: 8px">
             <div>{{ $t('generate.sha256hmac') }}</div>
             <div>
-              <span>请求头</span>
+              <span>{{ $t('generate.requestHeader') }}</span>
               ：X-Signature-256
             </div>
             <div>
-              <span>格式</span>
+              <span>{{ $t('generate.format') }}</span>
               ："sha256="+signature
             </div>
           </div>

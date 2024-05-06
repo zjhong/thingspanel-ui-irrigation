@@ -86,7 +86,7 @@ onMounted(() => {
             <NFlex justify="space-between" align="center" class="mt-4">
               <div>
                 {{ item.device_count }}
-                <span>个</span>
+                <span>{{ $t('generate.individual') }}</span>
                 <span>{{ $t('generate.device') }}</span>
               </div>
               <div>

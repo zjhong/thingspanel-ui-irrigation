@@ -259,10 +259,10 @@ export default {
                 </div>
 -->
 
-                <span>经度</span>
+                <span>{{ $t('generate.longitude') }}</span>
                 :
                 <NInput v-model:value="spaceForm.location" disabled />
-                <span>纬度</span>
+                <span>{{ $t('generate.latitude') }}</span>
                 :
                 <NInput v-model:value="spaceForm.dimensionality" disabled />
               </NFormItemGridItem>

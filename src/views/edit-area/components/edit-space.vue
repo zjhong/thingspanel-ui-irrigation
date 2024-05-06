@@ -321,10 +321,10 @@ export default {
                   <span class="required-span">*</span>
                 </NFormItemGridItem>
                 <NFormItemGridItem :label="$t('generate.location-information')" class="whitespace-nowrap" :span="18">
-                  <span>经度</span>
+                  <span>{{ $t('generate.longitude') }}</span>
                   :
                   <NInput v-model:value="spaceForm.location" disabled />
-                  <span>纬度</span>
+                  <span>{{ $t('generate.latitude') }}</span>
                   :
                   <NInput v-model:value="spaceForm.dimensionality" disabled />
                 </NFormItemGridItem>

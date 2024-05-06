@@ -1429,6 +1429,7 @@ declare namespace App {
         firstElement: string;
         secondElement: string;
         thirdElement: string;
+        individual: string;
       };
     };
 

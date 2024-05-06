@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { inject, reactive, ref } from 'vue';
-import { NColorPicker, NSelect } from 'naive-ui';
-import type { IConfigCtx } from '@/components/panel/card';
+import {inject, reactive, ref} from 'vue';
+import {NColorPicker, NSelect} from 'naive-ui';
+import type {IConfigCtx} from '@/components/panel/card';
 import CurveTheme from './theme';
+import {$t} from '@/locales';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
 
@@ -11,8 +12,8 @@ const originalColorGroups = reactive(CurveTheme);
 const colorGroups = ref(JSON.parse(JSON.stringify(originalColorGroups))); // Deep copy to preserve original data
 
 const themeOptions = [
-  { label: '配色主题1', value: 'colorGroups' },
-  { label: '配色主题2', value: 'colorGroups2' }
+  {label: '配色主题1', value: 'colorGroups'},
+  {label: '配色主题2', value: 'colorGroups2'}
 ];
 
 const selectedTheme = ref('');
@@ -46,15 +47,15 @@ const resetTheme = () => {
 <template>
   <div>
     <n-flex align="center" class="mb-2">
-      <div>配色主题：</div>
+      <div>{{ $t('generate.color-theme') }}</div>
       <NSelect
         v-model:value="selectedTheme"
         class="flex-1"
         :options="themeOptions"
-        placeholder="请选择主题"
+        :placeholder="$t('generate.select-theme')"
         @update:value="themeUpdate"
       />
-      <div @click="resetTheme">重置</div>
+      <div @click="resetTheme">{{ $t('common.reset') }}</div>
     </n-flex>
     <div v-if="selectedTheme" class="color-groups">
       <n-grid x-gap="6" y-gap="6" :cols="2">
@@ -69,7 +70,7 @@ const resetTheme = () => {
               @update:value="value => updateColor(value, index, 'top')"
             >
               <template #label>
-                <span />
+                <span/>
               </template>
             </NColorPicker>
             <div class="gradient-preview" :style="gradientStyle(group)"></div>
@@ -81,12 +82,12 @@ const resetTheme = () => {
               @update:value="value => updateColor(value, index, 'bottom')"
             >
               <template #label>
-                <span />
+                <span/>
               </template>
             </NColorPicker>
           </div>
         </n-gi>
-        <n-gi class="text-12px text-#999">建议：有几条数据改几条（按序号），最多9条</n-gi>
+        <n-gi class="text-12px text-#999">{{ $t('generate.max-9') }}</n-gi>
       </n-grid>
     </div>
   </div>

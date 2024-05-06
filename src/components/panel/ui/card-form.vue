@@ -1,10 +1,11 @@
 <script lang="tsx" setup>
-import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import type { SelectOption } from 'naive-ui';
-import { usePanelStore } from '@/store/modules/panel';
+import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
+import type {SelectOption} from 'naive-ui';
+import {usePanelStore} from '@/store/modules/panel';
 import ConfigCtx from '@/components/panel/ui/config-ctx.vue';
-import type { ICardData, ICardDefine } from '@/components/panel/card';
-import { deviceListForPanel, deviceMetricsList } from '@/service/api';
+import type {ICardData, ICardDefine} from '@/components/panel/card';
+import {deviceListForPanel, deviceMetricsList} from '@/service/api';
+import {$t} from '@/locales';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
@@ -13,9 +14,9 @@ const props = defineProps<{
   deviceWebChartConfig: any;
 }>();
 const systemNorm = [
-  { label: '设备总数', value: 1 },
-  { label: '在线设备数量', value: 2 },
-  { label: '离线设备数量', value: 3 }
+  {label: '设备总数', value: 1},
+  {label: '在线设备数量', value: 2},
+  {label: '离线设备数量', value: 3}
 ];
 const store = usePanelStore();
 const defData = {
@@ -45,7 +46,7 @@ watch(
   data => {
     emit('update', data as any);
   },
-  { deep: true }
+  {deep: true}
 );
 
 const removeSource = (i: number) => {
@@ -160,18 +161,18 @@ watch(
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
         <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
-            <NFormItem label="数据源类型">
+            <NFormItem :label="$t('generate.data-source-type')">
               <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
                 <NSpace>
-                  <NRadioButton value="system">系统</NRadioButton>
-                  <NRadioButton value="device">设备</NRadioButton>
+                  <NRadioButton value="system">{{ $t('generate.system') }}</NRadioButton>
+                  <NRadioButton value="device">{{ $t('generate.device') }}</NRadioButton>
                 </NSpace>
               </NRadioGroup>
             </NFormItem>
             <div v-if="state.data.dataSource?.origin === 'system'">
               <div v-for="(item, i) in state.data.dataSource.systemSource" :key="i" class="mb-4 flex space-x-2">
-                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm" />
-                <NInput v-model:value="item.name" placeholder="数据源名称" style="width: 200px" />
+                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm"/>
+                <NInput v-model:value="item.name" :placeholder="$t('generate.data-source-name')" style="width: 200px"/>
                 <NButton
                   v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
                   ghost
@@ -180,7 +181,7 @@ watch(
                   @click="removeSource(i)"
                 >
                   <template #icon>
-                    <SvgIcon icon="material-symbols:delete-outline" />
+                    <SvgIcon icon="material-symbols:delete-outline"/>
                   </template>
                 </NButton>
               </div>
@@ -189,7 +190,7 @@ watch(
                 block
                 @click="state.data.dataSource?.systemSource?.push({})"
               >
-                添加
+                {{ $t('generate.add') }}
               </NButton>
             </div>
             <div v-if="state.data.dataSource?.origin === 'device'">
@@ -201,7 +202,7 @@ watch(
                 class="m-b-2 w-360px"
                 @update:value="deviceCountUpdate"
               >
-                <template #prefix><span class="text-#999">设备数量:</span></template>
+                <template #prefix><span class="text-#999">{{ $t('generate.device-count') }}</span></template>
               </n-input-number>
 
               <div v-for="(item, i) in state.data.dataSource.deviceSource" :key="i" class="mb-4 flex space-x-2">
@@ -215,7 +216,7 @@ watch(
                   value-field="id"
                   @update:value="value => deviceSelectChange(value, item)"
                 >
-                  <template #header>设备</template>
+                  <template #header>{{ $t('generate.device') }}</template>
                 </NSelect>
 
                 <NSelect
@@ -228,7 +229,7 @@ watch(
                   :render-option="info => metricsOptionRender(info, item)"
                   @update:show="show => updateDropdownShow(show, item)"
                 ></NSelect>
-                <NInput v-if="i <= deviceCount - 1" v-model:value="item.metricsName" style="max-width: 140px" />
+                <NInput v-if="i <= deviceCount - 1" v-model:value="item.metricsName" style="max-width: 140px"/>
               </div>
             </div>
           </NForm>
@@ -238,7 +239,7 @@ watch(
         <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
           <div class="max-w-[600px]">
             <ConfigCtx v-model:config="state.data.config" mode="insert">
-              <component :is="state.selectCard?.configForm" :data="state.data" />
+              <component :is="state.selectCard?.configForm" :data="state.data"/>
               <!-- v-model:data="state" -->
             </ConfigCtx>
           </div>
@@ -246,10 +247,13 @@ watch(
       </NTabPane>
       <NTabPane name="basic" tab="基础设置">
         <NForm>
-          <NFormItem label="标题">
+          <NFormItem :label="$t('page.manage.menu.form.title')">
             <div class="flex items-center">
               <div class="w-36">
-                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">显示标题</NCheckbox>
+                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">{{
+                    $t('generate.display-title')
+                  }}
+                </NCheckbox>
               </div>
               <NInput
                 v-if="state.data.basicSettings.showTitle"

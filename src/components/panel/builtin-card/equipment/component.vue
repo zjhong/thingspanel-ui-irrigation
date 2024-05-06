@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import {computed, onMounted, ref} from 'vue';
 // import axios from 'axios'
 import * as echarts from 'echarts';
+import {$t} from '@/locales';
 // import type { ICardData } from '@/components/panel/card'
 // defineProps<{
 //   card: ICardData;
@@ -12,6 +13,7 @@ interface Props {
   /** 渐变结束的颜色 */
   endColor?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   startColor: '#ffb41d',
   endColor: '#ff7c4a'
@@ -38,7 +40,7 @@ onMounted(() => {
             type: 'group',
             left: '5',
             top: '30',
-            children: Array.from({ length: 10 })
+            children: Array.from({length: 10})
               .fill(0)
               .map((_value, i) => ({
                 type: 'rect',
@@ -91,7 +93,7 @@ onMounted(() => {
 
 <template>
   <div class="rounded-8px p-16px text-white" :style="{ backgroundImage: gradientStyle }">
-    <div>设备总数</div>
+    <div>{{ $t('generate.total-devices') }}</div>
     <div id="equipment" ref="equipment" class="h-full w-full"></div>
   </div>
 </template>

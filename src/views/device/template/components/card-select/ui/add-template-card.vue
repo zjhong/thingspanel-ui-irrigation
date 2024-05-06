@@ -76,7 +76,7 @@ watch(props, pr => {
   <NModal
     :show="open"
     preset="dialog"
-    title="配置"
+    :title="$t('generate.configuration')"
     size="huge"
     :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
     @close="emit('update:open', false)"
@@ -113,8 +113,8 @@ watch(props, pr => {
     </div>
     <div class="h-60px flex flex-center border-t">
       <div>
-        <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
-        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
+        <NButton class="mr-4" @click="emit('update:open', false)">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="mr-4" type="primary" @click="save">{{ $t('generate.confirm') }}</NButton>
       </div>
     </div>
   </NModal>

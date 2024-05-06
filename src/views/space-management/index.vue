@@ -7,6 +7,7 @@ import { router } from '@/router';
 import { dataServiceFlagLabels, dataServiceSignModeLabels, dataServiceStatusOptions } from '@/constants/business';
 import { fetchDataServiceList } from '@/service/api_demo/management';
 import { areasList, deleteArea, spacesList } from '@/service/api/equipment-map';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks';
 
@@ -239,10 +240,10 @@ init();
 
 <template>
   <div>
-    <NCard title="空间管理" :bordered="false">
+    <NCard :title="$t('generate.space-management')" :bordered="false">
       <div class="flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="空间名称" path="name">
+          <NFormItem :label="$t('generate.space-name')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
           <!--
@@ -250,11 +251,11 @@ init();
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
 -->
-          <NFormItem label="作物" path="status">
+          <NFormItem :label="$t('generate.crop')" path="status">
             <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
           </NFormItem>
           <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
           </NFormItem>
         </NForm>
       </div>
@@ -262,7 +263,10 @@ init();
     <div>
       <n-scrollbar style="max-height: 500px">
         <NCard v-for="(item, index) in spaces" :key="index">
-          <div class="space-name">空间名称: {{ item.name }}</div>
+          <div class="space-name">
+            <spna>{{ $t('generate.space-name') }}</spna>
+            : {{ item.name }}
+          </div>
           <NDataTable :columns="columns" :data="item.rows" :loading="loading" :pagination="pagination" />
 
           <!--
@@ -277,21 +281,21 @@ init();
       </n-scrollbar>
     </div>
 
-    <NModal v-model:show="equipmentShow" preset="card" title="设备管理" class="w-1200px">
+    <NModal v-model:show="equipmentShow" preset="card" :title="$t('generate.device-management')" class="w-1200px">
       <div class="flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="设备名称" path="name">
+          <NFormItem :label="$t('page.irrigation.group.deviceName')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="设备编码" path="name">
+          <NFormItem :label="$t('page.irrigation.group.deviceCode')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="设备类型" path="status">
+          <NFormItem :label="$t('page.irrigation.group.deviceType')" path="status">
             <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
           </NFormItem>
           <NFormItem>
-            <NButton class="mr-5 w-72px" type="primary" @click="handleQuery">搜索</NButton>
-            <NButton class="w-72px" type="primary" @click="handleQuery">重置</NButton>
+            <NButton class="mr-5 w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
         <NDataTable

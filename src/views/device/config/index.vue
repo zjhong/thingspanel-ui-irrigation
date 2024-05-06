@@ -5,6 +5,8 @@ import { IosSearch } from '@vicons/ionicons4';
 import type { LastLevelRouteKey } from '@elegant-router/types';
 import { deviceConfig } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
+
 const { routerPushByKey } = useRouterPush();
 
 const showModal = () => {
@@ -49,11 +51,11 @@ onMounted(() => {
 <template>
   <div class="p-20px">
     <NFlex justify="space-between" class="mb-4">
-      <NButton type="primary" @click="showModal()">+创建设备配置</NButton>
+      <NButton type="primary" @click="showModal()">{{ $t('generate.createDeviceConfig') }}</NButton>
       <NFlex align="center" justify="flex-end" :wrap="false">
         <NInput
           v-model:value="queryData.name"
-          placeholder="请输入配置名称"
+          :placeholder="$t('generate.enter-config-name')"
           type="text"
           clearable
           @clear="handleClearQuery"
@@ -65,7 +67,7 @@ onMounted(() => {
             </NIcon>
           </template>
         </NInput>
-        <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
       </NFlex>
     </NFlex>
     <n-empty
@@ -82,11 +84,15 @@ onMounted(() => {
               {{ item.name }}
             </div>
             <NFlex justify="space-between" align="center" class="mt-4">
-              <div>{{ item.device_count }}个设备</div>
               <div>
-                <template v-if="item.device_type === '1'">直连设备</template>
-                <template v-if="item.device_type === '2'">网关</template>
-                <template v-if="item.device_type === '3'">网关子设备</template>
+                {{ item.device_count }}
+                <span>{{ $t('generate.individual') }}</span>
+                <span>{{ $t('generate.device') }}</span>
+              </div>
+              <div>
+                <template v-if="item.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
+                <template v-if="item.device_type === '2'">{{ $t('generate.gateway') }}</template>
+                <template v-if="item.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
               </div>
             </NFlex>
           </NCard>

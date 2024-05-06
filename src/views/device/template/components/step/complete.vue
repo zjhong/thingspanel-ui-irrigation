@@ -51,10 +51,10 @@ onMounted(getTemplate);
       <template #footer>
         <div class="flex justify-between border-t pt-3">
           <div>
-            <n-button class="mr-4" @click="copyText">复制json</n-button>
+            <n-button class="mr-4" @click="copyText">{{ $t('generate.copy-json') }}</n-button>
           </div>
           <div>
-            <n-button class="mr-4" @click="back">上一步</n-button>
+            <n-button class="mr-4" @click="back">{{ $t('generate.previous-step') }}</n-button>
             <n-button type="primary" @click="emit('update:modalVisible', false)">
               {{ $t('common.complete') }}
             </n-button>

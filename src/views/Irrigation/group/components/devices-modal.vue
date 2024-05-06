@@ -10,7 +10,7 @@ import {
   irrigationGroupDeviceList,
   irrigationGroupDeviceTypes
 } from '@/service/api';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -211,7 +211,7 @@ init();
             <NCascader
               ref="refNCascader"
               v-model:value="queryParams.districtId"
-              placeholder="请选择"
+              :placeholder="$t('common.select')"
               :options="spaceOptions"
               :show-path="true"
               label-field="name"

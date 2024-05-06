@@ -11,8 +11,8 @@ import {
   irrigationRotationDetail,
   irrigationRotationDeviceList
 } from '@/service/api';
+import { $t } from '@/locales';
 import DevicesModal from './devices-modal.vue';
-import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -362,7 +362,10 @@ const valveOpenOptions = [
         <NFlex v-for="(item, index) in formModel.tasks" :key="index" justify="space-between" class="mb-20px">
           <NFlex class="w-140px">
             <div>{{ item.deviceName }}</div>
-            <div>序号{{ item.sort }}</div>
+            <div>
+              <span>{{ $t('generate.order-number') }}</span>
+              {{ item.sort }}
+            </div>
           </NFlex>
           <n-input-group class="w-200px">
             <n-input-group-label>{{ $t('page.irrigation.rotation.valveStatus') }}</n-input-group-label>

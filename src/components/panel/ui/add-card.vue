@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
-import { useMessage } from 'naive-ui';
-import { InformationCircleSharp } from '@vicons/ionicons5';
+import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
+import {useMessage} from 'naive-ui';
+import {InformationCircleSharp} from '@vicons/ionicons5';
 // eslint-disable-next-line vue/prefer-import-from-vue
-import type { UnwrapRefSimple } from '@vue/reactivity';
-import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
-import { PanelCards } from '@/components/panel';
-import { deviceTemplateSelect } from '@/service/api';
-import { $t } from '~/src/locales';
+import type {UnwrapRefSimple} from '@vue/reactivity';
+import type {ICardData, ICardDefine, ICardFormIns} from '@/components/panel/card';
+import {PanelCards} from '@/components/panel';
+import {deviceTemplateSelect} from '@/service/api';
+import {$t} from '@/locales';
 
 const props = defineProps<{
   open: boolean;
@@ -16,10 +16,10 @@ const props = defineProps<{
 const formRef = ref<ICardFormIns>();
 const tabValue = ref('builtin');
 const tabList = [
-  { tab: '系统', type: 'builtin' },
-  { tab: '设备', type: 'device' },
-  { tab: '插件', type: 'plugin' },
-  { tab: '图表', type: 'chart' }
+  {tab: '系统', type: 'builtin'},
+  {tab: '设备', type: 'device'},
+  {tab: '插件', type: 'plugin'},
+  {tab: '图表', type: 'chart'}
 ];
 const state = reactive({
   curCardData: null as null | Record<string, any>
@@ -129,7 +129,7 @@ const availableCardIds = ref<string[]>([]);
 const deviceSelectId = ref<string>('');
 
 const getDeviceOptions = async () => {
-  const { data, error } = await deviceTemplateSelect();
+  const {data, error} = await deviceTemplateSelect();
   if (!error) {
     deviceOptions.value = data;
   }
@@ -181,7 +181,7 @@ onMounted(() => {
   <NModal
     :show="open"
     preset="dialog"
-    title="配置"
+    :title="$t('generate.configuration')"
     size="huge"
     :style="{
       width: 'calc(100vw - 180px)',
@@ -241,7 +241,7 @@ onMounted(() => {
             <div v-if="item1.tab === '设备'">
               <NSelect
                 v-model:value="deviceSelectId"
-                placeholder="请选择设备"
+                :placeholder="$t('generate.select-device')"
                 :options="deviceOptions"
                 value-field="device_id"
                 label-field="device_name"
@@ -315,7 +315,7 @@ onMounted(() => {
                         {{ $t(item.title) }}
                       </div>
                       <div class="h-148px w-full">
-                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain"/>
                       </div>
                     </div>
                   </n-gi>
@@ -325,7 +325,7 @@ onMounted(() => {
           </NTabPane>
         </NTabs>
         <n-float-button v-if="count === 2" position="absolute" :left="4" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开卡片</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-card') }}</spna>
         </n-float-button>
       </div>
       <div :class="'h-full flex-center justify-center border-r bg-[#f6f9f8] p-2 overflow-hidden ' + widths[1]">
@@ -337,7 +337,7 @@ onMounted(() => {
           class="mr-4 mt-2 h-full w-full flex flex-col justify-center bg-[#f6f9f8] dark:bg-[#101014]"
         >
           <div id="panel_view" class="w-full overflow-y-auto p-4">
-            <CardItem :data="state.curCardData as any" />
+            <CardItem :data="state.curCardData as any"/>
           </div>
         </div>
       </div>
@@ -368,7 +368,7 @@ onMounted(() => {
           />
         </div>
         <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开配置</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-configuration') }}</spna>
         </n-float-button>
       </div>
     </div>
@@ -384,16 +384,16 @@ onMounted(() => {
             }
           "
         >
-          取消
+          {{ $t('generate.cancel') }}
         </NButton>
-        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
+        <NButton class="mr-4" type="primary" @click="save">{{ $t('generate.confirm') }}</NButton>
       </div>
     </div>
     <div v-if="count === 1" class="absolute bottom-0 right-0 h-60px flex flex-center">
       <n-icon size="24">
-        <InformationCircleSharp class="color-red" />
+        <InformationCircleSharp class="color-red"/>
       </n-icon>
-      <span>您可以移入右侧配置区进入配置，也可以确认后稍后配置</span>
+      <span>{{ $t('generate.configuration-entry') }}</span>
     </div>
   </NModal>
 </template>

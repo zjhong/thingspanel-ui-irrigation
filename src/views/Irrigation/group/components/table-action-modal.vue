@@ -8,8 +8,8 @@ import { useBoolean } from '@sa/hooks';
 // import { controlModalLabels } from '@/constants/business';
 import { addIrrigationGroup, irrigationGroupDeviceDetail } from '@/service/api';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { $t } from '@/locales';
 import DevicesModal from './devices-modal.vue';
-import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -19,6 +19,7 @@ export interface Props {
   /** 编辑的表格行数据 */
   editData?: any;
 }
+
 const modalType = ref<ModalType>('add');
 const { bool: devicesVisible, setTrue: openDevicesModal } = useBoolean();
 export type ModalType = NonNullable<Props['type']>;
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }
@@ -155,6 +157,7 @@ async function handleSubmit() {
   }
   closeModal();
 }
+
 const columns: Ref<any> = ref([
   {
     key: 'spaceAndDistrictName',

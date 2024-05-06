@@ -168,7 +168,11 @@ const clear: () => void = () => {
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
-      <n-select v-model:value="addFrom.read_write_flag" :options="readAndWriteOptions" placeholder="请输入读写标志" />
+      <n-select
+        v-model:value="addFrom.read_write_flag"
+        :options="readAndWriteOptions"
+        :placeholder="$t('generate.enterReadWriteFlag')"
+      />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">
       <n-input v-model:value.trim="addFrom.unit" :placeholder="$t('device_template.table_header.pleaseEnterTheUnit')" />

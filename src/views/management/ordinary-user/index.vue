@@ -8,10 +8,10 @@ import dayjs from 'dayjs';
 import { userStatusOptions } from '@/constants/business';
 import { delUser, fetchUserList } from '@/service/api/auth';
 import { useAuthStore } from '@/store/modules/auth';
+import { $t } from '@/locales';
 import TableActionModal from './components/table-action-modal.vue';
 import EditPasswordModal from './components/edit-password-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
 const authStore = useAuthStore();
@@ -63,6 +63,7 @@ const pagination: PaginationProps = reactive({
 });
 
 const tableData = ref<UserManagement.User[]>([]);
+
 function setTableData(data: UserManagement.User[]) {
   tableData.value = data;
 }

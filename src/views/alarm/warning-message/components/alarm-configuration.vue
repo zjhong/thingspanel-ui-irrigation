@@ -13,6 +13,7 @@ import { NButton, NSpace, useMessage } from 'naive-ui';
 import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
 import dayjs from 'dayjs';
 import { batchProcessing, infoList, processingOperation } from '@/service/api/alarm';
+import { $t } from '@/locales';
 
 const loading = ref(false);
 const checkedRowKeysRef = ref<DataTableRowKey[]>([]);
@@ -293,7 +294,7 @@ function handleEditPwd(row) {
               @update:value="pickerChange"
             />
           </NFormItem>
-          <NFormItem label="告警级别" path="status">
+          <NFormItem :label="$t('generate.alarm-level')" path="status">
             <NSelect
               v-model:value="listData.alarmLevel"
               clearable
@@ -302,7 +303,7 @@ function handleEditPwd(row) {
               @update:value="alarmLevelChang"
             />
           </NFormItem>
-          <NFormItem label="处理结果" path="status">
+          <NFormItem :label="$t('generate.final-result')" path="status">
             <NSelect
               v-model:value="listData.processingResult"
               clearable
@@ -326,13 +327,13 @@ function handleEditPwd(row) {
           @update:checked-row-keys="handleCheck"
         />
         <NSpace>
-          <NButton @click="handleBatch">批量处理</NButton>
-          <NButton @click="handleIgnore">批量忽略</NButton>
+          <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>
+          <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
         </NSpace>
       </NSpace>
-      <NModal v-model:show="particulars" preset="card" title="详情" class="w-800px">
+      <NModal v-model:show="particulars" preset="card" :title="$t('page.irrigation.time.log.detail')" class="w-800px">
         <div class="pop-up">
-          <div>告警内容:</div>
+          <div>{{ $t('generate.alarm-content') }}</div>
           <div class="pop-up-content">
             {{ particularsText }}
           </div>

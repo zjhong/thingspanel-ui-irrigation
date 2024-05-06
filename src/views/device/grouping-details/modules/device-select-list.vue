@@ -96,9 +96,9 @@ onMounted(getDeviceList);
   <NFlex justify="end" class="mt-5" align="center">
     <NFlex align="center">
       <div class="text-16px">
-        已选择
+        {{ $t('generate.selected') }}
         <span class="text-blue-4">{{ checkedRowKeysRef.length }}</span>
-        个设备。
+        {{ $t('generate.number-of-devices') }}
       </div>
       <NButton type="info" @click="closeModal">{{ $t('custom.grouping_details.cancel') }}</NButton>
       <NButton type="primary" @click="submit_data">{{ $t('custom.grouping_details.confirm') }}</NButton>

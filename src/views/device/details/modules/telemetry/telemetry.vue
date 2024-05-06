@@ -16,10 +16,12 @@ import {
 } from '@/service/api';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '@/service/api/device';
+import { $t } from '@/locales';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
 import { createServiceConfig } from '~/env.config';
+
 const props = defineProps<{
   id: string;
 }>();
@@ -275,36 +277,38 @@ onUnmounted(() => {
   <n-card class="w-full">
     <!-- 第一行 -->
     <NFlex justify="space-between">
-      <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
+      <n-button type="primary" class="mb-4" @click="openDialog">{{ $t('generate.issue-control') }}</n-button>
 
-      <n-button v-if="showLog" type="primary" class="mb-4" @click="openUpLog">模拟上报数据</n-button>
+      <n-button v-if="showLog" type="primary" class="mb-4" @click="openUpLog">
+        {{ $t('generate.simulate-report-data') }}
+      </n-button>
     </NFlex>
 
-    <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+    <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
       <n-card>
         <n-form>
-          <n-form-item label="属性">
+          <n-form-item :label="$t('generate.attribute')">
             <n-input v-model:value="formValue" type="textarea" />
           </n-form-item>
           <n-space align="end">
-            <n-button @click="showDialog = false">取消</n-button>
-            <n-button @click="sends">发送</n-button>
+            <n-button @click="showDialog = false">{{ $t('generate.cancel') }}</n-button>
+            <n-button @click="sends">{{ $t('generate.send') }}</n-button>
           </n-space>
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[900px]">
+    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" class="w-[900px]">
       <n-card>
         <n-form>
           <div style="display: flex; width: 700px; justify-content: space-between">
-            <span>模拟使用MQTT客户端上报数据</span>
-            <span>可复制以上命令到本地电脑模拟上报数据</span>
+            <span>{{ $t('generate.mqtt') }}</span>
+            <span>{{ $t('generate.copy-commands-to-local') }}</span>
           </div>
           <div style="display: flex; margin-top: 15px; margin-bottom: 15px">
             <n-input v-model:value="device_order" type="textarea" style="width: 700px" @click="copy" />
 
             <n-button style="width: 100px; margin-left: 20px; margin-top: 40px" @click="sendSimulationList">
-              发送
+              {{ $t('generate.send') }}
             </n-button>
           </div>
           <div v-if="showError" style="display: flex; width: 700px; border: 2px solid #eee; border-radius: 5px">
@@ -332,7 +336,7 @@ onUnmounted(() => {
       </n-card>
     </n-modal>
 
-    <n-modal v-model:show="showHistory" title="遥测历史数据" class="w-[600px]">
+    <n-modal v-model:show="showHistory" :title="$t('generate.telemetry-history-data')" class="w-[600px]">
       <NCard>
         <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
         <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />

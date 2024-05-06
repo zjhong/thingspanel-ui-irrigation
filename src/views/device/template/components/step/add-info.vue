@@ -185,7 +185,7 @@ watchEffect(async () => {
           v-else
           v-model:value.trim="addTageText"
           class="tag-ipt"
-          placeholder="请输入标签名称"
+          :placeholder="$t('generate.enter-tag-name')"
           autofocus
           @blur="tagBlur"
         />

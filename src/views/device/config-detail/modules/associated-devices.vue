@@ -6,6 +6,7 @@ import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
 import { deviceConfigBatch, deviceList } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 
 // const message = useMessage();
 
@@ -164,7 +165,7 @@ onMounted(async () => {
 
 <template>
   <div class="associated-box">
-    <NButton type="primary" @click="addDevice()">+添加设备</NButton>
+    <NButton type="primary" @click="addDevice()">{{ $t('generate.+add-device') }}</NButton>
     <n-data-table
       :columns="columnsData"
       :data="configDevice"
@@ -185,7 +186,7 @@ onMounted(async () => {
     <NModal
       v-model:show="visible"
       :mask-closable="false"
-      title="添加设备"
+      :title="$t('generate.add-device')"
       class="w-600px"
       preset="card"
       @after-leave="modalClose"
@@ -197,7 +198,7 @@ onMounted(async () => {
         label-placement="left"
         label-width="auto"
       >
-        <NFormItem label="选择设备" path="device_ids">
+        <NFormItem :label="$t('page.irrigation.rotation.chooseDevice')" path="device_ids">
           <NSelect
             v-model:value="associatedForm.device_ids"
             :options="deviceOptions"
@@ -209,8 +210,8 @@ onMounted(async () => {
           ></NSelect>
         </NFormItem>
         <NFlex justify="flex-end">
-          <NButton @click="handleClose">取消</NButton>
-          <NButton type="primary" @click="handleSubmit">添加</NButton>
+          <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('generate.add') }}</NButton>
         </NFlex>
       </NForm>
     </NModal>

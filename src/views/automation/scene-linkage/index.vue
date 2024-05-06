@@ -10,6 +10,8 @@ import {
   sceneAutomationsLog,
   sceneAutomationsSwitch
 } from '@/service/api/automation';
+import { $t } from '@/locales';
+
 const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
@@ -20,6 +22,7 @@ interface Props {
   // eslint-disable-next-line vue/prop-name-casing
   device_config_id?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   // eslint-disable-next-line vue/require-valid-default-prop
   device_id: '',
@@ -158,11 +161,11 @@ onMounted(() => {
 <template>
   <NCard class="w-full">
     <NFlex justify="space-between" class="mb-4">
-      <NButton type="primary" @click="linkAdd()">+新增场景联动</NButton>
+      <NButton type="primary" @click="linkAdd()">{{ $t('generate.+add-scene-linkage') }}</NButton>
       <NFlex align="center" justify="flex-end" :wrap="false">
         <NInput
           v-model:value="queryData.name"
-          placeholder="请输入场景联动名称"
+          :placeholder="$t('generate.enter-scene-linkage-name')"
           class="search-input"
           type="text"
           clearable
@@ -173,7 +176,7 @@ onMounted(() => {
             </NIcon>
           </template>
         </NInput>
-        <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
       </NFlex>
     </NFlex>
     <n-empty
@@ -208,7 +211,7 @@ onMounted(() => {
                   </template>
                 </NButton>
               </template>
-              编辑
+              {{ $t('common.edit') }}
             </NTooltip>
             <NTooltip trigger="hover">
               <template #trigger>
@@ -220,7 +223,7 @@ onMounted(() => {
                   </template>
                 </NButton>
               </template>
-              日志
+              {{ $t('page.irrigation.time.log.name') }}
             </NTooltip>
             <NTooltip trigger="hover">
               <template #trigger>
@@ -232,7 +235,7 @@ onMounted(() => {
                   </template>
                 </NButton>
               </template>
-              删除
+              {{ $t('common.delete') }}
             </NTooltip>
           </NFlex>
         </NCard>
@@ -251,7 +254,7 @@ onMounted(() => {
     v-model:show="showLog"
     :style="bodyStyle"
     preset="card"
-    title="日志"
+    :title="$t('page.irrigation.time.log.name')"
     size="huge"
     :bordered="false"
     @close="closeLog()"
@@ -262,20 +265,20 @@ onMounted(() => {
         v-model:value="logQuery.execution_result"
         :options="execution_result_options"
         class="max-w-40"
-        placeholder="请选择执行状态"
+        :placeholder="$t('generate.select-execution-status')"
         @update:value="queryLog"
       ></n-select>
-      <NButton type="primary" @click="queryLog()">搜索</NButton>
+      <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
     </NFlex>
     <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
     <template v-else>
       <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
         <thead>
           <tr>
-            <th>序号</th>
-            <th class="w-180px">执行时间</th>
-            <th>执行说明</th>
-            <th class="w-120px">执行状态</th>
+            <th>{{ $t('generate.order-number') }}</th>
+            <th class="w-180px">{{ $t('generate.execution-time') }}</th>
+            <th>{{ $t('generate.execution-description') }}</th>
+            <th class="w-120px">{{ $t('generate.execution-status') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -284,8 +287,8 @@ onMounted(() => {
             <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
             <td>{{ sceneItem['detail'] }}</td>
             <td>
-              <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>
-              <span v-if="sceneItem['execution_result'] === 'F'">执行失败</span>
+              <span v-if="sceneItem['execution_result'] === 'S'">{{ $t('generate.execution-successful') }}</span>
+              <span v-if="sceneItem['execution_result'] === 'F'">{{ $t('generate.execution-failed') }}</span>
             </td>
           </tr>
         </tbody>

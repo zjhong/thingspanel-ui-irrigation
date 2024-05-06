@@ -7,6 +7,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue';
 import Codemirror from 'codemirror-editor-vue3';
+import { $t } from '@/locales';
 // language
 // import "codemirror/mode/javascript/javascript.js";
 // // import "codemirror/mode/clike/clike.js";
@@ -68,7 +69,7 @@ defineExpose({
 <template>
   <NCard>
     <NForm>
-      <NFormItem label="代码" path="code">
+      <NFormItem :label="$t('generate.code')" path="code">
         <Codemirror
           v-model:value="code"
           KeepCursorInEnd

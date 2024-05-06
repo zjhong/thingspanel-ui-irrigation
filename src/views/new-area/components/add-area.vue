@@ -1,10 +1,11 @@
 <script>
-import { onMounted, reactive, ref, toRefs } from 'vue';
-import { useMessage } from 'naive-ui';
+import {onMounted, reactive, ref, toRefs} from 'vue';
+import {useMessage} from 'naive-ui';
 import AMapLoader from '@amap/amap-jsapi-loader';
-import { useNaiveForm } from '@/hooks/common/form';
-import { addArea, spacesData } from '@/service/api/equipment-map';
-import { createServiceConfig } from '~/env.config';
+import {useNaiveForm} from '@/hooks/common/form';
+import {addArea, spacesData} from '@/service/api/equipment-map';
+import {createServiceConfig} from '~/env.config';
+
 export default {
   setup(props, context) {
     const state = reactive({
@@ -63,13 +64,13 @@ export default {
       districts: [] // 已有空间范围
     });
     const message = useMessage();
-    const { formRef } = useNaiveForm();
+    const {formRef} = useNaiveForm();
     const methods = {
       /** 选择空间 */
       async spacesList() {
-        const name = { name: '' };
+        const name = {name: ''};
 
-        const { data } = await spacesData(name);
+        const {data} = await spacesData(name);
         console.log('列表2222', props);
         if (data) {
           data.list.map(item => {
@@ -112,7 +113,7 @@ export default {
       },
       /** 新增接口 */
       add() {
-        const data = { ...state.areaForm };
+        const data = {...state.areaForm};
         data.location = `${state.areaForm.location},${state.areaForm.dimensionality}`;
         data.scope = JSON.stringify(state.areaMap);
         addArea(data).then(e => {
@@ -210,7 +211,8 @@ export default {
 
               state.districts.map(item => {
                 // eslint-disable-next-line no-eval
-                pash = eval(item.scope);
+
+                pash = JSON.parse(item.scope);
                 let spaces = ''; // 定义多边形
                 spaces = new AMap.Polygon({
                   path: pash, // 设置多边形边界路径
@@ -293,13 +295,13 @@ export default {
           });
       }
     };
-    const { otherBaseURL } = createServiceConfig(import.meta.env);
+    const {otherBaseURL} = createServiceConfig(import.meta.env);
     const url = ref(otherBaseURL.demo);
     onMounted(() => {
       methods.mapInit(state.dimension);
       methods.spacesList();
     });
-    return { ...methods, ...toRefs(state), formRef, url };
+    return {...methods, ...toRefs(state), formRef, url};
   }
 };
 </script>
@@ -307,7 +309,12 @@ export default {
 <template>
   <div class="mapContainer">
     <div class="searchInfo">
-      <input id="tipinputs" v-model="newKeyAddress" placeholder="请输入关键字..." class="input-with-select" />
+      <input
+        id="tipinputs"
+        v-model="newKeyAddress"
+        :placeholder="$t('generate.enter-keyword')"
+        class="input-with-select"
+      />
 
       <div class="add-box">
         <NCard>
@@ -315,7 +322,7 @@ export default {
             <div class="form-box">
               <NForm ref="formRef" label-placement="left" :model="areaForm" :rules="areaRules">
                 <NGrid :cols="1" :x-gap="24">
-                  <NFormItemGridItem :span="1" label="所属空间" path="spaces_id">
+                  <NFormItemGridItem :span="1" :label="$t('generate.associated-space')" path="spaces_id">
                     <NSelect
                       v-model:value="areaForm.spaces_id"
                       class="w-200px"
@@ -323,29 +330,31 @@ export default {
                       @update:value="selectUpdate"
                     />
                   </NFormItemGridItem>
-                  <NFormItemGridItem :span="1" label="区域名称" path="name">
-                    <NInput v-model:value="areaForm.name" placeholder="" />
+                  <NFormItemGridItem :span="1" :label="$t('generate.area-name')" path="name">
+                    <NInput v-model:value="areaForm.name" placeholder=""/>
                   </NFormItemGridItem>
 
-                  <NFormItemGridItem :span="18" label="区域位置" class="whitespace-nowrap">
-                    <n-button :type="buttonData" @click="locationSetting">设置位置</n-button>
+                  <NFormItemGridItem :span="18" :label="$t('generate.area-location')" class="whitespace-nowrap">
+                    <n-button :type="buttonData" @click="locationSetting">{{ $t('generate.set-location') }}</n-button>
                     <span class="required-span">*</span>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="位置信息" class="whitespace-nowrap" :span="18">
+                  <NFormItemGridItem :label="$t('generate.location-information')" class="whitespace-nowrap" :span="18">
                     <!--
  <div>
                   <span>经度:</span><span>{{ areaForm.location }}</span>
                 </div>
 -->
-                    经度:
-                    <NInput v-model:value="areaForm.location" disabled />
-                    纬度:
-                    <NInput v-model:value="areaForm.dimensionality" disabled />
+                    <span>{{ $t('generate.longitude') }}</span>
+                    :
+                    <NInput v-model:value="areaForm.location" disabled/>
+                    <span>{{ $t('generate.latitude') }}</span>
+                    :
+                    <NInput v-model:value="areaForm.dimensionality" disabled/>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="地图范围" path="scope">
-                    <n-button @click="rangeSettingClick">设置范围</n-button>
+                  <NFormItemGridItem :label="$t('generate.map-range')" path="scope">
+                    <n-button @click="rangeSettingClick">{{ $t('generate.set-range') }}</n-button>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="区域图片" path="image_url">
+                  <NFormItemGridItem :label="$t('generate.area-image')" path="image_url">
                     <n-upload
                       :action="url + '/file/up'"
                       :default-file-list="fileList"
@@ -354,30 +363,38 @@ export default {
                       @preview="handlePictureCardPreview"
                     ></n-upload>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="区域面积" path="area" class="text-nowrap">
-                    <NInput v-model:value="areaForm.area" placeholder="" class="mr-2" />
-                    公顷
+                  <NFormItemGridItem
+                    :label="$t('dashboard_panel.cardName.regionalArea')"
+                    path="area"
+                    class="text-nowrap"
+                  >
+                    <NInput v-model:value="areaForm.area" placeholder="" class="mr-2"/>
+                    {{ $t('dashboard_panel.cardName.hectare') }}
                   </NFormItemGridItem>
-                  <NFormItemGridItem label-width="120" label="作物所需供水量" path="water_requirement">
-                    <NInput v-model:value="areaForm.water_requirement" placeholder="" class="mr-2" />
-                    升
+                  <NFormItemGridItem
+                    label-width="120"
+                    :label="$t('generate.required-water-supply-for-crops')"
+                    path="water_requirement"
+                  >
+                    <NInput v-model:value="areaForm.water_requirement" placeholder="" class="mr-2"/>
+                    {{ $t('generate.rise') }}
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="种植作物" path="crop_type">
-                    <NInput v-model:value="areaForm.crop_type" placeholder="" />
+                  <NFormItemGridItem :label="$t('generate.planting-crops')" path="crop_type">
+                    <NInput v-model:value="areaForm.crop_type" placeholder=""/>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="土壤类型" path="soil_type">
-                    <NInput v-model:value="areaForm.soil_type" placeholder="" />
+                  <NFormItemGridItem :label="$t('dashboard_panel.cardName.soil')" path="soil_type">
+                    <NInput v-model:value="areaForm.soil_type" placeholder=""/>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="灌溉类型" path="irrigation_type">
-                    <NInput v-model:value="areaForm.irrigation_type" placeholder="" />
+                  <NFormItemGridItem :label="$t('generate.irrigation-type')" path="irrigation_type">
+                    <NInput v-model:value="areaForm.irrigation_type" placeholder=""/>
                   </NFormItemGridItem>
-                  <NFormItemGridItem label="位置详情" path="description">
-                    <NInput v-model:value="areaForm.description" type="textarea" :rows="5" placeholder="" />
+                  <NFormItemGridItem :label="$t('generate.location-details')" path="description">
+                    <NInput v-model:value="areaForm.description" type="textarea" :rows="5" placeholder=""/>
                   </NFormItemGridItem>
                 </NGrid>
                 <NSpace class="w-full" :size="24" justify="center">
-                  <NButton class="w-72px" @click="closeModal">取消</NButton>
-                  <NButton class="w-72px" type="primary" @click="addAreaClick">保存</NButton>
+                  <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+                  <NButton class="w-72px" type="primary" @click="addAreaClick">{{ $t('common.save') }}</NButton>
                 </NSpace>
               </NForm>
             </div>
@@ -427,6 +444,7 @@ export default {
   margin-left: 10px;
   color: red;
 }
+
 .form-box {
   padding-right: 15px;
 }

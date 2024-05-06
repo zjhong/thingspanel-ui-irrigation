@@ -13,6 +13,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace, useMessage } from 'naive-ui';
 import { getNotificationGroupList } from '@/service/api/notification';
 import { delInfo, editInfo, warningMessageList } from '@/service/api/alarm';
+import { $t } from '@/locales';
 import type { ModalType } from './pop-up.vue';
 import popUp from './pop-up.vue';
 import { useBoolean } from '~/packages/hooks';
@@ -268,7 +269,7 @@ async function deleteInfo() {
         <NSpace>
           <NButton type="primary" @click="addWarningMessageBut">
             <IconIcRoundPlus class="mr-4px text-20px" />
-            新增告警
+            {{ $t('generate.addAlarm') }}
           </NButton>
         </NSpace>
       </NSpace>

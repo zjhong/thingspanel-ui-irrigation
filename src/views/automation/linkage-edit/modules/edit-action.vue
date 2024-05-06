@@ -12,6 +12,8 @@ import {
   deviceMetricsMenu,
   sceneGet
 } from '@/service/api/automation';
+import { $t } from '@/locales';
+
 const route = useRoute();
 
 interface Props {
@@ -19,6 +21,7 @@ interface Props {
   conditionsType?: object | any;
   actionData?: any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   conditionsType: null,
   actionData: []
@@ -459,7 +462,7 @@ onMounted(() => {
                         >
                           <template #header>
                             <NFlex align="center" class="w-500px">
-                              分组
+                              {{ $t('generate.group') }}
                               <n-select
                                 v-model:value="queryDevice.group_id"
                                 :options="deviceGroupOptions"
@@ -480,7 +483,7 @@ onMounted(() => {
                                 type="primary"
                                 @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
                               >
-                                搜索
+                                {{ $t('common.search') }}
                               </NButton>
                             </NFlex>
                           </template>
@@ -500,7 +503,7 @@ onMounted(() => {
                           label-field="name"
                           value-field="id"
                           class="max-w-40"
-                          placeholder="请选择"
+                          :placeholder="$t('common.select')"
                           filterable
                           remote
                           @search="getDeviceConfig"
@@ -517,7 +520,7 @@ onMounted(() => {
                       >
                         <NCascader
                           v-model:value="instructItem.action_param"
-                          placeholder="请选择"
+                          :placeholder="$t('common.select')"
                           :options="instructItem.actionParamOptions"
                           check-strategy="child"
                           children-field="options"
@@ -535,7 +538,7 @@ onMounted(() => {
                       >
                         <NInput
                           v-model:value="instructItem.action_value"
-                          placeholder="参数，如：{'param1':1}"
+                          :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
                           class="max-w-40"
                         />
                       </NFormItem>
@@ -547,7 +550,7 @@ onMounted(() => {
                       class="absolute right-5"
                       @click="addIfGroupsSubItem(actionGroupIndex)"
                     >
-                      新增一个操作
+                      {{ $t('generate.add-operation') }}
                     </NButton>
                     <NButton
                       v-if="instructIndex !== 0"
@@ -555,7 +558,7 @@ onMounted(() => {
                       class="absolute right-5"
                       @click="deleteIfGroupsSubItem(actionGroupIndex, instructIndex)"
                     >
-                      删除一个操作
+                      {{ $t('generate.delete-operation') }}
                     </NButton>
                   </NFlex>
                 </NCard>
@@ -564,7 +567,7 @@ onMounted(() => {
                 <NFlex class="ml-6" align="center">
                   <NFormItem
                     label-width="60"
-                    label="激活"
+                    :label="$t('generate.activate')"
                     :path="`actionGroups[${actionGroupIndex}].action_target`"
                     :rule="configFormRules.action_target"
                   >
@@ -573,7 +576,7 @@ onMounted(() => {
                       :options="sceneList"
                       label-field="name"
                       value-field="id"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       class="max-w-60"
                       :loading="loadingSelect"
                       filterable
@@ -587,7 +590,7 @@ onMounted(() => {
                 <NFlex class="ml-6">
                   <NFormItem
                     label-width="60"
-                    label="触发"
+                    :label="$t('generate.trigger')"
                     :path="`actionGroups[${actionGroupIndex}].action_target`"
                     :rule="configFormRules.action_target"
                   >
@@ -597,23 +600,27 @@ onMounted(() => {
                       label-field="name"
                       value-field="id"
                       class="max-w-60"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       filterable
                       remote
                       :loading="loadingSelect"
                       @search="getAlarmList"
                     />
                   </NFormItem>
-                  <NButton class="w-20" dashed type="info" @click="popUpVisible = true">创建告警</NButton>
+                  <NButton class="w-20" dashed type="info" @click="popUpVisible = true">
+                    {{ $t('generate.create-alarm') }}
+                  </NButton>
                 </NFlex>
               </template>
               <NButton v-if="actionGroupIndex > 0" type="error" @click="deleteActionGroupItem(actionGroupIndex)">
-                删除执行动作
+                {{ $t('generate.delete-execution-action') }}
               </NButton>
             </NFlex>
           </NFormItem>
         </NFlex>
-        <NButton type="primary" class="w-30" @click="addActionGroupItem()">新增执行动作</NButton>
+        <NButton type="primary" class="w-30" @click="addActionGroupItem()">
+          {{ $t('generate.add-execution-action') }}
+        </NButton>
       </NFlex>
     </NForm>
     <PopUp v-model:visible="popUpVisible" type="add" @new-edit="newEdit" />

@@ -25,6 +25,10 @@ watch(
 
 <style scoped>
 .card-wrapper {
-  width: 340px;
+  width: 100%;
+}
+
+:deep(.n-card__content) {
+  width: 100%;
 }
 </style>

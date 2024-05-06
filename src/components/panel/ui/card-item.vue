@@ -30,3 +30,5 @@ const findCardComponent = (id: string) => {
     </div>
   </NCard>
 </template>
+
+<style scoped></style>

@@ -283,7 +283,7 @@ onMounted(() => {
                               : '../chart-card/demo/poster.png'
                           "
                           alt=""
-                          style="width: 100%; height: 100%; object-fit: contain" 
+                          style="width: 100%; height: 100%; object-fit: contain"
 -->
                         <!-- /> -->
                         <img

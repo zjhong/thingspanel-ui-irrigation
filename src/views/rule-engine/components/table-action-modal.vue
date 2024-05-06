@@ -3,6 +3,7 @@ import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { ruleEngineStatusOptions } from '@/constants/business';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   (e: 'getTableData'): void;
 }
 
@@ -112,16 +114,16 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="12" label="规则名称" path="name">
+        <NFormItemGridItem :span="12" :label="$t('generate.rule-name')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="12" label="状态" path="status">
+        <NFormItemGridItem :span="12" :label="$t('generate.status')" path="status">
           <NSelect v-model:value="formModel.status" :options="ruleEngineStatusOptions" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">确定</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

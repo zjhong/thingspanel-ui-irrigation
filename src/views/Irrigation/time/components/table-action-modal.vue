@@ -10,7 +10,7 @@ import {
   getIrrigationDiveces,
   getIrrigationSpaces
 } from '@/service/api';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'TableActionModal' });
 
@@ -286,7 +286,7 @@ watch(
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.areaOrSpace')" path="sapceAndDistrict">
           <NCascader
             v-model:value="formModel.sapceAndDistrict"
-            placeholder="请选择"
+            :placeholder="$t('common.select')"
             :options="spaceOptions"
             :show-path="true"
             label-field="name"
@@ -300,7 +300,7 @@ watch(
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.device')" path="device_id">
           <NSelect
             v-model:value="formModel.device_id"
-            placeholder="请选择"
+            :placeholder="$t('common.select')"
             class="w-200px"
             clearable
             :options="deviceOptions"
@@ -311,7 +311,7 @@ watch(
             v-model:formatted-value="formModel.irrigation_time"
             format="HH:mm"
             value-format="HH:mm"
-            placeholder="请选择"
+            :placeholder="$t('common.select')"
           />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.irrigation.time.repeatTime')" path="scheduleList">

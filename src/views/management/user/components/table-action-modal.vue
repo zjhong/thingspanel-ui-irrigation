@@ -4,7 +4,7 @@ import type { FormInst, FormItemRule } from 'naive-ui';
 // import { genderOptions } from '@/constants'
 import { addUser, editUser } from '@/service/api/auth';
 import { createRequiredFormRule, formRules, getConfirmPwdRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -26,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }

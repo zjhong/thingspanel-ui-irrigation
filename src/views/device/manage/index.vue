@@ -300,6 +300,7 @@ const completeHandAdd = () => {
 function handleSelect(key: string | number) {
   activate('bottom', key);
 }
+
 const messageStyle = ref({
   color: messageColor,
   marginLeft: '10px',
@@ -341,7 +342,11 @@ watch(
       :row-click="goDeviceDetails"
     />
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
-      <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
+      <n-drawer-content
+        v-if="addKey === 'hands'"
+        :title="$t('generate.manually-add-device')"
+        class="flex-center pt-24px"
+      >
         <n-steps :current="current" :status="currentStatus">
           <n-step :title="$t('custom.devicePage.step1Title')" :description="$t('custom.devicePage.step1Desc')" />
           <n-step :title="$t('custom.devicePage.step2Title')" :description="$t('custom.devicePage.step2Desc')" />

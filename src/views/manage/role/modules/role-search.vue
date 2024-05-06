@@ -2,12 +2,14 @@
 import { $t } from '@/locales';
 import { enableStatusOptions } from '@/constants/business';
 import { translateOptions } from '@/utils/common4';
+
 defineOptions({
   name: 'RoleSearch'
 });
 
 interface Emits {
   (e: 'reset'): void;
+
   (e: 'search'): void;
 }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ButtonProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
 
 interface ButtonDetail {
   id: number;
@@ -538,7 +539,7 @@ const buttonExample: ButtonExample[] = [
 
 <template>
   <div>
-    <NCard title="按钮" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('page.manage.menu.button')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <NGrid cols="s:1 m:2" responsive="screen" :x-gap="16" :y-gap="16">
         <NGridItem v-for="item in buttonExample" :key="item.id">
           <NCard :title="item.label" class="min-h-180px">
@@ -559,11 +560,13 @@ const buttonExample: ButtonExample[] = [
           </NCard>
         </NGridItem>
         <NGridItem class="h-180px">
-          <NCard title="加载中" class="h-full">
-            <p class="pb-16px">按钮有加载状态。</p>
+          <NCard :title="$t('generate.loading')" class="h-full">
+            <p class="pb-16px">{{ $t('generate.loading-button') }}</p>
             <NSpace>
-              <NButton :loading="loading" type="primary" @click="startLoading">开始加载</NButton>
-              <NButton @click="endLoading">取消加载</NButton>
+              <NButton :loading="loading" type="primary" @click="startLoading">
+                {{ $t('generate.start-loading') }}
+              </NButton>
+              <NButton @click="endLoading">{{ $t('generate.cancel-loading') }}</NButton>
             </NSpace>
           </NCard>
         </NGridItem>

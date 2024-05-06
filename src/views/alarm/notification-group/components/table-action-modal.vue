@@ -4,6 +4,7 @@ import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { notificationOptions } from '@/constants/business';
 import { postNotificationGroup, putNotificationGroup } from '@/service/api/notification';
+import { $t } from '@/locales';
 import { handleSearch, initMemberData, memberTypeData, notificationTypeOptions } from '../utils';
 import MemberTypeData from './member-type-data.vue';
 
@@ -168,13 +169,13 @@ const handleAddMember = () => {
 <template>
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px" @on-after-leave="closeModal">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
-      <NFormItem path="name" label="通知组名称">
+      <NFormItem path="name" :label="$t('generate.notification-group-name')">
         <NInput v-model:value="formModel.name" />
       </NFormItem>
-      <NFormItem path="description" label="通知组描述">
+      <NFormItem path="description" :label="$t('generate.notification-group-description')">
         <NInput v-model:value="formModel.description" type="textarea" />
       </NFormItem>
-      <NFormItem path="notification_type" label="通知方式">
+      <NFormItem path="notification_type" :label="$t('generate.notification-method')">
         <NSelect v-model:value="formModel.notification_type" :options="notificationOptions" class="w-full" />
       </NFormItem>
 
@@ -182,8 +183,10 @@ const handleAddMember = () => {
         <template v-if="formModel.notification_type === 'MEMBER'">
           <NFormItem path="age" label="">
             <div class="flex">
-              <div>设置成员通知方式</div>
-              <NButton type="primary" size="small" style="margin-left: 24px" @click="handleAddMember">新增</NButton>
+              <div>{{ $t('generate.set-member-notification-method') }}</div>
+              <NButton type="primary" size="small" style="margin-left: 24px" @click="handleAddMember">
+                {{ $t('device_template.add') }}
+              </NButton>
             </div>
           </NFormItem>
 
@@ -193,30 +196,40 @@ const handleAddMember = () => {
         </template>
 
         <template v-if="['EMAIL', 'SME', 'VOICE'].includes(formModel.notification_type)">
-          <div>设置收件邮箱/接收手机号</div>
+          <div>{{ $t('generate.set-email-phone') }}</div>
           <NFormItem path="age" label="">
-            <NInput v-model:value="formModel.info" type="textarea" placeholder="多个邮箱/手机号使用英文逗号隔开" />
+            <NInput
+              v-model:value="formModel.info"
+              type="textarea"
+              :placeholder="$t('generate.multiple-email-phone-using-comma')"
+            />
           </NFormItem>
         </template>
 
         <template v-if="formModel.notification_type === 'WEBHOOK'">
-          <div>Payload URL*</div>
+          <div>{{ $t('generate.payload-url') }}</div>
           <NFormItem path="age" label="">
             <NInput v-model:value="notificationConfig.PayloadURL" />
           </NFormItem>
-          <div>Secret</div>
+          <div>{{ $t('generate.secret') }}</div>
           <NInput v-model:value="notificationConfig.Secret" />
           <div style="font-size: 12px; color: #8f8e94; margin-top: 8px">
-            <div>签名：使用 SHA-256 哈希函数和 HMAC 生成</div>
-            <div>格式："sha256="+signature</div>
-            <div>请求头：X-Signature-256</div>
+            <div>{{ $t('generate.sha256hmac') }}</div>
+            <div>
+              <span>请求头</span>
+              ：X-Signature-256
+            </div>
+            <div>
+              <span>格式</span>
+              ："sha256="+signature
+            </div>
           </div>
         </template>
       </div>
 
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">保存</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

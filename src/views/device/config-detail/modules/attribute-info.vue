@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { NFlex } from 'naive-ui';
 import { deviceConfigEdit, deviceConfigInfo, deviceConfigMenu } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 // eslint-disable-next-line vue/valid-define-emits
 const emit = defineEmits();
 const { routerPushByKey } = useRouterPush();
@@ -47,7 +48,7 @@ onMounted(async () => {
 <template>
   <div class="attribute-box">
     <NFlex align="center">
-      <div>绑定设备功能模板</div>
+      <div>{{ $t('generate.bind-device-function-template') }}</div>
       <NSelect
         v-model:value="selectValue"
         class="w-300px"
@@ -62,7 +63,7 @@ onMounted(async () => {
           }
         "
       />
-      <div class="to-create" @click="toTemplate">没有找到？去创建</div>
+      <div class="to-create" @click="toTemplate">{{ $t('generate.not-found-create') }}</div>
     </NFlex>
   </div>
 </template>

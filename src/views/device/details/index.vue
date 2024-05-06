@@ -185,31 +185,33 @@ watch(
       <div>
         <div style="display: flex; margin-top: -5px">
           <span style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</span>
-          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
+          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">
+            {{ $t('common.edit') }}
+          </NButton>
         </div>
 
-        <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+        <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
           <n-card>
             <n-form :model="deviceDataStore.deviceData" :rules="rules">
               <div>
-                <NH3>修改设备信息</NH3>
+                <NH3>{{ $t('generate.modify-device-info') }}</NH3>
               </div>
-              <n-form-item label="设备名称" path="name">
+              <n-form-item :label="$t('page.irrigation.group.deviceName')" path="name">
                 <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
-              <n-form-item label="设备编号" path="device_number">
+              <n-form-item :label="$t('generate.device-number')" path="device_number">
                 <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="lable">
                 <n-dynamic-tags v-model:value="lables" />
               </n-form-item>
-              <n-form-item label="设备描述">
+              <n-form-item :label="$t('generate.device-description')">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
                 <NInput v-model:value="deviceDataStore.deviceData.description" type="textarea" />
               </n-form-item>
               <n-space>
-                <n-button @click="closeModal">取消</n-button>
-                <n-button @click="save">保存</n-button>
+                <n-button @click="closeModal">{{ $t('generate.cancel') }}</n-button>
+                <n-button @click="save">{{ $t('common.save') }}</n-button>
               </n-space>
             </n-form>
           </n-card>

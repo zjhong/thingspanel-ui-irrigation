@@ -12,7 +12,7 @@ import {
   getDataScriptList,
   setDeviceScriptEnable
 } from '@/service/api/device';
-
+import { $t } from '@/locales';
 // const message = useMessage();
 const dialog = useDialog();
 
@@ -223,7 +223,7 @@ onMounted(() => {
 <template>
   <NFlex class="mb-6">
     <n-select v-model:value="queryData.script_type" :options="scripTypeOpt" class="max-w-40" />
-    <NButton type="primary" @click="openModal('新增', null)">新增数据处理</NButton>
+    <NButton type="primary" @click="openModal('新增', null)">{{ $t('generate.add-data-processing') }}</NButton>
   </NFlex>
   <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
   <div v-else class="alarm-box">
@@ -239,7 +239,7 @@ onMounted(() => {
           @update-value="handleChange(item)"
         />
       </div>
-      <div class="description item-desc">{{ item.description }}</div>
+      <div class="item-desc description">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
         <NButton tertiary circle type="info" @click="openModal('编辑', item)">
@@ -269,16 +269,24 @@ onMounted(() => {
     @after-enter="setupEditor"
   >
     <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
-      <NFormItem label="标题" path="name">
-        <NInput v-model:value="configForm.name" placeholder="请输入标题" />
+      <NFormItem :label="$t('page.manage.menu.form.title')" path="name">
+        <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-title')" />
       </NFormItem>
-      <NFormItem label="处理类型" path="script_type">
-        <NSelect v-model:value="configForm.script_type" :options="scripTypeOpt" placeholder="请选择处理类型"></NSelect>
+      <NFormItem :label="$t('generate.processing-type')" path="script_type">
+        <NSelect
+          v-model:value="configForm.script_type"
+          :options="scripTypeOpt"
+          :placeholder="$t('generate.select-processing-type')"
+        ></NSelect>
       </NFormItem>
-      <NFormItem label="描述" path="description">
-        <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" />
+      <NFormItem :label="$t('device_template.table_header.description')" path="description">
+        <NInput
+          v-model:value="configForm.description"
+          type="textarea"
+          :placeholder="$t('generate.enter-description')"
+        />
       </NFormItem>
-      <NFormItem label="解析脚本" path="content">
+      <NFormItem :label="$t('generate.parse-script')" path="content">
         <Codemirror
           ref="cmRef"
           v-model:value="configForm.content"
@@ -292,20 +300,20 @@ onMounted(() => {
         ></Codemirror>
         <!--        <NInput v-model:value="configForm.content" type="textarea" placeholder="请输入解析脚本" />-->
       </NFormItem>
-      <NFormItem v-if="0" label="是否启用" path="enable_flag">
+      <NFormItem v-if="0" :label="$t('page.manage.setting.dataClearSetting.form.enabled')" path="enable_flag">
         <NSwitch v-model:value="configForm.enable_flag" checked-value="Y" unchecked-value="N" />
       </NFormItem>
-      <NFormItem label="模拟输入" path="last_analog_input">
+      <NFormItem :label="$t('generate.simulate-input')" path="last_analog_input">
         <NInput v-model:value="configForm.last_analog_input" type="textarea" />
       </NFormItem>
-      <NFormItem label="调试运行结果" path="resolt_analog_input">
+      <NFormItem :label="$t('generate.debug-run-result')" path="resolt_analog_input">
         <NInput v-model:value="configForm.resolt_analog_input" :disabled="true" type="textarea" />
       </NFormItem>
-      <NButton type="primary" @click="doQuiz">调试</NButton>
+      <NButton type="primary" @click="doQuiz">{{ $t('common.debug') }}</NButton>
     </NForm>
     <NFlex justify="end">
-      <NButton @click="handleClose">取消</NButton>
-      <NButton type="primary" @click="handleSubmit">保存</NButton>
+      <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
     </NFlex>
   </n-modal>
 </template>

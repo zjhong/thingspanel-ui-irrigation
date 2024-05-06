@@ -62,7 +62,8 @@ const { send } = useWebSocket(wsUrl, {
   onMessage(ws: WebSocket, event: MessageEvent) {
     console.log('ws---', ws);
     if (event.data && event.data !== 'pong') {
-      device_is_online.value = event.data.is_online;
+      const info = JSON.parse(event.data);
+      device_is_online.value = info.is_online;
     }
   }
 });

@@ -99,7 +99,7 @@ function flattenTree(list: undefined | Option[]): Option[] {
 const handleUpdateValue = async () => {
   await deviceLocation({
     id: props.id,
-    is_online: is_online.value
+    is_online: Number(is_online.value)
   });
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
@@ -182,7 +182,7 @@ const selectConfig = v => {
 
     <div class="flex-col gap-10px">
       <div class="flex items-center">
-        <span class="">手动修改在线状态</span>
+        <span class="m-r-5px">手动修改在线状态</span>
         <n-popover trigger="hover" placement="right">
           <template #trigger>
             <span class="h-17px w-20px">
@@ -195,7 +195,9 @@ const selectConfig = v => {
               </svg>
             </span>
           </template>
-          <span>当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间</span>
+          <span>
+            当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间，在超时的情况下手动修改无效。
+          </span>
         </n-popover>
       </div>
       <div class="flex items-center gap-10px">

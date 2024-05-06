@@ -98,7 +98,7 @@ onUnmounted(() => {
       <NCard :bordered="false" class="box">
         <div class="top-data">
           <span class="name">
-            {{ card.dataSource.deviceSource?.[0]?.metricsName }}
+            {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
           </span>
         </div>
         <div class="bt-data">

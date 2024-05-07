@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { serviceManagementDeviceTypeOptions } from '@/constants/business';
 import { deepClone } from '@/utils/common/tool';
 import { addProtocolPlugin, editProtocolPlugin } from '@/service/api';
 import { createRequiredFormRule } from '@/utils/form/rule';
@@ -54,6 +53,11 @@ const title = computed(() => {
 });
 
 const formRef = ref<HTMLElement & FormInst>();
+
+const deviceOptions = ref<any[]>([
+  { label: '直连设备', value: 1 },
+  { label: '网关设备', value: 2 }
+]);
 
 type FormModel = Pick<
   ServiceManagement.Service,
@@ -119,6 +123,7 @@ function handleUpdateFormModelByModalType() {
       if (props.editData) {
         handleUpdateFormModel(props.editData);
       }
+      console.log(props.editData);
     }
   };
 
@@ -129,6 +134,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const formData = deepClone(formModel);
   formData.device_type = Number(formData.device_type);
+
   const additional_info = {};
   formData.additional_info_list.map((item: any) => {
     if (item.key && item.value) {
@@ -176,7 +182,7 @@ watch(
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.deviceType')" path="device_type">
-          <NSelect v-model:value="formModel.device_type" :options="serviceManagementDeviceTypeOptions" />
+          <NSelect v-model:value="formModel.device_type" :options="deviceOptions" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.protocolType')" path="protocol_type">
           <NInput v-model:value="formModel.protocol_type" />

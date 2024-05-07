@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
 import { v4 as uuidv4 } from 'uuid';
 import type { ICardData, ICardView } from '@/components/panel/card';
@@ -24,7 +25,17 @@ const countSpace = (data: ICardView[], y: number) => {
   }
   return start;
 };
-
+const switch_h: () => void = () => {
+  const obj = props.layout.filter((item: any) => {
+    if (item.data.cardId === 'chart-switch') {
+      console.log(item, 'item');
+      item.h = 2;
+      item.w = 5;
+    }
+    return item;
+  });
+  console.log(obj, '测试');
+};
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void;
   (e: 'edit', view: ICardView): void;
@@ -73,6 +84,11 @@ const removeLayout = (i: number) => {
     props.layout.filter(item => item.i !== i)
   );
 };
+onMounted(() => {
+  setTimeout(() => {
+    switch_h();
+  }, 100);
+});
 </script>
 
 <template>
@@ -98,6 +114,7 @@ const removeLayout = (i: number) => {
         :h="item.h"
         :i="item.i"
       >
+        {{ item.h }}
         <div class="relative h-full w-full">
           <NIcon
             v-if="!isPreview"

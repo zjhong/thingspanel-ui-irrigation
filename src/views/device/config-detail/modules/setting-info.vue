@@ -59,6 +59,7 @@ const onSubmit = async () => {
         heartbeat: Number(onlinejson.heartbeat)
       })
     });
+    router.back();
   }
 };
 </script>

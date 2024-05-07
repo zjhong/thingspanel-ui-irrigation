@@ -6,7 +6,7 @@ import { addElement, editElement } from '@/service/api/route';
 import { deepClone } from '@/utils/common/tool';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { icons } from '@/plugins/icon/icons';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */

@@ -4,6 +4,7 @@ import { useMessage } from 'naive-ui';
 import dayjs from 'dayjs';
 import { addMonths } from 'date-fns';
 import { telemetryHistoryData } from '@/service/api';
+import { $t } from '@/locales';
 import { useLoading } from '~/packages/hooks';
 
 interface Created {
@@ -109,7 +110,7 @@ onMounted(getTelemetryHistoryData);
     <n-flex justify="space-between" align="center">
       <n-flex justify="space-between" align="center">
         <n-date-picker v-model:value="dateRange" class="w-300px" type="daterange" @update:value="checkDateRange" />
-        <n-button class="ml-2" @click="refresh">刷新</n-button>
+        <n-button class="ml-2" @click="refresh">{{ $t('generate.refresh') }}</n-button>
       </n-flex>
 
       <n-button
@@ -121,11 +122,11 @@ onMounted(getTelemetryHistoryData);
           }
         "
       >
-        导出
+        {{ $t('generate.export') }}
       </n-button>
     </n-flex>
     <div class="mt-4">
-      <n-text v-if="!dateRange" depth="3">！默认查询最近24小时的数据</n-text>
+      <n-text v-if="!dateRange" depth="3">{{ $t('generate.hour-24') }}</n-text>
       <n-data-table :loading="loading" :columns="columns" :data="tableData" :pagination="pagination" />
     </div>
   </n-card>

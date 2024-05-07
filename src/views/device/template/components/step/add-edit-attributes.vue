@@ -36,7 +36,7 @@ type Rules = {
   data_name: Rule;
   data_identifier: Rule;
   read_write_flag: Rule;
-  data_type: Rule
+  data_type: Rule;
 };
 
 const fromRules: Rules = {
@@ -171,7 +171,7 @@ const clear: () => void = () => {
       <n-select
         v-model:value="addFrom.read_write_flag"
         :options="readAndWriteOptions"
-        placeholder="请输入读写标志"
+        :placeholder="$t('generate.enterReadWriteFlag')"
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">

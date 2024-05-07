@@ -19,8 +19,10 @@ import type {
   TooltipComponentOption
 } from 'echarts/components';
 import { addMonths } from 'date-fns';
+import { localStg } from '@/utils/storage';
 import { deviceTelemetryList } from '@/card/chart-card/curve/api';
 import type { ICardData } from '@/components/panel/card';
+import { deviceDetail } from './api';
 
 type EChartsOption = ComposeOption<
   TooltipComponentOption | LegendComponentOption | ToolboxComponentOption | GridComponentOption | LineSeriesOption
@@ -30,6 +32,10 @@ const chartRef = ref();
 const isAggregate = ref<boolean>(false);
 const isTimeSelect = ref<boolean>(false);
 const dateRange = ref<[number, number] | null>(null);
+
+const socket: any = ref(null);
+const detail: any = ref(null);
+
 const props = defineProps<{
   card: ICardData;
   colorGroup: { name: string; top: string; bottom: string }[];
@@ -52,7 +58,9 @@ const name = ref('');
 const option = ref<EChartsOption>({
   tooltip: {
     trigger: 'axis',
-    formatter: '{c}_/_'
+    formatter(datas) {
+      return datas[0].value[1] + detail.value.data[0].unit;
+    }
   },
   legend: {
     data: legendData.value
@@ -363,7 +371,28 @@ const reFresh = () => {
   params.aggregate_function = 'avg';
   params.time_range = 'custom';
 };
-const setSeries = dataSource => {
+const setSeries: (dataSource) => void = async dataSource => {
+  const arr: any = dataSource;
+  const querDetail = {
+    device_id: dataSource.deviceSource[0]?.deviceId ?? '',
+    keys: arr.deviceSource[0].metricsId
+  };
+  if (querDetail.device_id && querDetail.keys) {
+    detail.value = await deviceDetail(querDetail);
+    const queryInfo = {
+      device_id: dataSource.deviceSource[0]?.deviceId ?? '',
+      keys: [arr.deviceSource[0].metricsId || 'externalVol'],
+      token: localStg.get('token')
+    };
+    console.log(arr.deviceSource[0].metricsId, '11');
+    if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+      socket.value.send(JSON.stringify(queryInfo)); // 将对象转换为JSON字符串后发送
+    } else {
+      console.error('WebSocket连接未建立或已关闭');
+    }
+  } else {
+    // window.$message?.error("查询不到设备");
+  }
   if (dataSource) {
     option.value.series =
       dataSource.deviceSource?.slice(0, dataSource.deviceCount || 1).map((i, index) => {
@@ -427,7 +456,7 @@ onMounted(() => {
   <div class="m--6">
     <div class="mb-4 mt-4 flex justify-between">
       <div>
-        {{ name + ' (_/_)' }}
+        {{ name + ' ' + detail?.data[0].unit }}
       </div>
       <div class="flex justify-end">
         <n-popselect

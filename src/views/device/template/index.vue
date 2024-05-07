@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
 import { Delete20Regular } from '@vicons/fluent';
 import { deleteDeviceTemplate, deviceTemplate } from '@/service/api/device-template-model';
+import { $t } from '@/locales';
 import TemplateModal from './components/template-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks/src';
 
@@ -67,12 +68,12 @@ const handleRemove = async (id: string) => {
       <div class="mb-4 flex items-center justify-between">
         <!-- 新建按钮 -->
         <div>
-          <NButton @click="handleAddTemplate">添加设备功能模板</NButton>
+          <NButton @click="handleAddTemplate">{{ $t('generate.add-device-function-template') }}</NButton>
         </div>
         <!-- 搜索部分 -->
         <div class="flex items-center gap-2">
-          <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
-          <NButton type="primary" @click="handleQuery">搜索</NButton>
+          <NInput v-model:value="queryParams.name" clearable :placeholder="$t('generate.enter-template-name')" />
+          <NButton type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </div>
       </div>
 
@@ -95,7 +96,7 @@ const handleRemove = async (id: string) => {
               </template>
 
               <div class="mt-4 flex justify-end gap-2">
-                <NButton circle strong secondary @click.stop="handleRemove(item.id)">
+                <NButton strong circle secondary @click.stop="handleRemove(item.id)">
                   <template #icon>
                     <Delete20Regular class="text-24px text-primary" />
                   </template>

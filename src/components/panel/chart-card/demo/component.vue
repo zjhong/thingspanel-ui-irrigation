@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import type { ICardData } from '@/components/panel/card';
 import icons from './icon';
+
 const iconMap = new Map(icons.map(c => [c.name, c.value]));
 // 正式环境可根据api获取
 const value = ref(1);

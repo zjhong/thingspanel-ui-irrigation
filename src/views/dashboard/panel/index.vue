@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { $t } from '@/locales';
+</script>
 
 <template>
-  <div>看板迁移至可视化</div>
+  <div>{{ $t('generate.migrate-dashboard-to-visualization') }}</div>
 </template>

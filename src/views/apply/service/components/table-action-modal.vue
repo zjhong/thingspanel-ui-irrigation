@@ -5,7 +5,7 @@ import { serviceManagementDeviceTypeOptions } from '@/constants/business';
 import { deepClone } from '@/utils/common/tool';
 import { addProtocolPlugin, editProtocolPlugin } from '@/service/api';
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -202,8 +202,8 @@ watch(
         <NFormItemGridItem :span="24" label=" ">
           <div>
             <div v-for="(item, index) in formModel.additional_info_list" :key="index" class="mt-10px flex">
-              <NInput v-model:value="item.key" placeholder="key" />
-              <NInput v-model:value="item.value" class="ml-20px" placeholder="value" />
+              <NInput v-model:value="item.key" :placeholder="$t('generate.fieldKey')" />
+              <NInput v-model:value="item.value" class="ml-20px" placeholder="$t('generate.fieldValue')" />
             </div>
           </div>
         </NFormItemGridItem>

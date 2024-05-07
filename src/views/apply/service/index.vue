@@ -6,9 +6,9 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { serviceManagementDeviceTypeLabels } from '@/constants/business';
 import { delProtocolPlugin, fetchProtocolPluginList } from '@/service/api';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();

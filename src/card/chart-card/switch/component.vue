@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
 import { deviceDatas, deviceDetail } from './api';
 import { createServiceConfig } from '~/env.config';
 
@@ -102,7 +103,7 @@ onUnmounted(() => {
 <template>
   <NCard :bordered="false" class="card-wrapper">
     <n-switch v-model:value="active" @change="clickSwitch" />
-    <div class="switch">开关</div>
+    <div class="switch">{{ $t('generate.switch') }}</div>
   </NCard>
 </template>
 

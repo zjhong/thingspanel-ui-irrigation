@@ -7,7 +7,7 @@ import { IosSearch } from '@vicons/ionicons4';
 import { debounce } from 'lodash';
 import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
 import { group_columns } from '@/views/device/modules/all-columns';
-import { $t } from '../../../locales';
+import { $t } from '@/locales';
 import { AddOrEditDevices } from './components';
 
 const the_modal = ref();

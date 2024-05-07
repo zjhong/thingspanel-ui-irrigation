@@ -10,7 +10,8 @@ import {
   removeChildDevice
 } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
+
 const { routerPushByKey } = useRouterPush();
 const props = defineProps<{
   id: string;
@@ -165,31 +166,36 @@ onMounted(() => {});
 
 <template>
   <n-card class="w-full">
-    <NButton type="primary" @click="addDevice">添加子设备</NButton>
-    <n-modal v-model:show="showAddDialog" title="下发属性" style="height: 300px" class="w-[400px]">
+    <NButton type="primary" @click="addDevice">{{ $t('generate.add-sub-device') }}</NButton>
+    <n-modal
+      v-model:show="showAddDialog"
+      :title="$t('generate.issue-attribute')"
+      style="height: 300px"
+      class="w-[400px]"
+    >
       <n-card>
         <n-form>
-          <n-form-item label="添加子设备">
+          <n-form-item :label="$t('generate.add-sub-device')">
             <n-select v-model:value="selectChild" multiple :options="sOptions" @update:value="selectConfig">
-              <template #header>设备名称</template>
+              <template #header>{{ $t('page.irrigation.group.deviceName') }}</template>
             </n-select>
           </n-form-item>
           <NSpace style="display: flex; justify-content: flex-end; margin-top: 140px">
-            <NButton @click="showAddDialog = false">取消</NButton>
-            <NButton @click="addChildDeviceSure">确定</NButton>
+            <NButton @click="showAddDialog = false">{{ $t('generate.cancel') }}</NButton>
+            <NButton @click="addChildDeviceSure">{{ $t('page.login.common.confirm') }}</NButton>
           </NSpace>
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showSetDialog" title="下发属性" class="w-[400px]">
+    <n-modal v-model:show="showSetDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
       <n-card>
         <n-form>
-          <n-form-item label="子设备地址设置">
-            <n-input v-model:value="deviceSetName" type="text" placeholder="请输入子设备地址" />
+          <n-form-item :label="$t('generate.sub-device-address-setting')">
+            <n-input v-model:value="deviceSetName" type="text" :placeholder="$t('generate.enter-sub-device-address')" />
           </n-form-item>
           <NSpace style="display: flex; justify-content: flex-end">
-            <NButton @click="showSetDialog = false">取消</NButton>
-            <NButton @click="setDeviceAddress">确定</NButton>
+            <NButton @click="showSetDialog = false">{{ $t('generate.cancel') }}</NButton>
+            <NButton @click="setDeviceAddress">{{ $t('page.login.common.confirm') }}</NButton>
           </NSpace>
         </n-form>
       </n-card>

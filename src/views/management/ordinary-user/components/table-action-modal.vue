@@ -4,7 +4,8 @@ import type { FormInst } from 'naive-ui';
 import { addUser, editUser } from '@/service/api/auth';
 import { fetchGetAllRoles } from '@/service/api';
 import { createRequiredFormRule, formRules, getConfirmPwdRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
+
 export type ModalType = NonNullable<any['type']>;
 
 defineOptions({ name: 'TableActionModal' });
@@ -23,6 +24,7 @@ const props = withDefaults(
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }

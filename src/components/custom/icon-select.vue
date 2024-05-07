@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'IconSelect' });
 
@@ -45,14 +46,14 @@ function handleChange(iconItem: string) {
 <template>
   <NPopover placement="bottom-end" trigger="click">
     <template #trigger>
-      <NInput v-model:value="modelValue" readonly placeholder="点击选择图标">
+      <NInput v-model:value="modelValue" readonly :placeholder="$t('generate.click-to-select-icon')">
         <template #suffix>
           <SvgIcon :icon="selectedIcon" class="p-5px text-30px" />
         </template>
       </NInput>
     </template>
     <template #header>
-      <NInput v-model:value="searchValue" placeholder="搜索图标"></NInput>
+      <NInput v-model:value="searchValue" :placeholder="$t('generate.search-icon')"></NInput>
     </template>
     <div v-if="iconsList.length > 0" class="grid grid-cols-9 h-auto overflow-auto">
       <span v-for="iconItem in iconsList" :key="iconItem" @click="handleChange(iconItem)">
@@ -71,6 +72,7 @@ function handleChange(iconItem: string) {
 :deep(.n-input-wrapper) {
   padding-right: 0;
 }
+
 :deep(.n-input__suffix) {
   border: 1px solid #d9d9d9;
 }

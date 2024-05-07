@@ -95,7 +95,7 @@ const generalOptions: any = reactive(
 );
 
 const readAndWriteOptions: any = reactive(
-   ['R-只读', 'RW-读/写'].map(v => ({
+  ['R-只读', 'RW-读/写'].map(v => ({
     label: v,
     value: v
   }))
@@ -160,11 +160,11 @@ const clear: () => void = () => {
         :placeholder="$t('device_template.table_header.pleaseEnterTheDataType')"
       />
     </n-form-item>
-      <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
+    <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
       <n-select
         v-model:value="addFrom.read_write_flag"
         :options="readAndWriteOptions"
-        placeholder="请输入读写标志"
+        :placeholder="$t('generate.enterReadWriteFlag')"
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">

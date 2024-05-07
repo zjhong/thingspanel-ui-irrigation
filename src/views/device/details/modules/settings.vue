@@ -14,6 +14,7 @@ import {
   getDeviceGroupRelation
 } from '@/service/api';
 import { useDeviceDataStore } from '@/store/modules/device';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
@@ -164,7 +165,7 @@ const selectConfig = v => {
 <template>
   <div class="flex-col gap-16px p-t-10px">
     <div class="flex items-center">
-      <div>设备配置：</div>
+      <div>{{ $t('generate.device-configuration') }}</div>
       <NSelect
         v-model:value="selectedValues"
         filterable
@@ -175,14 +176,14 @@ const selectConfig = v => {
       />
     </div>
     <div class="flex items-center">
-      <span>设备编码:</span>
+      <span>{{ $t('generate.deviceCode') }}</span>
       <span>{{ device_coding }}</span>
-      <NButton type="primary" text class="ml-4">查看</NButton>
+      <NButton type="primary" text class="ml-4">{{ $t('generate.view') }}</NButton>
     </div>
 
     <div class="flex-col gap-10px">
       <div class="flex items-center">
-        <span class="m-r-5px">手动修改在线状态</span>
+        <span class="m-r-5px">{{ $t('generate.manualOnlineStatusEdit') }}</span>
         <n-popover trigger="hover" placement="right">
           <template #trigger>
             <span class="h-17px w-20px">
@@ -195,23 +196,21 @@ const selectConfig = v => {
               </svg>
             </span>
           </template>
-          <span>
-            当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间，在超时的情况下手动修改无效。
-          </span>
+          <span>{{ $t('generate.heartbeatFunctionInfo') }}</span>
         </n-popover>
       </div>
       <div class="flex items-center gap-10px">
         <n-switch v-model:value="is_online" checked-value="1" unchecked-value="0" @update:value="handleUpdateValue" />
-        <span>{{ is_online === '1' ? '在线' : '离线' }}</span>
+        <span>{{ is_online === '1' ? $t('custom.device_details.online') : $t('custom.device_details.offline') }}</span>
       </div>
     </div>
     <div class="flex items-center">
-      设备固件:
+      {{ $t('generate.device-firmware') }}
       <spna class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</spna>
     </div>
 
     <div class="flex-1">
-      <div class="mb-4">设备分组</div>
+      <div class="mb-4">{{ $t('generate.device-group') }}</div>
       <n-transfer
         ref="transfer"
         v-model:value="valueRef"

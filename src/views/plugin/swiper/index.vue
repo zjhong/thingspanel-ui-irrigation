@@ -3,6 +3,7 @@ import SwiperCore from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import type { SwiperOptions } from 'swiper/types';
+import { $t } from '@/locales';
 
 type SwiperExampleOptions = Pick<
   SwiperOptions,
@@ -87,18 +88,21 @@ const swiperExample: SwiperExample[] = [
 
 <template>
   <div>
-    <NCard title="Swiper插件" :bordered="false" class="rounded-8px shadow-sm">
+    <NCard :title="$t('generate.swiperPlugin')" :bordered="false" class="rounded-8px shadow-sm">
       <NSpace :vertical="true">
         <GithubLink link="https://github.com/nolimits4web/swiper" />
-        <WebSiteLink label="vue3版文档地址：" link="https://swiperjs.com/vue" />
-        <WebSiteLink label="插件demo地址：" link="https://swiperjs.com/demos" />
+        <WebSiteLink :label="$t('generate.vue3-doc-url')" link="https://swiperjs.com/vue" />
+        <WebSiteLink :label="$t('generate.pluginDemoUrl')" link="https://swiperjs.com/demos" />
       </NSpace>
       <NSpace :vertical="true">
         <div v-for="item in swiperExample" :key="item.id">
           <h3 class="py-24px text-24px font-bold">{{ item.label }}</h3>
           <Swiper v-bind="item.options">
             <SwiperSlide v-for="i in 5" :key="i">
-              <div class="h-240px flex-center border-1px border-#999 text-18px font-bold">Slide{{ i }}</div>
+              <div class="h-240px flex-center border-1px border-#999 text-18px font-bold">
+                <span>{{ $t('theme.page.mode.fade-slide') }}</span>
+                {{ i }}
+              </div>
             </SwiperSlide>
           </Swiper>
         </div>

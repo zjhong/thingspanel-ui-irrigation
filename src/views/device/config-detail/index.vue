@@ -6,6 +6,7 @@ import { deviceConfigInfo } from '@/service/api/device';
 import SettingInfo from '@/views/device/config-detail/modules/setting-info.vue';
 import DataHandle from '@/views/device/config-detail/modules/data-handle.vue';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 import AssociatedDevices from './modules/associated-devices.vue';
 import ExtendInfo from './modules/extend-info.vue';
 import AttributeInfo from './modules/attribute-info.vue';
@@ -51,13 +52,13 @@ onMounted(async () => {
   <div class="h-full overflow-hidden">
     <NCard :title="configForm?.name || '--'">
       <template #header-extra>
-        <NButton type="primary" @click="editConfig">编辑</NButton>
+        <NButton type="primary" @click="editConfig">{{ $t('common.edit') }}</NButton>
       </template>
       <div class="mb-4">
-        设备接入类型：
-        <template v-if="configForm.device_type === '1'">直连设备</template>
-        <template v-if="configForm.device_type === '2'">网关</template>
-        <template v-if="configForm.device_type === '3'">网关子设备</template>
+        {{ $t('generate.deviceAccessType') }}
+        <template v-if="configForm.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
+        <template v-if="configForm.device_type === '2'">{{ $t('generate.gateway') }}</template>
+        <template v-if="configForm.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
       </div>
       <n-tabs animated type="line">
         <n-tab-pane name="关联设备" tab="关联设备">

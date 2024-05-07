@@ -22,3 +22,13 @@ watch(
     <LineChart :card="props.card" :color-group="props?.card?.config?.colorGroups?.colorGroup || colorGroups" />
   </NCard>
 </template>
+
+<style scoped>
+.card-wrapper {
+  width: 100%;
+}
+
+:deep(.n-card__content) {
+  width: 100%;
+}
+</style>

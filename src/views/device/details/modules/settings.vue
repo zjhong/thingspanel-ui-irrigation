@@ -100,7 +100,7 @@ function flattenTree(list: undefined | Option[]): Option[] {
 const handleUpdateValue = async () => {
   await deviceLocation({
     id: props.id,
-    is_online: is_online.value
+    is_online: Number(is_online.value)
   });
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
@@ -183,7 +183,7 @@ const selectConfig = v => {
 
     <div class="flex-col gap-10px">
       <div class="flex items-center">
-        <span class="">{{ $t('generate.manualOnlineStatusEdit') }}</span>
+        <span class="m-r-5px">{{ $t('generate.manualOnlineStatusEdit') }}</span>
         <n-popover trigger="hover" placement="right">
           <template #trigger>
             <span class="h-17px w-20px">

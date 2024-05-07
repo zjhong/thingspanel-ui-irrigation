@@ -1104,7 +1104,8 @@ const local: App.I18n.Schema = {
     fieldValue: '值',
     fieldKey: '键',
     addAlarm: '新增告警',
-    heartbeatFunctionInfo: '当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间',
+    heartbeatFunctionInfo:
+      '当配置模板里启用心跳判断功能，手动修改无效；当前配置模板启用超时时间，在超时的情况下手动修改无效。',
     manualOnlineStatusEdit: '手动修改在线状态',
     deviceCode: '设备编码:',
     enterReadWriteFlag: '请输入读写标志',

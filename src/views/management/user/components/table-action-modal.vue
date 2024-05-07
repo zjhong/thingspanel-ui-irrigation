@@ -4,6 +4,7 @@ import type { FormInst, FormItemRule } from 'naive-ui';
 // import { genderOptions } from '@/constants'
 import { addUser, editUser } from '@/service/api/auth';
 import { createRequiredFormRule, formRules, getConfirmPwdRule } from '@/utils/form/rule';
+import { userStatusOptions } from '@/constants/business';
 import { $t } from '@/locales';
 
 export interface Props {
@@ -41,6 +42,17 @@ const modalVisible = computed({
     emit('update:visible', visible);
   }
 });
+
+const customUserStatusOptions = computed(() => {
+  return userStatusOptions.map(item => {
+    const key = item.value === 'N' ? 'page.manage.user.status.normal' : 'page.manage.user.status.freeze';
+    return {
+      label: $t(key),
+      value: item.value
+    };
+  });
+});
+
 const closeModal = () => {
   modalVisible.value = false;
 };
@@ -55,7 +67,7 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
+type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark' | 'status'> & {
   password: string;
   confirmPwd: string;
 };
@@ -69,6 +81,7 @@ const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   email: formRules.email,
   password: formRules.pwd,
   confirmPwd: getConfirmPwdRule(toRefs(formModel).password),
+  status: getConfirmPwdRule(toRefs(formModel).password),
   remark: createRequiredFormRule($t('common.pleaseCheckValue'))
 };
 
@@ -80,7 +93,8 @@ function createDefaultFormModel(): FormModel {
     email: '',
     password: '',
     confirmPwd: '',
-    remark: ''
+    remark: '',
+    status: 'N'
   };
 }
 
@@ -137,18 +151,12 @@ watch(
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.manage.user.userEmail')" path="email">
-          <NInput v-model:value="formModel.email" />
+          <NInput v-model:value="formModel.email" :disabled="type === 'edit'" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.manage.user.userPhone')" path="phone_number">
           <NInput v-model:value="formModel.phone_number" />
         </NFormItemGridItem>
-        <!--
- <n-form-item-grid-item :span="12" label="性别">
-          <n-radio-group v-model:value="formModel.gender">
-            <n-radio v-for="item in genderOptions" :key="item.value" :value="item.value">{{ item.label }}</n-radio>
-          </n-radio-group>
-        </n-form-item-grid-item>
--->
+
         <template v-if="type === 'add'">
           <NFormItemGridItem :span="12" :label="$t('page.manage.user.password')" path="password">
             <NInput v-model:value="formModel.password" type="password" />
@@ -157,6 +165,13 @@ watch(
             <NInput v-model:value="formModel.confirmPwd" type="password" />
           </NFormItemGridItem>
         </template>
+        <n-form-item-grid-item v-else :span="12" :label="$t('page.manage.user.accountStatus')">
+          <n-radio-group v-model:value="formModel.status">
+            <n-radio v-for="item in customUserStatusOptions" :key="item.value" :value="item.value">
+              {{ item.label }}
+            </n-radio>
+          </n-radio-group>
+        </n-form-item-grid-item>
         <NFormItemGridItem :span="24" :label="$t('common.remark')">
           <NInput v-model:value="formModel.remark" type="textarea" />
         </NFormItemGridItem>

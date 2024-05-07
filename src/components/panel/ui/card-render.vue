@@ -87,7 +87,7 @@ const removeLayout = (i: number) => {
 onMounted(() => {
   setTimeout(() => {
     switch_h();
-  }, 100);
+  }, 1000);
 });
 </script>
 

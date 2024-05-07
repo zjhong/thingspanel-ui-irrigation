@@ -1,14 +1,16 @@
 <script setup lang="tsx">
-import { ref, watch } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
 import { NSpace, NTag } from 'naive-ui';
 import _ from 'lodash';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
+import { localStg } from '@/utils/storage';
 import {
   checkDevice,
   deleteDevice,
   devicCeonnectForm,
+  deviceDictProtocolService,
   deviceGroupTree,
   deviceList,
   getDeviceConfigList,
@@ -185,6 +187,7 @@ const actions = [
     }
   }
 ];
+
 const searchConfigs = ref<SearchConfig[]>([
   {
     key: 'group_id',
@@ -232,6 +235,12 @@ const searchConfigs = ref<SearchConfig[]>([
     ]
   },
   {
+    key: 'open_weather',
+    label: $t('custom.devicePage.unlimitedAccessType'),
+    type: 'select',
+    options: []
+  },
+  {
     key: 'search',
     label: $t('custom.devicePage.deviceNameOrNumber'),
     type: 'input'
@@ -256,6 +265,25 @@ const dropOption = [
     key: 'server'
   }
 ];
+const getDictServiceList = async () => {
+  const { data }: any = await deviceDictProtocolService({ language_code: localStg.get('lang') });
+
+  data.map((item: any) => {
+    item.value = item.dict_value;
+    item.label = item.translation;
+    return item;
+  });
+  searchConfigs.value.map((item: any) => {
+    if (item.key === 'open_weather') {
+      item.options = data;
+    }
+    return item;
+  });
+};
+
+onBeforeMount(() => {
+  getDictServiceList();
+});
 const topActions = [
   {
     element: () => (
@@ -306,6 +334,7 @@ const messageStyle = ref({
   marginLeft: '10px',
   marginTop: '5px'
 });
+
 watch(
   deviceNumber,
   _.debounce(async newDeviceNumber => {

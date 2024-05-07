@@ -30,8 +30,8 @@ const deleteConfig = () => {
 const showModal = ref(false);
 const modalIndex = ref(1);
 const onlinejson = reactive({
-  online_timeout: '',
-  heartbeat: ''
+  online_timeout: 0,
+  heartbeat: 0
 });
 const onDialogVisble = () => {
   showModal.value = !showModal.value;
@@ -43,8 +43,8 @@ const onOpenDialogModal = (val: number) => {
     console.log('1');
   } else {
     console.log('2');
-    onlinejson.online_timeout = '';
-    onlinejson.heartbeat = '';
+    onlinejson.online_timeout = 0;
+    onlinejson.heartbeat = 0;
   }
 };
 
@@ -56,8 +56,8 @@ const onSubmit = async () => {
     await deviceConfigEdit({
       id: props.configInfo.id,
       other_config: JSON.stringify({
-        online_timeout: Number(onlinejson.online_timeout),
-        heartbeat: Number(onlinejson.heartbeat)
+        online_timeout: onlinejson.online_timeout,
+        heartbeat: onlinejson.heartbeat
       })
     });
     router.back();
@@ -106,12 +106,12 @@ const onSubmit = async () => {
             {{ $t('generate.timeoutThreshold') }}
           </dd>
           <dd class="m-b-20px max-w-220px">
-            <n-input v-model:value="onlinejson.online_timeout" placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.online_timeout" placeholder=""></n-input-number>
           </dd>
           <dt class="m-b-5px font-900">{{ $t('generate.heartbeatIntervalSeconds') }}</dt>
           <dd class="m-b-10px">{{ $t('generate.heartbeatThreshold') }}</dd>
           <dd class="max-w-220px">
-            <n-input v-model:value="onlinejson.heartbeat" type="text" placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.heartbeat" type="text" placeholder=""></n-input-number>
           </dd>
         </dl>
       </template>

@@ -959,6 +959,7 @@ declare namespace App {
           alarm: string;
           noAlarm: string;
           unlimitedAccessType: string;
+          unlimitedAccessMode: string;
           byProtocol: string;
           byService: string;
           deviceNameOrNumber: string;

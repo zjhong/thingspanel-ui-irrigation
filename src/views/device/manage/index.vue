@@ -235,8 +235,8 @@ const searchConfigs = ref<SearchConfig[]>([
     ]
   },
   {
-    key: 'open_weather',
-    label: $t('custom.devicePage.unlimitedAccessType'),
+    key: 'procotol_type',
+    label: $t('custom.devicePage.unlimitedAccessMode'),
     type: 'select',
     options: []
   },
@@ -269,12 +269,12 @@ const getDictServiceList = async () => {
   const { data }: any = await deviceDictProtocolService({ language_code: localStg.get('lang') });
 
   data.map((item: any) => {
-    item.value = item.dict_value;
+    item.value = item.dict_value + item.device_type;
     item.label = item.translation;
     return item;
   });
   searchConfigs.value.map((item: any) => {
-    if (item.key === 'open_weather') {
+    if (item.key === 'procotol_type') {
       item.options = data;
     }
     return item;

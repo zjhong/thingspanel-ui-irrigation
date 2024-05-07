@@ -75,6 +75,9 @@ defineExpose({
         data
       }
     ]);
+    setTimeout(() => {
+      switch_h();
+    }, 500);
   }
 });
 
@@ -87,7 +90,7 @@ const removeLayout = (i: number) => {
 onMounted(() => {
   setTimeout(() => {
     switch_h();
-  }, 1000);
+  }, 500);
 });
 </script>
 
@@ -114,7 +117,6 @@ onMounted(() => {
         :h="item.h"
         :i="item.i"
       >
-        {{ item.h }}
         <div class="relative h-full w-full">
           <NIcon
             v-if="!isPreview"

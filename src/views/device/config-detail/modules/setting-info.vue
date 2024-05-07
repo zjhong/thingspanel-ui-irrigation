@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
-import { deviceConfigDel } from '@/service/api/device';
+import { deviceConfigDel, deviceConfigEdit } from '@/service/api/device';
 
 interface Props {
   configInfo?: object | any;
@@ -28,6 +28,10 @@ const deleteConfig = () => {
 };
 const showModal = ref(false);
 const modalIndex = ref(1);
+const onlinejson = reactive({
+  online_timeout: '',
+  heartbeat: ''
+});
 const onDialogVisble = () => {
   showModal.value = !showModal.value;
 };
@@ -38,15 +42,23 @@ const onOpenDialogModal = (val: number) => {
     console.log('1');
   } else {
     console.log('2');
+    onlinejson.online_timeout = '';
+    onlinejson.heartbeat = '';
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   onDialogVisble();
   if (modalIndex.value === 1) {
     console.log('1');
   } else {
-    console.log('2');
+    await deviceConfigEdit({
+      id: props.configInfo.id,
+      other_config: JSON.stringify({
+        online_timeout: Number(onlinejson.online_timeout),
+        heartbeat: Number(onlinejson.heartbeat)
+      })
+    });
   }
 };
 </script>
@@ -92,12 +104,12 @@ const onSubmit = () => {
             >0代表启用超时功能，用来判断设备是否异常在线。当设备在该时间内未上报遥测数据，平台会认为该设备已离线
           </dd>
           <dd class="m-b-20px max-w-220px">
-            <n-input placeholder=""></n-input>
+            <n-input v-model:value="onlinejson.online_timeout" placeholder=""></n-input>
           </dd>
           <dt class="m-b-5px font-900">心跳判断（秒）</dt>
           <dd class="m-b-10px">>0代表启用心跳判断，系统仅按照遥测数据的上报作为设备的心跳判断在线离线状态</dd>
           <dd class="max-w-220px">
-            <n-input type="text" placeholder=""></n-input>
+            <n-input v-model:value="onlinejson.heartbeat" type="text" placeholder=""></n-input>
           </dd>
         </dl>
       </template>

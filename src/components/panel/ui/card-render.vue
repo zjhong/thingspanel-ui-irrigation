@@ -3,6 +3,7 @@ import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
 import { v4 as uuidv4 } from 'uuid';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   layout: ICardView[];
@@ -27,7 +28,7 @@ const switch_h: () => void = () => {
   const obj = props.layout.filter((item: any) => {
     if (item.data.cardId === 'chart-switch') {
       console.log(item, 'item');
-      item.h = 1.5;
+      item.h = 2;
       item.w = 5;
     }
     return item;
@@ -131,7 +132,7 @@ const removeLayout = (i: number) => {
                 <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
               </NIcon>
             </template>
-            <span>确认删除看板。</span>
+            <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
           </NPopconfirm>
           <CardItem :data="item.data!" :view="isPreview" />
         </div>

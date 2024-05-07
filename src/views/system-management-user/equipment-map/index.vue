@@ -349,10 +349,14 @@ function saveEditArea(data) {
     <div class="search-box">
       <div class="option">
         <n-space item-style="display: flex;">
-          <n-checkbox v-model:checked="checkeds" value="onLine" label="在线" />
-          <n-checkbox v-model:checked="offLineChecked" value="offLine" label="离线" />
-          <n-checkbox v-model:checked="warningChecked" value="warning" label="告警" />
-          <n-checkbox v-model:checked="normalChecked" value="normal" label="正常" />
+          <n-checkbox v-model:checked="checkeds" value="onLine" :label="$t('dashboard_panel.cardName.onLine')" />
+          <n-checkbox
+            v-model:checked="offLineChecked"
+            value="offLine"
+            :label="$t('dashboard_panel.cardName.offline')"
+          />
+          <n-checkbox v-model:checked="warningChecked" value="warning" :label="$t('generate.alarm')" />
+          <n-checkbox v-model:checked="normalChecked" value="normal" :label="$t('page.manage.user.status.normal')" />
         </n-space>
       </div>
       <div class="drop-down">
@@ -361,11 +365,11 @@ function saveEditArea(data) {
             <div class="search">
               <NInput
                 v-model:value="queryParams.name"
-                placeholder="搜索空间或区域"
+                :placeholder="$t('generate.search-space-or-area')"
                 class="search-input"
                 @change="nameInput"
               />
-              <NButton class="w-72px" type="primary" @click="handleReset">重置</NButton>
+              <NButton class="w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </div>
           </NForm>
           <div class="collapse">
@@ -373,7 +377,7 @@ function saveEditArea(data) {
               <n-spin :show="spinShow">
                 <n-scrollbar style="max-height: 220px">
                   <n-collapse>
-                    <n-collapse-item title="全部">
+                    <n-collapse-item :title="$t('generate.all')">
                       <n-collapse>
                         <n-collapse-item
                           v-for="(item, index) in listData"
@@ -400,8 +404,10 @@ function saveEditArea(data) {
             </n-space>
 
             <div class="add-but">
-              <NButton class="edit-but" type="primary" @click="editClick">编辑当前空间/区域</NButton>
-              <NButton type="primary" @click="neaAreaClick">添加空间/区域</NButton>
+              <NButton class="edit-but" type="primary" @click="editClick">
+                {{ $t('generate.edit-current-space-area') }}
+              </NButton>
+              <NButton type="primary" @click="neaAreaClick">{{ $t('route.new-area') }}</NButton>
             </div>
           </div>
         </div>
@@ -422,12 +428,12 @@ function saveEditArea(data) {
       <div v-if="overviewShow" class="overview">
         <div class="text-head">
           <SvgIcon class="overview-icon" local-icon="Box24Filled" />
-          <span class="text">设备总览</span>
+          <span class="text">{{ $t('generate.device-overview') }}</span>
         </div>
         <div class="on-line">
-          <div>终端数量</div>
+          <div>{{ $t('generate.terminal-count') }}</div>
           <div class="sum-box">
-            <div class="sum-title">设备总数</div>
+            <div class="sum-title">{{ $t('generate.total-devices') }}</div>
             <div>
               <div class="sum-head">
                 <SvgIcon class="sum-icon" local-icon="BezierCurveSquare12Filled" />
@@ -435,14 +441,20 @@ function saveEditArea(data) {
               </div>
             </div>
             <div class="sum-particulars">
-              <div>在线:{{ sumsdata.device_activity }}</div>
-              <div>离线:{{ sumsdata.device_on }}</div>
-              <div>在线率100%</div>
+              <div>
+                <span>{{ $t('dashboard_panel.cardName.onLine') }}</span>
+                :{{ sumsdata.device_activity }}
+              </div>
+              <div>
+                <span>{{ $t('dashboard_panel.cardName.offline') }}</span>
+                :{{ sumsdata.device_on }}
+              </div>
+              <div>{{ $t('generate.online-rate') }}</div>
             </div>
           </div>
         </div>
         <div class="condition">
-          <div>在线情况</div>
+          <div>{{ $t('generate.online-status') }}</div>
           <div class="line">
             <div id="foldLine" ref="foldLine" class="h-full w-full"></div>
           </div>

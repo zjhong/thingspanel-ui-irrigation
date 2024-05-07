@@ -40,3 +40,5 @@ declare const BUILD_TIME: string;
 declare interface Window {
   NMessage: any;
 }
+
+declare module 'moving-numbers-vue3';

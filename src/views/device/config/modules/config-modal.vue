@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
+import { $t } from '@/locales';
 // import {useMessage} from 'naive-ui';
 import { deviceConfigAdd, deviceConfigEdit, deviceTemplate } from '@/service/api/device';
 
@@ -118,10 +119,10 @@ const handleSubmit = async () => {
   <div class="overflow-hidden">
     <NCard :title="`${modalTitle}设备配置`">
       <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
-        <NFormItem label="设备配置名称" path="name">
-          <NInput v-model:value="configForm.name" placeholder="请输入设备名称" />
+        <NFormItem :label="$t('generate.device-configuration-name')" path="name">
+          <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-device-name')" />
         </NFormItem>
-        <NFormItem label="选择设备功能模板" path="device_template_id">
+        <NFormItem :label="$t('generate.select-device-function-template')" path="device_template_id">
           <NSelect
             v-model:value="configForm.device_template_id"
             :options="deviceTemplateOptions"
@@ -130,26 +131,26 @@ const handleSubmit = async () => {
             @scroll="deviceTemplateScroll"
           ></NSelect>
         </NFormItem>
-        <NFormItem label="设备接入类型" path="device_type">
+        <NFormItem :label="$t('generate.device-access-type')" path="device_type">
           <n-radio-group v-model:value="configForm.device_type" name="device_type">
             <n-space>
-              <n-radio value="1">直连设备</n-radio>
-              <n-radio value="2">网关</n-radio>
-              <n-radio value="3">网关子设备</n-radio>
+              <n-radio value="1">{{ $t('generate.direct-connected-device') }}</n-radio>
+              <n-radio value="2">{{ $t('generate.gateway') }}</n-radio>
+              <n-radio value="3">{{ $t('generate.gateway-sub-device') }}</n-radio>
             </n-space>
           </n-radio-group>
         </NFormItem>
-        <NFormItem label="设备连接方式" path="device_conn_type">
+        <NFormItem :label="$t('generate.device-connection-method')" path="device_conn_type">
           <n-radio-group v-model:value="configForm.device_conn_type" name="device_conn_type">
             <n-space>
-              <n-radio value="A">设备连接平台</n-radio>
-              <n-radio value="B">平台连接设备</n-radio>
+              <n-radio value="A">{{ $t('generate.device-connect-platform') }}</n-radio>
+              <n-radio value="B">{{ $t('generate.platform-connect-device') }}</n-radio>
             </n-space>
           </n-radio-group>
         </NFormItem>
         <NFlex>
-          <NButton @click="handleClose">取消</NButton>
-          <NButton type="primary" @click="handleSubmit">确定</NButton>
+          <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</NButton>
         </NFlex>
       </NForm>
     </NCard>

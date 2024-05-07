@@ -4,6 +4,7 @@ import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumn } from 'naive-ui';
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import { getRandomInteger } from '@/utils/common/number';
+import { $t } from '@/locales';
 
 interface DataSource {
   name: string;
@@ -107,11 +108,11 @@ onMounted(() => {
 
 <template>
   <div class="h-full overflow-hidden">
-    <NCard title="表格" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.table')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <NSpace :vertical="true">
         <NSpace>
-          <NButton @click="getDataSource">有数据</NButton>
-          <NButton @click="getEmptyDataSource">空数据</NButton>
+          <NButton @click="getDataSource">{{ $t('generate.has-data') }}</NButton>
+          <NButton @click="getEmptyDataSource">{{ $t('generate.no-data') }}</NButton>
         </NSpace>
         <LoadingEmptyWrapper class="h-480px" :loading="loading" :empty="empty">
           <NDataTable :columns="columns" :data="dataSource" :flex-height="true" class="h-480px" />

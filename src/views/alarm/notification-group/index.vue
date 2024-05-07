@@ -10,6 +10,7 @@ import {
   putNotificationGroup
 } from '@/service/api/notification';
 import { notificationOptions } from '@/constants/business';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks';
@@ -137,9 +138,9 @@ getTableData();
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="通知组" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.notification-group')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">新增</NButton>
+        <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
       </template>
       <div class="h-full flex-col">
         <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />

@@ -5,7 +5,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 defineOptions({
   name: 'MenuOperateDrawer'
 });

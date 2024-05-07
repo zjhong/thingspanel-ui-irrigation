@@ -11,7 +11,7 @@ import { computed, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui';
 import { addWarningMessage, editInfo } from '@/service/api/alarm';
 import { useNaiveForm } from '@/hooks/common/form';
-
+import { $t } from '@/locales';
 // interface ColumnsData {
 //   [key: string]: any;
 // }
@@ -44,6 +44,7 @@ interface Emits {
 
   (e: 'newEdit'): void;
 }
+
 const message = useMessage();
 const emit = defineEmits<Emits>();
 const { formRef } = useNaiveForm();
@@ -214,6 +215,7 @@ const add = async () => {
     message.error('添加失败');
   }
 };
+
 /** @param e 编辑 */
 async function editInfoText() {
   const datas = {
@@ -260,6 +262,7 @@ function handleReset(e) {
     }
   });
 }
+
 watch(props, newValue => {
   console.log('newValue', newValue);
   if (props.type === 'edit') {
@@ -285,38 +288,50 @@ watch(props, newValue => {
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
     <NForm ref="formRef" label-placement="top" :rules="rules" :model="formData">
       <n-grid :cols="24" :x-gap="24">
-        <n-form-item-gi :span="24" label="告警名称" path="name">
-          <n-input v-model:value="formData.name" placeholder="告警名称" />
+        <n-form-item-gi :span="24" :label="$t('generate.alarm-name')" path="name">
+          <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
         </n-form-item-gi>
 
-        <n-form-item-gi :span="24" label="告警描述">
-          <n-input v-model:value="formData.description" placeholder="告警描述" />
+        <n-form-item-gi :span="24" :label="$t('generate.alarm-description')">
+          <n-input v-model:value="formData.description" :placeholder="$t('generate.alarm-description')" />
         </n-form-item-gi>
 
-        <n-form-item-gi :span="24" label="告警级别" path="alarm_level">
-          <n-select v-model:value="formData.alarm_level" placeholder="告警级别" :options="alarmLevel" />
+        <n-form-item-gi :span="24" :label="$t('generate.alarm-level')" path="alarm_level">
+          <n-select
+            v-model:value="formData.alarm_level"
+            :placeholder="$t('generate.alarm-level')"
+            :options="alarmLevel"
+          />
         </n-form-item-gi>
 
-        <n-form-item-gi :span="24" label="触发重复次数" path="alarm_repeat_time">
-          <n-select v-model:value="formData.alarm_repeat_time" placeholder="触发重复次数" :options="alarmRepeatTime" />
+        <n-form-item-gi :span="24" :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
+          <n-select
+            v-model:value="formData.alarm_repeat_time"
+            :placeholder="$t('generate.trigger-repeat-count')"
+            :options="alarmRepeatTime"
+          />
         </n-form-item-gi>
 
-        <n-form-item-gi :span="24" label="触发持续时间" path="alarm_keep_time">
-          <n-select v-model:value="formData.alarm_keep_time" placeholder="触发持续时间" :options="alarmKeepTime" />
+        <n-form-item-gi :span="24" :label="$t('generate.trigger-duration')" path="alarm_keep_time">
+          <n-select
+            v-model:value="formData.alarm_keep_time"
+            :placeholder="$t('generate.trigger-duration')"
+            :options="alarmKeepTime"
+          />
         </n-form-item-gi>
 
-        <n-form-item-gi :span="24" label="通知组" path="selectValue">
+        <n-form-item-gi :span="24" :label="$t('generate.notification-group')" path="selectValue">
           <n-select
             v-model:value="formData.notification_group_id"
-            placeholder="请选择通知组"
+            :placeholder="$t('generate.select-notification-group')"
             :options="generalOptions"
           />
         </n-form-item-gi>
       </n-grid>
 
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleReset">保存</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleReset">{{ $t('common.save') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

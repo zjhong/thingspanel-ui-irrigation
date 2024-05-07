@@ -15,12 +15,12 @@ export const test: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
     align: 'center'
   },
   {
-    key: 'data_type',
+    key: 'read_write_flag',
     title: $t('device_template.table_header.readAndWriteSign'),
     align: 'center'
   },
   {
-    key: 'read_write_flag',
+    key: 'data_type',
     title: $t('device_template.table_header.dataType'),
     align: 'center'
   },
@@ -48,12 +48,12 @@ export const attribute: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
     align: 'center'
   },
   {
-    key: 'data_type',
+    key: 'read_write_flag',
     title: $t('device_template.table_header.readAndWriteSign'),
     align: 'center'
   },
   {
-    key: 'read_write_flag',
+    key: 'data_type',
     title: $t('device_template.table_header.dataType'),
     align: 'center'
   },

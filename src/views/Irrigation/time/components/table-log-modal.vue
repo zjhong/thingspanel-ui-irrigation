@@ -4,7 +4,7 @@ import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { irrigationTimeHistorys } from '@/service/api/irrigation';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -12,6 +12,7 @@ export interface Props {
   /** 编辑的表格行数据 */
   editData?: any;
 }
+
 const { loading } = useLoading(false);
 
 const props = withDefaults(defineProps<Props>(), {
@@ -51,6 +52,7 @@ const modalVisible = computed({
 });
 
 const tableData = ref<any>([]);
+
 async function getTableData() {
   const { data } = await irrigationTimeHistorys(queryParams);
   tableData.value = data.list;

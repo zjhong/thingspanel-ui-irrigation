@@ -5,6 +5,7 @@ import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace 
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
 import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type theLabel = string | (() => string) | undefined;
@@ -297,8 +298,8 @@ loadOptionsOnMount2();
               />
             </template>
           </div>
-          <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">搜索</NButton>
-          <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
+          <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">{{ $t('common.search') }}</NButton>
+          <NButton class="btn-style" size="small" @click="handleReset">{{ $t('common.reset') }}</NButton>
         </div>
         <!-- 新建与返回按钮 -->
       </div>

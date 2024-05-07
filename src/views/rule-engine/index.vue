@@ -6,6 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { ruleEngineStatusLabels } from '@/constants/business';
 import { fetchRuleEngineList } from '@/service/api_demo/management';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
@@ -13,6 +14,7 @@ const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
 const tableData = ref<RuleEngine.Rule[]>([]);
+
 function setTableData(data: RuleEngine.Rule[]) {
   tableData.value = data;
 }
@@ -150,10 +152,10 @@ init();
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="规则引擎" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
-        <NButton @click="handleAddTable">创建接入规则</NButton>
-        <NButton class="ml-10px">发布</NButton>
+        <NButton @click="handleAddTable">{{ $t('generate.create-access-rule') }}</NButton>
+        <NButton class="ml-10px">{{ $t('device_template.release') }}</NButton>
         <!--
  <n-button type="error">
           <icon-ic-round-delete class="mr-4px text-20px" />

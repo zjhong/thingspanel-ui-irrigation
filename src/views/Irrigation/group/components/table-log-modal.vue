@@ -5,8 +5,8 @@ import type { PaginationProps } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { irrigationGroupHistorys } from '@/service/api/irrigation';
+import { $t } from '@/locales';
 import LogRunModal from './log-rundetail-modal.vue';
-import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */

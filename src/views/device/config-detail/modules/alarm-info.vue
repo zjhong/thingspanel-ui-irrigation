@@ -2,6 +2,8 @@
 import { onMounted, ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
+import { $t } from '@/locales';
+
 const alarmList = ref([
   {
     name: '人来自动开灯',
@@ -44,7 +46,7 @@ onMounted(() => {
         </div>
         <n-switch />
       </div>
-      <div class="item-desc">温度大于28度报警</div>
+      <div class="item-desc">{{ $t('generate.temperature-alert-above-28') }}</div>
       <NFlex justify="end">
         <NButton circle tertiary type="info">
           <template #icon>

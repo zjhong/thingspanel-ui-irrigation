@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useWebSocket } from '@vueuse/core';
 import { ClipboardCode20Regular } from '@vicons/fluent';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
+import { deviceDetail } from '../curve/modules/api';
 import icons from './icon';
 import { createServiceConfig } from '~/env.config';
 
 const iconMap = new Map(icons.map(c => [c.name, c.value]));
 // 正式环境可根据api获取
 const value = ref(1);
+const detail: any = ref(null);
 const props = defineProps<{
   card: ICardData;
   // mode: IConfigCtx['view'];
@@ -51,6 +53,31 @@ watch(
   }
 );
 
+const setSeries: (dataSource) => void = async dataSource => {
+  const arr: any = dataSource;
+  const querDetail = {
+    device_id: dataSource.deviceSource[0]?.deviceId ?? '',
+    keys: arr.deviceSource[0].metricsId
+  };
+  if (querDetail.device_id && querDetail.keys) {
+    detail.value = await deviceDetail(querDetail);
+  } else {
+    // window.$message?.error("查询不到设备");
+  }
+};
+
+watch(
+  () => props.card?.dataSource?.deviceSource,
+  () => {
+    setSeries(props.card?.dataSource);
+  },
+  { deep: true }
+);
+
+onMounted(() => {
+  setSeries(props?.card?.dataSource);
+});
+
 onUnmounted(() => {
   console.log(status.value);
   close();
@@ -61,39 +88,27 @@ onUnmounted(() => {
   <div class="h-full">
     <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
     <div class="h-full flex-col items-center">
-      <NCard v-if="card.dataSource?.origin === 'system'" :bordered="false" class="box">
+      <!--
+ <NCard
+        v-if="card.dataSource?.origin === 'system'"
+        :bordered="false"
+        class="box"
+      > 
+-->
+      <NCard :bordered="false" class="box">
         <div class="top-data">
           <span class="name">
-            {{ card.dataSource.deviceSource?.[0]?.metricsName }}
+            {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
           </span>
-          <!--
- <span class="unit">{{
-            card.dataSource.unit ? card.dataSource.unit : "_/_"
-          }}</span>
--->
         </div>
         <div class="bt-data">
           <NIcon size="44"><ClipboardCode20Regular /></NIcon>
           <div>
-            <span class="value">{{ card.dataSource.sourceNum }}</span>
+            <span class="value">{{ value }}</span>
           </div>
-          <span class="unit">_/_</span>
+          <span class="unit">{{ detail?.data[0].unit }}</span>
         </div>
       </NCard>
-      <!--
- <div v-if="card.dataSource?.origin === 'system'">
-        <div class="bt-data">
-          <NIcon size="24"><ClipboardCode20Filled /></NIcon>
-          <div class="text-center text-24px">{{ value }}</div>
-        </div>
-        数据名：{{ card.dataSource.deviceSource?.[0]?.metricsName }}
-      </div>
--->
-      <!--
- <NCard :bordered="false">
-        <div class="text-center text-24px">{{ value }}</div>
-      </NCard>
--->
     </div>
   </div>
 </template>

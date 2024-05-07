@@ -8,8 +8,8 @@ import { deepClone } from '@/utils/common/tool';
 // const { otherBaseURL } = createServiceConfig(import.meta.env);
 // const url = ref(new URL(otherBaseURL.demo));
 import { useSysSettingStore } from '@/store/modules/sys-setting';
+import { $t } from '@/locales';
 import UploadImage from './upload-image.vue';
-import { $t } from '~/src/locales';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 
@@ -92,7 +92,7 @@ init();
  <NFormItemGridItem :span="24" :label="$t('page.manage.setting.themeSetting.form.websiteLogo')">
           <UploadImage v-model="formModel.logo_cache" accept="image/png, image/jpeg, image/jpg"
             :file-type="['jpg', 'png', 'jpeg']"></UploadImage>
-        </NFormItemGridItem> 
+        </NFormItemGridItem>
 -->
         <NFormItemGridItem :span="24" :label="$t('page.manage.setting.themeSetting.form.background')">
           <UploadImage
@@ -147,7 +147,7 @@ init();
                 :file-type="['jpg', 'png', 'jpeg']"></UploadImage>
             </div>
           </NSpace>
-        </NFormItemGridItem> 
+        </NFormItemGridItem>
 -->
         <NFormItemGridItem :span="24" class="mt-30px">
           <div class="w-120px"></div>

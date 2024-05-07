@@ -4,6 +4,7 @@ import { NButton, NFormItem, NSelect } from 'naive-ui';
 import { dictQuery } from '@/service/api/setting';
 import { deviceConfigEdit, deviceConfigVoucherType, protocolPluginConfigForm } from '@/service/api/device';
 // protocolPluginConfigInput
+import { $t } from '@/locales';
 import FormInput from './form.vue';
 
 type FormElementType = 'input' | 'table' | 'select';
@@ -119,27 +120,41 @@ onMounted(async () => {
 
 <template>
   <div class="connection-box">
-    <div class="connection-title">通过协议接入</div>
+    <div class="connection-title">{{ $t('generate.through-protocol-access') }}</div>
     <NForm :model="extendForm" :rules="extendFormRules" label-placement="left" label-width="auto">
-      <NFormItem label="选择协议/服务" path="protocol_type" class="w-300">
-        <NSelect v-model:value="extendForm.protocol_type" :options="typeOptions" placeholder="请选择选择协议/服务"
-          label-field="translation" value-field="dict_value" @change="choseProtocolType"></NSelect>
+      <NFormItem :label="$t('generate.choose-protocol-or-Service')" path="protocol_type" class="w-300">
+        <NSelect
+          v-model:value="extendForm.protocol_type"
+          :options="typeOptions"
+          :placeholder="$t('generate.select-protocol-service')"
+          label-field="translation"
+          value-field="dict_value"
+          @change="choseProtocolType"
+        ></NSelect>
       </NFormItem>
-      <NFormItem label="认证类型" path="voucher_type" class="w-300" v-show="configInfo.device_type !== '3'">
-        <NSelect v-if="props.configInfo.device_type !== 1" v-model:value="extendForm.voucher_type"
-          :options="connectOptions" placeholder="请选择认证类型"></NSelect>
+      <NFormItem
+        v-show="configInfo.device_type !== '3'"
+        :label="$t('generate.authentication-type')"
+        path="voucher_type"
+        class="w-300"
+      >
+        <NSelect
+          v-if="props.configInfo.device_type !== 1"
+          v-model:value="extendForm.voucher_type"
+          :options="connectOptions"
+          :placeholder="$t('generate.select-authentication-type')"
+        ></NSelect>
       </NFormItem>
       <NFormItem>
-        <NButton type="primary" @click="openForm">数据解析</NButton>
+        <NButton type="primary" @click="openForm">{{ $t('generate.data-parsing') }}</NButton>
       </NFormItem>
       <NFormItem>
-        <NButton type="primary" @click="handleSubmit">保存</NButton>
+        <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
       </NFormItem>
-      <NFlex justify="flex-end">
-      </NFlex>
+      <NFlex justify="flex-end"></NFlex>
     </NForm>
     <n-drawer v-model:show="active" height="90%" placement="bottom">
-      <n-drawer-content title="表单配置">
+      <n-drawer-content :title="$t('generate.form-configuration')">
         <FormInput v-model:protocol-config="protocol_config" :form-elements="formElements"></FormInput>
       </n-drawer-content>
     </n-drawer>

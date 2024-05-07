@@ -5,6 +5,7 @@ import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, use
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
 import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 
 const { routerPushByKey } = useRouterPush();
 const message = useMessage();
@@ -93,14 +94,14 @@ onMounted(fetchBoards);
         <div class="mb-4 flex items-center justify-between">
           <!-- 新建按钮 -->
           <div>
-            <NButton @click="showModal = true">新建大屏</NButton>
+            <NButton @click="showModal = true">{{ $t('generate.create-large-screen') }}</NButton>
           </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">
             <NInput
               v-model:value="nameSearch"
               clearable
-              placeholder="按名称搜索"
+              :placeholder="$t('generate.search-by-name')"
               @clear="
                 () => {
                   nameSearch = '';
@@ -109,7 +110,7 @@ onMounted(fetchBoards);
               "
             />
 
-            <NButton type="primary" @click="fetchBoards">搜索</NButton>
+            <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
           </div>
         </div>
         <!-- 大屏列表 -->
@@ -130,7 +131,7 @@ onMounted(fetchBoards);
                 {{ board.description }}
               </NTooltip>
               <div class="mt-4 flex justify-end gap-2">
-                <NButton strong circle secondary @click.stop="editBoard(board)">
+                <NButton strong secondary circle @click.stop="editBoard(board)">
                   <template #icon>
                     <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
                   </template>
@@ -161,11 +162,15 @@ onMounted(fetchBoards);
     <NModal v-model:show="showModal" :title="isEditMode ? '编辑大屏' : '新建大屏'" class="w-600px">
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
-          <NFormItem label="大屏名称" path="name">
-            <NInput v-model:value="formData.name" placeholder="请输入大屏名称" />
+          <NFormItem :label="$t('generate.large-screen-name')" path="name">
+            <NInput v-model:value="formData.name" :placeholder="$t('generate.enter-large-screen-name')" />
           </NFormItem>
-          <NFormItem label="描述">
-            <NInput v-model:value="formData.description" type="textarea" placeholder="请输入描述" />
+          <NFormItem :label="$t('device_template.table_header.description')">
+            <NInput
+              v-model:value="formData.description"
+              type="textarea"
+              :placeholder="$t('generate.enter-description')"
+            />
           </NFormItem>
         </NForm>
         <template #footer>
@@ -177,9 +182,9 @@ onMounted(fetchBoards);
                 clearFormData();
               "
             >
-              取消
+              {{ $t('generate.cancel') }}
             </NButton>
-            <NButton type="primary" @click="submitForm">保存</NButton>
+            <NButton type="primary" @click="submitForm">{{ $t('common.save') }}</NButton>
           </div>
         </template>
       </NCard>

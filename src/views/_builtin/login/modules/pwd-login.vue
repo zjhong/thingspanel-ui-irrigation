@@ -82,7 +82,9 @@ onMounted(() => {
       <NButton type="primary" size="large" round block :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.confirm') }}
       </NButton>
-      <NCheckbox :checked="isRememberPath" @update:checked="rememberPath">记住上次路径</NCheckbox>
+      <NCheckbox :checked="isRememberPath" @update:checked="rememberPath">
+        {{ $t('generate.remember-last-path') }}
+      </NCheckbox>
       <div class="flex-y-center justify-between gap-12px">
         <NButton class="flex-1" block @click="toggleLoginModule('code-login')">
           {{ $t(loginModuleRecord['code-login']) }}

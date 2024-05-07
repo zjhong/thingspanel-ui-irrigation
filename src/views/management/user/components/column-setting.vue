@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import type { DataTableColumn } from 'naive-ui';
 import VueDraggable from 'vuedraggable';
+import { $t } from '@/locales';
 
 type Column = DataTableColumn<UserManagement.User>;
 
@@ -48,7 +49,7 @@ watch(
     <template #trigger>
       <NButton size="small" type="primary">
         <IconAntDesignSettingOutlined class="mr-4px text-16px" />
-        表格列设置
+        {{ $t('common.changeTableColumns') }}
       </NButton>
     </template>
     <div class="w-180px">

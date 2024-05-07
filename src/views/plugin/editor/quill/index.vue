@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import WangEditor from 'wangeditor';
+import { $t } from '@/locales';
 
 const editor = ref<WangEditor>();
 const domRef = ref<HTMLElement>();
@@ -24,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="富文本插件" :bordered="false" class="rounded-8px shadow-sm">
+    <NCard :title="$t('generate.richTextPlugin')" :bordered="false" class="rounded-8px shadow-sm">
       <div ref="domRef" class="bg-white dark:bg-dark"></div>
       <template #footer>
         <GithubLink link="https://github.com/wangeditor-team/wangEditor" />
@@ -38,6 +39,7 @@ onMounted(() => {
   background: inherit !important;
   border-color: #999 !important;
 }
+
 :deep(.w-e-text-container) {
   background: inherit;
   border-color: #999 !important;

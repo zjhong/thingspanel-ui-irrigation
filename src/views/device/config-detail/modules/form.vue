@@ -39,45 +39,78 @@ const onCreate = () => {
         <template v-for="element in props.formElements" :key="element.dataKey">
           <div v-if="element.type === 'input'">
             <NFormItem :label="element.label" :path="element.dataKey" class="w-300">
-              <NInput v-model:value="protocol_config[element.dataKey]" :placeholder="element.placeholder" />
+              <NInputNumber
+                v-if="element.validate.type === 'number'"
+                v-model:value="protocol_config[element.dataKey]"
+                :placeholder="element.placeholder"
+              />
+              <NInput v-else v-model:value="protocol_config[element.dataKey]" :placeholder="element.placeholder" />
             </NFormItem>
           </div>
           <div v-if="element.type === 'select'">
             <NFormItem :label="element.label" :path="element.dataKey">
-              <NSelect v-model:value="protocol_config[element.dataKey]"
-                :options="element.options as SelectMixedOption[]" />
+              <NSelect
+                v-model:value="protocol_config[element.dataKey]"
+                :options="element.options as SelectMixedOption[]"
+              />
             </NFormItem>
           </div>
 
           <template v-if="element.type === 'table'">
             <div class="mb-12px w-full flex justify-between">
-              <n-ellipsis v-for="subElement in element.array" :key="subElement.dataKey + element.dataKey"
-                class="mr-24px flex-1">
+              <n-ellipsis
+                v-for="subElement in element.array"
+                :key="subElement.dataKey + element.dataKey"
+                class="mr-24px flex-1"
+              >
                 {{ subElement.label }}
               </n-ellipsis>
-
               <div class="ml-20px w-68px"></div>
             </div>
-
-            <n-dynamic-input v-model:value="protocol_config[element.dataKey]" item-style="margin-bottom: 0;"
-              :on-create="onCreate" #="{ index }">
+            <n-dynamic-input
+              v-model:value="protocol_config[element.dataKey]"
+              item-style="margin-bottom: 0;"
+              :on-create="onCreate"
+              #="{ index }"
+            >
               <div class="w-full flex justify-between">
                 <template v-for="subElement in element.array" :key="subElement.dataKey">
                   <template v-if="subElement.type === 'input'">
-                    <n-form-item class="flex-1" ignore-path-change :show-label="false" :label="subElement.label"
-                      :path="`${element.dataKey}[${index}]${subElement.dataKey}`" :rule="element.validate">
-                      <NInputNumber v-if="subElement.validate.type === 'number'"
+                    <n-form-item
+                      class="flex-1"
+                      ignore-path-change
+                      :show-label="false"
+                      :label="subElement.label"
+                      :path="`${element.dataKey}[${index}]${subElement.dataKey}`"
+                      :rule="element.validate"
+                    >
+                      <NInputNumber
+                        v-if="subElement.validate.type === 'number'"
                         v-model:value="protocol_config[element.dataKey][index][subElement.dataKey]"
-                        :placeholder="subElement.placeholder" @keydown.enter.prevent />
-                      <NInput v-else v-model:value="protocol_config[element.dataKey][index][subElement.dataKey]"
-                        :placeholder="subElement.placeholder" @keydown.enter.prevent />
+                        :placeholder="subElement.placeholder"
+                        @keydown.enter.prevent
+                      />
+                      <NInput
+                        v-else
+                        v-model:value="protocol_config[element.dataKey][index][subElement.dataKey]"
+                        :placeholder="subElement.placeholder"
+                        @keydown.enter.prevent
+                      />
                     </n-form-item>
                   </template>
                   <template v-if="subElement.type === 'select'">
-                    <n-form-item class="flex-1" ignore-path-change :show-label="false" :label="subElement.label"
-                      :path="`${element.dataKey}[${index}]${subElement.dataKey}`" :rule="element.validate">
-                      <NSelect v-model:value="protocol_config[element.dataKey][index][subElement.dataKey]"
-                        :options="subElement.options as SelectMixedOption[]" />
+                    <n-form-item
+                      class="flex-1"
+                      ignore-path-change
+                      :show-label="false"
+                      :label="subElement.label"
+                      :path="`${element.dataKey}[${index}]${subElement.dataKey}`"
+                      :rule="element.validate"
+                    >
+                      <NSelect
+                        v-model:value="protocol_config[element.dataKey][index][subElement.dataKey]"
+                        :options="subElement.options as SelectMixedOption[]"
+                      />
                     </n-form-item>
                   </template>
                   <div class="w-12px"></div>

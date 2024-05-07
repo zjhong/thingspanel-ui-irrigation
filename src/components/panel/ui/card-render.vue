@@ -23,6 +23,18 @@ const countSpace = (data: ICardView[], y: number) => {
   }
   return start;
 };
+const switch_h: () => void = () => {
+  const obj = props.layout.filter((item: any) => {
+    if (item.data.cardId === 'chart-switch') {
+      console.log(item, 'item');
+      item.h = 1.5;
+      item.w = 5;
+    }
+    return item;
+  });
+  console.log(obj);
+};
+switch_h();
 
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void;

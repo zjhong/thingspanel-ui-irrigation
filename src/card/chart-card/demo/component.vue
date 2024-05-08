@@ -93,7 +93,7 @@ onUnmounted(() => {
         v-if="card.dataSource?.origin === 'system'"
         :bordered="false"
         class="box"
-      > 
+      >
 -->
       <NCard :bordered="false" class="box">
         <div class="top-data">
@@ -104,7 +104,7 @@ onUnmounted(() => {
         <div class="bt-data">
           <NIcon size="44"><ClipboardCode20Regular /></NIcon>
           <div>
-            <span class="value">{{ value }}</span>
+            <span class="value">{{ detail?.data[0].value }}</span>
           </div>
           <span class="unit">{{ detail?.data[0].unit }}</span>
         </div>

@@ -475,5 +475,3 @@ watch(
     </n-drawer>
   </div>
 </template>
-
-<style scoped></style>

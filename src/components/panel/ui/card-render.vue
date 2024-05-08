@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {GridItem, GridLayout} from 'vue3-drr-grid-layout';
-import {v4 as uuidv4} from 'uuid';
-import type {ICardData, ICardView} from '@/components/panel/card';
+import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
+import { v4 as uuidv4 } from 'uuid';
+import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
-import {$t} from '@/locales';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   layout: ICardView[];
@@ -104,7 +104,7 @@ const removeLayout = (i: number) => {
             class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
             @click="emit('edit', item)"
           >
-            <SvgIcon icon="uil:setting" class="text-base"/>
+            <SvgIcon icon="uil:setting" class="text-base" />
           </NIcon>
           <NPopconfirm
             v-if="!isPreview"
@@ -117,12 +117,12 @@ const removeLayout = (i: number) => {
               <NIcon
                 class="absolute right-2 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
               >
-                <SvgIcon icon="material-symbols:delete-outline" class="text-base"/>
+                <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
               </NIcon>
             </template>
             <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
           </NPopconfirm>
-          <CardItem :data="item.data!" :view="isPreview"/>
+          <CardItem :data="item.data!" :view="isPreview" />
         </div>
       </GridItem>
     </template>

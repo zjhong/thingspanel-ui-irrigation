@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
-import { deviceConfigDel } from '@/service/api/device';
+import { deviceConfigDel, deviceConfigEdit } from '@/service/api/device';
 import { $t } from '@/locales';
 
 interface Props {
@@ -29,6 +29,10 @@ const deleteConfig = () => {
 };
 const showModal = ref(false);
 const modalIndex = ref(1);
+const onlinejson = reactive({
+  online_timeout: 0,
+  heartbeat: 0
+});
 const onDialogVisble = () => {
   showModal.value = !showModal.value;
 };
@@ -39,15 +43,24 @@ const onOpenDialogModal = (val: number) => {
     console.log('1');
   } else {
     console.log('2');
+    onlinejson.online_timeout = 0;
+    onlinejson.heartbeat = 0;
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   onDialogVisble();
   if (modalIndex.value === 1) {
     console.log('1');
   } else {
-    console.log('2');
+    await deviceConfigEdit({
+      id: props.configInfo.id,
+      other_config: JSON.stringify({
+        online_timeout: onlinejson.online_timeout,
+        heartbeat: onlinejson.heartbeat
+      })
+    });
+    router.back();
   }
 };
 </script>
@@ -93,12 +106,12 @@ const onSubmit = () => {
             {{ $t('generate.timeoutThreshold') }}
           </dd>
           <dd class="m-b-20px max-w-220px">
-            <n-input placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.online_timeout" placeholder=""></n-input-number>
           </dd>
           <dt class="m-b-5px font-900">{{ $t('generate.heartbeatIntervalSeconds') }}</dt>
           <dd class="m-b-10px">{{ $t('generate.heartbeatThreshold') }}</dd>
           <dd class="max-w-220px">
-            <n-input type="text" placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.heartbeat" type="text" placeholder=""></n-input-number>
           </dd>
         </dl>
       </template>

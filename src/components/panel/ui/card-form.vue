@@ -1,11 +1,11 @@
 <script lang="tsx" setup>
-import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
-import type {SelectOption} from 'naive-ui';
-import {usePanelStore} from '@/store/modules/panel';
+import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import type { SelectOption } from 'naive-ui';
+import { usePanelStore } from '@/store/modules/panel';
 import ConfigCtx from '@/components/panel/ui/config-ctx.vue';
-import type {ICardData, ICardDefine} from '@/components/panel/card';
-import {deviceListForPanel, deviceMetricsList} from '@/service/api';
-import {$t} from '@/locales';
+import type { ICardData, ICardDefine } from '@/components/panel/card';
+import { deviceListForPanel, deviceMetricsList } from '@/service/api';
+import { $t } from '@/locales';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
@@ -14,9 +14,9 @@ const props = defineProps<{
   deviceWebChartConfig: any;
 }>();
 const systemNorm = [
-  {label: '设备总数', value: 1},
-  {label: '在线设备数量', value: 2},
-  {label: '离线设备数量', value: 3}
+  { label: '设备总数', value: 1 },
+  { label: '在线设备数量', value: 2 },
+  { label: '离线设备数量', value: 3 }
 ];
 const store = usePanelStore();
 const defData = {
@@ -46,7 +46,7 @@ watch(
   data => {
     emit('update', data as any);
   },
-  {deep: true}
+  { deep: true }
 );
 
 const removeSource = (i: number) => {
@@ -171,8 +171,8 @@ watch(
             </NFormItem>
             <div v-if="state.data.dataSource?.origin === 'system'">
               <div v-for="(item, i) in state.data.dataSource.systemSource" :key="i" class="mb-4 flex space-x-2">
-                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm"/>
-                <NInput v-model:value="item.name" :placeholder="$t('generate.data-source-name')" style="width: 200px"/>
+                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm" />
+                <NInput v-model:value="item.name" :placeholder="$t('generate.data-source-name')" style="width: 200px" />
                 <NButton
                   v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
                   ghost
@@ -181,7 +181,7 @@ watch(
                   @click="removeSource(i)"
                 >
                   <template #icon>
-                    <SvgIcon icon="material-symbols:delete-outline"/>
+                    <SvgIcon icon="material-symbols:delete-outline" />
                   </template>
                 </NButton>
               </div>
@@ -202,7 +202,9 @@ watch(
                 class="m-b-2 w-360px"
                 @update:value="deviceCountUpdate"
               >
-                <template #prefix><span class="text-#999">{{ $t('generate.device-count') }}</span></template>
+                <template #prefix>
+                  <span class="text-#999">{{ $t('generate.device-count') }}</span>
+                </template>
               </n-input-number>
 
               <div v-for="(item, i) in state.data.dataSource.deviceSource" :key="i" class="mb-4 flex space-x-2">
@@ -229,7 +231,7 @@ watch(
                   :render-option="info => metricsOptionRender(info, item)"
                   @update:show="show => updateDropdownShow(show, item)"
                 ></NSelect>
-                <NInput v-if="i <= deviceCount - 1" v-model:value="item.metricsName" style="max-width: 140px"/>
+                <NInput v-if="i <= deviceCount - 1" v-model:value="item.metricsName" style="max-width: 140px" />
               </div>
             </div>
           </NForm>
@@ -239,7 +241,7 @@ watch(
         <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
           <div class="max-w-[600px]">
             <ConfigCtx v-model:config="state.data.config" mode="insert">
-              <component :is="state.selectCard?.configForm" :data="state.data"/>
+              <component :is="state.selectCard?.configForm" :data="state.data" />
               <!-- v-model:data="state" -->
             </ConfigCtx>
           </div>
@@ -250,9 +252,8 @@ watch(
           <NFormItem :label="$t('page.manage.menu.form.title')">
             <div class="flex items-center">
               <div class="w-36">
-                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">{{
-                    $t('generate.display-title')
-                  }}
+                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">
+                  {{ $t('generate.display-title') }}
                 </NCheckbox>
               </div>
               <NInput

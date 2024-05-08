@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import {onMounted, onUpdated, reactive, ref, watch} from 'vue';
-import {useMessage} from 'naive-ui';
-import {InformationCircleSharp} from '@vicons/ionicons5';
+import { onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { useMessage } from 'naive-ui';
+import { InformationCircleSharp } from '@vicons/ionicons5';
 // eslint-disable-next-line vue/prefer-import-from-vue
-import type {UnwrapRefSimple} from '@vue/reactivity';
-import type {ICardData, ICardDefine, ICardFormIns} from '@/components/panel/card';
-import {PanelCards} from '@/components/panel';
-import {deviceTemplateSelect} from '@/service/api';
-import {$t} from '@/locales';
+import type { UnwrapRefSimple } from '@vue/reactivity';
+import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
+import { PanelCards } from '@/components/panel';
+import { deviceTemplateSelect } from '@/service/api';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   open: boolean;
@@ -16,10 +16,10 @@ const props = defineProps<{
 const formRef = ref<ICardFormIns>();
 const tabValue = ref('builtin');
 const tabList = [
-  {tab: '系统', type: 'builtin'},
-  {tab: '设备', type: 'device'},
-  {tab: '插件', type: 'plugin'},
-  {tab: '图表', type: 'chart'}
+  { tab: '系统', type: 'builtin' },
+  { tab: '设备', type: 'device' },
+  { tab: '插件', type: 'plugin' },
+  { tab: '图表', type: 'chart' }
 ];
 const state = reactive({
   curCardData: null as null | Record<string, any>
@@ -129,7 +129,7 @@ const availableCardIds = ref<string[]>([]);
 const deviceSelectId = ref<string>('');
 
 const getDeviceOptions = async () => {
-  const {data, error} = await deviceTemplateSelect();
+  const { data, error } = await deviceTemplateSelect();
   if (!error) {
     deviceOptions.value = data;
   }
@@ -315,7 +315,7 @@ onMounted(() => {
                         {{ $t(item.title) }}
                       </div>
                       <div class="h-148px w-full">
-                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain"/>
+                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                       </div>
                     </div>
                   </n-gi>
@@ -337,7 +337,7 @@ onMounted(() => {
           class="mr-4 mt-2 h-full w-full flex flex-col justify-center bg-[#f6f9f8] dark:bg-[#101014]"
         >
           <div id="panel_view" class="w-full overflow-y-auto p-4">
-            <CardItem :data="state.curCardData as any"/>
+            <CardItem :data="state.curCardData as any" />
           </div>
         </div>
       </div>
@@ -391,7 +391,7 @@ onMounted(() => {
     </div>
     <div v-if="count === 1" class="absolute bottom-0 right-0 h-60px flex flex-center">
       <n-icon size="24">
-        <InformationCircleSharp class="color-red"/>
+        <InformationCircleSharp class="color-red" />
       </n-icon>
       <span>{{ $t('generate.configuration-entry') }}</span>
     </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue';
-import type {ICardData} from '@/components/panel/card';
+import { ref } from 'vue';
+import type { ICardData } from '@/components/panel/card';
 import icons from './icon';
 
 const iconMap = new Map(icons.map(c => [c.name, c.value]));
@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <div class="h-full flex items-center">
-    <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }"/>
+    <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
     <span v-if="card.dataSource?.origin === 'system'" class="ml-2">
       数据名：{{ card.dataSource.systemSource?.[0]?.name }}
     </span>

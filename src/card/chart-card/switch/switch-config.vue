@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {inject, ref, watch} from 'vue';
-import type {ICardData, IConfigCtx} from '@/components/panel/card';
-import {$t} from '@/locales';
-import {deviceDatas} from './api';
+import { inject, ref, watch } from 'vue';
+import type { ICardData, IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
+import { deviceDatas } from './api';
 
 const flag: any = ref(false);
 const active0: any = ref('');
@@ -45,7 +45,7 @@ watch(
   () => {
     console.log(props?.data?.dataSource, '测试');
   },
-  {deep: true, immediate: true}
+  { deep: true, immediate: true }
 );
 </script>
 
@@ -54,10 +54,10 @@ watch(
     <div class="title">{{ $t('generate.set-default-device-open-status') }}</div>
     <NForm :model="ctx.config">
       <NFormItem :label="$t('generate.open')">
-        <n-input v-model:value="active0" :placeholder="$t('generate.open')+':1'"/>
+        <n-input v-model:value="active0" :placeholder="$t('generate.open') + ':1'" />
       </NFormItem>
       <NFormItem :label="$t('generate.close')">
-        <n-input v-model:value="active1" :placeholder="$t('generate.close')+':1'"/>
+        <n-input v-model:value="active1" :placeholder="$t('generate.close') + ':1'" />
       </NFormItem>
       <NFormItem>
         <n-button type="info" class="btn" @click="blurClick">{{ $t('page.login.common.confirm') }}</n-button>

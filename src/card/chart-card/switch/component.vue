@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import {onMounted, onUnmounted, ref, watch} from 'vue';
-import {NCard} from 'naive-ui';
-import type {ICardData} from '@/components/panel/card';
-import {localStg} from '@/utils/storage';
-import {deviceDatas, deviceDetail} from './api';
-import {createServiceConfig} from '~/env.config';
-import {$t} from '@/locales';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { NCard } from 'naive-ui';
+import type { ICardData } from '@/components/panel/card';
+import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
+import { deviceDatas, deviceDetail } from './api';
+import { createServiceConfig } from '~/env.config';
 
 const active: any = ref(false);
 const props = defineProps<{
@@ -39,7 +39,7 @@ const setSeries: (obj: any) => void = async obj => {
 };
 
 const fun: () => void = () => {
-  const {otherBaseURL} = createServiceConfig(import.meta.env);
+  const { otherBaseURL } = createServiceConfig(import.meta.env);
   let wsUrl = otherBaseURL.demo.replace('http', 'ws');
   wsUrl += `/telemetry/datas/current/keys/ws`;
   socket.value = new WebSocket(wsUrl); // 替换为你的WebSocket URL
@@ -88,7 +88,7 @@ watch(
   () => {
     setSeries(props?.card?.dataSource);
   },
-  {deep: true}
+  { deep: true }
 );
 onMounted(() => {
   fun();
@@ -102,7 +102,7 @@ onUnmounted(() => {
 
 <template>
   <NCard :bordered="false" class="card-wrapper">
-    <n-switch v-model:value="active" @change="clickSwitch"/>
+    <n-switch v-model:value="active" @change="clickSwitch" />
     <div class="switch">{{ $t('generate.switch') }}</div>
   </NCard>
 </template>

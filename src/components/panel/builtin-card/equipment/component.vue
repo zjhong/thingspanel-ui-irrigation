@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
+import { computed, onMounted, ref } from 'vue';
 // import axios from 'axios'
 import * as echarts from 'echarts';
-import {$t} from '@/locales';
+import { $t } from '@/locales';
 // import type { ICardData } from '@/components/panel/card'
 // defineProps<{
 //   card: ICardData;
@@ -40,7 +40,7 @@ onMounted(() => {
             type: 'group',
             left: '5',
             top: '30',
-            children: Array.from({length: 10})
+            children: Array.from({ length: 10 })
               .fill(0)
               .map((_value, i) => ({
                 type: 'rect',

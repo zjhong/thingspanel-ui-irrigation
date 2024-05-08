@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {computed, ref} from 'vue';
-import {$t} from '@/locales';
+import { computed, ref } from 'vue';
+import { $t } from '@/locales';
 
-defineOptions({name: 'IconSelect'});
+defineOptions({ name: 'IconSelect' });
 
 interface Props {
   /** 选中的图标 */
@@ -48,7 +48,7 @@ function handleChange(iconItem: string) {
     <template #trigger>
       <NInput v-model:value="modelValue" readonly :placeholder="$t('generate.click-to-select-icon')">
         <template #suffix>
-          <SvgIcon :icon="selectedIcon" class="p-5px text-30px"/>
+          <SvgIcon :icon="selectedIcon" class="p-5px text-30px" />
         </template>
       </NInput>
     </template>
@@ -64,7 +64,7 @@ function handleChange(iconItem: string) {
         />
       </span>
     </div>
-    <NEmpty v-else class="w-306px" description="你什么也找不到"/>
+    <NEmpty v-else class="w-306px" description="你什么也找不到" />
   </NPopover>
 </template>
 

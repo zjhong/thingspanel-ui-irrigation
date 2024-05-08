@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import {inject, reactive, ref} from 'vue';
-import {NColorPicker, NSelect} from 'naive-ui';
-import type {IConfigCtx} from '@/components/panel/card';
+import { inject, reactive, ref } from 'vue';
+import { NColorPicker, NSelect } from 'naive-ui';
+import type { IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
 import CurveTheme from './theme';
-import {$t} from '@/locales';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
 
@@ -12,8 +12,8 @@ const originalColorGroups = reactive(CurveTheme);
 const colorGroups = ref(JSON.parse(JSON.stringify(originalColorGroups))); // Deep copy to preserve original data
 
 const themeOptions = [
-  {label: '配色主题1', value: 'colorGroups'},
-  {label: '配色主题2', value: 'colorGroups2'}
+  { label: '配色主题1', value: 'colorGroups' },
+  { label: '配色主题2', value: 'colorGroups2' }
 ];
 
 const selectedTheme = ref('');
@@ -70,7 +70,7 @@ const resetTheme = () => {
               @update:value="value => updateColor(value, index, 'top')"
             >
               <template #label>
-                <span/>
+                <span />
               </template>
             </NColorPicker>
             <div class="gradient-preview" :style="gradientStyle(group)"></div>
@@ -82,7 +82,7 @@ const resetTheme = () => {
               @update:value="value => updateColor(value, index, 'bottom')"
             >
               <template #label>
-                <span/>
+                <span />
               </template>
             </NColorPicker>
           </div>

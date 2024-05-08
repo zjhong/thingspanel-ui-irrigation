@@ -1,10 +1,10 @@
 <script>
-import {onMounted, reactive, ref, toRefs} from 'vue';
-import {useMessage} from 'naive-ui';
+import { onMounted, reactive, ref, toRefs } from 'vue';
+import { useMessage } from 'naive-ui';
 import AMapLoader from '@amap/amap-jsapi-loader';
-import {useNaiveForm} from '@/hooks/common/form';
-import {addArea, spacesData} from '@/service/api/equipment-map';
-import {createServiceConfig} from '~/env.config';
+import { useNaiveForm } from '@/hooks/common/form';
+import { addArea, spacesData } from '@/service/api/equipment-map';
+import { createServiceConfig } from '~/env.config';
 
 export default {
   setup(props, context) {
@@ -64,13 +64,13 @@ export default {
       districts: [] // 已有空间范围
     });
     const message = useMessage();
-    const {formRef} = useNaiveForm();
+    const { formRef } = useNaiveForm();
     const methods = {
       /** 选择空间 */
       async spacesList() {
-        const name = {name: ''};
+        const name = { name: '' };
 
-        const {data} = await spacesData(name);
+        const { data } = await spacesData(name);
         console.log('列表2222', props);
         if (data) {
           data.list.map(item => {
@@ -113,7 +113,7 @@ export default {
       },
       /** 新增接口 */
       add() {
-        const data = {...state.areaForm};
+        const data = { ...state.areaForm };
         data.location = `${state.areaForm.location},${state.areaForm.dimensionality}`;
         data.scope = JSON.stringify(state.areaMap);
         addArea(data).then(e => {
@@ -295,13 +295,13 @@ export default {
           });
       }
     };
-    const {otherBaseURL} = createServiceConfig(import.meta.env);
+    const { otherBaseURL } = createServiceConfig(import.meta.env);
     const url = ref(otherBaseURL.demo);
     onMounted(() => {
       methods.mapInit(state.dimension);
       methods.spacesList();
     });
-    return {...methods, ...toRefs(state), formRef, url};
+    return { ...methods, ...toRefs(state), formRef, url };
   }
 };
 </script>
@@ -331,7 +331,7 @@ export default {
                     />
                   </NFormItemGridItem>
                   <NFormItemGridItem :span="1" :label="$t('generate.area-name')" path="name">
-                    <NInput v-model:value="areaForm.name" placeholder=""/>
+                    <NInput v-model:value="areaForm.name" placeholder="" />
                   </NFormItemGridItem>
 
                   <NFormItemGridItem :span="18" :label="$t('generate.area-location')" class="whitespace-nowrap">
@@ -346,10 +346,10 @@ export default {
 -->
                     <span>{{ $t('generate.longitude') }}</span>
                     :
-                    <NInput v-model:value="areaForm.location" disabled/>
+                    <NInput v-model:value="areaForm.location" disabled />
                     <span>{{ $t('generate.latitude') }}</span>
                     :
-                    <NInput v-model:value="areaForm.dimensionality" disabled/>
+                    <NInput v-model:value="areaForm.dimensionality" disabled />
                   </NFormItemGridItem>
                   <NFormItemGridItem :label="$t('generate.map-range')" path="scope">
                     <n-button @click="rangeSettingClick">{{ $t('generate.set-range') }}</n-button>
@@ -368,7 +368,7 @@ export default {
                     path="area"
                     class="text-nowrap"
                   >
-                    <NInput v-model:value="areaForm.area" placeholder="" class="mr-2"/>
+                    <NInput v-model:value="areaForm.area" placeholder="" class="mr-2" />
                     {{ $t('dashboard_panel.cardName.hectare') }}
                   </NFormItemGridItem>
                   <NFormItemGridItem
@@ -376,20 +376,20 @@ export default {
                     :label="$t('generate.required-water-supply-for-crops')"
                     path="water_requirement"
                   >
-                    <NInput v-model:value="areaForm.water_requirement" placeholder="" class="mr-2"/>
+                    <NInput v-model:value="areaForm.water_requirement" placeholder="" class="mr-2" />
                     {{ $t('generate.rise') }}
                   </NFormItemGridItem>
                   <NFormItemGridItem :label="$t('generate.planting-crops')" path="crop_type">
-                    <NInput v-model:value="areaForm.crop_type" placeholder=""/>
+                    <NInput v-model:value="areaForm.crop_type" placeholder="" />
                   </NFormItemGridItem>
                   <NFormItemGridItem :label="$t('dashboard_panel.cardName.soil')" path="soil_type">
-                    <NInput v-model:value="areaForm.soil_type" placeholder=""/>
+                    <NInput v-model:value="areaForm.soil_type" placeholder="" />
                   </NFormItemGridItem>
                   <NFormItemGridItem :label="$t('generate.irrigation-type')" path="irrigation_type">
-                    <NInput v-model:value="areaForm.irrigation_type" placeholder=""/>
+                    <NInput v-model:value="areaForm.irrigation_type" placeholder="" />
                   </NFormItemGridItem>
                   <NFormItemGridItem :label="$t('generate.location-details')" path="description">
-                    <NInput v-model:value="areaForm.description" type="textarea" :rows="5" placeholder=""/>
+                    <NInput v-model:value="areaForm.description" type="textarea" :rows="5" placeholder="" />
                   </NFormItemGridItem>
                 </NGrid>
                 <NSpace class="w-full" :size="24" justify="center">

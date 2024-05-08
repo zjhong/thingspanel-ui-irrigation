@@ -1,46 +1,46 @@
 <script lang="tsx" setup>
-import type {VueElement} from 'vue';
-import {computed, defineProps, ref, watchEffect} from 'vue';
-import {NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace} from 'naive-ui';
-import type {TreeSelectOption} from 'naive-ui';
-import {throttle} from 'lodash-es';
-import {useLoading} from '@sa/hooks';
+import type { VueElement } from 'vue';
+import { computed, defineProps, ref, watchEffect } from 'vue';
+import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
+import type { TreeSelectOption } from 'naive-ui';
+import { throttle } from 'lodash-es';
+import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
 import TencentMap from './modules/tencent-map.vue';
-import {$t} from '@/locales';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type theLabel = string | (() => string) | undefined;
 export type SearchConfig =
   | {
-  key: string;
-  label: string;
-  type: 'input' | 'date' | 'date-range';
-}
+      key: string;
+      label: string;
+      type: 'input' | 'date' | 'date-range';
+    }
   | {
-  key: string;
-  label: string;
-  type: 'select';
-  options: { label: theLabel; value: any }[];
-  loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
-}
+      key: string;
+      label: string;
+      type: 'select';
+      options: { label: theLabel; value: any }[];
+      loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
+    }
   | {
-  key: string;
-  label: string;
-  type: 'tree-select';
-  options: TreeSelectOption[];
-  multiple: boolean;
-  loadOptions?: () => Promise<TreeSelectOption[]>;
-};
+      key: string;
+      label: string;
+      type: 'tree-select';
+      options: TreeSelectOption[];
+      multiple: boolean;
+      loadOptions?: () => Promise<TreeSelectOption[]>;
+    };
 
 // 通过props从父组件接收参数
 
 const props = defineProps<{
   fetchData: (data: any) => Promise<any>; // 数据获取函数
   columnsToShow: // 表格列配置
-    | {
-    key: string;
-    label: theLabel;
-    render?: (row: any) => VueElement | string | undefined; // 自定义渲染函数
-  }[]
+  | {
+        key: string;
+        label: theLabel;
+        render?: (row: any) => VueElement | string | undefined; // 自定义渲染函数
+      }[]
     | 'all'; // 特殊值'all'表示显示所有列
   searchConfigs: SearchConfig[]; // 搜索配置数组
   tableActions: Array<{
@@ -52,9 +52,9 @@ const props = defineProps<{
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
   rowClick?: (row: any) => void; // 表格行点击回调
 }>();
-const {loading, startLoading, endLoading} = useLoading();
+const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
-const {fetchData, columnsToShow, tableActions, searchConfigs} = props;
+const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
 const isTableView = ref(true); // 默认显示表格视图
 const dataList = ref([]); // 表格数据列表
 const total = ref(0); // 数据总数
@@ -313,21 +313,21 @@ loadOptionsOnMount2();
           <NButton quaternary @click="isTableView = true">
             <template #icon>
               <n-icon text style="font-size: 24px">
-                <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px"/>
+                <icon-material-symbols:table-rows-narrow-outline-sharp class="text-24px" />
               </n-icon>
             </template>
           </NButton>
           <NButton quaternary @click="isTableView = false">
             <template #icon>
               <n-icon text style="font-size: 24px">
-                <icon-material-symbols:map-rounded class="text-24px"/>
+                <icon-material-symbols:map-rounded class="text-24px" />
               </n-icon>
             </template>
           </NButton>
           <NButton quaternary @click="getData">
             <template #icon>
               <n-icon text style="font-size: 24px">
-                <icon-material-symbols:refresh class="text-24px"/>
+                <icon-material-symbols:refresh class="text-24px" />
               </n-icon>
             </template>
           </NButton>
@@ -345,7 +345,7 @@ loadOptionsOnMount2();
       </div>
       <div v-else class="h-525px">
         <!-- 地图视图占位 -->
-        <TencentMap :devices="dataList"/>
+        <TencentMap :devices="dataList" />
       </div>
 
       <n-pagination

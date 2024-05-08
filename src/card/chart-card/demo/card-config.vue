@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {inject} from 'vue';
-import type {IConfigCtx} from '@/components/panel/card';
+import { inject } from 'vue';
+import type { IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
 import icons from './icon';
-import {$t} from '@/locales';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
 </script>
@@ -19,12 +19,12 @@ const ctx = inject<IConfigCtx>('config-ctx')!;
           }`"
           @click="ctx.config.icon = item.name"
         >
-          <component :is="item.value"/>
+          <component :is="item.value" />
         </div>
       </div>
     </NFormItem>
     <NFormItem :label="$t('generate.color')">
-      <NColorPicker v-model:value="ctx.config.color" :show-alpha="false"/>
+      <NColorPicker v-model:value="ctx.config.color" :show-alpha="false" />
     </NFormItem>
   </NForm>
 </template>

@@ -1,21 +1,21 @@
 <script lang="tsx" setup>
-import {onMounted, reactive, ref} from 'vue';
-import {useFullscreen} from '@vueuse/core';
-import {router} from '@/router';
-import type {ICardData, ICardRender, ICardView} from '@/components/panel/card';
-import {PutBoard, getBoard} from '@/service/api';
-import {useAppStore} from '@/store/modules/app';
-import {$t} from '@/locales';
+import { onMounted, reactive, ref } from 'vue';
+import { useFullscreen } from '@vueuse/core';
+import { router } from '@/router';
+import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
+import { PutBoard, getBoard } from '@/service/api';
+import { useAppStore } from '@/store/modules/app';
+import { $t } from '@/locales';
 
 const props = defineProps<{ panelId: string }>();
 const panelDate = ref<Panel.Board>();
 const cr = ref<ICardRender>();
 const fullui = ref();
-const {isFullscreen, toggle} = useFullscreen(fullui);
+const { isFullscreen, toggle } = useFullscreen(fullui);
 const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
 const fetchBroad = async () => {
-  const {data} = await getBoard(props.panelId);
+  const { data } = await getBoard(props.panelId);
   if (data) {
     panelDate.value = data;
     if (data.config) {
@@ -75,19 +75,19 @@ onMounted(fetchBroad);
     >
       <div>
         <NButton @click="router.go(-1)">
-          <SvgIcon icon="ep:back" class="mr-0.5 text-lg"/>
+          <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           {{ $t('page.login.common.back') }}
         </NButton>
       </div>
       <NSpace align="center">
         <NButton @click="add">
-          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg"/>
+          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
           {{ $t('generate.add-component') }}
         </NButton>
         <!--        <NButton>-->
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->
-        <NDivider vertical/>
+        <NDivider vertical />
         <!--        <NButton>取消</NButton>-->
         <NButton @click="savePanel">{{ $t('common.save') }}</NButton>
         <FullScreen
@@ -107,9 +107,9 @@ onMounted(fetchBroad);
       <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
         <NEmpty description="暂未添加组件"></NEmpty>
       </div>
-      <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="85" @edit="edit"/>
+      <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="85" @edit="edit" />
     </div>
-    <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard"/>
+    <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>
 

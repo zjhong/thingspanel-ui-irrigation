@@ -185,13 +185,18 @@ const onUpdatePageSize = newPageSize => {
 // 观察分页和搜索条件的变化，自动重新获取数据
 watchEffect(() => {
   searchConfigs.map((item: any) => {
-    if (item?.extendParams && searchCriteria.value[item.key])
+    const vals = searchCriteria.value[item.key];
+    if (item?.extendParams && vals) {
       item?.options.map(oitem => {
-        item?.extendParams.map(eitem => {
-          searchCriteria.value[eitem.label] = oitem[eitem.value];
-        });
+        if (oitem.dict_value + oitem.device_type === vals) {
+          item?.extendParams.map(eitem => {
+            searchCriteria.value[eitem.label] = oitem[eitem.value];
+          });
+        }
       });
+    }
   });
+  console.log(searchCriteria.value);
   getData();
 });
 

@@ -92,7 +92,6 @@ const execution_result_options = ref([
   }
 ]);
 const showLog = ref(false);
-console.log(moment().subtract(7, 'day').format());
 const logQuery = ref({
   page: 1,
   page_size: 10,

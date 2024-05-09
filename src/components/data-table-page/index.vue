@@ -183,7 +183,7 @@ const onUpdatePageSize = newPageSize => {
 // 观察分页和搜索条件的变化，自动重新获取数据
 watchEffect(() => {
   searchConfigs.map((item: any) => {
-    if (item?.extendParams)
+    if (item?.extendParams && searchCriteria.value[item.key])
       item?.options.map(oitem => {
         item?.extendParams.map(eitem => {
           searchCriteria.value[eitem.label] = oitem[eitem.value];

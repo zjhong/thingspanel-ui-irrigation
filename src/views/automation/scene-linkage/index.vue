@@ -158,150 +158,146 @@ onMounted(() => {
 </script>
 
 <template>
-  <NCard class="w-full">
-    <NFlex justify="space-between" class="mb-4">
-      <NButton type="primary" @click="linkAdd()">{{ $t('generate.+add-scene-linkage') }}</NButton>
-      <NFlex align="center" justify="flex-end" :wrap="false">
-        <NInput
-          v-model:value="queryData.name"
-          :placeholder="$t('generate.enter-scene-linkage-name')"
-          class="search-input"
-          type="text"
-          clearable
-        >
-          <template #prefix>
-            <NIcon>
-              <IosSearch />
-            </NIcon>
-          </template>
-        </NInput>
-        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+  <div class="w-full">
+    <NCard class="w-full">
+      <NFlex justify="space-between" class="mb-4">
+        <NButton type="primary" @click="linkAdd()">{{ $t('generate.+add-scene-linkage') }}</NButton>
+        <NFlex align="center" justify="flex-end" :wrap="false">
+          <NInput
+            v-model:value="queryData.name"
+            :placeholder="$t('generate.enter-scene-linkage-name')"
+            class="search-input"
+            type="text"
+            clearable
+          ></NInput>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+        </NFlex>
       </NFlex>
-    </NFlex>
-    <n-empty
-      v-if="sceneLinkageList.length === 0"
-      size="huge"
-      description="暂无数据"
-      class="min-h-60 justify-center"
-    ></n-empty>
-    <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
-      <NGridItem v-for="(item, index) in sceneLinkageList" :key="index">
-        <NCard hoverable style="height: 180px">
-          <NFlex justify="space-between" align="center" class="mb-4">
-            <div class="text-16px font-600">
-              {{ item.name }}
-            </div>
-            <n-switch
-              v-model:value="item.enabled"
-              checked-value="Y"
-              unchecked-value="N"
-              @update-value="() => linkActivation(item)"
-            />
-          </NFlex>
-          <div>{{ item.description }}</div>
-          <NFlex justify="flex-end" class="mt-4">
-            <NTooltip trigger="hover">
-              <template #trigger>
-                <NButton tertiary circle type="warning" @click="linkEdit(item)">
-                  <template #icon>
-                    <n-icon>
-                      <editIcon />
-                    </n-icon>
-                  </template>
-                </NButton>
-              </template>
-              {{ $t('common.edit') }}
-            </NTooltip>
-            <NTooltip trigger="hover">
-              <template #trigger>
-                <NButton circle tertiary type="info" @click="openLog(item)">
-                  <template #icon>
-                    <n-icon>
-                      <copyIcon />
-                    </n-icon>
-                  </template>
-                </NButton>
-              </template>
-              {{ $t('page.irrigation.time.log.name') }}
-            </NTooltip>
-            <NTooltip trigger="hover">
-              <template #trigger>
-                <NButton circle tertiary type="error" @click="deleteLink(item)">
-                  <template #icon>
-                    <n-icon>
-                      <trashIcon />
-                    </n-icon>
-                  </template>
-                </NButton>
-              </template>
-              {{ $t('common.delete') }}
-            </NTooltip>
-          </NFlex>
-        </NCard>
-      </NGridItem>
-    </NGrid>
-    <NFlex justify="flex-end" class="mt-4">
-      <NPagination
-        v-model:page="queryData.page"
-        :page-size="queryData.page_size"
-        :item-count="dataTotal"
-        @update:page="getData"
-      />
-    </NFlex>
-  </NCard>
-  <n-modal
-    v-model:show="showLog"
-    :style="bodyStyle"
-    preset="card"
-    :title="$t('page.irrigation.time.log.name')"
-    size="huge"
-    :bordered="false"
-    @close="closeLog()"
-  >
-    <NFlex class="mb-6">
-      <n-date-picker v-model:value="logQuery.queryTime" type="datetimerange" @update:value="queryLog" />
-      <n-select
-        v-model:value="logQuery.execution_result"
-        :options="execution_result_options"
-        class="max-w-40"
-        :placeholder="$t('generate.select-execution-status')"
-        @update:value="queryLog"
-      ></n-select>
-      <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
-    </NFlex>
-    <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
-    <template v-else>
-      <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
-        <thead>
-          <tr>
-            <th>{{ $t('generate.order-number') }}</th>
-            <th class="w-180px">{{ $t('generate.execution-time') }}</th>
-            <th>{{ $t('generate.execution-description') }}</th>
-            <th class="w-120px">{{ $t('generate.execution-status') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(sceneItem, index) in logData" :key="index">
-            <td class="w-100px">{{ index + 1 }}</td>
-            <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
-            <td>{{ sceneItem['detail'] }}</td>
-            <td>
-              <span v-if="sceneItem['execution_result'] === 'S'">{{ $t('generate.execution-successful') }}</span>
-              <span v-if="sceneItem['execution_result'] === 'F'">{{ $t('generate.execution-failed') }}</span>
-            </td>
-          </tr>
-        </tbody>
-      </NTable>
-      <NFlex justify="end">
+      <n-empty
+        v-if="sceneLinkageList.length === 0"
+        size="huge"
+        description="暂无数据"
+        class="min-h-60 justify-center"
+      ></n-empty>
+      <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem v-for="(item, index) in sceneLinkageList" :key="index">
+          <NCard hoverable style="height: 180px">
+            <NFlex justify="space-between" align="center" class="mb-4">
+              <div class="text-16px font-600">
+                {{ item.name }}
+              </div>
+              <n-switch
+                v-model:value="item.enabled"
+                checked-value="Y"
+                unchecked-value="N"
+                @update-value="() => linkActivation(item)"
+              />
+            </NFlex>
+            <div>{{ item.description }}</div>
+            <NFlex justify="flex-end" class="mt-4">
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton tertiary circle type="warning" @click="linkEdit(item)">
+                    <template #icon>
+                      <n-icon>
+                        <editIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('common.edit') }}
+              </NTooltip>
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton circle tertiary type="info" @click="openLog(item)">
+                    <template #icon>
+                      <n-icon>
+                        <copyIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('page.irrigation.time.log.name') }}
+              </NTooltip>
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton circle tertiary type="error" @click="deleteLink(item)">
+                    <template #icon>
+                      <n-icon>
+                        <trashIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('common.delete') }}
+              </NTooltip>
+            </NFlex>
+          </NCard>
+        </NGridItem>
+      </NGrid>
+      <NFlex justify="flex-end" class="mt-4">
         <NPagination
-          v-model:page="logQuery.page"
-          :page-size="logQuery.page_size"
-          :item-count="logDataTotal"
-          @update:page="getLogList"
+          v-model:page="queryData.page"
+          :page-size="queryData.page_size"
+          :item-count="dataTotal"
+          @update:page="getData"
         />
       </NFlex>
-    </template>
-  </n-modal>
+    </NCard>
+    <n-modal
+      v-model:show="showLog"
+      :style="bodyStyle"
+      preset="card"
+      :title="$t('page.irrigation.time.log.name')"
+      size="huge"
+      :bordered="false"
+      @close="closeLog()"
+    >
+      <NFlex class="mb-6">
+        <n-date-picker v-model:value="logQuery.queryTime" type="datetimerange" @update:value="queryLog" />
+        <n-select
+          v-model:value="logQuery.execution_result"
+          :options="execution_result_options"
+          class="max-w-40"
+          :placeholder="$t('generate.select-execution-status')"
+          @update:value="queryLog"
+        ></n-select>
+        <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
+      </NFlex>
+      <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
+      <template v-else>
+        <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
+          <thead>
+            <tr>
+              <th>{{ $t('generate.order-number') }}</th>
+              <th class="w-180px">{{ $t('generate.execution-time') }}</th>
+              <th>{{ $t('generate.execution-description') }}</th>
+              <th class="w-120px">{{ $t('generate.execution-status') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sceneItem, index) in logData" :key="index">
+              <td class="w-100px">{{ index + 1 }}</td>
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
+              <td>{{ sceneItem['detail'] }}</td>
+              <td>
+                <span v-if="sceneItem['execution_result'] === 'S'">{{ $t('generate.execution-successful') }}</span>
+                <span v-if="sceneItem['execution_result'] === 'F'">{{ $t('generate.execution-failed') }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </NTable>
+        <NFlex justify="end">
+          <NPagination
+            v-model:page="logQuery.page"
+            :page-size="logQuery.page_size"
+            :item-count="logDataTotal"
+            @update:page="getLogList"
+          />
+        </NFlex>
+      </template>
+    </n-modal>
+  </div>
 </template>
 
 <style scoped lang="scss">

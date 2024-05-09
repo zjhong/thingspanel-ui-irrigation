@@ -103,8 +103,6 @@ const handleUpdateValue = async () => {
     id: props.id,
     is_online: Number(is_online.value)
   });
-
-  // !error && emit('change');
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (

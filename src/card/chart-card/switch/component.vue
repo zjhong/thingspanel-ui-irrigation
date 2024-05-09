@@ -33,7 +33,7 @@ const setSeries: (obj: any) => void = async obj => {
       console.error('WebSocket连接未建立或已关闭');
     }
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('WebSocket连接未建立或已关闭');
   }
 };
 
@@ -78,7 +78,7 @@ const clickSwitch: () => void = async () => {
     await deviceDatas(obj);
     fun();
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('查询不到设备');
   }
 };
 

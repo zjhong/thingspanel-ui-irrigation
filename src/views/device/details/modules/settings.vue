@@ -97,15 +97,14 @@ function flattenTree(list: undefined | Option[]): Option[] {
   flatten(list);
   return result;
 }
-const emit = defineEmits(['change']);
 
 const handleUpdateValue = async () => {
-  const { error } = await deviceLocation({
+  await deviceLocation({
     id: props.id,
     is_online: Number(is_online.value)
   });
 
-  !error && emit('change');
+  // !error && emit('change');
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (

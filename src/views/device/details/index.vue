@@ -268,7 +268,6 @@ watch(
                 :id="d_id as string"
                 :online="device_is_online"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
-                @change="getDeviceDetail"
               />
             </n-spin>
           </n-tab-pane>

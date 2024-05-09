@@ -5,9 +5,9 @@ import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { getStaticUrl } from '@/utils/common/tool';
 import { getOtaTaskList } from '@/service/product/update-ota';
-import { formatDateTime } from '@/utils/common/datetime';
 import TableDeviceModal from './table-device-modal.vue';
 import TableDetailModal from './table-detail-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
@@ -186,8 +186,8 @@ const downloadPackage = () => {
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           remote
+          flex-height
           class="flex-1-hidden"
         />
         <div v-if="activeTab === 'info'">

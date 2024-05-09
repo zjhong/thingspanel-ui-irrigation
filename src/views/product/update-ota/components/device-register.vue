@@ -7,6 +7,7 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { getStaticUrl } from '@/utils/common/tool';
 import { getOtaTaskList } from '@/service/product/update-ota';
+import { formatDateTime } from '@/utils/common/datetime';
 import TableDeviceModal from './table-device-modal.vue';
 import TableDetailModal from './table-detail-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
@@ -92,7 +93,10 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 创建日期
   {
     key: 'created_at',
-    title: $t('page.product.update-ota.createTime')
+    title: $t('page.product.update-ota.createTime'),
+    render: row => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'actions',

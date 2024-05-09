@@ -11,6 +11,7 @@ import {
 } from '@/constants/business';
 import { fetchDataServiceList } from '@/service/api_demo/management';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 import SecretKeyModal from './components/secret-key-modal.vue';
@@ -95,7 +96,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'createTime',
     title: '创建时间',
-    align: 'left'
+    align: 'left',
+    render: row => {
+      return formatDateTime(row.createTime);
+    }
   },
   {
     key: 'status',

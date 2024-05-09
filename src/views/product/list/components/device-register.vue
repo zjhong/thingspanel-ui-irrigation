@@ -5,9 +5,9 @@ import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import moment from 'moment';
 import { $t } from '@/locales';
 import { exportDevice, getPreProductList } from '@/service/product/list';
+import { formatDateTime } from '@/utils/common/datetime';
 import TableDeviceModal from './table-device-modal.vue';
 import type { ModalType } from './table-action-modal.vue';
 import ColumnSetting from './column-setting.vue';
@@ -117,7 +117,7 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     key: 'activate_at',
     title: $t('page.product.list.activeDate'),
     render: row => {
-      return row.activate_at ? moment(row.activate_at) : '-';
+      return row.activate_at ? formatDateTime(row.activate_at) : '-';
     }
   }
 ]) as Ref<DataTableColumns<PreproductDeviceRecord>>;
@@ -206,8 +206,8 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          remote
           flex-height
+          remote
           class="flex-1-hidden"
         />
         <TableDeviceModal

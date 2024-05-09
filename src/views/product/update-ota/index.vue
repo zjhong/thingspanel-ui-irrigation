@@ -7,6 +7,7 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { getOtaPackageList } from '@/service/product/update-package';
 import { getDeviceConfigList } from '@/service/api/device';
+import { formatDateTime } from '@/utils/common/datetime';
 import ColumnSetting from './components/column-setting.vue';
 import DeviceRegister from './components/device-register.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -101,7 +102,10 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'created_at',
-    title: $t('page.product.update-package.createTime')
+    title: $t('page.product.update-package.createTime'),
+    render: row => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'description',

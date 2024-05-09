@@ -5,6 +5,7 @@ import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { getSystemLogList } from '@/service/api/system-management-user';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -67,7 +68,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     key: 'created_at',
     title: '时间',
     align: 'left',
-    width: '280'
+    width: '280',
+    render: row => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'ip',

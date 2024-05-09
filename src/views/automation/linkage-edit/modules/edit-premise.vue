@@ -227,9 +227,7 @@ const triggerSourceChange = (ifItem: any) => {
 };
 
 // const testFocus = () => {
-//   console.log(888);
 //   setTimeout(() => {
-//     console.log(queryDeviceName.value[0]);
 //     queryDeviceName.value[0].focus();
 //   }, 100);
 // };
@@ -541,8 +539,8 @@ const addIfGroupItem = (data: any) => {
     premiseForm.value.ifGroups.push(groupObj);
   } else {
     groupObj.push(data);
+    premiseForm.value.ifGroups.push(groupObj);
   }
-  premiseForm.value.ifGroups.push(groupObj);
 };
 
 const ifGroupsData = () => {

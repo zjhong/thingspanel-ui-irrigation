@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onBeforeMount, ref, watch } from 'vue';
+import { h, onBeforeMount, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
 import { NSpace, NTag } from 'naive-ui';
@@ -238,6 +238,32 @@ const searchConfigs = ref<SearchConfig[]>([
     key: 'procotol_dict',
     label: $t('custom.devicePage.unlimitedAccessMode'),
     type: 'select',
+    renderLabel(option: any) {
+      const deviceText = {
+        '1': $t('generate.direct-connected-device'),
+        '2': $t('generate.gateway'),
+        '3': $t('custom.device_details.deviceAnalysis')
+      };
+      return h(
+        'div',
+        {
+          class: 'm-b-5px'
+        },
+        [
+          h('div', null, option.dict_value as string),
+          h(
+            'div',
+            {
+              class: ' color-#ccc'
+            },
+            deviceText[option.device_type] as string
+          )
+        ]
+      );
+    },
+    renderTag({ option }: any) {
+      return h('div', option.label as string);
+    },
     extendParams: [
       {
         label: 'procotol_type',

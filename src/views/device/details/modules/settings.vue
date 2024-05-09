@@ -18,6 +18,7 @@ import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
+  online: string;
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
@@ -150,6 +151,7 @@ const initData = async () => {
 };
 
 onMounted(() => {
+  is_online.value = String(props.online);
   initData();
   deviceConfigList('');
 });

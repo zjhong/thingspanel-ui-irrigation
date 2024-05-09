@@ -20,6 +20,8 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
+      renderLabel?: any;
+      renderTag?: any;
       extendParams?: object;
       options: { label: theLabel; value: any }[];
       loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
@@ -183,7 +185,7 @@ const onUpdatePageSize = newPageSize => {
 // 观察分页和搜索条件的变化，自动重新获取数据
 watchEffect(() => {
   searchConfigs.map((item: any) => {
-    if (item?.extendParams)
+    if (item?.extendParams && searchCriteria.value[item.key])
       item?.options.map(oitem => {
         item?.extendParams.map(eitem => {
           searchCriteria.value[eitem.label] = oitem[eitem.value];
@@ -285,6 +287,8 @@ loadOptionsOnMount2();
                 size="small"
                 filterable
                 :options="config.options"
+                :render-label="config.renderLabel"
+                :render-tag="config.renderTag"
                 :placeholder="config.label"
                 class="input-style"
                 @update:value="currentPage = 1"

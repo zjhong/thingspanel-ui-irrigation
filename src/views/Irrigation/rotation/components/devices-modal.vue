@@ -4,7 +4,7 @@ import type { CascaderOption, FormInst, FormItemRule } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { getIrrigationDistricts, getIrrigationDiveces, getIrrigationSpaces } from '@/service/api';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -124,7 +124,7 @@ watch(
             <NCascader
               ref="refNCascader"
               v-model:value="formModel.sapceAndDistrict"
-              placeholder="请选择"
+              :placeholder="$t('common.select')"
               :options="spaceOptions"
               :show-path="true"
               label-field="name"

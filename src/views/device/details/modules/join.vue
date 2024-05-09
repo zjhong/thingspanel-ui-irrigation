@@ -5,7 +5,7 @@ import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 import { devicCeonnectForm, getDeviceConnectInfo, updateDeviceVoucher } from '@/service/api/device';
 import { useDeviceDataStore } from '@/store/modules/device';
-
+import { $t } from '@/locales';
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
 const formRef = ref<FormInst | null>(null);
@@ -102,12 +102,12 @@ const copy = async param => {
 <template>
   <div>
     <n-descriptions label-placement="left" :column="1" class="mt-6">
-      <n-descriptions-item label="接入方式/服务">
+      <n-descriptions-item :label="$t('generate.access-method-service')">
         {{ deviceDataStore?.deviceData?.device_config?.protocol_type || '--' }}
       </n-descriptions-item>
     </n-descriptions>
 
-    <NCard title="凭证" class="mb-6 mt-6">
+    <NCard :title="$t('generate.credential')" class="mb-6 mt-6">
       <NForm ref="formRef" :rules="formRules" :model="formData">
         <template v-for="element in formElements" :key="element.dataKey">
           <div v-if="element.type === 'input'" class="form-item">
@@ -144,7 +144,7 @@ const copy = async param => {
       </NForm>
     </NCard>
     <n-scrollbar class="h-400px">
-      <NCard title="连接信息">
+      <NCard :title="$t('generate.connection-info')">
         <NDescriptions :column="1">
           <NDescriptionsItem v-for="(value, key, index) in connectInfo" :key="key" :index="index" :label="key">
             <span :id="index.toString()" class="font-600" @click="copy(index)">{{ value }}</span>
@@ -153,7 +153,7 @@ const copy = async param => {
       </NCard>
     </n-scrollbar>
     <div class="mt-4 w-full flex-center">
-      <NButton type="primary" @click="handleSubmit">保存</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
     </div>
   </div>
 </template>

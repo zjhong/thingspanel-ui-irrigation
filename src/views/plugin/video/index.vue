@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import Player from 'xgplayer';
 import 'xgplayer/dist/index.min.css';
+import { $t } from '@/locales';
 
 const domRef = ref<HTMLElement>();
 const player = ref<Player>();
@@ -16,6 +17,7 @@ function renderXgPlayer() {
     fluid: true
   });
 }
+
 function destroyXgPlayer() {
   player.value?.destroy();
 }
@@ -31,7 +33,7 @@ onUnmounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="视频播放器插件" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.videoPlayerPlugin')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div ref="domRef" class=""></div>
     </NCard>
   </div>

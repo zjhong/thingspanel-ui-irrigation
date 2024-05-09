@@ -7,7 +7,7 @@ import type { UnwrapRefSimple } from '@vue/reactivity';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
 import { deviceTemplateSelect } from '@/service/api';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   open: boolean;
@@ -181,7 +181,7 @@ onMounted(() => {
   <NModal
     :show="open"
     preset="dialog"
-    title="配置"
+    :title="$t('generate.configuration')"
     size="huge"
     :style="{
       width: 'calc(100vw - 180px)',
@@ -241,7 +241,7 @@ onMounted(() => {
             <div v-if="item1.tab === '设备'">
               <NSelect
                 v-model:value="deviceSelectId"
-                placeholder="请选择设备"
+                :placeholder="$t('generate.select-device')"
                 :options="deviceOptions"
                 value-field="device_id"
                 label-field="device_name"
@@ -283,7 +283,7 @@ onMounted(() => {
                               : '../chart-card/demo/poster.png'
                           "
                           alt=""
-                          style="width: 100%; height: 100%; object-fit: contain" 
+                          style="width: 100%; height: 100%; object-fit: contain"
 -->
                         <!-- /> -->
                         <img
@@ -325,7 +325,7 @@ onMounted(() => {
           </NTabPane>
         </NTabs>
         <n-float-button v-if="count === 2" position="absolute" :left="4" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开卡片</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-card') }}</spna>
         </n-float-button>
       </div>
       <div :class="'h-full flex-center justify-center border-r bg-[#f6f9f8] p-2 overflow-hidden ' + widths[1]">
@@ -368,7 +368,7 @@ onMounted(() => {
           />
         </div>
         <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开配置</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-configuration') }}</spna>
         </n-float-button>
       </div>
     </div>
@@ -384,16 +384,16 @@ onMounted(() => {
             }
           "
         >
-          取消
+          {{ $t('generate.cancel') }}
         </NButton>
-        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
+        <NButton class="mr-4" type="primary" @click="save">{{ $t('generate.confirm') }}</NButton>
       </div>
     </div>
     <div v-if="count === 1" class="absolute bottom-0 right-0 h-60px flex flex-center">
       <n-icon size="24">
         <InformationCircleSharp class="color-red" />
       </n-icon>
-      <span>您可以移入右侧配置区进入配置，也可以确认后稍后配置</span>
+      <span>{{ $t('generate.configuration-entry') }}</span>
     </div>
   </NModal>
 </template>

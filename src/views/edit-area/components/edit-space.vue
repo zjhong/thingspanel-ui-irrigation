@@ -298,37 +298,48 @@ export default {
 <template>
   <div class="mapContainer">
     <div class="searchInfo">
-      <input id="editInput" v-model="newKeyAddress" placeholder="请输入关键字..." class="input-with-select" />
+      <input
+        id="editInput"
+        v-model="newKeyAddress"
+        :placeholder="$t('generate.enter-keyword')"
+        class="input-with-select"
+      />
 
       <div class="add-box">
         <NCard>
           <n-spin :show="spinShow">
             <NForm ref="formRef" label-placement="left" :model="spaceForm" :rules="rules">
               <NGrid :cols="1" :x-gap="18">
-                <NFormItemGridItem :span="16" label="空间名称" path="name">
+                <NFormItemGridItem :span="16" :label="$t('generate.space-name')" path="name">
                   <NInput v-model:value="spaceForm.name" />
                 </NFormItemGridItem>
 
-                <NFormItemGridItem :span="18" label="空间位置" class="whitespace-nowrap">
-                  <n-button :type="buttonData" :disabled="buttonDisabled" @click="locationSetting">编辑位置</n-button>
+                <NFormItemGridItem :span="18" :label="$t('generate.space-location')" class="whitespace-nowrap">
+                  <n-button :type="buttonData" :disabled="buttonDisabled" @click="locationSetting">
+                    {{ $t('generate.edit-location') }}
+                  </n-button>
                   <span class="required-span">*</span>
                 </NFormItemGridItem>
-                <NFormItemGridItem label="位置信息" class="whitespace-nowrap" :span="18">
-                  经度:
+                <NFormItemGridItem :label="$t('generate.location-information')" class="whitespace-nowrap" :span="18">
+                  <span>{{ $t('generate.longitude') }}</span>
+                  :
                   <NInput v-model:value="spaceForm.location" disabled />
-                  纬度:
+                  <span>{{ $t('generate.latitude') }}</span>
+                  :
                   <NInput v-model:value="spaceForm.dimensionality" disabled />
                 </NFormItemGridItem>
-                <NFormItemGridItem :span="16" label="地图范围" path="scope">
-                  <n-button :disabled="buttonDisabled" @click="rangeSettingClick">设置范围</n-button>
+                <NFormItemGridItem :span="16" :label="$t('generate.map-range')" path="scope">
+                  <n-button :disabled="buttonDisabled" @click="rangeSettingClick">
+                    {{ $t('generate.set-range') }}
+                  </n-button>
                 </NFormItemGridItem>
-                <NFormItemGridItem :span="16" label="位置详情" path="description">
+                <NFormItemGridItem :span="16" :label="$t('generate.location-details')" path="description">
                   <NInput v-model:value="spaceForm.description" type="textarea" placeholder="" />
                 </NFormItemGridItem>
               </NGrid>
               <NSpace class="w-full pt-16px" :size="24" justify="center">
-                <NButton class="w-72px" @click="closeModal">取消</NButton>
-                <NButton class="w-72px" type="primary" @click="handleReset">保存</NButton>
+                <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+                <NButton class="w-72px" type="primary" @click="handleReset">{{ $t('common.save') }}</NButton>
               </NSpace>
             </NForm>
           </n-spin>

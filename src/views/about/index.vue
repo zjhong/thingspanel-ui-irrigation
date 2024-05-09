@@ -1,7 +1,9 @@
-<script setup lang="tsx"></script>
+<script setup lang="tsx">
+import { $t } from '@/locales';
+</script>
 
 <template>
-  <div>打撒都是</div>
+  <div>{{ $t('generate.randomText') }}</div>
 </template>
 
 <style scoped></style>

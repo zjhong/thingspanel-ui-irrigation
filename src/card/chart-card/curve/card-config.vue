@@ -2,6 +2,7 @@
 import { inject, reactive, ref } from 'vue';
 import { NColorPicker, NSelect } from 'naive-ui';
 import type { IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
 import CurveTheme from './theme';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
@@ -46,15 +47,15 @@ const resetTheme = () => {
 <template>
   <div>
     <n-flex align="center" class="mb-2">
-      <div>配色主题：</div>
+      <div>{{ $t('generate.color-theme') }}</div>
       <NSelect
         v-model:value="selectedTheme"
         class="flex-1"
         :options="themeOptions"
-        placeholder="请选择主题"
+        :placeholder="$t('generate.select-theme')"
         @update:value="themeUpdate"
       />
-      <div @click="resetTheme">重置</div>
+      <div @click="resetTheme">{{ $t('common.reset') }}</div>
     </n-flex>
     <div v-if="selectedTheme" class="color-groups">
       <n-grid x-gap="6" y-gap="6" :cols="2">
@@ -86,7 +87,7 @@ const resetTheme = () => {
             </NColorPicker>
           </div>
         </n-gi>
-        <n-gi class="text-12px text-#999">建议：有几条数据改几条（按序号），最多9条</n-gi>
+        <n-gi class="text-12px text-#999">{{ $t('generate.max-9') }}</n-gi>
       </n-grid>
     </div>
   </div>

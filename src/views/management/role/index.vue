@@ -6,6 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 // import { userStatusLabels, userStatusOptions } from '@/constants'
 import { useBoolean, useLoading } from '@sa/hooks';
 import { delrles, rlesList } from '@/service/api';
+import { $t } from '@/locales';
 import TableActionModal from './modules/table-action-modal.vue';
 import EditPasswordModal from './modules/edit-password-modal.vue';
 import type { ModalType } from './modules/table-action-modal.vue';
@@ -182,7 +183,7 @@ init();
           <NSpace>
             <NButton type="primary" @click="handleAddTable">
               <icon-ic-round-plus class="mr-4px text-20px" />
-              新增
+              {{ $t('device_template.add') }}
             </NButton>
           </NSpace>
         </NSpace>

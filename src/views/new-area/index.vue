@@ -9,24 +9,32 @@
 <script setup lang="tsx">
 import addSpace from './components/add-space.vue';
 import addArea from './components/add-area.vue';
+
 interface Emits {
   (e: 'cancelAdd', menu: App.Global.Menu): boolean;
+
   (e: 'saveAddSpace', menu: App.Global.Menu): boolean;
+
   (e: 'cancelAddApace', menu: App.Global.Menu): boolean;
+
   (e: 'saveAddAres', menu: App.Global.Menu): boolean;
 }
+
 const emit = defineEmits<Emits>();
 
 function cancelAdd(data) {
   emit('cancelAdd', data);
   console.log('孙', data);
 }
+
 function saveAddSpace(data) {
   emit('saveAddSpace', data);
 }
+
 function cancelAddApace(data) {
   emit('cancelAddApace', data);
 }
+
 function saveAddAres(data) {
   emit('saveAddAres', data);
 }

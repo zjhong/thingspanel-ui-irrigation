@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { inject, ref, watch } from 'vue';
 import type { ICardData, IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
 import { deviceDatas } from './api';
+
 const flag: any = ref(false);
 const active0: any = ref('');
 const active1: any = ref('');
@@ -49,16 +51,16 @@ watch(
 
 <template>
   <div>
-    <div class="title">设置设备默认的开启状态</div>
+    <div class="title">{{ $t('generate.set-default-device-open-status') }}</div>
     <NForm :model="ctx.config">
-      <NFormItem label="开启：">
-        <n-input v-model:value="active0" placeholder="开启是1" />
+      <NFormItem :label="$t('generate.open')">
+        <n-input v-model:value="active0" :placeholder="$t('generate.open') + ':1'" />
       </NFormItem>
-      <NFormItem label="关闭：">
-        <n-input v-model:value="active1" placeholder="关闭是0" />
+      <NFormItem :label="$t('generate.close')">
+        <n-input v-model:value="active1" :placeholder="$t('generate.close') + ':1'" />
       </NFormItem>
       <NFormItem>
-        <n-button type="info" class="btn" @click="blurClick">确定</n-button>
+        <n-button type="info" class="btn" @click="blurClick">{{ $t('page.login.common.confirm') }}</n-button>
       </NFormItem>
     </NForm>
   </div>

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, reactive, ref, toRefs, watch } from 'vue';
-import type { FormInst } from 'naive-ui';
+import type { FormInst, FormItemRule } from 'naive-ui';
 import { addUser, editUser } from '@/service/api/auth';
 import { fetchGetAllRoles } from '@/service/api';
 import { createRequiredFormRule, formRules, getConfirmPwdRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
+
 export type ModalType = NonNullable<any['type']>;
 
 defineOptions({ name: 'TableActionModal' });
@@ -23,6 +24,7 @@ const props = withDefaults(
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }
@@ -51,20 +53,23 @@ const title = computed(() => {
 
 const formRef = ref<HTMLElement & FormInst>();
 
-type FormModel = Pick<any, 'email' | 'name' | 'phone_number' | 'remark' | 'userRoles'> & {
+type FormModel = Pick<any, 'email' | 'name' | 'phone_number' | 'remark' | 'userRoles' | 'status'> & {
   password: string;
   confirmPwd: string;
 };
 
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
-const rules = {
+const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('common.pleaseCheckValue')),
+
   phone_number: formRules.phone,
   email: formRules.email,
   password: formRules.pwd,
   confirmPwd: getConfirmPwdRule(toRefs(formModel).password),
-  remark: createRequiredFormRule($t('common.pleaseCheckValue'))
+  remark: createRequiredFormRule($t('common.pleaseCheckValue')),
+  status: createRequiredFormRule('请选择用户状态'),
+  userRoles: createRequiredFormRule('请选择用户角色')
 };
 
 function createDefaultFormModel(): FormModel {
@@ -75,7 +80,8 @@ function createDefaultFormModel(): FormModel {
     password: '',
     confirmPwd: '',
     userRoles: [],
-    remark: ''
+    remark: '',
+    status: ''
   };
 }
 
@@ -101,6 +107,11 @@ function handleUpdateFormModelByModalType() {
 
 /** the enabled role options */
 const roleOptions = ref<any[]>([]);
+
+const userOptions = ref<any[]>([
+  { label: '正常', value: 'N' },
+  { label: '冻结', value: 'F' }
+]);
 
 async function getRoleOptions() {
   const { error, data } = await fetchGetAllRoles({ page: 1, page_size: 10 });
@@ -143,7 +154,7 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NFormItem :span="12" :label="$t('page.manage.user.userEmail')" path="email">
-        <NInput v-model:value="formModel.email" autocomplete="off" />
+        <NInput v-model:value="formModel.email" autocomplete="off" :disabled="props.type == 'edit'" />
       </NFormItem>
 
       <template v-if="type === 'add'">
@@ -170,6 +181,10 @@ watch(
           :options="roleOptions"
           :placeholder="$t('page.manage.user.form.userRole2')"
         ></NSelect>
+      </NFormItem>
+
+      <NFormItem v-if="type == 'edit'" :label="$t('page.manage.user.userStatus2')" path="status">
+        <NSelect v-model:value="formModel.status" :options="userOptions" placeholder="请选择用户状态"></NSelect>
       </NFormItem>
 
       <NFormItem :span="24" :label="$t('common.remark')">

@@ -5,6 +5,7 @@ import { router } from '@/router';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
 import { PutBoard, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
+import { $t } from '@/locales';
 
 const props = defineProps<{ panelId: string }>();
 const panelDate = ref<Panel.Board>();
@@ -75,20 +76,20 @@ onMounted(fetchBroad);
       <div>
         <NButton @click="router.go(-1)">
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
-          返回
+          {{ $t('page.login.common.back') }}
         </NButton>
       </div>
       <NSpace align="center">
         <NButton @click="add">
           <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
-          添加组件
+          {{ $t('generate.add-component') }}
         </NButton>
         <!--        <NButton>-->
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->
         <NDivider vertical />
         <!--        <NButton>取消</NButton>-->
-        <NButton @click="savePanel">保存</NButton>
+        <NButton @click="savePanel">{{ $t('common.save') }}</NButton>
         <FullScreen
           :full="isFullscreen"
           @click="

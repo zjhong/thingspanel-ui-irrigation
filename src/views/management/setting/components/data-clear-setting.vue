@@ -8,12 +8,13 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import { dataClearSettingEnabledTypeOptions } from '@/constants/business';
 import { editDataClear, fetchDataClearList } from '@/service/api/setting';
 import { deepClone } from '@/utils/common/tool';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal, setFalse: closeModal } = useBoolean();
 
 const tableData = ref<GeneralSetting.DataClearSetting[]>([]);
+
 function setTableData(data: GeneralSetting.DataClearSetting[]) {
   tableData.value = data;
 }

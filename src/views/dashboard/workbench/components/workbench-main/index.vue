@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { $t } from '@/locales';
 import { ShortcutsCard, TechnologyCard } from './components';
 
 defineOptions({ name: 'DashboardWorkbenchMain' });
@@ -134,9 +135,14 @@ const shortcuts: Shortcuts[] = [
   <NGrid :item-responsive="true" :x-gap="16" :y-gap="16">
     <NGridItem span="0:24 640:24 1024:16">
       <NSpace :vertical="true" :size="16">
-        <NCard title="项目主要技术栈" :bordered="false" size="small" class="rounded-8px shadow-sm">
+        <NCard
+          :title="$t('generate.project-main-tech-stack')"
+          :bordered="false"
+          size="small"
+          class="rounded-8px shadow-sm"
+        >
           <template #header-extra>
-            <a class="text-primary" href="javascript:;">更多技术栈</a>
+            <a class="text-primary" href="javascript:;">{{ $t('generate.more-tech-stack') }}</a>
           </template>
           <NGrid :item-responsive="true" responsive="screen" cols="m:2 l:3" :x-gap="8" :y-gap="8">
             <NGridItem v-for="item in technology" :key="item.id">
@@ -144,9 +150,9 @@ const shortcuts: Shortcuts[] = [
             </NGridItem>
           </NGrid>
         </NCard>
-        <NCard title="动态" :bordered="false" size="small" class="rounded-8px shadow-sm">
+        <NCard :title="$t('generate.dynamic')" :bordered="false" size="small" class="rounded-8px shadow-sm">
           <template #header-extra>
-            <a class="text-primary" href="javascript:;">更多动态</a>
+            <a class="text-primary" href="javascript:;">{{ $t('generate.more-dynamics') }}</a>
           </template>
           <NList>
             <NListItem v-for="item in activity" :key="item.id">
@@ -161,14 +167,14 @@ const shortcuts: Shortcuts[] = [
     </NGridItem>
     <NGridItem span="0:24 640:24 1024:8">
       <NSpace :vertical="true" :size="16">
-        <NCard title="快捷操作" :bordered="false" size="small" class="rounded-8px shadow-sm">
+        <NCard :title="$t('generate.quick-operation')" :bordered="false" size="small" class="rounded-8px shadow-sm">
           <NGrid :item-responsive="true" responsive="screen" cols="m:2 l:3" :x-gap="8" :y-gap="8">
             <NGridItem v-for="item in shortcuts" :key="item.id">
               <ShortcutsCard v-bind="item" />
             </NGridItem>
           </NGrid>
         </NCard>
-        <NCard title="创意" :bordered="false" size="small" class="rounded-8px shadow-sm">
+        <NCard :title="$t('generate.creativity')" :bordered="false" size="small" class="rounded-8px shadow-sm">
           <div class="h-380px flex-center">
             <IconLocalBanner class="text-400px text-primary sm:text-320px" />
           </div>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
-import { deviceConfigDel } from '@/service/api/device';
+import { deviceConfigDel, deviceConfigEdit } from '@/service/api/device';
+import { $t } from '@/locales';
 
 interface Props {
   configInfo?: object | any;
@@ -28,6 +29,10 @@ const deleteConfig = () => {
 };
 const showModal = ref(false);
 const modalIndex = ref(1);
+const onlinejson = reactive({
+  online_timeout: 0,
+  heartbeat: 0
+});
 const onDialogVisble = () => {
   showModal.value = !showModal.value;
 };
@@ -38,15 +43,23 @@ const onOpenDialogModal = (val: number) => {
     console.log('1');
   } else {
     console.log('2');
+    onlinejson.online_timeout = 0;
+    onlinejson.heartbeat = 0;
   }
 };
 
-const onSubmit = () => {
+const onSubmit = async () => {
   onDialogVisble();
   if (modalIndex.value === 1) {
     console.log('1');
   } else {
-    console.log('2');
+    await deviceConfigEdit({
+      id: props.configInfo.id,
+      other_config: JSON.stringify({
+        online_timeout: onlinejson.online_timeout,
+        heartbeat: onlinejson.heartbeat
+      })
+    });
   }
 };
 </script>
@@ -54,17 +67,17 @@ const onSubmit = () => {
 <template>
   <div class="flex-col gap-30px p-10px">
     <div class="">
-      <div class="m-b-10px">自动创建设备</div>
-      <div class="m-b-10px">通过一型一密动态获取证书创建设备</div>
-      <NButton class="" type="primary" @click="onOpenDialogModal(1)">配置</NButton>
+      <div class="m-b-10px">{{ $t('generate.auto-create-device') }}</div>
+      <div class="m-b-10px">{{ $t('generate.auto-create-device-via-one-type-one-secret') }}</div>
+      <NButton class="" type="primary" @click="onOpenDialogModal(1)">{{ $t('generate.configuration') }}</NButton>
     </div>
     <div class="">
-      <div class="m-b-10px">设备在线配置</div>
-      <NButton class="" type="primary" @click="onOpenDialogModal(2)">配置</NButton>
+      <div class="m-b-10px">{{ $t('generate.onlineDeviceConfig') }}</div>
+      <NButton class="" type="primary" @click="onOpenDialogModal(2)">{{ $t('generate.configuration') }}</NButton>
     </div>
     <div>
-      <div class="m-b-10px color-error-500">删除设备配置</div>
-      <NButton type="error" @click="deleteConfig">删除</NButton>
+      <div class="m-b-10px color-error-500">{{ $t('generate.delete-device-configuration') }}</div>
+      <NButton type="error" @click="deleteConfig">{{ $t('common.delete') }}</NButton>
     </div>
 
     <n-modal
@@ -75,36 +88,36 @@ const onSubmit = () => {
     >
       <template v-if="modalIndex === 1">
         <dl class="flex-col gap-20px">
-          <dd>允许设备自动创建</dd>
+          <dd>{{ $t('generate.allow-device-auto-create') }}</dd>
           <dd>
             <n-switch />
           </dd>
-          <dd>复制一型一密设备的密码</dd>
+          <dd>{{ $t('generate.copy-one-type-one-secret-device-password') }}</dd>
           <dd>
-            <NButton type="success">复制</NButton>
+            <NButton type="success">{{ $t('generate.copy') }}</NButton>
           </dd>
         </dl>
       </template>
       <template v-else>
         <dl class="m-b-20px flex-col">
-          <dt class="m-b-5px font-900">超时时间（分钟）</dt>
+          <dt class="m-b-5px font-900">{{ $t('generate.timeoutMinutes') }}</dt>
           <dd class="m-b-10px">
-            >0代表启用超时功能，用来判断设备是否异常在线。当设备在该时间内未上报遥测数据，平台会认为该设备已离线
+            {{ $t('generate.timeoutThreshold') }}
           </dd>
           <dd class="m-b-20px max-w-220px">
-            <n-input placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.online_timeout" placeholder=""></n-input-number>
           </dd>
-          <dt class="m-b-5px font-900">心跳判断（秒）</dt>
-          <dd class="m-b-10px">>0代表启用心跳判断，系统仅按照遥测数据的上报作为设备的心跳判断在线离线状态</dd>
+          <dt class="m-b-5px font-900">{{ $t('generate.heartbeatIntervalSeconds') }}</dt>
+          <dd class="m-b-10px">{{ $t('generate.heartbeatThreshold') }}</dd>
           <dd class="max-w-220px">
-            <n-input type="text" placeholder=""></n-input>
+            <n-input-number v-model:value="onlinejson.heartbeat" type="text" placeholder=""></n-input-number>
           </dd>
         </dl>
       </template>
 
       <NFlex justify="end">
-        <NButton @click="onDialogVisble">取消</NButton>
-        <NButton type="primary" @click="onSubmit">保存</NButton>
+        <NButton @click="onDialogVisble">{{ $t('generate.cancel') }}</NButton>
+        <NButton type="primary" @click="onSubmit">{{ $t('common.save') }}</NButton>
       </NFlex>
     </n-modal>
   </div>

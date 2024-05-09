@@ -12,9 +12,12 @@ import {
   deviceListAll,
   deviceMetricsConditionMenu
 } from '@/service/api/automation';
+import { $t } from '@/locales';
+
 interface Emits {
   (e: 'conditionChose', data: any): void;
 }
+
 const route = useRoute();
 const emit = defineEmits<Emits>();
 const loadingSelect = ref(false);
@@ -568,6 +571,7 @@ interface Props {
   // eslint-disable-next-line vue/no-unused-properties,vue/prop-name-casing
   device_config_id?: string | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   // eslint-disable-next-line vue/require-valid-default-prop
   conditionData: [],
@@ -624,12 +628,12 @@ onMounted(() => {
       size="small"
       :show-feedback="false"
     >
-      (满足以下任意一组条件即可触发)
+      {{ $t('generate.condition-trigger') }}
       <NFlex v-for="(ifGroupItem, ifGroupIndex) in premiseForm.ifGroups" :key="ifGroupIndex" class="w-100%">
         <NCard class="mb-2 w-[calc(100%-78px)]">
           <NFlex v-for="(ifItem, ifIndex) in ifGroupItem" :key="ifIndex" class="ifGroupItem-class mb-2 w-100%">
             <NFlex class="flex-1" align="center">
-              <NTag v-if="ifIndex !== 0" type="success" class="tag-class" size="small">并且</NTag>
+              <NTag v-if="ifIndex !== 0" type="success" class="tag-class" size="small">{{ $t('generate.and') }}</NTag>
               <!-- 选项1条件类型下拉-->
               <NFormItem
                 :show-label="false"
@@ -640,7 +644,7 @@ onMounted(() => {
                 <NSelect
                   v-model:value="ifItem.ifType"
                   :options="ifTypeOptions"
-                  placeholder="请选择"
+                  :placeholder="$t('common.select')"
                   @update-value="data => ifTypeChange(ifItem, data)"
                 />
               </NFormItem>
@@ -655,7 +659,7 @@ onMounted(() => {
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
                     :options="deviceConditionOptions"
-                    placeholder="请选择"
+                    :placeholder="$t('common.select')"
                     clearable
                     @update:value="data => triggerConditionsTypeChange(ifItem, data)"
                   />
@@ -679,7 +683,7 @@ onMounted(() => {
                     >
                       <template #header>
                         <NFlex align="center" class="w-500px">
-                          分组
+                          {{ $t('generate.group') }}
                           <NSelect
                             v-model:value="queryDevice.group_id"
                             :options="deviceGroupOptions"
@@ -687,7 +691,7 @@ onMounted(() => {
                             value-field="id"
                             class="max-w-40"
                             clearable
-                            placeholder="请选择"
+                            :placeholder="$t('common.select')"
                             @update:value="data => getDevice(data, queryDevice.device_name)"
                           />
                           <NInput
@@ -695,14 +699,14 @@ onMounted(() => {
                             v-model:value="queryDevice.device_name"
                             class="flex-1"
                             clearable
-                            placeholder="请输入"
+                            :placeholder="$t('common.input')"
                             @click="handleFocus(ifIndex)"
                           ></NInput>
                           <NButton
                             type="primary"
                             @click.stop="getDevice(queryDevice.group_id, queryDevice.device_name)"
                           >
-                            搜索
+                            {{ $t('common.search') }}
                           </NButton>
                         </NFlex>
                       </template>
@@ -722,7 +726,7 @@ onMounted(() => {
                       :options="deviceConfigOption"
                       label-field="name"
                       value-field="id"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       filterable
                       remote
                       @search="getDeviceConfig"
@@ -740,7 +744,7 @@ onMounted(() => {
                   >
                     <NCascader
                       v-model:value="ifItem.trigger_param"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       :options="ifItem.triggerParamOptions"
                       check-strategy="child"
                       children-field="options"
@@ -767,7 +771,10 @@ onMounted(() => {
                         :rule="premiseFormRules.trigger_value"
                         class="max-w-50 w-full"
                       >
-                        <NInput v-model:value="ifItem.trigger_value" placeholder="多个英文逗号隔开" />
+                        <NInput
+                          v-model:value="ifItem.trigger_value"
+                          :placeholder="$t('generate.separated-by-commas')"
+                        />
                       </NFormItem>
                     </template>
                     <template v-else-if="ifItem.trigger_operator == 'between'">
@@ -778,7 +785,7 @@ onMounted(() => {
                         :rule="premiseFormRules.minValue"
                         class="max-w-35 w-full"
                       >
-                        <NInput v-model:value="ifItem.minValue" placeholder="最小值" />
+                        <NInput v-model:value="ifItem.minValue" :placeholder="$t('generate.min-value')" />
                       </NFormItem>
                       <NFormItem
                         :show-label="false"
@@ -786,7 +793,7 @@ onMounted(() => {
                         :rule="premiseFormRules.maxValue"
                         class="max-w-30 w-full"
                       >
-                        <NInput v-model:value="ifItem.maxValue" placeholder="最大值" />
+                        <NInput v-model:value="ifItem.maxValue" :placeholder="$t('generate.max-value')" />
                       </NFormItem>
                     </template>
                     <template v-else>
@@ -797,7 +804,7 @@ onMounted(() => {
                         :rule="premiseFormRules.trigger_value"
                         class="max-w-40 w-full"
                       >
-                        <NInput v-model:value="ifItem.trigger_value" placeholder="取值" />
+                        <NInput v-model:value="ifItem.trigger_value" :placeholder="$t('generate.value')" />
                       </NFormItem>
                     </template>
                   </template>
@@ -809,7 +816,10 @@ onMounted(() => {
                       :rule="premiseFormRules.trigger_value"
                       class="max-w-40 w-full"
                     >
-                      <NInput v-model:value="ifItem.trigger_value" placeholder="参数，如：{'param1':1}" />
+                      <NInput
+                        v-model:value="ifItem.trigger_value"
+                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                      />
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.trigger_param_type === 'event'">
@@ -820,7 +830,10 @@ onMounted(() => {
                       :rule="premiseFormRules.trigger_value"
                       class="max-w-40 w-full"
                     >
-                      <NInput v-model:value="ifItem.trigger_value" placeholder="参数，如：{'param1':1}" />
+                      <NInput
+                        v-model:value="ifItem.trigger_value"
+                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                      />
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.trigger_param_type === 'status'">
@@ -839,7 +852,7 @@ onMounted(() => {
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
                     :options="timeConditionOptions"
-                    placeholder="请选择"
+                    :placeholder="$t('common.select')"
                   />
                 </NFormItem>
                 <template v-if="ifItem.trigger_conditions_type === '20'">
@@ -855,10 +868,10 @@ onMounted(() => {
                       type="datetime"
                       :time-picker-props="{ format: 'HH:mm' }"
                       format="yyyy-MM-dd HH:mm"
-                      placeholder="请选择日时分"
+                      :placeholder="$t('generate.please-select-day-hour-minute')"
                     />
                   </NFormItem>
-                  <span class="ml-4">未执行</span>
+                  <span class="ml-4">{{ $t('generate.not-executed') }}</span>
                   <NButton text class="refresh-class">
                     <n-icon>
                       <IosRefresh />
@@ -866,7 +879,7 @@ onMounted(() => {
                   </NButton>
                   <span class="ml-4"></span>
                   <NFormItem
-                    label="过期时间"
+                    :label="$t('generate.expiration-time')"
                     label-width="80px"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                     :rule="premiseFormRules.expiration_time"
@@ -874,7 +887,7 @@ onMounted(() => {
                     <NSelect
                       v-model:value="ifItem.expiration_time"
                       :options="expirationTimeOptions"
-                      placeholder="请选择过期时间"
+                      :placeholder="$t('generate.please-select-expiration-time')"
                       class="w-30"
                     />
                   </NFormItem>
@@ -887,7 +900,11 @@ onMounted(() => {
                     :rule="premiseFormRules.task_type"
                     class="max-w-30 w-full"
                   >
-                    <NSelect v-model:value="ifItem.task_type" :options="cycleOptions" placeholder="请选择周期" />
+                    <NSelect
+                      v-model:value="ifItem.task_type"
+                      :options="cycleOptions"
+                      :placeholder="$t('generate.please-select-period')"
+                    />
                   </NFormItem>
                   <template v-if="ifItem.task_type === 'HOUR'">
                     <!--  时间条件下->重复->每小时->选择分-->
@@ -897,10 +914,14 @@ onMounted(() => {
                       :rule="premiseFormRules.hourTimeValue"
                       class="max-w-40 w-full"
                     >
-                      <NTimePicker v-model:value="ifItem.hourTimeValue" placeholder="请选择" format="mm" />
+                      <NTimePicker
+                        v-model:value="ifItem.hourTimeValue"
+                        :placeholder="$t('common.select')"
+                        format="mm"
+                      />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      :label="$t('generate.expiration-time')"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -908,7 +929,7 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        placeholder="请选择过期时间"
+                        :placeholder="$t('generate.please-select-expiration-time')"
                         class="w-30"
                       />
                     </NFormItem>
@@ -923,13 +944,13 @@ onMounted(() => {
                     >
                       <NTimePicker
                         v-model:value="ifItem.dayTimeValue"
-                        placeholder="请选择"
+                        :placeholder="$t('common.select')"
                         value-format="HH:mm"
                         format="HH:mm"
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      :label="$t('generate.expiration-time')"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -937,7 +958,7 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        placeholder="请选择过期时间"
+                        :placeholder="$t('generate.please-select-expiration-time')"
                         class="w-30"
                       />
                     </NFormItem>
@@ -972,13 +993,13 @@ onMounted(() => {
                     >
                       <NTimePicker
                         v-model:value="ifItem.weekTimeValue"
-                        placeholder="请选择"
+                        :placeholder="$t('common.select')"
                         value-format="HH:mm"
                         format="HH:mm"
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      :label="$t('generate.expiration-time')"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -986,7 +1007,7 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        placeholder="请选择过期时间"
+                        :placeholder="$t('generate.please-select-expiration-time')"
                         class="w-35"
                       />
                     </NFormItem>
@@ -1002,7 +1023,7 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.monthChoseValue"
                         :options="mouthRangeOptions"
-                        placeholder="请选择日期"
+                        :placeholder="$t('generate.please-select-date')"
                       />
                     </NFormItem>
                     <NFormItem
@@ -1013,13 +1034,13 @@ onMounted(() => {
                     >
                       <NTimePicker
                         v-model:value="ifItem.monthTimeValue"
-                        placeholder="请选择"
+                        :placeholder="$t('common.select')"
                         value-format="HH:mm"
                         format="HH:mm"
                       />
                     </NFormItem>
                     <NFormItem
-                      label="过期时间"
+                      :label="$t('generate.expiration-time')"
                       label-width="80px"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].expiration_time`"
                       :rule="premiseFormRules.expiration_time"
@@ -1027,7 +1048,7 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        placeholder="请选择过期时间"
+                        :placeholder="$t('generate.please-select-expiration-time')"
                         class="w-30"
                       />
                     </NFormItem>
@@ -1063,7 +1084,7 @@ onMounted(() => {
                   >
                     <NTimePicker
                       v-model:value="ifItem.startTimeValue"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       value-format="HH:mm:ss"
                       format="HH:mm:ss"
                     />
@@ -1077,7 +1098,7 @@ onMounted(() => {
                   >
                     <NTimePicker
                       v-model:value="ifItem.endTimeValue"
-                      placeholder="请选择"
+                      :placeholder="$t('common.select')"
                       value-format="HH:mm:ss"
                       format="HH:mm:ss"
                     />
@@ -1115,7 +1136,7 @@ onMounted(() => {
                 class="absolute right-0"
                 @click="addIfGroupsSubItem(ifGroupIndex)"
               >
-                新增一个条件
+                {{ $t('generate.add-condition') }}
               </NButton>
               <NButton
                 v-if="ifIndex !== 0"
@@ -1123,35 +1144,39 @@ onMounted(() => {
                 class="absolute right-0"
                 @click="deleteIfGroupsSubItem(ifGroupIndex, ifIndex)"
               >
-                删除一个条件
+                {{ $t('generate.delete-condition') }}
               </NButton>
             </NFlex>
           </NFlex>
         </NCard>
         <NButton v-if="ifGroupIndex > 0" type="error" class="relative" @click="deleteIfGroupsItem(ifGroupIndex)">
-          删除组
+          {{ $t('generate.delete-group') }}
         </NButton>
       </NFlex>
     </NForm>
-    <NButton type="primary" class="w-30" @click="addIfGroupItem(null)">新增一个组</NButton>
+    <NButton type="primary" class="w-30" @click="addIfGroupItem(null)">{{ $t('generate.add-group') }}</NButton>
   </NFlex>
 </template>
 
 <style scoped>
 .ifGroupItem-class {
   position: relative;
+
   .tag-class {
     position: absolute;
     top: 5px;
   }
 }
+
 .refresh-class {
   height: 30px;
   font-size: 24px;
 }
+
 :deep(.n-card__content) {
   padding: 10px 10px 4px 10px !important;
 }
+
 .weekChoseValue-box {
   :deep(.n-form-item-feedback-wrapper) {
     position: absolute;

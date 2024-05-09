@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { deviceConfigInfo, deviceDetail, deviceLocation } from '@/service/api';
+import { $t } from '@/locales';
 import TencentMap from './public/tencent-map.vue'; // 路径根据实际位置调整
+
 const props = defineProps<{
   id: string;
   deviceConfigId: string;
@@ -58,16 +60,16 @@ onMounted(getConfigInfo);
 
 <template>
   <div>
-    <NCard title="设备位置" class="mb-4">
+    <NCard :title="$t('generate.device-location')" class="mb-4">
       <n-space>
-        <NInput v-model:value="longitude" placeholder="经度" class="w-140px" />
-        <NInput v-model:value="latitude" placeholder="纬度" class="w-140px" />
+        <NInput v-model:value="longitude" :placeholder="$t('generate.longitude')" class="w-140px" />
+        <NInput v-model:value="latitude" :placeholder="$t('generate.latitude')" class="w-140px" />
 
-        <NButton @click="openMapAndGetPosition">定位</NButton>
+        <NButton @click="openMapAndGetPosition">{{ $t('generate.location') }}</NButton>
       </n-space>
     </NCard>
 
-    <NCard title="扩展信息" class="mb-4">
+    <NCard :title="$t('generate.extension-info')" class="mb-4">
       <template v-for="item in additionInfo" :key="item.name">
         <NFlex justify="space-between" class="mb-24px items-center">
           <div class="flex items-center">
@@ -78,7 +80,7 @@ onMounted(getConfigInfo);
       </template>
     </NCard>
 
-    <NButton @click="handleSave">保存</NButton>
+    <NButton @click="handleSave">{{ $t('common.save') }}</NButton>
     <NModal v-model:show="isShow" class="w-440px flex-center">
       <NCard>
         <TencentMap

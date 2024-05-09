@@ -102,6 +102,7 @@ onUnmounted(() => {
 <template>
   <div class="box">
     <div>
+      <!-- {{  props?.card?.dataSource?.deviceSource[0] }} -->
       <n-switch v-model:value="active" @change="clickSwitch" />
       <div class="switch">{{ $t('generate.switch') }}</div>
     </div>

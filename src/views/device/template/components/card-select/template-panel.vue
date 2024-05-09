@@ -104,7 +104,6 @@ onMounted(fetchBroad);
       :row-height="65"
       @edit="edit"
     />
-
     <AddTemplateCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>

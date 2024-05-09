@@ -19,6 +19,7 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
+      extendParams?: object;
       options: { label: theLabel; value: any }[];
       loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
     }
@@ -54,13 +55,13 @@ const props = defineProps<{
 }>();
 const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
-const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
+const { fetchData, columnsToShow, tableActions, searchConfigs }: any = props;
 const isTableView = ref(true); // 默认显示表格视图
 const dataList = ref([]); // 表格数据列表
 const total = ref(0); // 数据总数
 const currentPage = ref(1); // 当前页码
 const pageSize = ref(10); // 每页显示数量
-const searchCriteria = ref({}); // 每页显示数量
+const searchCriteria: any = ref({}); // 每页显示数量
 
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
@@ -174,7 +175,17 @@ const onUpdatePageSize = newPageSize => {
   getData(); // 更新数据
 };
 // 观察分页和搜索条件的变化，自动重新获取数据
-watchEffect(getData);
+watchEffect(() => {
+  searchConfigs.map((item: any) => {
+    if (item?.extendParams)
+      item?.options.map(oitem => {
+        item?.extendParams.map(eitem => {
+          searchCriteria.value[eitem.label] = oitem[eitem.value];
+        });
+      });
+  });
+  getData();
+});
 
 // 搜索和重置按钮的逻辑
 const handleSearch = () => {
@@ -231,6 +242,7 @@ const loadOptionsOnMount2 = async () => {
 };
 // 使用throttle减少动态加载选项时的请求频率
 const throttledLoadOptionsOnMount = throttle(loadOptionsOnMount, 300);
+
 // 在组件挂载时加载选项
 loadOptionsOnMount('');
 loadOptionsOnMount2();
@@ -362,7 +374,7 @@ loadOptionsOnMount2();
   </n-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .input-style {
   min-width: 140px;
 }

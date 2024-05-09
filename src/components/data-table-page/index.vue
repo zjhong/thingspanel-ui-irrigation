@@ -6,6 +6,7 @@ import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type theLabel = string | (() => string) | undefined;
@@ -111,7 +112,12 @@ const generatedColumns = computed(() => {
       return {
         title: item.label,
         key: item.key,
-        render: row => <>{row[item.key]}</>
+        render: row => {
+          if (item.key === 'ts' && row[item.key]) {
+            return formatDateTime(row[item.key]);
+          }
+          return <>{row[item.key]}</>;
+        }
       };
     });
     // 添加操作列

@@ -14,6 +14,7 @@ import { createNoSelectDeviceColumns, group_columns } from '@/views/device/modul
 import useLoadingEmpty from '@/hooks/common/use-loading-empty';
 import DeviceSelectList from '@/views/device/grouping-details/modules/device-select-list.vue';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 
 const group_data = ref([]);
 const device_data = ref<DeviceManagement.DeviceData[]>([]);
@@ -251,7 +252,7 @@ watch(
                 {{ details_data.detail.description }}
               </NDescriptionsItem>
               <NDescriptionsItem :label="$t('custom.grouping_details.createTime')">
-                {{ details_data.detail.created_at }}
+                {{ formatDateTime(details_data.detail.created_at) }}
               </NDescriptionsItem>
             </NDescriptions>
             <NDivider title-placement="left">{{ $t('custom.grouping_details.subGroup') }}</NDivider>

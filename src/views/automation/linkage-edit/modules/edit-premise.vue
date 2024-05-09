@@ -227,9 +227,7 @@ const triggerSourceChange = (ifItem: any) => {
 };
 
 // const testFocus = () => {
-//   console.log(888);
 //   setTimeout(() => {
-//     console.log(queryDeviceName.value[0]);
 //     queryDeviceName.value[0].focus();
 //   }, 100);
 // };

@@ -177,8 +177,6 @@ const getDevice = async (groupId: any, name: any) => {
 
 const queryDeviceName = ref([] as any);
 const handleFocus = (ifIndex: any) => {
-  console.log(queryDeviceName.value);
-  console.log(ifIndex);
   queryDeviceName.value[ifIndex].focus();
 };
 

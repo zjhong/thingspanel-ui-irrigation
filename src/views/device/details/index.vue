@@ -48,7 +48,7 @@ const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
 const device_is_online = ref(0);
-
+const device_loop = ref(false);
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 
@@ -129,7 +129,9 @@ const rules = {
   }
 };
 const getDeviceDetail = async () => {
+  device_loop.value = false;
   const { error, data } = await deviceDetail(d_id);
+  device_loop.value = true;
   if (!error) {
     device_number.value = data.device_number;
     device_is_online.value = data.is_online;
@@ -260,11 +262,13 @@ watch(
       <div>
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
-            <n-spin size="small" :show="loading">
+            <n-spin v-if="device_loop" size="small" :show="loading">
               <component
                 :is="component.component"
                 :id="d_id as string"
+                :online="device_is_online"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
+                @change="getDeviceDetail"
               />
             </n-spin>
           </n-tab-pane>

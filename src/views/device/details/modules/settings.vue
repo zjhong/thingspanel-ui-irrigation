@@ -18,6 +18,7 @@ import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
+  online: string;
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
@@ -96,12 +97,15 @@ function flattenTree(list: undefined | Option[]): Option[] {
   flatten(list);
   return result;
 }
+const emit = defineEmits(['change']);
 
 const handleUpdateValue = async () => {
-  await deviceLocation({
+  const { error } = await deviceLocation({
     id: props.id,
     is_online: Number(is_online.value)
   });
+
+  !error && emit('change');
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (
@@ -150,6 +154,7 @@ const initData = async () => {
 };
 
 onMounted(() => {
+  is_online.value = String(props.online);
   initData();
   deviceConfigList('');
 });

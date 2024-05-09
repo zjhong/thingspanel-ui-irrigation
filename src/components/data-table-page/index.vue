@@ -20,6 +20,8 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
+      renderLabel?: any;
+      renderTag?: any;
       extendParams?: object;
       options: { label: theLabel; value: any }[];
       loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
@@ -285,6 +287,8 @@ loadOptionsOnMount2();
                 size="small"
                 filterable
                 :options="config.options"
+                :render-label="config.renderLabel"
+                :render-tag="config.renderTag"
                 :placeholder="config.label"
                 class="input-style"
                 @update:value="currentPage = 1"

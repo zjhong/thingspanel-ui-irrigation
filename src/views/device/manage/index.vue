@@ -238,6 +238,7 @@ const searchConfigs = ref<SearchConfig[]>([
     key: 'procotol_dict',
     label: $t('custom.devicePage.unlimitedAccessMode'),
     type: 'select',
+
     extendParams: [
       {
         label: 'procotol_type',

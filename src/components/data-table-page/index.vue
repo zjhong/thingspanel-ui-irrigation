@@ -6,6 +6,7 @@ import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
 export type theLabel = string | (() => string) | undefined;
@@ -19,6 +20,9 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
+      renderLabel?: any;
+      renderTag?: any;
+      extendParams?: object;
       options: { label: theLabel; value: any }[];
       loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
     }
@@ -54,13 +58,13 @@ const props = defineProps<{
 }>();
 const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
-const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
+const { fetchData, columnsToShow, tableActions, searchConfigs }: any = props;
 const isTableView = ref(true); // 默认显示表格视图
 const dataList = ref([]); // 表格数据列表
 const total = ref(0); // 数据总数
 const currentPage = ref(1); // 当前页码
 const pageSize = ref(10); // 每页显示数量
-const searchCriteria = ref({}); // 每页显示数量
+const searchCriteria: any = ref({}); // 每页显示数量
 
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
@@ -111,7 +115,12 @@ const generatedColumns = computed(() => {
       return {
         title: item.label,
         key: item.key,
-        render: row => <>{row[item.key]}</>
+        render: row => {
+          if (item.key === 'ts' && row[item.key]) {
+            return formatDateTime(row[item.key]);
+          }
+          return <>{row[item.key]}</>;
+        }
       };
     });
     // 添加操作列
@@ -174,7 +183,17 @@ const onUpdatePageSize = newPageSize => {
   getData(); // 更新数据
 };
 // 观察分页和搜索条件的变化，自动重新获取数据
-watchEffect(getData);
+watchEffect(() => {
+  searchConfigs.map((item: any) => {
+    if (item?.extendParams && searchCriteria.value[item.key])
+      item?.options.map(oitem => {
+        item?.extendParams.map(eitem => {
+          searchCriteria.value[eitem.label] = oitem[eitem.value];
+        });
+      });
+  });
+  getData();
+});
 
 // 搜索和重置按钮的逻辑
 const handleSearch = () => {
@@ -231,6 +250,7 @@ const loadOptionsOnMount2 = async () => {
 };
 // 使用throttle减少动态加载选项时的请求频率
 const throttledLoadOptionsOnMount = throttle(loadOptionsOnMount, 300);
+
 // 在组件挂载时加载选项
 loadOptionsOnMount('');
 loadOptionsOnMount2();
@@ -267,6 +287,8 @@ loadOptionsOnMount2();
                 size="small"
                 filterable
                 :options="config.options"
+                :render-label="config.renderLabel"
+                :render-tag="config.renderTag"
                 :placeholder="config.label"
                 class="input-style"
                 @update:value="currentPage = 1"
@@ -362,7 +384,7 @@ loadOptionsOnMount2();
   </n-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .input-style {
   min-width: 140px;
 }

@@ -57,7 +57,6 @@ const dataTotal = ref(0);
 
 const getData = async () => {
   const res = await sceneGet(queryData.value);
-  console.log(res.data);
   content.value.sceneManageList = res.data.list;
   dataTotal.value = res.data.total;
 };

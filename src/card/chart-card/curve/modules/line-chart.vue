@@ -57,10 +57,10 @@ const name = ref('');
 
 const option = ref<EChartsOption>({
   tooltip: {
-    trigger: 'axis',
-    formatter(datas) {
-      return datas[0].value[1] + detail.value.data[0].unit;
-    }
+    trigger: 'axis'
+    // formatter(datas) {
+    //   return datas[0].value[1] + detail.value.data[0].unit;
+    // }
   },
   legend: {
     data: legendData.value
@@ -427,7 +427,13 @@ const setSeries: (dataSource) => void = async dataSource => {
           emphasis: {
             focus: 'series'
           },
-          data: deviceList.value[index]
+          data: deviceList.value[index],
+          // Mouse moves into add unit
+          tooltip: {
+            valueFormatter(value) {
+              return value + detail?.value.data[0].unit;
+            }
+          }
         };
       }) || [];
   }

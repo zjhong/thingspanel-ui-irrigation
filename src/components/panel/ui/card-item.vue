@@ -25,10 +25,15 @@ const findCardComponent = (id: string) => {
     >
       {{ data.basicSettings?.title }}
     </div>
-    <div class="p-4">
+    <div class="w p-4">
       <component :is="findCardComponent(cardId || '')" :card="props.data" :view="view" @drag.stop="console.log(1)" />
     </div>
   </NCard>
 </template>
 
-<style scoped></style>
+<style scoped>
+.w {
+  width: 100%;
+  height: 100%;
+}
+</style>

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue';
-import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
@@ -101,14 +100,18 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <NCard :bordered="false" class="card-wrapper">
-    <n-switch v-model:value="active" @change="clickSwitch" />
-    <div class="switch">{{ $t('generate.switch') }}</div>
-  </NCard>
+  <div class="box">
+    <div>
+      <n-switch v-model:value="active" @change="clickSwitch" />
+      <div class="switch">{{ $t('generate.switch') }}</div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
-.card-wrapper {
+.box {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

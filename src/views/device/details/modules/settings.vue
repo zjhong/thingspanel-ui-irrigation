@@ -18,6 +18,7 @@ import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
+  online: string;
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
@@ -102,6 +103,8 @@ const handleUpdateValue = async () => {
     id: props.id,
     is_online: Number(is_online.value)
   });
+
+  // !error && emit('change');
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (
@@ -150,6 +153,7 @@ const initData = async () => {
 };
 
 onMounted(() => {
+  is_online.value = String(props.online);
   initData();
   deviceConfigList('');
 });

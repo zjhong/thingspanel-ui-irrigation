@@ -95,7 +95,7 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
     key: 'created_at',
     title: $t('page.product.update-ota.createTime'),
     render: row => {
-      return formatDateTime(row.created_at);
+      return formatDateTime(row['created_at']);
     }
   },
   {

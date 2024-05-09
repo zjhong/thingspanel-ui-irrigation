@@ -70,7 +70,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     align: 'left',
     width: '280',
     render: row => {
-      return formatDateTime(row.created_at);
+      return formatDateTime(row['created_at']);
     }
   },
   {

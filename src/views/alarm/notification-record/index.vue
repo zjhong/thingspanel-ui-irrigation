@@ -72,7 +72,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     title: '发送时间',
     align: 'left',
     render: row => {
-      return formatDateTime(row.send_time);
+      return formatDateTime(row['send_time']);
     }
   },
   {

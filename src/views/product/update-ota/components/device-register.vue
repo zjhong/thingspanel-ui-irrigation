@@ -182,12 +182,12 @@ const downloadPackage = () => {
         </NSpace>
         <NDataTable
           v-if="activeTab === 'mission'"
-          remote
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
           flex-height
+          remote
           class="flex-1-hidden"
         />
         <div v-if="activeTab === 'info'">

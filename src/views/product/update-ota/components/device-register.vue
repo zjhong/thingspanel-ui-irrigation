@@ -94,7 +94,7 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   {
     key: 'created_at',
     title: $t('page.product.update-ota.createTime'),
-    render: row => {
+    render: (row: any) => {
       return formatDateTime(row.created_at);
     }
   },
@@ -102,7 +102,7 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
     key: 'actions',
     title: $t('common.action'),
     align: 'center',
-    render: row => {
+    render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>

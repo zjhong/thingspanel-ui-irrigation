@@ -42,12 +42,11 @@ const onOpenDialogModal = (val: number) => {
   if (modalIndex.value === 1) {
     console.log('1');
   } else {
-    console.log('2');
-    onlinejson.online_timeout = 0;
-    onlinejson.heartbeat = 0;
+    const { online_timeout, heartbeat }: any = JSON.parse(props.configInfo?.other_config || {});
+    onlinejson.online_timeout = online_timeout || 0;
+    onlinejson.heartbeat = heartbeat || 0;
   }
 };
-
 const onSubmit = async () => {
   onDialogVisble();
   if (modalIndex.value === 1) {

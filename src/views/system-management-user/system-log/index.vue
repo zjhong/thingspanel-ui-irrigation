@@ -69,7 +69,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     title: '时间',
     align: 'left',
     width: '280',
-    render: row => {
+    render: (row: any) => {
       return formatDateTime(row.created_at);
     }
   },

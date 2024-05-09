@@ -26,7 +26,7 @@ const clickSwitch: () => void = async () => {
     };
     await deviceDatas(obj);
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('获取不到设备参数');
   }
 };
 
@@ -36,7 +36,7 @@ const blurClick: () => void = () => {
     flag.value = active0.value === '1';
     clickSwitch();
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('获取不到设备参数');
   }
 };
 
@@ -54,10 +54,10 @@ watch(
     <div class="title">{{ $t('generate.set-default-device-open-status') }}</div>
     <NForm :model="ctx.config">
       <NFormItem :label="$t('generate.open')">
-        <n-input v-model:value="active0" :placeholder="$t('generate.open') + ':1'" />
+        <n-input v-model:value="active0" :placeholder="$t('generate.open') + '1'" />
       </NFormItem>
       <NFormItem :label="$t('generate.close')">
-        <n-input v-model:value="active1" :placeholder="$t('generate.close') + ':1'" />
+        <n-input v-model:value="active1" :placeholder="$t('generate.close') + '0'" />
       </NFormItem>
       <NFormItem>
         <n-button type="info" class="btn" @click="blurClick">{{ $t('page.login.common.confirm') }}</n-button>

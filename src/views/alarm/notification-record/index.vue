@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { getNotificationHistoryList } from '@/service/api/notification';
 import { notificationOptions } from '@/constants/business';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -69,7 +70,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'send_time',
     title: '发送时间',
-    align: 'left'
+    align: 'left',
+    render: (row: any) => {
+      return formatDateTime(row.send_time);
+    }
   },
   {
     key: 'send_content',

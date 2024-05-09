@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import type { ICardDefine } from '@/components/panel/card';
-import poster from './switch.png';
+import poster from './poster.png';
 
 export default {
   id: 'chart-switch',

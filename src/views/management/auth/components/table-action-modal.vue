@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
 import { routeComponentTypeOptions, routeSysFlagOptions, routeTypeOptions } from '@/constants/business';
-import { addElement, editElement } from '@/service/api/route';
+import { addElement, editElement, fetchElementList } from '@/service/api/route';
 import { deepClone } from '@/utils/common/tool';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { icons } from '@/plugins/icon/icons';
@@ -57,12 +57,29 @@ const title = computed(() => {
   };
   return titles[props.type];
 });
-/* eslint-disable logical-assignment-operators */
-const parentOptions = computed(() => {
-  return props.tableList.map((item: CustomRoute.Route) => {
-    return JSON.parse(JSON.stringify(item));
+
+const parentOptions = ref<CustomRoute.Route[]>([]);
+
+async function getTableData() {
+  const { data } = await fetchElementList({
+    page: 1,
+    page_size: 99
   });
-});
+  if (data) {
+    const list: Api.Route.MenuRoute[] = data.list;
+    parentOptions.value = list;
+  }
+}
+
+getTableData();
+
+/* eslint-disable logical-assignment-operators */
+// const parentOptions = computed(() => {
+//   return props.tableList.map((item: CustomRoute.Route) => {
+//     return JSON.parse(JSON.stringify(item));
+//   });
+// });
+
 /* eslint-disable logical-assignment-operators */
 const formRef = ref<HTMLElement & FormInst>();
 

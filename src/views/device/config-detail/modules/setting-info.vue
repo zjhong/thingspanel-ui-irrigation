@@ -60,7 +60,6 @@ const onSubmit = async () => {
         heartbeat: onlinejson.heartbeat
       })
     });
-    router.back();
   }
 };
 </script>

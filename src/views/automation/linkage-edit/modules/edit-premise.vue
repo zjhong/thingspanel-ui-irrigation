@@ -541,8 +541,8 @@ const addIfGroupItem = (data: any) => {
     premiseForm.value.ifGroups.push(groupObj);
   } else {
     groupObj.push(data);
+    premiseForm.value.ifGroups.push(groupObj);
   }
-  premiseForm.value.ifGroups.push(groupObj);
 };
 
 const ifGroupsData = () => {

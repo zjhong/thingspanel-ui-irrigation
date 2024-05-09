@@ -7,6 +7,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { delrles, rlesList } from '@/service/api';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import TableActionModal from './modules/table-action-modal.vue';
 import EditPasswordModal from './modules/edit-password-modal.vue';
 import type { ModalType } from './modules/table-action-modal.vue';
@@ -59,12 +60,18 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'created_at',
     title: '创建日期',
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'updated_at',
     title: '修改日期',
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return formatDateTime(row.updated_at);
+    }
   },
   {
     key: 'actions',

@@ -8,7 +8,7 @@ import { $t } from '@/locales';
 interface Props {
   configInfo?: object | any;
 }
-
+const emit = defineEmits(['change']);
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -52,13 +52,14 @@ const onSubmit = async () => {
   if (modalIndex.value === 1) {
     console.log('1');
   } else {
-    await deviceConfigEdit({
+    const { error }: any = await deviceConfigEdit({
       id: props.configInfo.id,
       other_config: JSON.stringify({
         online_timeout: onlinejson.online_timeout,
         heartbeat: onlinejson.heartbeat
       })
     });
+    !error && emit('change');
   }
 };
 </script>

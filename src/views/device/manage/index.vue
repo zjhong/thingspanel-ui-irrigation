@@ -250,7 +250,7 @@ const searchConfigs = ref<SearchConfig[]>([
           class: 'm-b-5px'
         },
         [
-          h('div', null, option.dict_value as string),
+          h('div', null, option.label as string),
           h(
             'div',
             {

@@ -22,7 +22,7 @@ const props = defineProps<{
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
-
+const emit = defineEmits(['change']);
 const is_online = ref<string>('');
 const treeData = ref();
 type Option = {
@@ -99,10 +99,11 @@ function flattenTree(list: undefined | Option[]): Option[] {
 }
 
 const handleUpdateValue = async () => {
-  await deviceLocation({
+  const { error }: any = await deviceLocation({
     id: props.id,
     is_online: Number(is_online.value)
   });
+  !error && emit('change');
 };
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (

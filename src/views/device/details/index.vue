@@ -144,7 +144,6 @@ const getDeviceDetail = async () => {
     } else {
       components = components.filter(item => item.key !== 'device-analysis');
     }
-
     send(
       JSON.stringify({
         device_id: d_id,
@@ -262,12 +261,13 @@ watch(
       <div>
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
-            <n-spin v-if="device_loop" size="small" :show="loading">
+            <n-spin size="small" :show="loading">
               <component
                 :is="component.component"
                 :id="d_id as string"
                 :online="device_is_online"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
+                @change="getDeviceDetail"
               />
             </n-spin>
           </n-tab-pane>

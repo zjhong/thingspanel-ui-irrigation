@@ -54,11 +54,12 @@ const deleteDevice = async id => {
 };
 
 const handleLook = (id: string) => {
+  console.log('测试跳转id--', id);
   routerPushByKey('device_details-child', {
-    query: {
-      d_id: id
-    }
-  }).catch(error => error);
+    query: { d_id: id }
+  }).catch(error => {
+    console.log('error----', error);
+  });
 };
 
 const handleSetAddress = async (id, subDeviceAddr) => {

@@ -120,9 +120,6 @@ const deviceVisible = ref(false);
 const checkDevice = () => {
   deviceVisible.value = true;
 };
-const deviceChange = value => {
-  console.log(value);
-};
 </script>
 
 <template>
@@ -151,7 +148,6 @@ const deviceChange = value => {
               v-model:visible="deviceVisible"
               v-model:selected-keys="formModel.device_id_list"
               :edit-data="props.editData"
-              @success="deviceChange"
             />
           </NSpace>
         </NFormItemGridItem>

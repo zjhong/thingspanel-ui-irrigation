@@ -120,14 +120,11 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<productDeviceRecord | null>(null);
-
 /**
  * 添加升级任务
  */
 function handleAddTable() {
   // editData.value = null;
-  console.log(props.record)
   openModal();
   setModalType('add');
 }

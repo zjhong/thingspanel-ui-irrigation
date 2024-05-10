@@ -39,11 +39,6 @@ function setTableData(data: PreproductDeviceRecord[]) {
   tableData.value = data;
 }
 const exportFile = async () => {
-  if (!queryParams.batch_number) {
-    return window.$message?.error(
-      $t("common.input") + $t("page.product.list.batchNumber"),
-    );
-  }
   const { data } = await exportDevice({
     ...queryParams,
     page: undefined,

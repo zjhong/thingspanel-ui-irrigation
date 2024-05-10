@@ -109,11 +109,12 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     key: 'activate_flag',
     title: $t('page.product.list.activeStatus'),
     render: row => {
-      return row.activate_flag === 'inactive' || row.activate_flag === 'N'
-        ? $t('page.product.list.noActive')
-        : row.activate_flag === 'active'
-          ? $t('page.product.list.active')
-          : '-';
+      if (row.activate_flag === 'inactive' || row.activate_flag === 'N') {
+        return $t('page.product.list.noActive');
+      } else if (row.activate_flag === 'active') {
+        return $t('page.product.list.active');
+      }
+      return '-';
     }
   },
   {

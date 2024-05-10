@@ -5,6 +5,7 @@ import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { getStaticUrl } from '@/utils/common/tool';
 import { getOtaTaskList } from '@/service/product/update-ota';
 import TableDeviceModal from './table-device-modal.vue';
@@ -92,13 +93,16 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 创建日期
   {
     key: 'created_at',
-    title: $t('page.product.update-ota.createTime')
+    title: $t('page.product.update-ota.createTime'),
+    render: (row: any) => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'actions',
     title: $t('common.action'),
     align: 'center',
-    render: row => {
+    render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
@@ -178,12 +182,12 @@ const downloadPackage = () => {
         </NSpace>
         <NDataTable
           v-if="activeTab === 'mission'"
-          remote
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
           flex-height
+          remote
           class="flex-1-hidden"
         />
         <div v-if="activeTab === 'info'">

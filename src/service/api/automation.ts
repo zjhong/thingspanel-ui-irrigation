@@ -4,6 +4,11 @@ export const deviceListAll = async (params: any) => {
   return await request.get<any>('/device/tenant/list', { params });
 };
 
+/** 获取设备配置下拉菜单 */
+export const deviceConfigAll = async (params: any) => {
+  return await request.get<any>('/device_config/menu', { params });
+};
+
 /** 单个设备动作选择下拉菜单 */
 export const deviceMetricsConditionMenu = async (params: any) => {
   return await request.get<any>(`/device/metrics/condition/menu`, { params });

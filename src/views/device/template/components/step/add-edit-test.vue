@@ -35,6 +35,7 @@ type Rule = {
 type Rules = {
   data_name: Rule;
   data_identifier: Rule;
+  data_type: Rule;
   read_write_flag: Rule;
 };
 
@@ -49,10 +50,15 @@ const fromRules: Rules = {
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheDataIdentifier')
   },
-  read_write_flag: {
+  data_type: {
     required: true,
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheDataType')
+  },
+  read_write_flag: {
+    required: true,
+    trigger: ['blur', 'input'],
+    message: '请输入读写标志'
   }
 };
 
@@ -73,7 +79,6 @@ watch(
         device_template_id: deviceTemplateId,
         data_name: '',
         data_identifier: '',
-        read_write_flag: 'Number',
         unit: '',
         description: ''
       });
@@ -84,6 +89,13 @@ watch(
 
 const generalOptions: any = reactive(
   ['Number', 'String', 'Boolean'].map(v => ({
+    label: v,
+    value: v
+  }))
+);
+
+const readAndWriteOptions: any = reactive(
+  ['R-只读', 'RW-读/写'].map(v => ({
     label: v,
     value: v
   }))
@@ -141,11 +153,18 @@ const clear: () => void = () => {
         :placeholder="$t('device_template.table_header.pleaseEnterTheDataIdentifier')"
       />
     </n-form-item>
-    <n-form-item :label="$t('device_template.table_header.dataType')" path="read_write_flag">
+    <n-form-item :label="$t('device_template.table_header.dataType')" path="data_type">
       <n-select
-        v-model:value="addFrom.read_write_flag"
+        v-model:value="addFrom.data_type"
         :options="generalOptions"
         :placeholder="$t('device_template.table_header.pleaseEnterTheDataType')"
+      />
+    </n-form-item>
+    <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
+      <n-select
+        v-model:value="addFrom.read_write_flag"
+        :options="readAndWriteOptions"
+        :placeholder="$t('generate.enterReadWriteFlag')"
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">

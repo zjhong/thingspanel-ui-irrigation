@@ -10,15 +10,32 @@ import {
   sceneAutomationsLog,
   sceneAutomationsSwitch
 } from '@/service/api/automation';
+import { $t } from '@/locales';
+
 const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
+
+interface Props {
+  // eslint-disable-next-line vue/prop-name-casing
+  device_id?: string;
+  // eslint-disable-next-line vue/prop-name-casing
+  device_config_id?: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  // eslint-disable-next-line vue/require-valid-default-prop
+  device_id: '',
+  device_config_id: ''
+});
 
 const sceneLinkageList = ref([] as any);
 
 // 新建场景
 const linkAdd = () => {
-  routerPushByKey('automation_linkage-edit');
+  routerPushByKey('automation_linkage-edit', {
+    query: { device_id: props.device_id, device_config_id: props.device_config_id }
+  });
 };
 
 // 编辑场景
@@ -39,22 +56,26 @@ const linkActivation = async (item: any) => {
 const queryData = ref({
   name: '',
   page: 1,
-  page_size: 10
+  page_size: 12,
+  device_id: '',
+  device_config_id: ''
 });
 const dataTotal = ref(0);
 
 const getData = async () => {
+  queryData.value.device_id = props.device_id;
+  queryData.value.device_config_id = props.device_config_id;
   const res = await sceneAutomationsGet(queryData.value);
-  sceneLinkageList.value = res.data.list;
+  sceneLinkageList.value = res.data.list || [];
   dataTotal.value = res.data.total;
 };
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// const handleQuery = async () => {
-//   queryData.value.page = 1;
-//   await getData();
-// };
+const handleQuery = async () => {
+  queryData.value.page = 1;
+  await getData();
+};
 const bodyStyle = ref({
-  width: '800px'
+  width: '1000px'
 });
 const execution_result_options = ref([
   {
@@ -71,10 +92,9 @@ const execution_result_options = ref([
   }
 ]);
 const showLog = ref(false);
-console.log(moment().subtract(7, 'day').format());
 const logQuery = ref({
   page: 1,
-  page_size: 12,
+  page_size: 10,
   scene_automation_id: '',
   execution_result: '',
   execution_start_time: '',
@@ -123,7 +143,7 @@ const deleteLink = async (item: any) => {
 const closeLog = () => {
   logQuery.value = {
     page: 1,
-    page_size: 12,
+    page_size: 10,
     scene_automation_id: '',
     execution_result: '',
     execution_start_time: '',
@@ -138,26 +158,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full">
-    <NCard :bordered="false">
+  <div class="w-full">
+    <NCard class="w-full">
       <NFlex justify="space-between" class="mb-4">
-        <NButton type="primary" @click="linkAdd()">+新增联动规则</NButton>
-        <!--        <NFlex align="center" justify="flex-end" :wrap="false">-->
-        <!--          <NInput-->
-        <!--            v-model:value="queryData.name"-->
-        <!--            placeholder="请输入场景联动名称"-->
-        <!--            class="search-input"-->
-        <!--            type="text"-->
-        <!--            clearable-->
-        <!--          >-->
-        <!--            <template #prefix>-->
-        <!--              <NIcon>-->
-        <!--                <IosSearch />-->
-        <!--              </NIcon>-->
-        <!--            </template>-->
-        <!--          </NInput>-->
-        <!--          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>-->
-        <!--        </NFlex>-->
+        <NButton type="primary" @click="linkAdd()">{{ $t('generate.+add-scene-linkage') }}</NButton>
+        <NFlex align="center" justify="flex-end" :wrap="false">
+          <NInput
+            v-model:value="queryData.name"
+            :placeholder="$t('generate.enter-scene-linkage-name')"
+            class="search-input"
+            type="text"
+            clearable
+          ></NInput>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+        </NFlex>
       </NFlex>
       <n-empty
         v-if="sceneLinkageList.length === 0"
@@ -165,78 +179,76 @@ onMounted(() => {
         description="暂无数据"
         class="min-h-60 justify-center"
       ></n-empty>
-      <template v-else>
-        <NGrid x-gap="24" y-gap="16" :cols="24">
-          <NGridItem v-for="(item, index) in sceneLinkageList" :key="index" :span="6">
-            <NCard hoverable>
-              <NFlex justify="space-between" align="center" class="mb-4">
-                <div class="text-16px font-600">
-                  {{ item.name }}
-                </div>
-                <n-switch
-                  v-model:value="item.enabled"
-                  checked-value="Y"
-                  unchecked-value="N"
-                  @update-value="() => linkActivation(item)"
-                />
-              </NFlex>
-              <div>{{ item.description }}</div>
-              <NFlex justify="flex-end" class="mt-4">
-                <NTooltip trigger="hover">
-                  <template #trigger>
-                    <NButton tertiary circle type="warning" @click="linkEdit(item)">
-                      <template #icon>
-                        <n-icon>
-                          <editIcon />
-                        </n-icon>
-                      </template>
-                    </NButton>
-                  </template>
-                  编辑
-                </NTooltip>
-                <NTooltip trigger="hover">
-                  <template #trigger>
-                    <NButton circle tertiary type="info" @click="openLog(item)">
-                      <template #icon>
-                        <n-icon>
-                          <copyIcon />
-                        </n-icon>
-                      </template>
-                    </NButton>
-                  </template>
-                  日志
-                </NTooltip>
-                <NTooltip trigger="hover">
-                  <template #trigger>
-                    <NButton circle tertiary type="error" @click="deleteLink(item)">
-                      <template #icon>
-                        <n-icon>
-                          <trashIcon />
-                        </n-icon>
-                      </template>
-                    </NButton>
-                  </template>
-                  删除
-                </NTooltip>
-              </NFlex>
-            </NCard>
-          </NGridItem>
-        </NGrid>
-        <NFlex justify="flex-end" class="mt-4">
-          <NPagination
-            v-model:page="queryData.page"
-            :page-size="queryData.page_size"
-            :item-count="dataTotal"
-            @update:page="getData"
-          />
-        </NFlex>
-      </template>
+      <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem v-for="(item, index) in sceneLinkageList" :key="index">
+          <NCard hoverable style="height: 180px">
+            <NFlex justify="space-between" align="center" class="mb-4">
+              <div class="text-16px font-600">
+                {{ item.name }}
+              </div>
+              <n-switch
+                v-model:value="item.enabled"
+                checked-value="Y"
+                unchecked-value="N"
+                @update-value="() => linkActivation(item)"
+              />
+            </NFlex>
+            <div>{{ item.description }}</div>
+            <NFlex justify="flex-end" class="mt-4">
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton tertiary circle type="warning" @click="linkEdit(item)">
+                    <template #icon>
+                      <n-icon>
+                        <editIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('common.edit') }}
+              </NTooltip>
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton circle tertiary type="info" @click="openLog(item)">
+                    <template #icon>
+                      <n-icon>
+                        <copyIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('page.irrigation.time.log.name') }}
+              </NTooltip>
+              <NTooltip trigger="hover">
+                <template #trigger>
+                  <NButton circle tertiary type="error" @click="deleteLink(item)">
+                    <template #icon>
+                      <n-icon>
+                        <trashIcon />
+                      </n-icon>
+                    </template>
+                  </NButton>
+                </template>
+                {{ $t('common.delete') }}
+              </NTooltip>
+            </NFlex>
+          </NCard>
+        </NGridItem>
+      </NGrid>
+      <NFlex justify="flex-end" class="mt-4">
+        <NPagination
+          v-model:page="queryData.page"
+          :page-size="queryData.page_size"
+          :item-count="dataTotal"
+          @update:page="getData"
+        />
+      </NFlex>
     </NCard>
     <n-modal
       v-model:show="showLog"
       :style="bodyStyle"
       preset="card"
-      title="日志"
+      :title="$t('page.irrigation.time.log.name')"
       size="huge"
       :bordered="false"
       @close="closeLog()"
@@ -247,28 +259,30 @@ onMounted(() => {
           v-model:value="logQuery.execution_result"
           :options="execution_result_options"
           class="max-w-40"
-          placeholder="请选择执行状态"
+          :placeholder="$t('generate.select-execution-status')"
           @update:value="queryLog"
         ></n-select>
-        <NButton type="primary" @click="queryLog()">搜索</NButton>
+        <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
       </NFlex>
       <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
       <template v-else>
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>
             <tr>
-              <th class="w-180px">执行时间</th>
-              <th>执行说明</th>
-              <th class="w-120px">执行状态</th>
+              <th>{{ $t('generate.order-number') }}</th>
+              <th class="w-180px">{{ $t('generate.execution-time') }}</th>
+              <th>{{ $t('generate.execution-description') }}</th>
+              <th class="w-120px">{{ $t('generate.execution-status') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in logData" :key="index">
-              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-100px">{{ index + 1 }}</td>
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td>{{ sceneItem['detail'] }}</td>
               <td>
-                <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>
-                <span v-if="sceneItem['execution_result'] === 'F'">执行失败</span>
+                <span v-if="sceneItem['execution_result'] === 'S'">{{ $t('generate.execution-successful') }}</span>
+                <span v-if="sceneItem['execution_result'] === 'F'">{{ $t('generate.execution-failed') }}</span>
               </td>
             </tr>
           </tbody>
@@ -294,6 +308,7 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 0;
+
   .scene-item {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 18px;
@@ -319,19 +334,23 @@ onMounted(() => {
       align-items: center;
     }
   }
+
   .scene-item:hover {
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
+
   /* 去除每行尾多余的边距 */
   .scene-item:nth-child(3n) {
     margin-right: 0;
   }
 }
+
 .pagination-box {
   display: flex;
   justify-content: flex-end;
 }
+
 .search-input {
   width: 200px;
 }

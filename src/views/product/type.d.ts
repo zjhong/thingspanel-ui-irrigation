@@ -9,8 +9,8 @@ type ProductLocal = {
     createTime: string;
     operate: string;
     edit: string;
-    noActive:string;
-    active:string;
+    noActive: string;
+    active: string;
     register: string;
     delete: string;
     addProduct: string;

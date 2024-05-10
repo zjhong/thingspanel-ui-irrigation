@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { inject } from 'vue';
 import type { IConfigCtx } from '@/components/panel/card';
+import { $t } from '@/locales';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
 
@@ -41,7 +42,7 @@ const options = [
     <NFormItem label="选择icon">
       <NSelect v-model:value="ctx.config.times" multiple :options="options" />
     </NFormItem>
-    <NFormItem label="颜色">
+    <NFormItem :label="$t('generate.color')">
       <NColorPicker v-model:value="ctx.config.color" :show-alpha="false" />
     </NFormItem>
   </NForm>

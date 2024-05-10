@@ -13,10 +13,10 @@ import {
   irrigationTimeDel,
   irrigationTimeDistribute
 } from '@/service/api/irrigation';
+import { $t } from '@/locales';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
 const dialog = useDialog();
@@ -310,7 +310,7 @@ onMounted(async () => {
           <NFormItem :label="$t('page.irrigation.areaOrSpace')" path="district_id">
             <NCascader
               v-model:value="queryParams.district_id"
-              placeholder="请选择"
+              :placeholder="$t('common.select')"
               :options="spaceOptions"
               :show-path="true"
               label-field="name"

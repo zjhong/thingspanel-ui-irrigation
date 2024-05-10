@@ -161,7 +161,7 @@ watch(
     >
       <NForm ref="formRef" :model="formItem" :rules="rules" label-placement="left" label-width="auto">
         <!-- Parent group selection using tree select component -->
-        <NFormItem :rules="[rules.parent_id]" label="父分组" path="parent_id">
+        <NFormItem :rules="[rules.parent_id]" :label="$t('generate.parent-group')" path="parent_id">
           <NTreeSelect
             v-model:value="formItem.parent_id"
             :disabled="props.isPidNoEdit"
@@ -172,7 +172,7 @@ watch(
           ></NTreeSelect>
         </NFormItem>
         <!-- Group name input field -->
-        <NFormItem :rules="[rules.name]" label="分组名称" path="name">
+        <NFormItem :rules="[rules.name]" :label="$t('generate.group-name')" path="name">
           <NInput v-model:value="formItem.name" />
         </NFormItem>
         <!-- Description textarea for optional input -->

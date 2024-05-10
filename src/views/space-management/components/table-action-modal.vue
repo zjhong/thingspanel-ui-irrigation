@@ -4,6 +4,7 @@ import type { Ref } from 'vue';
 import type { DataTableColumns, FormInst, FormItemRule, SelectOption } from 'naive-ui';
 import { dataServiceFlagOptions, dataServiceSignModeOptions } from '@/constants/business';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -25,6 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   (e: 'getTableData'): void;
 }
 
@@ -143,6 +145,7 @@ const columns: Ref<DataTableColumns<Columns>> = ref([
 ]) as Ref<DataTableColumns<Columns>>;
 
 const tableData = ref<Columns[]>([]);
+
 function setTableData(data: Columns[]) {
   tableData.value = data;
 }
@@ -167,22 +170,22 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="规则名称" path="name">
+        <NFormItemGridItem :span="24" :label="$t('generate.rule-name')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="签名方式" path="signMode">
+        <NFormItemGridItem :span="24" :label="$t('generate.signature-method')" path="signMode">
           <NSelect v-model:value="formModel.signMode" :options="dataServiceSignModeOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="IP白名单">
-          <NInput v-model:value="formModel.ip" type="textarea" placeholder="多个ip用竖线分割" />
+        <NFormItemGridItem :span="24" :label="$t('generate.ip2')">
+          <NInput v-model:value="formModel.ip" type="textarea" :placeholder="$t('generate.ip')" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="接口支持标志" path="flag">
+        <NFormItemGridItem :span="24" :label="$t('generate.api-support-flag')" path="flag">
           <NSelect v-model:value="formModel.flag" :options="dataServiceFlagOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="描述">
+        <NFormItemGridItem :span="24" :label="$t('device_template.table_header.description')">
           <NInput v-model:value="formModel.desc" type="textarea" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="SQL编写辅助">
+        <NFormItemGridItem :span="24" :label="$t('generate.sql2')">
           <div class="flex-1">
             <NSelect
               v-model:value="formModel.SQLWritingAid"
@@ -197,8 +200,8 @@ watch(
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">确定</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

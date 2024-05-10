@@ -7,7 +7,7 @@ import type { UnwrapRefSimple } from '@vue/reactivity';
 import type { ICardData, ICardDefine, ICardFormIns } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
 import { deviceTemplateSelect } from '@/service/api';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   open: boolean;
@@ -31,7 +31,31 @@ const emit = defineEmits<{
 }>();
 
 const copy = (data: object) => JSON.parse(JSON.stringify(data));
-const selectCard = (item: ICardDefine) => {
+const selectCard = item => {
+  state.curCardData = {
+    cardId: item.cardId,
+    type: item.type,
+    title: item.title,
+    config: item.config || {},
+    basicSettings: item.basicSettings || {},
+    dataSource: item.dataSource || {
+      origin: 'system',
+      systemSource: [{}],
+      deviceSource: [{}]
+    }
+  };
+  formRef.value?.setCard(state.curCardData as any);
+};
+const getImagePath = item => {
+  const cardType = item.data.cardId.match(/curve|demo|switch/);
+
+  if (!cardType) {
+    return '/src/card/chart-card/default/poster.png';
+  }
+
+  return `/src/card/chart-card/${cardType[0]}/poster.png`;
+};
+const selectFinalCard = (item: ICardDefine) => {
   state.curCardData = {
     cardId: item.id,
     type: item.type,
@@ -46,6 +70,7 @@ const selectCard = (item: ICardDefine) => {
   };
   formRef.value?.setCard(state.curCardData as any);
 };
+
 const message = useMessage();
 const widths = ref(['flex-[44]', 'flex-[54]', 'flex-[2]']);
 const count = ref<number>(2);
@@ -164,9 +189,13 @@ onMounted(() => {
   <NModal
     :show="open"
     preset="dialog"
-    title="配置"
+    :title="$t('generate.configuration')"
     size="huge"
-    :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
+    :style="{
+      width: 'calc(100vw - 180px)',
+      height: 'calc(100vh - 50px)',
+      minWidth: '882px'
+    }"
     @close="
       () => {
         count = 2;
@@ -220,7 +249,7 @@ onMounted(() => {
             <div v-if="item1.tab === '设备'">
               <NSelect
                 v-model:value="deviceSelectId"
-                placeholder="请选择设备"
+                :placeholder="$t('generate.select-device')"
                 :options="deviceOptions"
                 value-field="device_id"
                 label-field="device_name"
@@ -237,23 +266,48 @@ onMounted(() => {
             <n-scrollbar style="height: 100%; padding: 4px">
               <div v-if="item1.tab === '设备'">
                 <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
-                  <n-gi
-                    v-for="item in PanelCards.chart.filter(item9 => {
-                      return availableCardIds.includes(item9.id);
-                    })"
-                    :key="item.id"
-                    class="min-w-240px"
-                  >
+                  <n-gi v-for="item in webChartConfig" :key="item.data.cardId" class="min-w-240px">
                     <div
+                      v-if="item.data.cardId.indexOf('chart') != -1"
                       class="cursor-pointer overflow-hidden border rounded p-2px duration-200"
                       :style="
-                        item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
+                        item.data.cardId === state?.curCardData?.cardId
+                          ? 'border-color: #2d3d88'
+                          : 'border-color: #f6f9f8'
                       "
-                      @click="selectCard(item)"
+                      @click="selectCard(item.data)"
                     >
-                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                        {{ $t(item.data.title) }}
+                      </div>
                       <div class="h-148px w-full">
-                        <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
+                        <!--
+ <img
+                          :src="
+                            item.data.cardId.indexOf('chart-curve') != -1
+                              ? '../../../../card/chart-card/curve/poster.png'
+                              : '../chart-card/demo/poster.png'
+                          "
+                          alt=""
+                          style="width: 100%; height: 100%; object-fit: contain"
+-->
+                        <!-- /> -->
+                        <!--                        <img-->
+                        <!--                          v-if="item.data.cardId.indexOf('curve') != -1"-->
+                        <!--                          src="../../../card/chart-card/curve/poster.png"-->
+                        <!--                          style="width: 100%; height: 100%; object-fit: contain"-->
+                        <!--                        />-->
+                        <!--                        <img-->
+                        <!--                          v-if="item.data.cardId.indexOf('demo') != -1"-->
+                        <!--                          src="../../../card/chart-card/demo/poster.png"-->
+                        <!--                          style="width: 100%; height: 100%; object-fit: contain"-->
+                        <!--                        />-->
+                        <!--                        <img-->
+                        <!--                          v-if="item.data.cardId.indexOf('switch') != -1"-->
+                        <!--                          src="../../../card/chart-card/switch/poster.png"-->
+                        <!--                          style="width: 100%; height: 100%; object-fit: contain"-->
+                        <!--                        />-->
+                        <img :src="getImagePath(item)" style="width: 100%; height: 100%; object-fit: contain" />
                       </div>
                     </div>
                   </n-gi>
@@ -267,9 +321,11 @@ onMounted(() => {
                       :style="
                         item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'
                       "
-                      @click="selectCard(item)"
+                      @click="selectFinalCard(item)"
                     >
-                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                      <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                        {{ $t(item.title) }}
+                      </div>
                       <div class="h-148px w-full">
                         <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                       </div>
@@ -281,7 +337,7 @@ onMounted(() => {
           </NTabPane>
         </NTabs>
         <n-float-button v-if="count === 2" position="absolute" :left="4" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开卡片</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-card') }}</spna>
         </n-float-button>
       </div>
       <div :class="'h-full flex-center justify-center border-r bg-[#f6f9f8] p-2 overflow-hidden ' + widths[1]">
@@ -324,7 +380,7 @@ onMounted(() => {
           />
         </div>
         <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">移入展开配置</spna>
+          <spna class="text-12px text-primary-600">{{ $t('generate.expand-configuration') }}</spna>
         </n-float-button>
       </div>
     </div>
@@ -340,16 +396,16 @@ onMounted(() => {
             }
           "
         >
-          取消
+          {{ $t('generate.cancel') }}
         </NButton>
-        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
+        <NButton class="mr-4" type="primary" @click="save">{{ $t('generate.confirm') }}</NButton>
       </div>
     </div>
     <div v-if="count === 1" class="absolute bottom-0 right-0 h-60px flex flex-center">
       <n-icon size="24">
         <InformationCircleSharp class="color-red" />
       </n-icon>
-      <span>您可以移入右侧配置区进入配置，也可以确认后稍后配置</span>
+      <span>{{ $t('generate.configuration-entry') }}</span>
     </div>
   </NModal>
 </template>

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue';
-import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
 import { deviceDatas, deviceDetail } from './api';
 import { createServiceConfig } from '~/env.config';
 
@@ -33,7 +33,7 @@ const setSeries: (obj: any) => void = async obj => {
       console.error('WebSocket连接未建立或已关闭');
     }
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('WebSocket连接未建立或已关闭');
   }
 };
 
@@ -78,7 +78,7 @@ const clickSwitch: () => void = async () => {
     await deviceDatas(obj);
     fun();
   } else {
-    window.$message?.error('查询不到设备');
+    console.log('查询不到设备');
   }
 };
 
@@ -100,14 +100,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <NCard :bordered="false" class="card-wrapper">
-    <n-switch v-model:value="active" @change="clickSwitch" />
-    <div class="switch">开关</div>
-  </NCard>
+  <div class="box">
+    <div>
+      <!-- {{  props?.card?.dataSource?.deviceSource[0] }} -->
+      <n-switch v-model:value="active" @change="clickSwitch" />
+      <div class="switch">{{ $t('generate.switch') }}</div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
-.card-wrapper {
+.box {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

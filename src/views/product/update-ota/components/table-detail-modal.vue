@@ -6,6 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { editOtaTaskDetail, getOtaTaskDetail } from '@/service/product/update-ota';
+import { formatDateTime } from '@/utils/common/datetime';
 import ColumnSetting from './column-setting.vue';
 
 export interface Props {
@@ -184,7 +185,10 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   },
   {
     key: 'updated_at',
-    title: $t('page.product.update-ota.updateTime')
+    title: $t('page.product.update-ota.updateTime'),
+    render: row => {
+      return formatDateTime(row.updated_at);
+    }
     // title: '状态更新时间'
   },
   {

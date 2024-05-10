@@ -5,6 +5,7 @@ import { useLoading } from '@sa/hooks';
 import { Refresh } from '@vicons/ionicons5';
 import type { FlatResponseFailData, FlatResponseSuccessData } from '@sa/axios';
 import { commandDataById } from '@/service/api';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
@@ -91,13 +92,13 @@ onMounted(fetchDataFunction);
         <NIcon size="18">
           <Refresh />
         </NIcon>
-        刷新
+        {{ $t('generate.refresh') }}
       </NButton>
     </NFlex>
-    <NModal v-if="submitApi" v-model:show="showDialog" title="下发属性" class="bg- w-400px">
+    <NModal v-if="submitApi" v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="bg- w-400px">
       <n-card>
         <NForm>
-          <NFormItem v-if="isCommand" label="命令标识符" required :options="options">
+          <NFormItem v-if="isCommand" :label="$t('generate.command-identifier')" required :options="options">
             <NSelect
               v-model:value="commandValue"
               label-field="data_name"
@@ -105,20 +106,28 @@ onMounted(fetchDataFunction);
               :options="options"
               @update:show="getOptions"
             />
-            <span class="ml-4 mr-4">或</span>
-            <NInput v-model:value="commandValue" placeholder="或在此输入" />
+            <span class="ml-4 mr-4">{{ $t('generate.or') }}</span>
+            <NInput v-model:value="commandValue" :placeholder="$t('generate.or-enter-here')" />
           </NFormItem>
-          <NFormItem label="属性">
+          <NFormItem :label="$t('generate.attribute')">
             <NInput v-model:value="textValue" type="textarea" />
           </NFormItem>
           <NFlex justify="end">
-            <NButton @click="closeDialog">取消</NButton>
-            <NButton type="primary" @click="submit">下发</NButton>
+            <NButton @click="closeDialog">{{ $t('generate.cancel') }}</NButton>
+            <NButton type="primary" @click="submit">{{ $t('page.irrigation.distribute') }}</NButton>
           </NFlex>
         </NForm>
       </n-card>
     </NModal>
     <NDataTable class="mb-4 mt-4" :loading="loading" :columns="tableColumns" :data="tableData" />
-    <NPagination v-if="!noRefresh" :page-count="page_coune" :page="the_page" :page-size="4" @update:page="updatePage" />
+    <div class="flex flex-justify-end">
+      <NPagination
+        v-if="!noRefresh"
+        :page-count="page_coune"
+        :page="the_page"
+        :page-size="4"
+        @update:page="updatePage"
+      />
+    </div>
   </div>
 </template>

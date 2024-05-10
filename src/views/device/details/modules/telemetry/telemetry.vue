@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { onMounted, onUnmounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
-import { NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
 import { DocumentOnePage24Regular } from '@vicons/fluent';
 import { useWebSocket } from '@vueuse/core';
+import { MovingNumbers } from 'moving-numbers-vue3';
 import {
   getSimulation,
   getTelemetryLogList,
@@ -16,26 +16,19 @@ import {
 } from '@/service/api';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '@/service/api/device';
+import { $t } from '@/locales';
 import HistoryData from './modules/history-data.vue';
 import TimeSeriesData from './modules/time-series-data.vue';
 import { useLoading } from '~/packages/hooks';
 import { createServiceConfig } from '~/env.config';
+
 const props = defineProps<{
   id: string;
 }>();
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
-wsUrl += `/telemetry/datas/current/ws`;
-// eslint-disable-next-line no-constant-binary-expression
-
-const { status, send, close } = useWebSocket(wsUrl, {
-  heartbeat: {
-    message: 'ping',
-    interval: 8000,
-    pongTimeout: 3000
-  }
-});
+wsUrl += '/telemetry/datas/current/ws';
 const showDialog = ref(false);
 const showLogDialog = ref(false);
 const showHistory = ref(false);
@@ -49,6 +42,7 @@ const sendResult = ref('');
 const tableData = ref([]);
 
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
+const initTelemetryData = ref<any>();
 const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
 const telemetry = ref<any>({});
 const nowTime = ref<any>();
@@ -73,6 +67,45 @@ const cardMargin = ref(15); // 卡片的间距
 const log_page = ref(1);
 const showError = ref(false);
 const erroMessage = ref('');
+
+const { status, send, close } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  },
+  onMessage(ws: WebSocket, event: MessageEvent) {
+    console.log('ws---', ws);
+    if (event.data && event.data !== 'pong') {
+      const info = JSON.parse(event.data);
+      const currTelemetryKey = telemetryData.value
+        .map(item => {
+          return item.key === 'systime' ? false : item.key;
+        })
+        .filter(item => Boolean(item));
+      const newData = telemetryData.value.map(item => {
+        return {
+          ...item,
+          value: info[item.key] || item.value,
+          ts: info.systime || item.ts
+        };
+      });
+      const newTelemetry: any[] = [];
+      for (const key in info) {
+        if (key !== 'systime' && !currTelemetryKey.includes(key)) {
+          newTelemetry.push({
+            ...initTelemetryData.value,
+            key,
+            value: info[key],
+            ts: info.systime
+          });
+        }
+      }
+      telemetryData.value = [...newData, ...newTelemetry];
+    }
+  }
+});
+
 const columns = [
   { title: '指令', key: 'data' },
   {
@@ -80,7 +113,7 @@ const columns = [
     key: 'operation_type',
     render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
   },
-  { title: '操作用户', key: 'user_id' },
+  { title: '操作用户', key: 'username' },
   {
     title: '操作时间',
     key: 'created_at',
@@ -162,12 +195,13 @@ const fetchTelemetry = async () => {
   const { data, error } = await telemetryDataCurrent(props.id);
   if (!error && data) {
     telemetryData.value = data;
-
+    initTelemetryData.value = data[0] || {}; // 存储一份模板
     const dataw = {
       // eslint-disable-next-line no-constant-binary-expression
       device_id: props.id,
       token
     };
+
     send(JSON.stringify(dataw));
   }
 };
@@ -192,6 +226,7 @@ const getDeviceDetail = async () => {
       showLog.value = true;
     }
   }
+  console.log(showLog.value);
 };
 getDeviceDetail();
 
@@ -211,19 +246,15 @@ const handleDeleteTable = async () => {
     fetchTelemetry();
   }
 };
-const renderOption = ({ option }: any) => {
-  delparam.value = {
-    key: option.key,
-    device_id: props.id
-  };
-  return (
-    <NPopconfirm onPositiveClick={handleDeleteTable}>
-      {{
-        default: () => '确认删除',
-        trigger: () => <div class="h-22px w-90px text-center">删除</div>
-      }}
-    </NPopconfirm>
-  );
+
+const handleSelect = (key, item) => {
+  if (String(key) === '1') {
+    delparam.value = {
+      key: item.key,
+      device_id: props.id
+    };
+    handleDeleteTable();
+  }
 };
 const copy = event => {
   const input = event.target;
@@ -246,36 +277,38 @@ onUnmounted(() => {
   <n-card class="w-full">
     <!-- 第一行 -->
     <NFlex justify="space-between">
-      <n-button type="primary" class="mb-4" @click="openDialog">下发控制</n-button>
+      <n-button type="primary" class="mb-4" @click="openDialog">{{ $t('generate.issue-control') }}</n-button>
 
-      <n-button v-model:show="showLog" type="primary" class="mb-4" @click="openUpLog">模拟上报数据</n-button>
+      <n-button v-if="showLog" type="primary" class="mb-4" @click="openUpLog">
+        {{ $t('generate.simulate-report-data') }}
+      </n-button>
     </NFlex>
 
-    <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+    <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
       <n-card>
         <n-form>
-          <n-form-item label="属性">
+          <n-form-item :label="$t('generate.attribute')">
             <n-input v-model:value="formValue" type="textarea" />
           </n-form-item>
           <n-space align="end">
-            <n-button @click="showDialog = false">取消</n-button>
-            <n-button @click="sends">发送</n-button>
+            <n-button @click="showDialog = false">{{ $t('generate.cancel') }}</n-button>
+            <n-button @click="sends">{{ $t('generate.send') }}</n-button>
           </n-space>
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showLogDialog" title="上报数据" class="w-[900px]">
+    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" class="w-[900px]">
       <n-card>
         <n-form>
           <div style="display: flex; width: 700px; justify-content: space-between">
-            <span>模拟使用MQTT客户端上报数据</span>
-            <span>可复制以上命令到本地电脑模拟上报数据</span>
+            <span>{{ $t('generate.mqtt') }}</span>
+            <span>{{ $t('generate.copy-commands-to-local') }}</span>
           </div>
           <div style="display: flex; margin-top: 15px; margin-bottom: 15px">
             <n-input v-model:value="device_order" type="textarea" style="width: 700px" @click="copy" />
 
             <n-button style="width: 100px; margin-left: 20px; margin-top: 40px" @click="sendSimulationList">
-              发送
+              {{ $t('generate.send') }}
             </n-button>
           </div>
           <div v-if="showError" style="display: flex; width: 700px; border: 2px solid #eee; border-radius: 5px">
@@ -303,7 +336,7 @@ onUnmounted(() => {
       </n-card>
     </n-modal>
 
-    <n-modal v-model:show="showHistory" title="遥测历史数据" class="w-[600px]">
+    <n-modal v-model:show="showHistory" :title="$t('generate.telemetry-history-data')" class="w-[600px]">
       <NCard>
         <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
         <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />
@@ -316,14 +349,13 @@ onUnmounted(() => {
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
               <span>
-                <n-number-animation
+                <MovingNumbers
                   :ref="setItemRef"
                   :data-index="index"
-                  :precision="2"
-                  :duration="800"
-                  :from="0.0"
-                  :to="telemetry[i.key] || i.value"
-                />
+                  class="c1"
+                  :m-num="telemetry[i.key] || i.value"
+                  :quantile-show="true"
+                ></MovingNumbers>
               </span>
 
               <span>{{ i.unit }}</span>
@@ -341,7 +373,7 @@ onUnmounted(() => {
             </template>
             <template #footer>
               <div class="flex justify-end">
-                {{ telemetry[i.key] ? nowTime : dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') }}
+                {{ i.ts ? dayjs(i.ts).format('YYYY-MM-DD HH:mm:ss') : nowTime }}
               </div>
             </template>
             <template #header-extra>
@@ -375,7 +407,7 @@ onUnmounted(() => {
                   <Activity />
                 </NIcon>
                 <NDivider vertical />
-                <n-dropdown trigger="click" :render-option="renderOption" :options="options">
+                <n-dropdown trigger="click" :options="options" @select="handleSelect($event, i)">
                   <svg
                     style="width: 20px"
                     xmlns="http://www.w3.org/2000/svg"
@@ -453,4 +485,3 @@ onUnmounted(() => {
   }
 }
 </style>
-type type type type , NButtontype type type type , NButton

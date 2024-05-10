@@ -39,8 +39,8 @@ export const productLocaleEn: ProductLocal = {
     addType: 'Add Method',
     batchUpload: 'Batch Upload',
     autoGenerate: 'Auto Generate', // 自动生成
-    active:"Active", //已激活
-    noActive:"Inactive", //未激活
+    active: 'Active', // 已激活
+    noActive: 'Inactive' // 未激活
   },
   'update-package': {
     packageList: 'Upgrade Package List',

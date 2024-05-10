@@ -4,6 +4,8 @@ import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { getSystemLogList } from '@/service/api/system-management-user';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -66,7 +68,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     key: 'created_at',
     title: '时间',
     align: 'left',
-    width: '280'
+    width: '280',
+    render: (row: any) => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'ip',
@@ -105,16 +110,16 @@ getTableData();
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="系统日志" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.system-log')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="用户名" path="name">
+          <NFormItem :label="$t('generate.username')" path="name">
             <NInput v-model:value="queryParams.username" />
           </NFormItem>
           <NFormItem path="selected_time">
             <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
           </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">查询</NButton>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
         </NForm>
         <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
         <div class="pagination-box">

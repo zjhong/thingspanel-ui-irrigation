@@ -128,7 +128,7 @@ watch(
       tableData.value = [];
     }
     if (!error && data && initialOptions.value.series) {
-      tableData.value = data;
+      tableData.value = data.reverse();
       initialOptions.value.series.forEach(series => {
         series.data = data.map(item => {
           return [item.x, item.y];

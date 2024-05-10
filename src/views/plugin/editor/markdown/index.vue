@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref, watch } from 'vue';
 import Vditor from 'vditor';
 import 'vditor/dist/index.css';
 import { useThemeStore } from '@/store/modules/theme';
+import { $t } from '@/locales';
 
 const theme = useThemeStore();
 
@@ -38,7 +39,7 @@ onUnmounted(() => {
 
 <template>
   <div class="h-full">
-    <NCard title="markdown插件" :bordered="false" class="rounded-8px shadow-sm">
+    <NCard :title="$t('generate.markdown-plugin')" :bordered="false" class="rounded-8px shadow-sm">
       <div ref="domRef"></div>
       <template #footer>
         <GithubLink link="https://github.com/Vanessa219/vditor" />

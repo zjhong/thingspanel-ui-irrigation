@@ -5,6 +5,8 @@ import { IosSearch } from '@vicons/ionicons4';
 import moment from 'moment';
 import { sceneActive, sceneDel, sceneGet, sceneLog } from '@/service/api/automation';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
+
 const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
@@ -55,7 +57,6 @@ const dataTotal = ref(0);
 
 const getData = async () => {
   const res = await sceneGet(queryData.value);
-  console.log(res.data);
   content.value.sceneManageList = res.data.list;
   dataTotal.value = res.data.total;
 };
@@ -64,7 +65,7 @@ const handleQuery = async () => {
   await getData();
 };
 const bodyStyle = ref({
-  width: '800px'
+  width: '1000px'
 });
 const showLog = ref(false);
 
@@ -149,11 +150,11 @@ onMounted(() => {
   <div class="h-full w-full">
     <NCard :bordered="false">
       <NFlex justify="space-between" class="mb-4">
-        <NButton type="primary" @click="sceneAdd()">+新增场景</NButton>
+        <NButton type="primary" @click="sceneAdd()">{{ $t('generate.+add-scene') }}</NButton>
         <NFlex align="center" justify="flex-end" :wrap="false">
           <NInput
             v-model:value="queryData.name"
-            placeholder="请输入场景名称"
+            :placeholder="$t('generate.enterSceneName')"
             class="search-input"
             type="text"
             clearable
@@ -164,7 +165,7 @@ onMounted(() => {
               </NIcon>
             </template>
           </NInput>
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </NFlex>
       </NFlex>
       <NEmpty
@@ -177,23 +178,29 @@ onMounted(() => {
         <NTable :bordered="false" :single-line="false">
           <thead>
             <tr>
-              <th>场景名称</th>
-              <th>场景描述</th>
-              <th>创建时间</th>
-              <th>操作</th>
+              <th>{{ $t('generate.order-number') }}</th>
+              <th>{{ $t('generate.scene-name') }}</th>
+              <th>{{ $t('generate.scene-description') }}</th>
+              <th>{{ $t('common.creationTime') }}</th>
+              <th>{{ $t('generate.modification-time') }}</th>
+              <th>{{ $t('generate.operation') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in content.sceneManageList" :key="index">
+              <td class="w-100px">{{ index + 1 }}</td>
               <td>{{ sceneItem.name }}</td>
               <td>{{ sceneItem.description }}</td>
-              <td>{{ moment(sceneItem['created_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-180px">{{ moment(sceneItem['created_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
+              <td class="w-180px">{{ moment(sceneItem['updated_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td class="w-320px">
                 <NFlex justify="space-around">
-                  <NButton tertiary type="success" @click="sceneActivation(sceneItem)">激活</NButton>
-                  <NButton tertiary type="info" @click="sceneEdit(sceneItem)">编辑</NButton>
-                  <NButton tertiary @click="openLog(sceneItem)">日志</NButton>
-                  <NButton tertiary type="error" @click="deleteScene(sceneItem)">删除</NButton>
+                  <NButton tertiary type="success" @click="sceneActivation(sceneItem)">
+                    {{ $t('generate.activate') }}
+                  </NButton>
+                  <NButton tertiary type="info" @click="sceneEdit(sceneItem)">{{ $t('common.edit') }}</NButton>
+                  <NButton tertiary @click="openLog(sceneItem)">{{ $t('page.irrigation.time.log.name') }}</NButton>
+                  <NButton tertiary type="error" @click="deleteScene(sceneItem)">{{ $t('common.delete') }}</NButton>
                 </NFlex>
               </td>
             </tr>
@@ -213,7 +220,7 @@ onMounted(() => {
       v-model:show="showLog"
       :style="bodyStyle"
       preset="card"
-      title="日志"
+      :title="$t('page.irrigation.time.log.name')"
       size="huge"
       :bordered="false"
       @close="logClose()"
@@ -224,28 +231,30 @@ onMounted(() => {
           v-model:value="logQuery.execution_result"
           :options="execution_result_options"
           class="max-w-40"
-          placeholder="请选择执行状态"
+          :placeholder="$t('generate.select-execution-status')"
           @update:value="queryLog"
         ></n-select>
-        <NButton type="primary" @click="queryLog()">搜索</NButton>
+        <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
       </NFlex>
       <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
       <template v-else>
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>
             <tr>
-              <th class="w-180px">执行时间</th>
-              <th>执行说明</th>
-              <th class="w-120px">执行状态</th>
+              <th>{{ $t('generate.order-number') }}</th>
+              <th class="w-180px">{{ $t('generate.execution-time') }}</th>
+              <th>{{ $t('generate.execution-description') }}</th>
+              <th class="w-120px">{{ $t('generate.execution-status') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in logData" :key="index">
-              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD hh:mm:ss') }}</td>
+              <td class="w-100px">{{ index + 1 }}</td>
+              <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td>{{ sceneItem['detail'] }}</td>
               <td>
-                <span v-if="sceneItem['execution_result'] === 'S'">执行成功</span>
-                <span v-if="sceneItem['execution_result'] === 'F'">执行失败</span>
+                <span v-if="sceneItem['execution_result'] === 'S'">{{ $t('generate.execution-successful') }}</span>
+                <span v-if="sceneItem['execution_result'] === 'F'">{{ $t('generate.execution-failed') }}</span>
               </td>
             </tr>
           </tbody>

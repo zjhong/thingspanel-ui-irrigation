@@ -1,14 +1,16 @@
 <script setup lang="tsx">
-import { ref, watch } from 'vue';
+import { h, onBeforeMount, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DrawerPlacement, StepsProps } from 'naive-ui';
 import { NSpace, NTag } from 'naive-ui';
 import _ from 'lodash';
 import type { TreeSelectOption } from 'naive-ui/es/tree-select/src/interface';
+import { localStg } from '@/utils/storage';
 import {
   checkDevice,
   deleteDevice,
   devicCeonnectForm,
+  deviceDictProtocolService,
   deviceGroupTree,
   deviceList,
   getDeviceConfigList,
@@ -31,6 +33,8 @@ const configId = ref();
 const formData = ref();
 const tablePageRef = ref();
 const buttonDisabled = ref(true);
+const showMessage = ref(false);
+const messageColor = ref('');
 const getFormJson = async id => {
   const res = await devicCeonnectForm({ device_id: id });
 
@@ -183,6 +187,7 @@ const actions = [
     }
   }
 ];
+
 const searchConfigs = ref<SearchConfig[]>([
   {
     key: 'group_id',
@@ -230,6 +235,48 @@ const searchConfigs = ref<SearchConfig[]>([
     ]
   },
   {
+    key: 'procotol_dict',
+    label: $t('custom.devicePage.unlimitedAccessMode'),
+    type: 'select',
+    renderLabel(option: any) {
+      const deviceText = {
+        '1': $t('generate.direct-connected-device'),
+        '2': $t('generate.gateway'),
+        '3': $t('custom.device_details.deviceAnalysis')
+      };
+      return h(
+        'div',
+        {
+          class: 'm-b-5px'
+        },
+        [
+          h('div', null, option.dict_value as string),
+          h(
+            'div',
+            {
+              class: ' color-#ccc'
+            },
+            deviceText[option.device_type] as string
+          )
+        ]
+      );
+    },
+    renderTag({ option }: any) {
+      return h('div', option.label as string);
+    },
+    extendParams: [
+      {
+        label: 'procotol_type',
+        value: 'dict_value'
+      },
+      {
+        label: 'device_type',
+        value: 'device_type'
+      }
+    ],
+    options: []
+  },
+  {
     key: 'search',
     label: $t('custom.devicePage.deviceNameOrNumber'),
     type: 'input'
@@ -248,12 +295,31 @@ const dropOption = [
   {
     label: () => $t('custom.devicePage.addByNumber'),
     key: 'number'
+  },
+  {
+    label: () => $t('custom.devicePage.addByServer'),
+    key: 'server'
   }
-  // {
-  //   label: () => $t('custom.devicePage.addByServer'),
-  //   key: 'server'
-  // }
 ];
+const getDictServiceList = async () => {
+  const { data }: any = await deviceDictProtocolService({ language_code: localStg.get('lang') });
+
+  data.map((item: any) => {
+    item.value = item.dict_value + item.device_type;
+    item.label = item.translation;
+    return item;
+  });
+  searchConfigs.value.map((item: any) => {
+    if (item.key === 'procotol_dict') {
+      item.options = data;
+    }
+    return item;
+  });
+};
+
+onBeforeMount(() => {
+  getDictServiceList();
+});
 const topActions = [
   {
     element: () => (
@@ -299,16 +365,29 @@ function handleSelect(key: string | number) {
   activate('bottom', key);
 }
 
+const messageStyle = ref({
+  color: messageColor,
+  marginLeft: '10px',
+  marginTop: '5px'
+});
+
 watch(
   deviceNumber,
   _.debounce(async newDeviceNumber => {
     try {
+      if (!newDeviceNumber) {
+        showMessage.value = false;
+        return;
+      }
       const { data, error } = await checkDevice(newDeviceNumber);
       if (!error && data && data.is_available) {
         buttonDisabled.value = false;
+        messageColor.value = 'rgb(2,153,52)';
       } else {
         buttonDisabled.value = true;
+        messageColor.value = 'rgb(255, 26, 26)';
       }
+      showMessage.value = true;
     } catch (error) {
       console.error(error);
     }
@@ -328,7 +407,11 @@ watch(
       :row-click="goDeviceDetails"
     />
     <n-drawer v-model:show="active" :height="720" :placement="placement" @after-leave="completeHandAdd">
-      <n-drawer-content v-if="addKey === 'hands'" title="手动添加设备" class="flex-center pt-24px">
+      <n-drawer-content
+        v-if="addKey === 'hands'"
+        :title="$t('generate.manually-add-device')"
+        class="flex-center pt-24px"
+      >
         <n-steps :current="current" :status="currentStatus">
           <n-step :title="$t('custom.devicePage.step1Title')" :description="$t('custom.devicePage.step1Desc')" />
           <n-step :title="$t('custom.devicePage.step2Title')" :description="$t('custom.devicePage.step2Desc')" />
@@ -378,7 +461,8 @@ watch(
       </n-drawer-content>
       <n-drawer-content
         v-if="addKey === 'number'"
-        class="flex-center pt-24px"
+        class="flex-left pt-24px"
+        style="margin-left: 500px"
         :title="$t('custom.devicePage.addByNumber')"
       >
         <n-h4 align-text>
@@ -386,15 +470,14 @@ watch(
             <NText strong>{{ $t('custom.devicePage.tips') }}</NText>
           </n-li>
         </n-h4>
-        <div class="mb-6">
+        <div style="display: flex; margin-bottom: 20px">
           <n-input
             v-model:value="deviceNumber"
             :placeholder="$t('custom.devicePage.enterDeviceNumber')"
             class="max-w-240px"
           ></n-input>
-          {{ buttonDisabled ? '' : $t('custom.devicePage.deviceNumberAvailable') }}
+          <NText v-if="showMessage" :style="messageStyle">{{ buttonDisabled ? '设备编号不可用' : '设备可用' }}</NText>
         </div>
-
         <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">
           {{ $t('custom.devicePage.finish') }}
         </n-button>
@@ -428,5 +511,3 @@ watch(
     </n-drawer>
   </div>
 </template>
-
-<style scoped></style>

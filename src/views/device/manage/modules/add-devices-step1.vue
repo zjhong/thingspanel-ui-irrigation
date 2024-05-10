@@ -60,7 +60,9 @@ function handleValidateClick(e: MouseEvent) {
           />
         </n-form-item>
         <n-form-item>
-          <n-button type="primary" attr-type="button" @click="handleValidateClick">下一步</n-button>
+          <n-button type="primary" attr-type="button" @click="handleValidateClick">
+            {{ $t('device_template.nextStep') }}
+          </n-button>
         </n-form-item>
       </n-form>
     </n-card>

@@ -1,15 +1,13 @@
 <script setup lang="ts">
+import sceneLinkage from '@/views/automation/scene-linkage/index.vue';
+
 defineProps<{
   id: string;
 }>();
 </script>
 
 <template>
-  <NCard>
-    <div class="h-500px flex-center flex-col">
-      <n-empty description="暂无数据"></n-empty>
-    </div>
-  </NCard>
+  <sceneLinkage :device_id="id" />
 </template>
 
 <style scoped></style>

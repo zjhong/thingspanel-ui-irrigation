@@ -32,7 +32,7 @@ const columns = [
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   { title: '状态', key: 'status', render: row => formatStatus(row.status) },
-  { title: '命令参数', key: 'data' },
+  { title: '命令内容', key: 'data' },
   { title: '错误信息', key: 'error_message' }
 ];
 </script>

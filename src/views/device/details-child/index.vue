@@ -87,8 +87,8 @@ const save = async () => {
   queryParams.lable = lables.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
 
-  const res = await deviceUpdate(queryParams);
-  if (!res.error) {
+  const { error } = await deviceUpdate(queryParams);
+  if (!error) {
     showDialog.value = false;
     deviceDataStore.fetchData(d_id as string);
   }
@@ -106,15 +106,15 @@ const rules = {
   }
 };
 const getDeviceDetail = async () => {
-  const res = await deviceDetail(d_id);
-  if (res.data) {
-    device_number.value = res.data.device_number;
-    if (res.data.is_online !== 0) {
+  const { data, error } = await deviceDetail(d_id);
+  if (!error) {
+    device_number.value = data.device_number;
+    if (data.is_online !== 0) {
       device_color.value = 'rgb(2,153,52)';
       icon_type.value = 'rgb(2,153,52)';
     }
-    if (res.data.device_config !== undefined) {
-      device_type.value = res.data.device_config.device_type;
+    if (data.device_config !== undefined) {
+      device_type.value = data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
@@ -147,32 +147,34 @@ watch(
     <n-card>
       <div>
         <div style="display: flex; margin-top: -5px">
-          <spna style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</spna>
-          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
+          <span style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</span>
+          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">
+            {{ $t('common.edit') }}
+          </NButton>
         </div>
 
-        <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+        <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
           <n-card>
             <n-form :model="deviceDataStore.deviceData" :rules="rules">
               <div>
-                <NH3>修改设备信息</NH3>
+                <NH3>{{ $t('generate.modify-device-info') }}</NH3>
               </div>
-              <n-form-item label="设备名称" path="name">
+              <n-form-item :label="$t('page.irrigation.group.deviceName')" path="name">
                 <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
-              <n-form-item label="设备编号" path="device_number">
+              <n-form-item :label="$t('generate.device-number')" path="device_number">
                 <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="lable">
                 <n-dynamic-tags v-model:value="lables" />
               </n-form-item>
-              <n-form-item label="设备描述">
+              <n-form-item :label="$t('generate.device-description')">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
                 <NInput v-model:value="deviceDataStore.deviceData.description" type="textarea" />
               </n-form-item>
               <n-space>
-                <n-button @click="close">取消</n-button>
-                <n-button @click="save">保存</n-button>
+                <n-button @click="close">{{ $t('generate.cancel') }}</n-button>
+                <n-button @click="save">{{ $t('common.save') }}</n-button>
               </n-space>
             </n-form>
           </n-card>
@@ -180,12 +182,12 @@ watch(
 
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
-            <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ device_number || '--' }}</spna>
+            <span class="mr-2" style="color: #ccc">ID:</span>
+            <span style="color: #ccc">{{ device_number || '--' }}</span>
           </div>
           <div class="mr-4" style="color: #ccc">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <span class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</span>
+            <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
             <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
@@ -195,13 +197,13 @@ watch(
               class="text-20px text-primary"
               :stroke="icon_type"
             />
-            <spna :style="{ color: device_color }">
+            <span :style="{ color: device_color }">
               {{
                 deviceDataStore?.deviceData?.is_online === 1
                   ? $t('custom.device_details.online')
                   : $t('custom.device_details.offline')
               }}
-            </spna>
+            </span>
           </div>
           <div class="mr-4" style="display: flex">
             <SvgIcon
@@ -212,9 +214,9 @@ watch(
             />
             <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
 
-            <spna style="color: #ccc">
+            <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}
-            </spna>
+            </span>
           </div>
         </NFlex>
       </div>

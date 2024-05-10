@@ -5,6 +5,7 @@ import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, use
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
 import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api/index';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 
 const { routerPushByKey } = useRouterPush();
 const message = useMessage();
@@ -91,14 +92,14 @@ onMounted(fetchBoards);
         <div class="mb-4 flex items-center justify-between">
           <!-- 新建按钮 -->
           <div>
-            <NButton @click="showModal = true">新建看板</NButton>
+            <NButton @click="showModal = true">{{ $t('dashboard_panel.addKanBan') }}</NButton>
           </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">
             <NInput
               v-model:value="nameSearch"
               clearable
-              placeholder="按名称搜索"
+              :placeholder="$t('generate.search-by-name')"
               @clear="
                 () => {
                   nameSearch = '';
@@ -107,7 +108,7 @@ onMounted(fetchBoards);
               "
             />
 
-            <NButton type="primary" @click="fetchBoards">搜索</NButton>
+            <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
           </div>
         </div>
         <!-- 看板列表 -->
@@ -127,7 +128,7 @@ onMounted(fetchBoards);
                   v-if="board.home_flag === 'Y'"
                   class="mr--4 mt--2 h-24px w-24px border border-red-4 rounded-50 text-center text-12px text-red font-600"
                 >
-                  首
+                  {{ $t('generate.first') }}
                 </div>
               </div>
               <!-- 使用NTooltip组件 -->
@@ -169,10 +170,10 @@ onMounted(fetchBoards);
     <NModal v-model:show="showModal" :title="isEditMode ? '编辑看板' : '新建看板'" class="w-600px">
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
-          <NFormItem label="看板名称" path="name">
-            <NInput v-model:value="formData.name" placeholder="请输入看板名称" />
+          <NFormItem :label="$t('generate.dashboard-name')" path="name">
+            <NInput v-model:value="formData.name" :placeholder="$t('generate.enter-dashboard-name')" />
           </NFormItem>
-          <NFormItem label="是否首页">
+          <NFormItem :label="$t('generate.is-homepage')">
             <NSelect
               v-model:value="formData.home_flag"
               :options="[
@@ -181,8 +182,12 @@ onMounted(fetchBoards);
               ]"
             />
           </NFormItem>
-          <NFormItem label="描述">
-            <NInput v-model:value="formData.description" type="textarea" placeholder="请输入描述" />
+          <NFormItem :label="$t('device_template.table_header.description')">
+            <NInput
+              v-model:value="formData.description"
+              type="textarea"
+              :placeholder="$t('generate.enter-description')"
+            />
           </NFormItem>
         </NForm>
         <template #footer>
@@ -194,9 +199,9 @@ onMounted(fetchBoards);
                 clearFormData();
               "
             >
-              取消
+              {{ $t('generate.cancel') }}
             </NButton>
-            <NButton type="primary" @click="submitForm">保存</NButton>
+            <NButton type="primary" @click="submitForm">{{ $t('common.save') }}</NButton>
           </div>
         </template>
       </NCard>

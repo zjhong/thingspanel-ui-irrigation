@@ -10,6 +10,8 @@ import {
   dataServiceStatusOptions
 } from '@/constants/business';
 import { fetchDataServiceList } from '@/service/api_demo/management';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 import SecretKeyModal from './components/secret-key-modal.vue';
@@ -94,7 +96,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'createTime',
     title: '创建时间',
-    align: 'left'
+    align: 'left',
+    render: row => {
+      return formatDateTime(row.createTime);
+    }
   },
   {
     key: 'status',
@@ -207,9 +212,9 @@ init();
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="规则引擎" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">新增</NButton>
+        <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
         <!--
  <n-button type="error">
           <icon-ic-round-delete class="mr-4px text-20px" />
@@ -223,14 +228,14 @@ init();
       </template>
       <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
-          <NFormItem label="规则名称" path="name">
+          <NFormItem :label="$t('generate.rule-name')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="签名方式" path="status">
+          <NFormItem :label="$t('generate.signature-method')" path="status">
             <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
           </NFormItem>
           <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
           </NFormItem>
         </NForm>
         <NDataTable

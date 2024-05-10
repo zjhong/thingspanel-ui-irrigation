@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
+import { useWebSocket } from '@vueuse/core';
 import { useDeviceDataStore } from '@/store/modules/device';
 import Telemetry from '@/views/device/details/modules/telemetry/telemetry.vue';
 import Join from '@/views/device/details/modules/join.vue';
@@ -17,6 +18,9 @@ import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { deviceDetail, deviceUpdate } from '@/service/api/device';
+import { localStg } from '@/utils/storage';
+import { useRouterPush } from '@/hooks/common/router';
+import { createServiceConfig } from '~/env.config';
 
 const { query } = useRoute();
 const appStore = useAppStore();
@@ -40,10 +44,29 @@ let components = [
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
 const lables = ref<string[]>([]);
-const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
+const device_is_online = ref(0);
+const device_loop = ref(false);
+const { otherBaseURL } = createServiceConfig(import.meta.env);
+let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
+
+wsUrl += `/device/online/status/ws`;
+const { send } = useWebSocket(wsUrl, {
+  heartbeat: {
+    message: 'ping',
+    interval: 8000,
+    pongTimeout: 3000
+  },
+  onMessage(ws: WebSocket, event: MessageEvent) {
+    console.log('ws---', ws);
+    if (event.data && event.data !== 'pong') {
+      const info = JSON.parse(event.data);
+      device_is_online.value = info.is_online;
+    }
+  }
+});
 
 const queryParams = reactive({
   lable: '',
@@ -63,7 +86,7 @@ const changeTabs = v => {
 const editConfig = () => {
   showDialog.value = true;
 };
-const close = async () => {
+const closeModal = async () => {
   showDialog.value = false;
   deviceDataStore.fetchData(d_id as string);
 };
@@ -87,8 +110,8 @@ const save = async () => {
   queryParams.lable = lables.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
 
-  const res = await deviceUpdate(queryParams);
-  if (!res.error) {
+  const { error } = await deviceUpdate(queryParams);
+  if (!error) {
     showDialog.value = false;
     deviceDataStore.fetchData(d_id as string);
   }
@@ -106,23 +129,40 @@ const rules = {
   }
 };
 const getDeviceDetail = async () => {
-  const res = await deviceDetail(d_id);
-  if (res.data) {
-    device_number.value = res.data.device_number;
-    if (res.data.is_online !== 0) {
-      device_color.value = 'rgb(2,153,52)';
-      icon_type.value = 'rgb(2,153,52)';
-    }
-    if (res.data.device_config !== undefined) {
-      device_type.value = res.data.device_config.device_type;
+  device_loop.value = false;
+  const { error, data } = await deviceDetail(d_id);
+  device_loop.value = true;
+  if (!error) {
+    device_number.value = data.device_number;
+    device_is_online.value = data.is_online;
+
+    if (data.device_config !== undefined) {
+      device_type.value = data.device_config.device_type;
       if (device_type.value !== '2') {
         components = components.filter(item => item.key !== 'device-analysis');
       }
     } else {
       components = components.filter(item => item.key !== 'device-analysis');
     }
+
+    send(
+      JSON.stringify({
+        device_id: d_id,
+        token: localStg.get('token')
+      })
+    );
   }
 };
+const { routerPushByKey } = useRouterPush();
+const clickConfig: () => void = () => {
+  console.log(deviceDataStore?.deviceData?.device_config_id, 'deviceDataStore');
+  routerPushByKey('device_config-detail', {
+    query: {
+      id: deviceDataStore?.deviceData?.device_config_id
+    }
+  });
+};
+
 onMounted(() => {
   getDeviceDetail();
   deviceDataStore.fetchData(d_id as string);
@@ -147,32 +187,34 @@ watch(
     <n-card>
       <div>
         <div style="display: flex; margin-top: -5px">
-          <spna style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</spna>
-          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">编辑</NButton>
+          <span style="margin-right: 20px">{{ deviceDataStore?.deviceData?.name || '--' }}</span>
+          <NButton v-show="true" type="primary" style="margin-top: -5px" @click="editConfig">
+            {{ $t('common.edit') }}
+          </NButton>
         </div>
 
-        <n-modal v-model:show="showDialog" title="下发属性" class="w-[400px]">
+        <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
           <n-card>
             <n-form :model="deviceDataStore.deviceData" :rules="rules">
               <div>
-                <NH3>修改设备信息</NH3>
+                <NH3>{{ $t('generate.modify-device-info') }}</NH3>
               </div>
-              <n-form-item label="设备名称" path="name">
+              <n-form-item :label="$t('page.irrigation.group.deviceName')" path="name">
                 <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
-              <n-form-item label="设备编号" path="device_number">
+              <n-form-item :label="$t('generate.device-number')" path="device_number">
                 <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="lable">
                 <n-dynamic-tags v-model:value="lables" />
               </n-form-item>
-              <n-form-item label="设备描述">
+              <n-form-item :label="$t('generate.device-description')">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
                 <NInput v-model:value="deviceDataStore.deviceData.description" type="textarea" />
               </n-form-item>
               <n-space>
-                <n-button @click="close">取消</n-button>
-                <n-button @click="save">保存</n-button>
+                <n-button @click="closeModal">{{ $t('generate.cancel') }}</n-button>
+                <n-button @click="save">{{ $t('common.save') }}</n-button>
               </n-space>
             </n-form>
           </n-card>
@@ -180,12 +222,14 @@ watch(
 
         <NFlex style="margin-top: 8px">
           <div class="mr-4">
-            <spna class="mr-2" style="color: #ccc">ID:</spna>
-            <spna style="color: #ccc">{{ d_id || '--' }}</spna>
+            <span class="mr-2" style="color: #ccc">ID:</span>
+            <span style="color: #ccc">{{ d_id || '--' }}</span>
           </div>
           <div class="mr-4" style="color: #ccc">
-            <spna class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</spna>
-            <spna style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</spna>
+            <span class="mr-2">{{ $t('custom.device_details.deviceConfig') }}:</span>
+            <span style="color: blue; cursor: pointer" @click="clickConfig">
+              {{ deviceDataStore?.deviceData?.device_config_name || '--' }}
+            </span>
           </div>
           <div class="mr-4" style="display: flex">
             <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
@@ -193,15 +237,11 @@ watch(
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
               class="text-20px text-primary"
-              :stroke="icon_type"
+              :stroke="device_is_online === 1 ? 'rgb(2,153,52)' : '#ccc'"
             />
-            <spna :style="{ color: device_color }">
-              {{
-                deviceDataStore?.deviceData?.is_online === 1
-                  ? $t('custom.device_details.online')
-                  : $t('custom.device_details.offline')
-              }}
-            </spna>
+            <span :style="{ color: device_is_online === 1 ? 'rgb(2,153,52)' : '#ccc' }">
+              {{ device_is_online === 1 ? $t('custom.device_details.online') : $t('custom.device_details.offline') }}
+            </span>
           </div>
           <div class="mr-4" style="display: flex">
             <SvgIcon
@@ -212,9 +252,9 @@ watch(
             />
             <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
 
-            <spna style="color: #ccc">
+            <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}
-            </spna>
+            </span>
           </div>
         </NFlex>
       </div>
@@ -222,10 +262,11 @@ watch(
       <div>
         <n-tabs v-model:value="tabValue" animated type="line" @update:value="changeTabs">
           <n-tab-pane v-for="component in components" :key="component.key" :tab="component.name" :name="component.key">
-            <n-spin size="small" :show="loading">
+            <n-spin v-if="device_loop" size="small" :show="loading">
               <component
                 :is="component.component"
                 :id="d_id as string"
+                :online="device_is_online"
                 :device-config-id="deviceDataStore?.deviceData?.device_config_id || ''"
               />
             </n-spin>

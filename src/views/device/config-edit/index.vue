@@ -5,12 +5,14 @@ import type { FormInst } from 'naive-ui';
 // import {useMessage} from 'naive-ui';
 import { router } from '@/router';
 import { deviceConfigAdd, deviceConfigEdit, deviceConfigInfo, deviceTemplate } from '@/service/api/device';
+import { $t } from '@/locales';
 
 const route = useRoute();
 // const message = useMessage();
 const configId = ref(route.query.id || null);
 const modalTitle = ref('添加');
 const configForm = ref(defaultConfigForm());
+const isEdit = ref(false);
 
 function defaultConfigForm() {
   return {
@@ -50,7 +52,7 @@ const queryTemplate = ref({
   page_size: 20,
   total: 0
 });
-const deviceTemplateOptions = ref([]);
+const deviceTemplateOptions = ref([{ name: '不绑定', id: '' }]);
 const getDeviceTemplate = () => {
   deviceTemplate(queryTemplate.value).then(res => {
     deviceTemplateOptions.value = deviceTemplateOptions.value.concat(res.data.list);
@@ -61,7 +63,7 @@ const getDeviceTemplate = () => {
 const deviceTemplateScroll = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
   if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
-    if (deviceTemplateOptions.value.length <= queryTemplate.value.total) {
+    if (deviceTemplateOptions.value.length + 1 <= queryTemplate.value.total) {
       queryTemplate.value.page += 1;
       getDeviceTemplate();
     }
@@ -108,8 +110,10 @@ onMounted(async () => {
   // configId.value=<string>route.query.id || ''
   if (configId.value) {
     modalTitle.value = '编辑';
+    isEdit.value = true;
     await getConfig();
   } else {
+    isEdit.value = false;
     modalTitle.value = '添加';
   }
   getDeviceTemplate();
@@ -127,10 +131,10 @@ onMounted(async () => {
         label-width="auto"
         class="w-600"
       >
-        <NFormItem label="设备配置名称" path="name">
-          <NInput v-model:value="configForm.name" placeholder="请输入设备名称" />
+        <NFormItem :label="$t('generate.device-configuration-name')" path="name">
+          <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-device-name')" />
         </NFormItem>
-        <NFormItem label="选择设备功能模板" path="device_template_id">
+        <NFormItem :label="$t('generate.select-device-function-template')" path="device_template_id">
           <NSelect
             v-model:value="configForm.device_template_id"
             :options="deviceTemplateOptions"
@@ -140,12 +144,12 @@ onMounted(async () => {
             @scroll="deviceTemplateScroll"
           ></NSelect>
         </NFormItem>
-        <NFormItem label="设备接入类型" path="device_type">
+        <NFormItem :label="$t('generate.device-access-type')" path="device_type">
           <n-radio-group v-model:value="configForm.device_type" name="device_type">
             <n-space>
-              <n-radio value="1" disabled>直连设备</n-radio>
-              <n-radio value="2" disabled>网关</n-radio>
-              <n-radio value="3" disabled>网关子设备</n-radio>
+              <n-radio value="1" :disabled="isEdit">{{ $t('generate.direct-connected-device') }}</n-radio>
+              <n-radio value="2" :disabled="isEdit">{{ $t('generate.gateway') }}</n-radio>
+              <n-radio value="3" :disabled="isEdit">{{ $t('generate.gateway-sub-device') }}</n-radio>
             </n-space>
           </n-radio-group>
         </NFormItem>
@@ -158,7 +162,7 @@ onMounted(async () => {
         <!--          </n-radio-group>-->
         <!--        </NFormItem>-->
         <NFlex justify="flex-end">
-          <NButton type="primary" @click="handleSubmit">确定</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</NButton>
         </NFlex>
       </NForm>
     </NCard>

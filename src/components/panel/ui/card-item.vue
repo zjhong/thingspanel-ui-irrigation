@@ -1,16 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { usePanelStore } from '@/store/modules/panel';
-import type { ICardData } from '@/components/panel/card';
+// import type { ICardData } from "@/components/panel/card";
 
 const props = defineProps<{
   view?: boolean;
-  data: ICardData;
+  data: any;
 }>();
 const cardId = computed(() => props.data?.cardId);
 const store = usePanelStore();
 const findCardComponent = (id: string) => {
-  return store.$state.cardMap.get(id)?.component || null;
+  console.log('zh_favor', id);
+  const cIds = id.split('-');
+  const cId = `${cIds[0]}-${cIds[1]}`;
+  return store.$state.cardMap.get(cId)?.component || null;
 };
 </script>
 
@@ -22,8 +25,15 @@ const findCardComponent = (id: string) => {
     >
       {{ data.basicSettings?.title }}
     </div>
-    <div class="p-4">
-      <component :is="findCardComponent(cardId || '')" :card="data" :view="view" @drag.stop="console.log(1)" />
+    <div class="w p-4">
+      <component :is="findCardComponent(cardId || '')" :card="props.data" :view="view" @drag.stop="console.log(1)" />
     </div>
   </NCard>
 </template>
+
+<style scoped>
+.w {
+  width: 100%;
+  height: 100%;
+}
+</style>

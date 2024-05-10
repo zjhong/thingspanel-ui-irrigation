@@ -100,7 +100,8 @@ function createDefaultFormModel(): productPackageRecord {
     remark: '',
     signature_type: '',
     target_version: '',
-    version: ''
+    version: '',
+    created_at: ''
   };
   return defaultFormModel;
 }

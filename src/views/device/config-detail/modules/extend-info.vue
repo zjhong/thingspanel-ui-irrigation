@@ -4,19 +4,25 @@ import { onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace, NSwitch, useMessage } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
+import { $t } from '@/locales';
+
 const visible = ref(false);
 const isEdit = ref(false);
 const editIndex = ref(-1);
 const extendFormRef = ref<HTMLElement & FormInst>();
 const extendForm = ref(defaultExtendForm());
 const message = useMessage();
+
 interface Emits {
   (e: 'upDateConfig'): void;
 }
+
 const emit = defineEmits<Emits>();
+
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
@@ -30,6 +36,7 @@ function defaultExtendForm() {
     enable: false
   };
 }
+
 const extendFormRules = ref({
   name: {
     required: true,
@@ -202,7 +209,7 @@ onMounted(() => {
 
 <template>
   <div class="extend-box">
-    <NButton type="primary" @click="addDevice()">+添加扩展信息</NButton>
+    <NButton type="primary" @click="addDevice()">{{ $t('generate.add-extension-info') }}</NButton>
     <NDataTable :columns="columns" :data="extendInfoList" size="small" class="m-tb-10" />
     <!--    <div class="pagination-box">-->
     <!--      &lt;!&ndash; Data table to display device groups &ndash;&gt;-->
@@ -218,21 +225,25 @@ onMounted(() => {
       @after-leave="modalClose"
     >
       <NForm ref="extendFormRef" :model="extendForm" :rules="extendFormRules" label-placement="left" label-width="auto">
-        <NFormItem label="名称" path="name">
-          <NInput v-model:value="extendForm.name" placeholder="请输入设备名称" />
+        <NFormItem :label="$t('page.manage.menu.form.name')" path="name">
+          <NInput v-model:value="extendForm.name" :placeholder="$t('generate.enter-device-name')" />
         </NFormItem>
-        <NFormItem label="类型" path="type">
-          <NSelect v-model:value="extendForm.type" :options="typeOptions" placeholder="请选择类型"></NSelect>
+        <NFormItem :label="$t('generate.type')" path="type">
+          <NSelect
+            v-model:value="extendForm.type"
+            :options="typeOptions"
+            :placeholder="$t('generate.select-type')"
+          ></NSelect>
         </NFormItem>
-        <NFormItem label="默认值" path="default_value">
-          <NInput v-model:value="extendForm.default_value" placeholder="请输入默认值" />
+        <NFormItem :label="$t('generate.default-value')" path="default_value">
+          <NInput v-model:value="extendForm.default_value" :placeholder="$t('generate.enter-default-value')" />
         </NFormItem>
-        <NFormItem label="描述" path="device_ids">
-          <NInput v-model:value="extendForm.desc" placeholder="请输入描述" type="textarea" />
+        <NFormItem :label="$t('device_template.table_header.description')" path="device_ids">
+          <NInput v-model:value="extendForm.desc" :placeholder="$t('generate.enter-description')" type="textarea" />
         </NFormItem>
         <NFlex justify="flex-end">
-          <NButton @click="handleClose">取消</NButton>
-          <NButton type="primary" @click="handleSubmit">确定</NButton>
+          <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</NButton>
         </NFlex>
       </NForm>
     </NModal>

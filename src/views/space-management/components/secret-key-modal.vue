@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useClipboard } from '@vueuse/core';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -47,7 +48,7 @@ function handleCopy() {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" title="查看密钥" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="$t('generate.view-key')" class="w-700px">
     <NSpace vertical>
       <NInput :default-value="secretKey" type="text" readonly @focus="handleCopy" />
     </NSpace>

@@ -8,8 +8,9 @@ import EditAction from '@/views/automation/linkage-edit/modules/edit-action.vue'
 import EditPremise from '@/views/automation/linkage-edit/modules/edit-premise.vue';
 import { sceneAutomationsAdd, sceneAutomationsEdit, sceneAutomationsInfo } from '@/service/api/automation';
 import { useRouterPush } from '@/hooks/common/router';
-const { routerBack } = useRouterPush();
+import { $t } from '@/locales';
 
+const { routerBack } = useRouterPush();
 const dialog = useDialog();
 const route = useRoute();
 const configFormRules = ref({
@@ -34,7 +35,13 @@ const configFormRules = ref({
 });
 const configFormRef = ref<HTMLElement & FormInst>();
 const configForm = ref(defaultConfigForm());
+
 const configId = ref(route.query.id || '');
+const propsData = ref({
+  device_id: route.query.device_id || '',
+  device_config_id: route.query.device_config_id || ''
+});
+
 function defaultConfigForm() {
   return {
     id: '',
@@ -45,6 +52,7 @@ function defaultConfigForm() {
     actions: []
   };
 }
+
 const editPremise = ref();
 const editAction = ref();
 const submitData = async () => {
@@ -271,24 +279,35 @@ onMounted(() => {
         size="small"
       >
         <NFlex>
-          <NFormItem label="名称:" path="name" class="w-150">
-            <NInput v-model:value="configForm.name" placeholder="请输入场景联动名称" />
+          <NFormItem :label="$t('generate.labelName')" path="name" class="w-150">
+            <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-scene-linkage-name')" />
           </NFormItem>
-          <NFormItem label="描述:" path="description" class="w-150">
-            <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" rows="1" />
+          <NFormItem :label="$t('generate.description')" path="description" class="w-150">
+            <NInput
+              v-model:value="configForm.description"
+              type="textarea"
+              :placeholder="$t('generate.enter-description')"
+              rows="1"
+            />
           </NFormItem>
         </NFlex>
-        <NFormItem label="如果:" class="w-100%" path="trigger_condition_groups" :show-feedback="false">
-          <EditPremise ref="editPremise" :condition-data="conditionData" @condition-chose="conditionChose" />
+        <NFormItem :label="$t('generate.if')" class="w-100%" path="trigger_condition_groups" :show-feedback="false">
+          <EditPremise
+            ref="editPremise"
+            :device_id="propsData.device_id"
+            :device_config_id="propsData.device_config_id"
+            :condition-data="conditionData"
+            @condition-chose="conditionChose"
+          />
         </NFormItem>
         <n-divider dashed class="divider-class" />
-        <NFormItem label="那么:" class="w-100%" path="actions" :show-feedback="false">
+        <NFormItem :label="$t('generate.then')" class="w-100%" path="actions" :show-feedback="false">
           <EditAction ref="editAction" :conditions-type="conditionsType" :action-data="actionData" />
         </NFormItem>
       </NForm>
       <n-divider class="divider-class" />
       <NFlex justify="center">
-        <NButton type="primary" @click="submitData">保存场景联动</NButton>
+        <NButton type="primary" @click="submitData">{{ $t('generate.save-scene-linkage') }}</NButton>
       </NFlex>
     </NCard>
   </div>

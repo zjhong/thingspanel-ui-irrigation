@@ -8,17 +8,22 @@ import {
   deviceDetail,
   deviceGroupRelation,
   deviceGroupTree,
+  deviceLocation,
   deviceUpdateConfig,
   getDeviceConfigList,
   getDeviceGroupRelation
 } from '@/service/api';
 import { useDeviceDataStore } from '@/store/modules/device';
+import { $t } from '@/locales';
 
 const props = defineProps<{
   id: string;
+  online: string;
 }>();
 const valueRef = ref<Array<string | number>>([]);
 const device_coding = ref<string>('');
+
+const is_online = ref<string>('');
 const treeData = ref();
 type Option = {
   label: string;
@@ -93,6 +98,12 @@ function flattenTree(list: undefined | Option[]): Option[] {
   return result;
 }
 
+const handleUpdateValue = async () => {
+  await deviceLocation({
+    id: props.id,
+    is_online: Number(is_online.value)
+  });
+};
 const renderSourceList: TransferRenderSourceList = ({ pattern }) => {
   return (
     <NTree
@@ -140,6 +151,7 @@ const initData = async () => {
 };
 
 onMounted(() => {
+  is_online.value = String(props.online);
   initData();
   deviceConfigList('');
 });
@@ -153,32 +165,54 @@ const selectConfig = v => {
 </script>
 
 <template>
-  <div>
-    <NFlex justify="space-between" class="mb-24px mt-8 h-50px items-center">
-      <div class="w-320px flex items-center">
-        <div>设备配置：</div>
-        <NSelect
-          v-model:value="selectedValues"
-          filterable
-          class="w-200px"
-          :options="sOptions"
-          @update:value="selectConfig"
-          @search="deviceConfigList"
-        />
-      </div>
-    </NFlex>
-    <div>
-      <span>设备编码:</span>
-      <span>{{ device_coding }}</span>
-      <NButton type="primary" text class="ml-4">查看</NButton>
+  <div class="flex-col gap-16px p-t-10px">
+    <div class="flex items-center">
+      <div>{{ $t('generate.device-configuration') }}</div>
+      <NSelect
+        v-model:value="selectedValues"
+        filterable
+        class="w-200px"
+        :options="sOptions"
+        @update:value="selectConfig"
+        @search="deviceConfigList"
+      />
     </div>
-    <div class="mt-4 h-60px">
-      设备固件:
+    <div class="flex items-center">
+      <span>{{ $t('generate.deviceCode') }}</span>
+      <span>{{ device_coding }}</span>
+      <NButton type="primary" text class="ml-4">{{ $t('generate.view') }}</NButton>
+    </div>
+
+    <div class="flex-col gap-10px">
+      <div class="flex items-center">
+        <span class="m-r-5px">{{ $t('generate.manualOnlineStatusEdit') }}</span>
+        <n-popover trigger="hover" placement="right">
+          <template #trigger>
+            <span class="h-17px w-20px">
+              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512">
+                <path fill="none" d="M240 304h32l6-160h-44l6 160z"></path>
+                <path
+                  d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208s208-93.31 208-208S370.69 48 256 48zm20 319.91h-40v-40h40zM272 304h-32l-6-160h44z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </span>
+          </template>
+          <span>{{ $t('generate.heartbeatFunctionInfo') }}</span>
+        </n-popover>
+      </div>
+      <div class="flex items-center gap-10px">
+        <n-switch v-model:value="is_online" checked-value="1" unchecked-value="0" @update:value="handleUpdateValue" />
+        <span>{{ is_online === '1' ? $t('custom.device_details.online') : $t('custom.device_details.offline') }}</span>
+      </div>
+    </div>
+    <div class="flex items-center">
+      {{ $t('generate.device-firmware') }}
       <spna class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</spna>
     </div>
 
-    <div>
-      <div class="mb-4">设备分组</div>
+    <div class="flex-1">
+      <div class="mb-4">{{ $t('generate.device-group') }}</div>
       <n-transfer
         ref="transfer"
         v-model:value="valueRef"

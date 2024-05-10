@@ -4,7 +4,7 @@ import type { Ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { irrigationGroupHistoryDetail } from '@/service/api/irrigation';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -30,11 +30,13 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
+
 interface QueryFormModel {
   group_irrigation_history_id: string;
   page: number;
   page_size: number;
 }
+
 const queryParams = reactive<QueryFormModel>({
   group_irrigation_history_id: '',
   page: 1,
@@ -51,10 +53,12 @@ const modalVisible = computed({
 });
 
 const tableData = ref<any>([]);
+
 function setTableData(data: any) {
   console.error(data);
   tableData.value = data;
 }
+
 async function getTableData() {
   startLoading();
   queryParams.group_irrigation_history_id = props.editData?.id || '';
@@ -174,4 +178,3 @@ onMounted(() => {
 </template>
 
 <style scoped></style>
-s

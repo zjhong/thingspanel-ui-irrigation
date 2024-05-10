@@ -11,10 +11,10 @@ import {
   irrigationRotationList
 } from '@/service/api';
 import { irrigationPlanStatus, irrigationPlanStatusOption } from '@/constants/business';
+import { $t } from '@/locales';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
 const dialog = useDialog();

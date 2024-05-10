@@ -6,6 +6,8 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import dayjs from 'dayjs';
 import { getNotificationHistoryList } from '@/service/api/notification';
 import { notificationOptions } from '@/constants/business';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -68,7 +70,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'send_time',
     title: '发送时间',
-    align: 'left'
+    align: 'left',
+    render: (row: any) => {
+      return formatDateTime(row.send_time);
+    }
   },
   {
     key: 'send_content',
@@ -102,10 +107,10 @@ getTableData();
 
 <template>
   <div class="overflow-hidden">
-    <NCard title="通知记录" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.notification-record')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem path="name" label="通知类型:">
+          <NFormItem path="name" :label="$t('generate.notification-type')">
             <NSelect
               v-model:value="queryParams.notification_type"
               :options="notificationOptions"
@@ -116,9 +121,9 @@ getTableData();
             <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
           </NFormItem>
           <NFormItem path="send_target">
-            <NInput v-model:value="queryParams.send_target" placeholder="接收人" />
+            <NInput v-model:value="queryParams.send_target" :placeholder="$t('generate.recipient')" />
           </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </NForm>
         <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
         <div class="pagination-box">

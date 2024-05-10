@@ -19,6 +19,12 @@ export const getDeviceGroup = async (params: any) => {
   return await request.get<any>('/device/group', { params });
 };
 
+//
+/** 接入方式下拉菜单 */
+export const deviceDictProtocolService = async (params: any) => {
+  return await request.get<DeviceManagement.TreeStructure | any>('/dict/protocol/service', params);
+};
+
 /** 获取设备分组树 */
 export const deviceGroupTree = async (params: any) => {
   return await request.get<DeviceManagement.TreeStructure | any>('/device/group/tree', params);
@@ -113,7 +119,7 @@ export const deviceConfigVoucherType = async (params: any) => {
 };
 /** 设备配置-获取设备配置表单 */
 export const protocolPluginConfigForm = async (params: any) => {
-  return await request.get<Api.BaseApi.Data | any>(`/protocol_plugin/config_form`, { params });
+  return await request.get<any>(`/protocol_plugin/config_form`, { params });
 };
 /** 批量新设备配置关联的设备 */
 export const deviceConfigBatch = async (params: any) => {

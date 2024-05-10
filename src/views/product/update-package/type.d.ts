@@ -16,4 +16,5 @@ type productPackageEdit = {
   signature_type: string;
   target_version: string;
   version: string;
+  created_at: string;
 };

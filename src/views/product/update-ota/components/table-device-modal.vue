@@ -150,7 +150,7 @@ const deviceChange = value => {
             <TableActionModal
               v-model:visible="deviceVisible"
               v-model:selected-keys="formModel.device_id_list"
-              :record="props.editData"
+              :edit-data="props.editData"
               @success="deviceChange"
             />
           </NSpace>

@@ -162,8 +162,7 @@ watch(
           <UploadCard
             v-model:value="formModel.batch_file"
             :text="$t('page.product.list.filePlaceholder')"
-            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-"
+            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             source-type="importBatch"
             class="mt-10px"
             :file-type="['xls', 'xlsx']"

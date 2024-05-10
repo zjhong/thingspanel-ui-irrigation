@@ -96,11 +96,12 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     key: 'package_type',
     title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
-      return row.package_type === 1
-        ? $t('page.product.update-package.diff')
-        : row.package_type === 2
-          ? $t('page.product.update-package.full')
-          : '-';
+      if (row.package_type === 1) {
+        return $t('page.product.update-package.diff');
+      } else if (row.package_type === 2) {
+        return $t('page.product.update-package.full');
+      }
+      return '-';
     }
   },
   {
@@ -159,7 +160,7 @@ init();
   <div class="h-full overflow-hidden">
     <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+        <NForm inline label-placement="left" :model="queryParams">
           <NGrid :cols="24" :x-gap="18">
             <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
               <NSelect

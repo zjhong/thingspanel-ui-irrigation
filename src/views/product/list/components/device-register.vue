@@ -22,6 +22,7 @@ const props: DeviceRegisterProps = defineProps({
 const queryParams = reactive({
   batch_number: "",
   device_number: "",
+  activate_flag:"",
   product_id: props.pid,
   page: 1,
   page_size: 10,
@@ -157,6 +158,16 @@ watch(
 );
 // 初始化
 init();
+const activeOptions = [
+  {
+    label:$t("page.product.list.active"),
+    value:'active',              
+  },
+  {
+    label:$t("page.product.list.noActive"),
+    value:'inactive'
+  }
+]
 </script>
 
 <template>
@@ -164,19 +175,30 @@ init();
     <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem
+          <NGrid :cols="24" :x-gap="18">
+          <NFormItemGridItem
+          :span="6"
             :label="$t('page.product.list.batchNumber')"
             path="batchNumber"
           >
             <NInput v-model:value="queryParams.batch_number" />
-          </NFormItem>
-          <NFormItem
+          </NFormItemGridItem>
+          <NFormItemGridItem
+          :span="6"
             :label="$t('page.product.list.deviceNumber')"
             path="deviceNumber"
           >
             <NInput v-model:value="queryParams.device_number" />
-          </NFormItem>
-          <NFormItem>
+          </NFormItemGridItem>
+          <!-- 激活状态 -->
+          <NFormItemGridItem
+          :span="6"
+            :label="$t('page.product.list.activeStatus')"
+            path="activate_flag"
+          >
+            <NSelect :placeHolder="$t('common.select')+$t('page.product.list.activeStatus')"  v-model:value="queryParams.activate_flag" :options="activeOptions" />
+          </NFormItemGridItem>
+          <NFormItemGridItem :span="6">
             <NButton class="w-72px" type="primary" @click="handleQuery">{{
               $t("common.search")
             }}</NButton>
@@ -186,7 +208,9 @@ init();
               @click="handleReset"
               >{{ $t("common.reset") }}</NButton
             >
-          </NFormItem>
+          </NFormItemGridItem>
+        </NGrid>
+
         </NForm>
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>

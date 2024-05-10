@@ -124,7 +124,7 @@ const queryParams = reactive({
   page: 1,
   activate_flag: "active",
   is_enabled: "enabled",
-  device_config_id:props.editData.device_config_id,
+  device_config_id: props?.editData?.device_config_id,
   page_size: 10,
 });
 const tableData = ref<productPackageRecord[]>([]);

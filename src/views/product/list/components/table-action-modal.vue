@@ -183,10 +183,10 @@ watch(
           <NInput v-model:value="formModel.product_model" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" filterable :options="deviceOptions" @search="getList" />
+          <NSelect v-model:value="formModel.device_config_id" filterable :disabled="props.type === 'edit'" :options="deviceOptions" @search="getList" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productKey')" path="product_key">
-          <NInput v-model:value="formModel.product_key" />
+          <NInput v-model:value="formModel.product_key" :disabled="props.type === 'edit'" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.productImage')" path="image_url">
           <UploadCard

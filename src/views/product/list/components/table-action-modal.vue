@@ -1,4 +1,7 @@
 <script setup lang="ts">
+/**
+ * @description 产品编辑与新增弹窗
+ */
 /* ————————————————————————————————————————————— 产品编辑与新增弹窗 ——————————————————————————————————————————————— */
 import { computed, reactive, ref, watch } from "vue";
 import type { FormInst, FormItemRule } from "naive-ui";

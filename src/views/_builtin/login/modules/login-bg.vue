@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
+import BgImage from '@/assets/imgs/bg.jpg';
 // import { getColorPalette } from '@/utils'
 // import { CornerBottom, CornerTop } from './components'
 
@@ -43,7 +44,7 @@ const imageProps = computed(() => {
 const bgColor = computed(() => props.sysSetting.home_background);
 
 const assetImage = new Image();
-assetImage.src = 'src/assets/imgs/bg.jpg';
+assetImage.src = BgImage;
 assetImage.onload = () => {
   isBgLoaded.value = true;
 };

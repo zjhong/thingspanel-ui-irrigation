@@ -104,11 +104,11 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
     title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
       return row.package_type === 1
-        ? $t("page.product.update-package.diff")
+        ? $t('page.product.update-package.diff')
         : row.package_type === 2
-          ? $t("page.product.update-package.full")
-          : "-";
-    },
+          ? $t('page.product.update-package.full')
+          : '-';
+    }
   },
   {
     key: 'module',

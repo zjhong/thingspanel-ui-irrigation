@@ -1,44 +1,38 @@
 <script setup lang="tsx">
-/**
- * @description: 批量选择设备
- */
-import { computed, reactive, ref, watch } from "vue";
-import type { Ref } from "vue";
-import { NButton } from "naive-ui";
-import type {
-  DataTableColumns,
-  DataTableRowKey,
-  PaginationProps,
-} from "naive-ui";
-import { useLoading } from "@sa/hooks";
-import { $t } from "@/locales";
-import { getPreProductList } from "~/src/service/product/list";
+/** @description: 批量选择设备 */
+import { computed, reactive, ref, watch } from 'vue';
+import type { Ref } from 'vue';
+import { NButton } from 'naive-ui';
+import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
+import { getPreProductList } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
   /** 弹窗类型 add: 新增 edit: 编辑 */
-  type?: "add" | "edit";
+  type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
   editData?: productPackageRecord | null;
   selectedKeys: string[];
 }
 
-export type ModalType = NonNullable<Props["type"]>;
+export type ModalType = NonNullable<Props['type']>;
 
-defineOptions({ name: "TableActionModal" });
+defineOptions({ name: 'TableActionModal' });
 
 const props = withDefaults(defineProps<Props>(), {
-  type: "add",
+  type: 'add',
   editData: null,
-  selectedKeys: () => [],
+  selectedKeys: () => []
 });
 
 interface Emits {
-  (e: "update:visible", visible: boolean): void;
+  (e: 'update:visible', visible: boolean): void;
 
   /** 点击协议 */
-  (e: "update:selectedKeys", data: any[]): void;
+  (e: 'update:selectedKeys', data: any[]): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -48,8 +42,8 @@ const modalVisible = computed({
     return props.visible;
   },
   set(visible) {
-    emit("update:visible", visible);
-  },
+    emit('update:visible', visible);
+  }
 });
 
 // (e: 'update:selectedKeys', selectedKeys: string[]): void;
@@ -57,15 +51,15 @@ const selectedKeys = computed({
   get: () => {
     return props.selectedKeys;
   },
-  set: (keys) => {
-    emit("update:selectedKeys", keys);
-  },
+  set: keys => {
+    emit('update:selectedKeys', keys);
+  }
 });
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t("page.product.update-ota.batchSelectDevice"), // 设备配置
-    edit: $t("page.product.list.editProduct"),
+    add: $t('page.product.update-ota.batchSelectDevice'), // 设备配置
+    edit: $t('page.product.list.editProduct')
   };
   return titles[props.type];
 });
@@ -74,7 +68,7 @@ const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
 function createDefaultFormModel() {
   return {
-    name: "",
+    name: '',
     device_type: undefined,
     additional_info: undefined,
     description: undefined,
@@ -83,7 +77,7 @@ function createDefaultFormModel() {
     product_type: undefined,
     remark: undefined,
     device_config_id: undefined,
-    product_key: undefined,
+    product_key: undefined
   };
 }
 
@@ -99,7 +93,7 @@ function handleUpdateFormModelByModalType() {
     },
     edit: () => {
       handleUpdateFormModel(props.editData as productAdd);
-    },
+    }
   };
 
   handlers[props.type]();
@@ -108,24 +102,24 @@ function handleUpdateFormModelByModalType() {
 const backupData = ref([]);
 watch(
   () => props.visible,
-  (newValue) => {
+  newValue => {
     if (newValue) {
       handleUpdateFormModelByModalType();
     } else {
       backupData.value = JSON.parse(JSON.stringify(props.selectedKeys));
     }
-  },
+  }
 );
 const { loading, startLoading, endLoading } = useLoading(false);
 
 const queryParams = reactive({
-  name: "",
-  current_version: "",
+  name: '',
+  current_version: '',
   page: 1,
-  activate_flag: "active",
-  is_enabled: "enabled",
+  activate_flag: 'active',
+  is_enabled: 'enabled',
   device_config_id: props?.editData?.device_config_id,
-  page_size: 10,
+  page_size: 10
 });
 const tableData = ref<productPackageRecord[]>([]);
 
@@ -135,16 +129,16 @@ function setTableData(data: productPackageRecord[]) {
 
 function handleQuery() {
   Object.assign(queryParams, {
-    page: 1,
+    page: 1
   });
   init();
 }
 
 function handleReset() {
   Object.assign(queryParams, {
-    name: "",
-    current_version: "",
-    page: 1,
+    name: '',
+    current_version: '',
+    page: 1
   });
   handleQuery();
 }
@@ -165,7 +159,7 @@ const pagination: PaginationProps = reactive({
     queryParams.page = 1;
     queryParams.page_size = pageSize;
     getTableData();
-  },
+  }
 });
 
 async function getTableData() {
@@ -181,23 +175,23 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
-    type: "selection",
+    type: 'selection',
     checked: (row: productPackageRecord) => {
       return props.selectedKeys.includes(row.id);
-    },
+    }
   },
   {
-    key: "name",
-    title: $t("page.product.update-ota.deviceName"),
+    key: 'name',
+    title: $t('page.product.update-ota.deviceName')
   },
   {
-    key: "current_version",
-    title: $t("page.product.update-package.versionText"),
+    key: 'current_version',
+    title: $t('page.product.update-package.versionText')
   },
   {
-    key: "device_number",
-    title: $t("page.product.list.deviceNumber"),
-  },
+    key: 'device_number',
+    title: $t('page.product.list.deviceNumber')
+  }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
 
 function init() {
@@ -209,11 +203,11 @@ init();
 const rowKey = (row: productPackageRecord) => row.id;
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
-  emit("update:selectedKeys", rowKeys);
+  emit('update:selectedKeys', rowKeys);
 }
 
 const closeModal = () => {
-  emit("update:selectedKeys", backupData.value);
+  emit('update:selectedKeys', backupData.value);
   modalVisible.value = false;
 };
 const onSubmit = () => {
@@ -222,49 +216,26 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <NModal
-    v-model:show="modalVisible"
-    preset="card"
-    :title="title"
-    class="w-800px"
-  >
+  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
     <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
         <div class="h-full flex-col">
           <NForm inline label-placement="left" :model="queryParams">
-            <NFormItem
-              :label="$t('page.product.update-package.versionText')"
-              path="versionText"
-            >
+            <NFormItem :label="$t('page.product.update-package.versionText')" path="versionText">
               <NInput
                 v-model:value="queryParams.current_version"
-                :placeholder="
-                  $t('common.input') +
-                  $t('page.product.update-package.versionText')
-                "
+                :placeholder="$t('common.input') + $t('page.product.update-package.versionText')"
               />
             </NFormItem>
-            <NFormItem
-              :label="$t('page.product.update-ota.deviceName')"
-              path="deviceName"
-            >
+            <NFormItem :label="$t('page.product.update-ota.deviceName')" path="deviceName">
               <NInput
                 v-model:value="queryParams.name"
-                :placeholder="
-                  $t('common.input') + $t('page.product.update-ota.deviceName')
-                "
+                :placeholder="$t('common.input') + $t('page.product.update-ota.deviceName')"
               />
             </NFormItem>
             <NFormItem>
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{
-                $t("common.search")
-              }}</NButton>
-              <NButton
-                class="ml-20px w-72px"
-                type="primary"
-                @click="handleReset"
-                >{{ $t("common.reset") }}</NButton
-              >
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItem>
           </NForm>
           <NDataTable
@@ -281,16 +252,15 @@ const onSubmit = () => {
           />
           <NSpace class="mt-10px pb-12px" justify="space-between">
             <NSpace>
-              {{ $t("page.product.update-ota.selected")
-              }}{{ selectedKeys.length
-              }}{{ $t("page.product.update-ota.selectedNumber") }}
+              {{ $t('page.product.update-ota.selected') }}{{ selectedKeys.length
+              }}{{ $t('page.product.update-ota.selectedNumber') }}
             </NSpace>
             <NSpace align="center" :size="18">
               <NButton @click="closeModal">
-                {{ $t("common.cancel") }}
+                {{ $t('common.cancel') }}
               </NButton>
               <NButton type="primary" @click="onSubmit">
-                {{ $t("common.confirm") }}
+                {{ $t('common.confirm') }}
               </NButton>
             </NSpace>
           </NSpace>

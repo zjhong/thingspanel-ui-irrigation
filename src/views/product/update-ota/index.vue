@@ -1,23 +1,23 @@
 <script setup lang="tsx">
-import { reactive, ref } from "vue";
-import type { Ref } from "vue";
-import { NButton, NSpace } from "naive-ui";
-import type { DataTableColumns, PaginationProps } from "naive-ui";
-import { useBoolean, useLoading } from "@sa/hooks";
-import { $t } from "@/locales";
-import { getOtaPackageList } from "@/service/product/update-package";
-import { getDeviceConfigList } from "@/service/api/device";
-import { formatDateTime } from "@/utils/common/datetime";
-import ColumnSetting from "./components/column-setting.vue";
-import DeviceRegister from "./components/device-register.vue";
+import { reactive, ref } from 'vue';
+import type { Ref } from 'vue';
+import { NButton, NSpace } from 'naive-ui';
+import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
+import { getOtaPackageList } from '@/service/product/update-package';
+import { getDeviceConfigList } from '@/service/api/device';
+import { formatDateTime } from '@/utils/common/datetime';
+import ColumnSetting from './components/column-setting.vue';
+import DeviceRegister from './components/device-register.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 
 const { bool: editPwdVisible, setTrue: openConfig } = useBoolean();
 const queryParams = reactive({
-  name: "",
-  device_config_id: "",
+  name: '',
+  device_config_id: '',
   page: 1,
-  page_size: 10,
+  page_size: 10
 });
 const currentMid = ref();
 const tableData = ref<productPackageRecord[]>([]);
@@ -26,15 +26,15 @@ function setTableData(data: productPackageRecord[]) {
 }
 function handleQuery() {
   Object.assign(queryParams, {
-    page: 1,
+    page: 1
   });
   init();
 }
 function handleReset() {
   Object.assign(queryParams, {
-    name: "",
-    device_config_id: "",
-    page: 1,
+    name: '',
+    device_config_id: '',
+    page: 1
   });
   handleQuery();
 }
@@ -54,7 +54,7 @@ const pagination: PaginationProps = reactive({
     queryParams.page = 1;
     queryParams.page_size = pageSize;
     getTableData();
-  },
+  }
 });
 
 async function getTableData() {
@@ -67,75 +67,71 @@ async function getTableData() {
     endLoading();
   }
 }
-const drawerTitle: Ref<string> = ref("");
-const editData:any = ref<productPackageRecord>();
+const drawerTitle: Ref<string> = ref('');
+const editData: any = ref<productPackageRecord>();
 async function handleRegisterConfig(record: productPackageRecord) {
   currentMid.value = record.id;
   editData.value = record;
   openConfig();
-  drawerTitle.value = `${record.name}-${$t("page.product.list.preRegister")}`;
+  drawerTitle.value = `${record.name}-${$t('page.product.list.preRegister')}`;
 }
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
-    key: "name",
-    title: $t("page.product.update-package.packageName"),
+    key: 'name',
+    title: $t('page.product.update-package.packageName')
   },
   {
-    key: "target_version",
-    title: $t("page.product.update-package.version"),
+    key: 'target_version',
+    title: $t('page.product.update-package.version')
   },
   {
-    key: "version",
-    title: $t("page.product.update-package.versionCode"),
+    key: 'version',
+    title: $t('page.product.update-package.versionCode')
   },
   {
-    key: "device_config_name",
-    title: $t("page.product.update-package.deviceConfig"),
+    key: 'device_config_name',
+    title: $t('page.product.update-package.deviceConfig')
   },
   {
-    key: "package_type",
-    title: $t("page.product.update-package.type"),
+    key: 'package_type',
+    title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
       return row.package_type === 1
-        ? $t("page.product.update-package.diff")
+        ? $t('page.product.update-package.diff')
         : row.package_type === 2
-          ? $t("page.product.update-package.full")
-          : "-";
-    },
+          ? $t('page.product.update-package.full')
+          : '-';
+    }
   },
   {
-    key: "module",
-    title: $t("page.product.update-package.moduleName"),
+    key: 'module',
+    title: $t('page.product.update-package.moduleName')
   },
   {
-    key: "created_at",
-    title: $t("page.product.update-package.createTime"),
-    render: (row) => {
+    key: 'created_at',
+    title: $t('page.product.update-package.createTime'),
+    render: row => {
       return formatDateTime(row.created_at);
-    },
+    }
   },
   {
-    key: "description",
-    title: $t("page.product.update-package.desc"),
+    key: 'description',
+    title: $t('page.product.update-package.desc')
   },
   {
-    key: "actions",
-    title: $t("common.action"),
-    align: "center",
+    key: 'actions',
+    title: $t('common.action'),
+    align: 'center',
     render: (row: productPackageRecord) => {
       return (
-        <NSpace justify={"center"}>
-          <NButton
-            size={"small"}
-            type="primary"
-            onClick={() => handleRegisterConfig(row)}
-          >
-            {$t("page.product.update-ota.lookTask")}
+        <NSpace justify={'center'}>
+          <NButton size={'small'} type="primary" onClick={() => handleRegisterConfig(row)}>
+            {$t('page.product.update-ota.lookTask')}
           </NButton>
         </NSpace>
       );
-    },
-  },
+    }
+  }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
 
 const deviceOptions = ref();
@@ -144,7 +140,7 @@ const getList = async (name?: string) => {
   const { data, error } = await getDeviceConfigList({
     page: 1,
     page_size: 99,
-    name,
+    name
   });
   if (!error && data) {
     deviceOptions.value = data?.list || [];
@@ -161,24 +157,11 @@ init();
 
 <template>
   <div class="h-full overflow-hidden">
-    <NCard
-      :title="$t('page.product.update-ota.otaTitle')"
-      :bordered="false"
-      class="h-full rounded-8px shadow-sm"
-    >
+    <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
-        <NForm
-          ref="queryFormRef"
-          inline
-          label-placement="left"
-          :model="queryParams"
-        >
+        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
           <NGrid :cols="24" :x-gap="18">
-            <NFormItemGridItem
-              :span="6"
-              :label="$t('page.product.list.deviceConfig')"
-              path="email"
-            >
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
               <NSelect
                 v-model:value="queryParams.device_config_id"
                 filterable
@@ -188,23 +171,12 @@ init();
                 @search="getList"
               />
             </NFormItemGridItem>
-            <NFormItemGridItem
-              :span="6"
-              :label="$t('page.product.update-package.packageName')"
-              path="name"
-            >
+            <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
               <NInput v-model:value="queryParams.name" />
             </NFormItemGridItem>
             <NFormItemGridItem>
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{
-                $t("common.search")
-              }}</NButton>
-              <NButton
-                class="ml-20px w-72px"
-                type="primary"
-                @click="handleReset"
-                >{{ $t("common.reset") }}</NButton
-              >
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItemGridItem>
           </NGrid>
         </NForm>
@@ -212,11 +184,8 @@ init();
           <NSpace></NSpace>
           <NSpace align="center" :size="18">
             <NButton size="small" type="primary" @click="getTableData">
-              <IconMdiRefresh
-                class="mr-4px text-16px"
-                :class="{ 'animate-spin': loading }"
-              />
-              {{ $t("common.refreshTable") }}
+              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+              {{ $t('common.refreshTable') }}
             </NButton>
             <ColumnSetting v-model:columns="columns" />
           </NSpace>
@@ -230,16 +199,8 @@ init();
           flex-height
           class="flex-1-hidden"
         />
-        <NDrawer
-          v-model:show="editPwdVisible"
-          display-directive="show"
-          width="80%"
-          placement="right"
-        >
-          <NDrawerContent
-            :title="$t('page.product.update-ota.lookTask')"
-            closable
-          >
+        <NDrawer v-model:show="editPwdVisible" display-directive="show" width="80%" placement="right">
+          <NDrawerContent :title="$t('page.product.update-ota.lookTask')" closable>
             <DeviceRegister :mid="currentMid" :record="editData" />
           </NDrawerContent>
         </NDrawer>

@@ -1,31 +1,31 @@
 <script setup lang="tsx">
 /* ————————————————————————————————————————————— 产品预注册列表 ——————————————————————————————————————————————— */
-import { reactive, ref, watch } from "vue";
-import type { Ref } from "vue";
-import { NButton, NSpace } from "naive-ui";
-import type { DataTableColumns, PaginationProps } from "naive-ui";
-import { useBoolean, useLoading } from "@sa/hooks";
-import { $t } from "@/locales";
-import { exportDevice, getPreProductList } from "@/service/product/list";
-import { formatDateTime } from "@/utils/common/datetime";
-import TableDeviceModal from "./table-device-modal.vue";
-import type { ModalType } from "./table-action-modal.vue";
-import ColumnSetting from "./column-setting.vue";
+import { reactive, ref, watch } from 'vue';
+import type { Ref } from 'vue';
+import { NButton, NSpace } from 'naive-ui';
+import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
+import { exportDevice, getPreProductList } from '@/service/product/list';
+import { formatDateTime } from '@/utils/common/datetime';
+import TableDeviceModal from './table-device-modal.vue';
+import type { ModalType } from './table-action-modal.vue';
+import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const props: DeviceRegisterProps = defineProps({
   pid: {
     type: String,
-    required: true,
-  },
+    required: true
+  }
 });
 const queryParams = reactive({
-  batch_number: "",
-  device_number: "",
-  activate_flag: "",
+  batch_number: '',
+  device_number: '',
+  activate_flag: '',
   product_id: props.pid,
   page: 1,
-  page_size: 10,
+  page_size: 10
 });
 watch(
   props,
@@ -33,7 +33,7 @@ watch(
     queryParams.product_id = props.pid;
     getTableData();
   },
-  { deep: true },
+  { deep: true }
 );
 const tableData = ref<PreproductDeviceRecord[]>([]);
 function setTableData(data: PreproductDeviceRecord[]) {
@@ -43,7 +43,7 @@ const exportFile = async () => {
   const { data } = await exportDevice({
     ...queryParams,
     page: undefined,
-    page_size: undefined,
+    page_size: undefined
   });
   data && window.open(data);
 };
@@ -64,20 +64,20 @@ const pagination: PaginationProps = reactive({
     queryParams.page = 1;
     queryParams.page_size = pageSize;
     getTableData();
-  },
+  }
 });
 function handleQuery() {
   Object.assign(queryParams, {
-    page: 1,
+    page: 1
   });
   init();
 }
 function handleReset() {
   Object.assign(queryParams, {
-    batch_number: "",
-    device_number: "",
-    activate_flag: "",
-    page: 1,
+    batch_number: '',
+    device_number: '',
+    activate_flag: '',
+    page: 1
   });
   handleQuery();
 }
@@ -94,38 +94,38 @@ async function getTableData() {
 
 const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   {
-    key: "device_number",
-    title: $t("page.product.list.deviceNumber"),
+    key: 'device_number',
+    title: $t('page.product.list.deviceNumber')
   },
   {
-    key: "batch_number",
-    title: $t("page.product.list.batchNumber"),
+    key: 'batch_number',
+    title: $t('page.product.list.batchNumber')
   },
   {
-    key: "current_version",
-    title: $t("page.product.list.firmwareVersion"),
+    key: 'current_version',
+    title: $t('page.product.list.firmwareVersion')
   },
   {
-    key: "activate_flag",
-    title: $t("page.product.list.activeStatus"),
-    render: (row) => {
-      return row.activate_flag === "inactive"||row.activate_flag === "N"
-        ? $t("page.product.list.noActive")
-        : row.activate_flag === "active"
-          ? $t("page.product.list.active")
-          : "-";
-    },
+    key: 'activate_flag',
+    title: $t('page.product.list.activeStatus'),
+    render: row => {
+      return row.activate_flag === 'inactive' || row.activate_flag === 'N'
+        ? $t('page.product.list.noActive')
+        : row.activate_flag === 'active'
+          ? $t('page.product.list.active')
+          : '-';
+    }
   },
   {
-    key: "activate_at",
-    title: $t("page.product.list.activeDate"),
-    render: (row) => {
-      return row.activate_at ? formatDateTime(row.activate_at) : "-";
-    },
-  },
+    key: 'activate_at',
+    title: $t('page.product.list.activeDate'),
+    render: row => {
+      return row.activate_at ? formatDateTime(row.activate_at) : '-';
+    }
+  }
 ]) as Ref<DataTableColumns<PreproductDeviceRecord>>;
 
-const modalType = ref<ModalType>("add");
+const modalType = ref<ModalType>('add');
 
 function setModalType(type: ModalType) {
   modalType.value = type;
@@ -136,7 +136,7 @@ const editData = ref<PreproductDeviceRecord | null>(null);
 function handleAddTable() {
   editData.value = null;
   openModal();
-  setModalType("add");
+  setModalType('add');
 }
 
 // function handleEditPwd(rowId: string) {
@@ -157,19 +157,19 @@ watch(
       getTableData();
     }
   },
-  { deep: true },
+  { deep: true }
 );
 // 初始化
 init();
 const activeOptions = [
   {
-    label: $t("page.product.list.active"),
-    value: "active",
+    label: $t('page.product.list.active'),
+    value: 'active'
   },
   {
-    label: $t("page.product.list.noActive"),
-    value: "inactive",
-  },
+    label: $t('page.product.list.noActive'),
+    value: 'inactive'
+  }
 ];
 </script>
 
@@ -179,44 +179,23 @@ const activeOptions = [
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
           <NGrid :cols="24" :x-gap="18">
-            <NFormItemGridItem
-              :span="6"
-              :label="$t('page.product.list.batchNumber')"
-              path="batchNumber"
-            >
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.batchNumber')" path="batchNumber">
               <NInput v-model:value="queryParams.batch_number" />
             </NFormItemGridItem>
-            <NFormItemGridItem
-              :span="6"
-              :label="$t('page.product.list.deviceNumber')"
-              path="deviceNumber"
-            >
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
               <NInput v-model:value="queryParams.device_number" />
             </NFormItemGridItem>
             <!-- 激活状态 -->
-            <NFormItemGridItem
-              :span="6"
-              :label="$t('page.product.list.activeStatus')"
-              path="activate_flag"
-            >
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.activeStatus')" path="activate_flag">
               <NSelect
-                :placeholder="
-                  $t('common.select') + $t('page.product.list.activeStatus')
-                "
                 v-model:value="queryParams.activate_flag"
+                :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
                 :options="activeOptions"
               />
             </NFormItemGridItem>
             <NFormItemGridItem :span="6">
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{
-                $t("common.search")
-              }}</NButton>
-              <NButton
-                class="ml-20px w-72px"
-                type="primary"
-                @click="handleReset"
-                >{{ $t("common.reset") }}</NButton
-              >
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </NFormItemGridItem>
           </NGrid>
         </NForm>
@@ -227,23 +206,20 @@ const activeOptions = [
                 <IconIcRoundPlus class="mr-4px text-20px" />
               </template>
               <!-- 创建批次 -->
-              {{ $t("page.product.list.batchAdd") }}
+              {{ $t('page.product.list.batchAdd') }}
             </NButton>
             <NButton type="primary" @click="exportFile">
               <template #icon>
                 <IconAntDesignExportOutlined class="mr-4px text-20px" />
               </template>
 
-              {{ $t("common.export") }}
+              {{ $t('common.export') }}
             </NButton>
           </NSpace>
           <NSpace align="center" :size="18">
             <NButton size="small" type="primary" @click="getTableData">
-              <IconMdiRefresh
-                class="mr-4px text-16px"
-                :class="{ 'animate-spin': loading }"
-              />
-              {{ $t("common.refreshTable") }}
+              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+              {{ $t('common.refreshTable') }}
             </NButton>
             <ColumnSetting v-model:columns="columns" />
           </NSpace>

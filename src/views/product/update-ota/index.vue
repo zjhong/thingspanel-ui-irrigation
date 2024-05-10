@@ -160,7 +160,7 @@ init();
   <div class="h-full overflow-hidden">
     <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+        <NForm inline label-placement="left" :model="queryParams">
           <NGrid :cols="24" :x-gap="18">
             <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
               <NSelect

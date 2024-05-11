@@ -117,7 +117,9 @@ onMounted(getDevice); // Fetch device groups on component mount
           :loading="loading"
         ></NDataTable>
         <!-- Pagination component -->
-        <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
+        <div class="flex flex-justify-end">
+          <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
+        </div>
       </div>
     </NCard>
   </div>

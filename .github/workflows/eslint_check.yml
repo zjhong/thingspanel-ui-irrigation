@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: eslint check
 
 # 定义触发CI工作流的事件
 on:

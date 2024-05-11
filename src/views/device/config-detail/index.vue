@@ -83,7 +83,7 @@ onMounted(async () => {
           <ExtendInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
         <n-tab-pane name="设备设置" tab="设备设置">
-          <SettingInfo :config-info="configForm" />
+          <SettingInfo :config-info="configForm" @change="getConfig" />
         </n-tab-pane>
       </n-tabs>
     </NCard>

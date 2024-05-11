@@ -70,7 +70,6 @@ const removeLayout = (i: any) => {
               </template>
               <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
             </NPopconfirm>
-
             <CardTemplateItem :data="item.data!" />
           </div>
         </n-gi>

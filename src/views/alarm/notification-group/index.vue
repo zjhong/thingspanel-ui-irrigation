@@ -137,25 +137,23 @@ getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('generate.notification-group')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
-      </template>
-      <div class="h-full flex-col">
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
-        </div>
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          @get-table-data="getTableData"
-        />
+  <NCard :title="$t('generate.notification-group')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <template #header-extra>
+      <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
+    </template>
+    <div class="h-full flex-col">
+      <NDataTable :columns="columns" :data="tableData" :loading="loading" />
+      <div class="pagination-box">
+        <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
       </div>
-    </NCard>
-  </div>
+      <TableActionModal
+        v-model:visible="visible"
+        :type="modalType"
+        :edit-data="editData"
+        @get-table-data="getTableData"
+      />
+    </div>
+  </NCard>
 </template>
 
 <style scoped>

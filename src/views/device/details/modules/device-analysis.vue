@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import {
   addChildDevice,
@@ -9,10 +10,11 @@ import {
   deviceUpdate,
   removeChildDevice
 } from '@/service/api/device';
-import { useRouterPush } from '@/hooks/common/router';
+// import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 
-const { routerPushByKey } = useRouterPush();
+const router = useRouter();
+// const { routerPushByKey } = useRouterPush();
 const props = defineProps<{
   id: string;
 }>();
@@ -54,11 +56,14 @@ const deleteDevice = async id => {
 };
 
 const handleLook = (id: string) => {
-  routerPushByKey('device_details-child', {
-    query: {
-      d_id: id
-    }
-  }).catch(error => error);
+  console.log('测试跳转id--', id);
+
+  router.push({ path: 'details-child', query: { d_id: id } });
+  // routerPushByKey('device_details-child', {
+  //   query: { d_id: id }
+  // }).catch(error => {
+  //   console.log('error----', error);
+  // });
 };
 
 const handleSetAddress = async (id, subDeviceAddr) => {

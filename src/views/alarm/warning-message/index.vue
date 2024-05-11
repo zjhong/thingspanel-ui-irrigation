@@ -13,18 +13,16 @@ import NewInformation from './components/new-information.vue';
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('generate.alarm-center')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <n-tabs type="line" size="large" :tabs-padding="20" pane-style="padding: 20px;">
-        <n-tab-pane name="告警信息">
-          <AlarmConfiguration />
-        </n-tab-pane>
-        <n-tab-pane name="告警配置">
-          <NewInformation />
-        </n-tab-pane>
-      </n-tabs>
-    </NCard>
-  </div>
+  <NCard :title="$t('generate.alarm-center')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <n-tabs type="line" size="large" :tabs-padding="20" pane-style="padding: 20px;">
+      <n-tab-pane name="告警信息">
+        <AlarmConfiguration />
+      </n-tab-pane>
+      <n-tab-pane name="告警配置">
+        <NewInformation />
+      </n-tab-pane>
+    </n-tabs>
+  </NCard>
 </template>
 
 <style scoped></style>

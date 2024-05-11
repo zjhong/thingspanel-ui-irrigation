@@ -68,7 +68,7 @@ async function getTableData() {
   }
 }
 const drawerTitle: Ref<string> = ref('');
-const editData = ref<productPackageRecord>();
+const editData: any = ref<productPackageRecord>();
 async function handleRegisterConfig(record: productPackageRecord) {
   currentMid.value = record.id;
   editData.value = record;
@@ -94,7 +94,15 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'package_type',
-    title: $t('page.product.update-package.type')
+    title: $t('page.product.update-package.type'),
+    render: (row: productPackageRecord) => {
+      if (row.package_type === 1) {
+        return $t('page.product.update-package.diff');
+      } else if (row.package_type === 2) {
+        return $t('page.product.update-package.full');
+      }
+      return '-';
+    }
   },
   {
     key: 'module',
@@ -149,57 +157,54 @@ init();
 </script>
 
 <template>
-  <div class="h-full overflow-hidden">
-    <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
-          <NGrid :cols="24" :x-gap="18">
-            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
-              <NSelect
-                v-model:value="queryParams.device_config_id"
-                filterable
-                :options="deviceOptions"
-                label-field="name"
-                value-field="id"
-                @search="getList"
-              />
-            </NFormItemGridItem>
-            <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
-              <NInput v-model:value="queryParams.name" />
-            </NFormItemGridItem>
-            <NFormItemGridItem>
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-            </NFormItemGridItem>
-          </NGrid>
-        </NForm>
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace></NSpace>
-          <NSpace align="center" :size="18">
-            <NButton size="small" type="primary" @click="getTableData">
-              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
-              {{ $t('common.refreshTable') }}
-            </NButton>
-            <ColumnSetting v-model:columns="columns" />
-          </NSpace>
+  <NCard :title="$t('page.product.update-ota.otaTitle')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <div class="h-full flex-col">
+      <NForm inline label-placement="left" :model="queryParams">
+        <NGrid :cols="24" :x-gap="18">
+          <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
+            <NSelect
+              v-model:value="queryParams.device_config_id"
+              filterable
+              :options="deviceOptions"
+              label-field="name"
+              value-field="id"
+              @search="getList"
+            />
+          </NFormItemGridItem>
+          <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
+            <NInput v-model:value="queryParams.name" />
+          </NFormItemGridItem>
+          <NFormItemGridItem>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+          </NFormItemGridItem>
+        </NGrid>
+      </NForm>
+      <NSpace class="pb-12px" justify="space-between">
+        <NSpace></NSpace>
+        <NSpace align="center" :size="18">
+          <NButton size="small" type="primary" @click="getTableData">
+            <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+            {{ $t('common.refreshTable') }}
+          </NButton>
+          <ColumnSetting v-model:columns="columns" />
         </NSpace>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <NDrawer v-model:show="editPwdVisible" display-directive="show" width="80%" placement="right">
-          <NDrawerContent :title="$t('page.product.update-ota.lookTask')" closable>
-            <DeviceRegister :mid="currentMid" :record="editData" />
-          </NDrawerContent>
-        </NDrawer>
-      </div>
-    </NCard>
-  </div>
+      </NSpace>
+      <NDataTable
+        remote
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <NDrawer v-model:show="editPwdVisible" display-directive="show" width="80%" placement="right">
+        <NDrawerContent :title="$t('page.product.update-ota.lookTask')" closable>
+          <DeviceRegister :mid="currentMid" :record="editData" />
+        </NDrawerContent>
+      </NDrawer>
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

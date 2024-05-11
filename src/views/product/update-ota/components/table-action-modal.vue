@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+/** @description: 批量选择设备 */
 import { computed, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
@@ -117,6 +118,7 @@ const queryParams = reactive({
   page: 1,
   activate_flag: 'active',
   is_enabled: 'enabled',
+  device_config_id: props?.editData?.device_config_id,
   page_size: 10
 });
 const tableData = ref<productPackageRecord[]>([]);

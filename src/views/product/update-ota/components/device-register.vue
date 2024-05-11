@@ -15,14 +15,13 @@ import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: visibleTable, setTrue: openTable } = useBoolean();
-const props = defineProps({
+const props: any = defineProps({
   mid: {
     type: Number,
     required: true
   },
   record: {
     type: Object,
-    default: () => {},
     required: true
   }
 });
@@ -120,10 +119,9 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<productDeviceRecord | null>(null);
-
+/** 添加升级任务 */
 function handleAddTable() {
-  editData.value = null;
+  // editData.value = null;
   openModal();
   setModalType('add');
 }
@@ -222,7 +220,13 @@ const downloadPackage = () => {
             </NGrid>
           </NForm>
         </div>
-        <TableDeviceModal v-model:visible="visible" :type="modalType" :pid="props.record.id" @success="getTableData" />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :edit-data="props.record"
+          :type="modalType"
+          :pid="props.record.id"
+          @success="getTableData"
+        />
         <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
       </div>
     </NCard>

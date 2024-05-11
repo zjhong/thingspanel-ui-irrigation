@@ -22,6 +22,7 @@ const props: DeviceRegisterProps = defineProps({
 const queryParams = reactive({
   batch_number: '',
   device_number: '',
+  activate_flag: '',
   product_id: props.pid,
   page: 1,
   page_size: 10
@@ -38,16 +39,13 @@ const tableData = ref<PreproductDeviceRecord[]>([]);
 function setTableData(data: PreproductDeviceRecord[]) {
   tableData.value = data;
 }
-const exportFile = () => {
-  // return '88'
-  // if (!queryParams.batch_number) {
-  //   return window.$message?.error(
-  //     $t("common.input") + $t("page.product.list.batchNumber"),
-  //   );
-  // }
-  if (queryParams.batch_number) {
-    exportDevice({ ...queryParams, page: undefined, page_size: undefined });
-  }
+const exportFile = async () => {
+  const { data } = await exportDevice({
+    ...queryParams,
+    page: undefined,
+    page_size: undefined
+  });
+  data && window.open(data);
 };
 
 const pagination: PaginationProps = reactive({
@@ -78,6 +76,7 @@ function handleReset() {
   Object.assign(queryParams, {
     batch_number: '',
     device_number: '',
+    activate_flag: '',
     page: 1
   });
   handleQuery();
@@ -110,7 +109,12 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
     key: 'activate_flag',
     title: $t('page.product.list.activeStatus'),
     render: row => {
-      return row.activate_flag === 'inactive' ? $t('page.product.list.noActive') : $t('page.product.list.active');
+      if (row.activate_flag === 'inactive' || row.activate_flag === 'N') {
+        return $t('page.product.list.noActive');
+      } else if (row.activate_flag === 'active') {
+        return $t('page.product.list.active');
+      }
+      return '-';
     }
   },
   {
@@ -158,6 +162,16 @@ watch(
 );
 // 初始化
 init();
+const activeOptions = [
+  {
+    label: $t('page.product.list.active'),
+    value: 'active'
+  },
+  {
+    label: $t('page.product.list.noActive'),
+    value: 'inactive'
+  }
+];
 </script>
 
 <template>
@@ -165,16 +179,26 @@ init();
     <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.product.list.batchNumber')" path="batchNumber">
-            <NInput v-model:value="queryParams.batch_number" />
-          </NFormItem>
-          <NFormItem :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
-            <NInput v-model:value="queryParams.device_number" />
-          </NFormItem>
-          <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-          </NFormItem>
+          <NGrid :cols="24" :x-gap="18">
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.batchNumber')" path="batchNumber">
+              <NInput v-model:value="queryParams.batch_number" />
+            </NFormItemGridItem>
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
+              <NInput v-model:value="queryParams.device_number" />
+            </NFormItemGridItem>
+            <!-- 激活状态 -->
+            <NFormItemGridItem :span="6" :label="$t('page.product.list.activeStatus')" path="activate_flag">
+              <NSelect
+                v-model:value="queryParams.activate_flag"
+                :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
+                :options="activeOptions"
+              />
+            </NFormItemGridItem>
+            <NFormItemGridItem :span="6">
+              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+            </NFormItemGridItem>
+          </NGrid>
         </NForm>
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>
@@ -206,8 +230,8 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           remote
+          flex-height
           class="flex-1-hidden"
         />
         <TableDeviceModal

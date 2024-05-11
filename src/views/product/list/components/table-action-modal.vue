@@ -73,9 +73,9 @@ const getList = async (name?: string) => {
 };
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
-const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
+const rules: Record<'name' | 'product_type', FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
-  device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
+  product_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
 };
 
 function createDefaultFormModel() {
@@ -128,10 +128,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct({
-      ...formModel,
-      device_type: Number(formModel.device_type as string)
-    });
+    data = await addProduct(formModel);
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -171,7 +168,7 @@ watch(
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceType')" path="product_type">
           <NSelect
-            v-model:value="formModel.device_type"
+            v-model:value="formModel.product_type"
             filterable
             :options="productOptions"
             label-field="translation"
@@ -183,10 +180,16 @@ watch(
           <NInput v-model:value="formModel.product_model" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" filterable :options="deviceOptions" @search="getList" />
+          <NSelect
+            v-model:value="formModel.device_config_id"
+            filterable
+            :disabled="props.type === 'edit'"
+            :options="deviceOptions"
+            @search="getList"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productKey')" path="product_key">
-          <NInput v-model:value="formModel.product_key" />
+          <NInput v-model:value="formModel.product_key" :disabled="props.type === 'edit'" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.productImage')" path="image_url">
           <UploadCard

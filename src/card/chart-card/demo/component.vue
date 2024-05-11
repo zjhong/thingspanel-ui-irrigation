@@ -5,13 +5,14 @@ import { ClipboardCode20Regular } from '@vicons/fluent';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '../curve/modules/api';
-import icons from './icon';
+// import icons from "./icon";
 import { createServiceConfig } from '~/env.config';
 
-const iconMap = new Map(icons.map(c => [c.name, c.value]));
+// const iconMap = new Map(icons.map((c) => [c.name, c.value]));
 // 正式环境可根据api获取
 const value = ref(1);
 const detail: any = ref(null);
+const intervalNum = ref();
 const props = defineProps<{
   card: ICardData;
   // mode: IConfigCtx['view'];
@@ -75,18 +76,28 @@ watch(
 );
 
 onMounted(() => {
-  setSeries(props?.card?.dataSource);
+  // setSeries(props?.card?.dataSource);
+  intervalNum.value = setInterval(() => {
+    setSeries(props?.card?.dataSource);
+  }, 500);
 });
 
 onUnmounted(() => {
   console.log(status.value);
+  clearInterval(intervalNum.value);
   close();
 });
 </script>
 
 <template>
   <div class="h-full">
-    <component :is="iconMap.get(card.config?.icon || 'm1')" class="text-lg" :style="{ color: card.config?.color }" />
+    <!--
+ <component
+      :is="iconMap.get(card.config?.icon || 'm1')"
+      class="text-lg"
+      :style="{ color: card.config?.color }"
+    /> 
+-->
     <div class="h-full flex-col items-center">
       <!--
  <NCard
@@ -102,7 +113,7 @@ onUnmounted(() => {
           </span>
         </div>
         <div class="bt-data">
-          <NIcon size="44"><ClipboardCode20Regular /></NIcon>
+          <NIcon size="58"><ClipboardCode20Regular /></NIcon>
           <div>
             <span class="value">{{ detail?.data[0].value }}</span>
           </div>
@@ -117,24 +128,26 @@ onUnmounted(() => {
 .items-center {
   padding: 0;
 }
+:deep(.n-card__content:first-child) {
+  padding-top: 0;
+}
 .box {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 50px;
   border-radius: 10px;
 }
 .top-data,
 .bt-data {
   display: flex;
-  padding: 0 20px;
   width: 100%;
   justify-content: space-between;
   align-items: center;
 }
 
 .bt-data {
-  margin-top: 30px;
+  margin-top: 20%;
+  padding: 0 10%;
   position: relative;
 }
 
@@ -145,11 +158,12 @@ onUnmounted(() => {
 }
 
 .name {
-  font-size: 20px;
+  margin-top: 10px;
+  font-size: 18px;
 }
 
 .value {
-  font-size: 48px;
+  font-size: calc(100vw * 68 / 1920);
   margin-right: 40px;
 }
 </style>

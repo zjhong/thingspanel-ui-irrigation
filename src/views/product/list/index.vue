@@ -70,7 +70,7 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
     title: $t('page.product.list.productName')
   },
   {
-    key: 'device_type_name',
+    key: 'product_type',
     title: $t('page.product.list.deviceType')
   },
   {
@@ -180,42 +180,39 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <IconIcRoundPlus class="mr-4px text-20px" />
-              {{ $t('common.add') }}
-            </NButton>
-          </NSpace>
-          <NSpace align="center" :size="18">
-            <NButton size="small" type="primary" @click="getTableData">
-              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
-              {{ $t('common.refreshTable') }}
-            </NButton>
-            <ColumnSetting v-model:columns="columns" />
-          </NSpace>
+  <NCard :title="$t('page.product.list.productList')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <div class="h-full flex-col">
+      <NSpace class="pb-12px" justify="space-between">
+        <NSpace>
+          <NButton type="primary" @click="handleAddTable">
+            <IconIcRoundPlus class="mr-4px text-20px" />
+            {{ $t('common.add') }}
+          </NButton>
         </NSpace>
-        <NDataTable
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          remote
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <NDrawer v-model:show="editPwdVisible" width="80%" display-directive="show" placement="right">
-          <NDrawerContent :title="drawerTitle" closable>
-            <DeviceRegister :pid="(editData?.id as unknown as string)" />
-          </NDrawerContent>
-        </NDrawer>
-      </div>
-    </NCard>
-  </div>
+        <NSpace align="center" :size="18">
+          <NButton size="small" type="primary" @click="getTableData">
+            <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+            {{ $t('common.refreshTable') }}
+          </NButton>
+          <ColumnSetting v-model:columns="columns" />
+        </NSpace>
+      </NSpace>
+      <NDataTable
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        remote
+        class="flex-1-hidden"
+      />
+      <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+      <NDrawer v-model:show="editPwdVisible" width="80%" display-directive="show" placement="right">
+        <NDrawerContent :title="drawerTitle" closable>
+          <DeviceRegister :pid="(editData?.id as unknown as string)" />
+        </NDrawerContent>
+      </NDrawer>
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

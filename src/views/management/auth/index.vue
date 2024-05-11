@@ -216,36 +216,33 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">
-          <IconIcRoundPlus class="mr-4px text-20px" />
-          {{ $t('common.add') }}
-        </NButton>
-      </template>
-      <div class="h-full flex-col">
-        <NDataTable
-          size="small"
-          :row-key="rowKey"
-          :remote="true"
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          :flex-height="true"
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          :table-list="tableData"
-          @success="getTableData"
-        />
-      </div>
-    </NCard>
-  </div>
+  <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <template #header-extra>
+      <NButton type="primary" @click="handleAddTable">
+        <IconIcRoundPlus class="mr-4px text-20px" />
+        {{ $t('common.add') }}
+      </NButton>
+    </template>
+    <div class="h-full flex-col">
+      <NDataTable
+        size="small"
+        :row-key="rowKey"
+        :remote="true"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal
+        v-model:visible="visible"
+        :type="modalType"
+        :edit-data="editData"
+        :table-list="tableData"
+        @success="getTableData"
+      />
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

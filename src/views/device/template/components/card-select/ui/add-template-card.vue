@@ -78,7 +78,11 @@ watch(props, pr => {
     preset="dialog"
     :title="$t('generate.configuration')"
     size="huge"
-    :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
+    :style="{
+      width: 'calc(100vw - 180px)',
+      height: 'calc(100vh - 50px)',
+      minWidth: '882px'
+    }"
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
@@ -94,7 +98,9 @@ watch(props, pr => {
                     :style="item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'"
                     @click="selectCard(item)"
                   >
-                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                      {{ $t(item.title) }}
+                    </div>
                     <div class="h-148px w-full">
                       <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                     </div>

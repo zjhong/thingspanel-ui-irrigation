@@ -70,7 +70,7 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
     title: $t('page.product.list.productName')
   },
   {
-    key: 'device_type_name',
+    key: 'product_type',
     title: $t('page.product.list.deviceType')
   },
   {

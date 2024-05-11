@@ -1,25 +1,21 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { NButton, NCard, NFlex, NPagination, useDialog, useMessage } from 'naive-ui';
+import type { Ref } from 'vue';
+import { NButton, NCard, NFlex, NPagination, NPopconfirm, NSpace, useDialog, useMessage } from 'naive-ui';
+import type { DataTableColumns } from 'naive-ui';
 import { IosSearch } from '@vicons/ionicons4';
 import moment from 'moment';
 import { sceneActive, sceneDel, sceneGet, sceneLog } from '@/service/api/automation';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 
 const dialog = useDialog();
 const message = useMessage();
 const { routerPushByKey } = useRouterPush();
-
-// interface sceneManageItem {
-//   name: string;
-//   description: string;
-//   created_at: string;
-// }
-const content = ref({
-  sceneManageList: [] as any
-});
-
+const showLog = ref(false);
+const logDataTotal = ref(0);
+const logData = ref([]);
 // 新建场景
 const sceneAdd = () => {
   routerPushByKey('automation_scene-edit');
@@ -47,7 +43,7 @@ const sceneActivation = (item: any) => {
     }
   });
 };
-
+const tableData = ref([]);
 const queryData = ref({
   name: '',
   page: 1,
@@ -57,32 +53,13 @@ const dataTotal = ref(0);
 
 const getData = async () => {
   const res = await sceneGet(queryData.value);
-  content.value.sceneManageList = res.data.list;
+  tableData.value = res.data.list;
   dataTotal.value = res.data.total;
 };
 const handleQuery = async () => {
   queryData.value.page = 1;
   await getData();
 };
-const bodyStyle = ref({
-  width: '1000px'
-});
-const showLog = ref(false);
-
-const execution_result_options = ref([
-  {
-    label: '全部',
-    value: ''
-  },
-  {
-    label: '执行成功',
-    value: 'S'
-  },
-  {
-    label: '执行失败',
-    value: 'F'
-  }
-]);
 const logQuery = ref({
   id: '',
   page: 1,
@@ -92,13 +69,6 @@ const logQuery = ref({
   execution_end_time: '',
   execution_result: ''
 });
-const logDataTotal = ref(0);
-const logData = ref([]);
-const queryLog = () => {
-  logQuery.value.page = 1;
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  getLogList();
-};
 const getLogList = async () => {
   if (logQuery.value.time) {
     logQuery.value.execution_start_time = moment(logQuery.value.time[0]).format();
@@ -118,7 +88,7 @@ const openLog = (item: any) => {
 const deleteScene = async (item: any) => {
   dialog.warning({
     title: '删除提示',
-    content: '请确认是否删除该场景信息？',
+    content: '请确认是否删除该场景信息2？',
     positiveText: '确定',
     negativeText: '取消',
     onPositiveClick: async () => {
@@ -130,6 +100,90 @@ const deleteScene = async (item: any) => {
     }
   });
 };
+const bodyStyle = ref({
+  width: '1000px'
+});
+
+const columns: Ref<any> = ref([
+  {
+    key: 'name',
+    title: '场景名称',
+    align: 'left'
+  },
+  {
+    key: 'description',
+    title: '场景描述',
+    align: 'left'
+  },
+  {
+    key: 'created_at',
+    title: '创建时间',
+    align: 'left',
+    render: (row: any) => {
+      return formatDateTime(row.created_at);
+    }
+  },
+  {
+    key: 'updated_at',
+    title: '修改时间',
+    align: 'left',
+    render: (row: any) => {
+      return formatDateTime(row.updated_at);
+    }
+  },
+  {
+    key: 'actions',
+    title: '操作',
+    align: 'left',
+    render: row => {
+      return (
+        <NSpace justify={'center'}>
+          <NButton size={'small'} type="success" onClick={() => sceneActivation(row)}>
+            {$t('generate.activate')}
+          </NButton>
+          <NButton size={'small'} type="primary" onClick={() => sceneEdit(row)}>
+            {$t('common.edit')}
+          </NButton>
+          <NButton size={'small'} type="tertiary" onClick={() => openLog(row)}>
+            {$t('page.irrigation.time.log.name')}
+          </NButton>
+          <NPopconfirm onPositiveClick={() => deleteScene(row)}>
+            {{
+              default: () => $t('common.confirmDelete'),
+              trigger: () => (
+                <NButton type="error" size={'small'}>
+                  {$t('common.delete')}
+                </NButton>
+              )
+            }}
+          </NPopconfirm>
+        </NSpace>
+      );
+    }
+  }
+]) as Ref<DataTableColumns<DataService.Data>>;
+
+const execution_result_options = ref([
+  {
+    label: '全部',
+    value: ''
+  },
+  {
+    label: '执行成功',
+    value: 'S'
+  },
+  {
+    label: '执行失败',
+    value: 'F'
+  }
+]);
+
+const queryLog = () => {
+  logQuery.value.page = 1;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  getLogList();
+};
+
 const logClose = () => {
   logQuery.value = {
     id: '',
@@ -168,53 +222,15 @@ onMounted(() => {
           <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </NFlex>
       </NFlex>
-      <NEmpty
-        v-if="content.sceneManageList.length === 0"
-        size="huge"
-        description="暂无数据"
-        class="min-h-60 justify-center"
-      ></NEmpty>
-      <template v-else>
-        <NTable :bordered="false" :single-line="false">
-          <thead>
-            <tr>
-              <th>{{ $t('generate.order-number') }}</th>
-              <th>{{ $t('generate.scene-name') }}</th>
-              <th>{{ $t('generate.scene-description') }}</th>
-              <th>{{ $t('common.creationTime') }}</th>
-              <th>{{ $t('generate.modification-time') }}</th>
-              <th>{{ $t('generate.operation') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(sceneItem, index) in content.sceneManageList" :key="index">
-              <td class="w-100px">{{ index + 1 }}</td>
-              <td>{{ sceneItem.name }}</td>
-              <td>{{ sceneItem.description }}</td>
-              <td class="w-180px">{{ moment(sceneItem['created_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
-              <td class="w-180px">{{ moment(sceneItem['updated_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
-              <td class="w-320px">
-                <NFlex justify="space-around">
-                  <NButton tertiary type="success" @click="sceneActivation(sceneItem)">
-                    {{ $t('generate.activate') }}
-                  </NButton>
-                  <NButton tertiary type="info" @click="sceneEdit(sceneItem)">{{ $t('common.edit') }}</NButton>
-                  <NButton tertiary @click="openLog(sceneItem)">{{ $t('page.irrigation.time.log.name') }}</NButton>
-                  <NButton tertiary type="error" @click="deleteScene(sceneItem)">{{ $t('common.delete') }}</NButton>
-                </NFlex>
-              </td>
-            </tr>
-          </tbody>
-        </NTable>
-        <NFlex justify="flex-end" class="mt-4">
-          <NPagination
-            v-model:page="queryData.page"
-            :page-size="queryData.page_size"
-            :item-count="dataTotal"
-            @update:page="getData"
-          />
-        </NFlex>
-      </template>
+      <n-data-table :columns="columns" :data="tableData" class="mt-4" />
+      <NFlex justify="flex-end" class="mt-4">
+        <NPagination
+          v-model:page="queryData.page"
+          :page-size="queryData.page_size"
+          :item-count="dataTotal"
+          @update:page="getData"
+        />
+      </NFlex>
     </NCard>
     <n-modal
       v-model:show="showLog"

@@ -73,9 +73,9 @@ const getList = async (name?: string) => {
 };
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
-const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
+const rules: Record<'name' | 'product_type', FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
-  device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
+  product_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
 };
 
 function createDefaultFormModel() {
@@ -128,10 +128,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct({
-      ...formModel,
-      product_type: Number(formModel.product_type as string)
-    });
+    data = await addProduct(formModel);
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
@@ -183,7 +180,13 @@ watch(
           <NInput v-model:value="formModel.product_model" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" filterable :disabled="props.type === 'edit'" :options="deviceOptions" @search="getList" />
+          <NSelect
+            v-model:value="formModel.device_config_id"
+            filterable
+            :disabled="props.type === 'edit'"
+            :options="deviceOptions"
+            @search="getList"
+          />
         </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.product.list.productKey')" path="product_key">
           <NInput v-model:value="formModel.product_key" :disabled="props.type === 'edit'" />

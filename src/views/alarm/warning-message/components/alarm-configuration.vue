@@ -323,7 +323,6 @@ function handleEditPwd(row) {
           :pagination="pagination"
           :row-key="rowKey"
           virtual-scroll
-          :max-height="250"
           @update:checked-row-keys="handleCheck"
         />
         <NSpace>

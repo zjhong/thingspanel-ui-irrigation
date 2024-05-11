@@ -307,7 +307,6 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          :flex-height="true"
           class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />

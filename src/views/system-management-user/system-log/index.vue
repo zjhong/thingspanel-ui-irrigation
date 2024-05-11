@@ -109,25 +109,23 @@ getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('generate.system-log')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('generate.username')" path="name">
-            <NInput v-model:value="queryParams.username" />
-          </NFormItem>
-          <NFormItem path="selected_time">
-            <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
-          </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
-        </NForm>
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
-        </div>
+  <NCard :title="$t('generate.system-log')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <div class="h-full flex-col">
+      <NForm inline label-placement="left" :model="queryParams">
+        <NFormItem :label="$t('generate.username')" path="name">
+          <NInput v-model:value="queryParams.username" />
+        </NFormItem>
+        <NFormItem path="selected_time">
+          <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
+        </NFormItem>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
+      </NForm>
+      <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
+      <div class="pagination-box">
+        <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
       </div>
-    </NCard>
-  </div>
+    </div>
+  </NCard>
 </template>
 
 <style scoped>

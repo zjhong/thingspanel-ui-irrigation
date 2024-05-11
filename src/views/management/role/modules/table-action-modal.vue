@@ -51,7 +51,7 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '新增角色',
+    add: $t('page.manage.role.title'),
     edit: '编辑角色'
   };
   return titles[props.type];
@@ -106,7 +106,6 @@ async function handleSubmit() {
     data = await editrles(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
     emit('success');
   }
   closeModal();
@@ -128,10 +127,6 @@ watch(
       <n-grid :cols="24" :x-gap="18">
         <n-form-item-grid-item :span="24" :label="$t('page.manage.role.roleName')" path="name">
           <n-input v-model:value="formModel.name" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('generate.select-permission')" path="email">
-          <n-tree-select multiple :options="[]" />
-          <!-- @update:value="handleUpdateValue" -->
         </n-form-item-grid-item>
         <n-form-item-grid-item :span="24" :label="$t('generate.role-description')">
           <n-input v-model:value="formModel.description" type="textarea" />

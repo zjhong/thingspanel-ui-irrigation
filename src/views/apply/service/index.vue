@@ -171,27 +171,24 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('route.apply_service')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">
-          {{ $t('common.add') }}
-        </NButton>
-      </template>
-      <div class="h-full flex-col">
-        <NDataTable
-          :remote="true"
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-      </div>
-    </NCard>
-  </div>
+  <NCard :title="$t('route.apply_service')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <template #header-extra>
+      <NButton type="primary" @click="handleAddTable">
+        {{ $t('common.add') }}
+      </NButton>
+    </template>
+    <div class="h-full flex-col">
+      <NDataTable
+        :remote="true"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

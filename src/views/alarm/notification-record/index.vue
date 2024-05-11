@@ -106,32 +106,30 @@ getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('generate.notification-record')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem path="name" :label="$t('generate.notification-type')">
-            <NSelect
-              v-model:value="queryParams.notification_type"
-              :options="notificationOptions"
-              class="input-style min-w-160px"
-            />
-          </NFormItem>
-          <NFormItem path="selected_time">
-            <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
-          </NFormItem>
-          <NFormItem path="send_target">
-            <NInput v-model:value="queryParams.send_target" :placeholder="$t('generate.recipient')" />
-          </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-        </NForm>
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
-        </div>
+  <NCard :title="$t('generate.notification-record')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <div class="h-full flex-col">
+      <NForm inline label-placement="left" :model="queryParams">
+        <NFormItem path="name" :label="$t('generate.notification-type')">
+          <NSelect
+            v-model:value="queryParams.notification_type"
+            :options="notificationOptions"
+            class="input-style min-w-160px"
+          />
+        </NFormItem>
+        <NFormItem path="selected_time">
+          <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
+        </NFormItem>
+        <NFormItem path="send_target">
+          <NInput v-model:value="queryParams.send_target" :placeholder="$t('generate.recipient')" />
+        </NFormItem>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+      </NForm>
+      <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
+      <div class="pagination-box">
+        <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
       </div>
-    </NCard>
-  </div>
+    </div>
+  </NCard>
 </template>
 
 <style scoped>

@@ -183,35 +183,32 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <n-card :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <icon-ic-round-plus class="mr-4px text-20px" />
-              {{ $t('device_template.add') }}
-            </NButton>
-          </NSpace>
+  <n-card :bordered="false" class="h-full rounded-8px shadow-sm">
+    <div class="h-full flex-col">
+      <NSpace class="pb-12px" justify="space-between">
+        <NSpace>
+          <NButton type="primary" @click="handleAddTable">
+            <icon-ic-round-plus class="mr-4px text-20px" />
+            {{ $t('device_template.add') }}
+          </NButton>
         </NSpace>
+      </NSpace>
 
-        <n-data-table
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <EditPasswordModal
-          v-model:visible="editPwdVisible"
-          :edit-data="editData"
-          @success="getTableData"
-        ></EditPasswordModal>
-      </div>
-    </n-card>
-  </div>
+      <n-data-table
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+      <EditPasswordModal
+        v-model:visible="editPwdVisible"
+        :edit-data="editData"
+        @success="getTableData"
+      ></EditPasswordModal>
+    </div>
+  </n-card>
 </template>
 
 <style scoped></style>

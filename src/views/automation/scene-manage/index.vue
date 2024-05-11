@@ -52,9 +52,9 @@ const queryData = ref({
 const dataTotal = ref(0);
 
 const getData = async () => {
-  const res = await sceneGet(queryData.value);
-  tableData.value = res.data.list;
-  dataTotal.value = res.data.total;
+  const { data } = await sceneGet(queryData.value);
+  tableData.value = data.list;
+  dataTotal.value = data.total;
 };
 const handleQuery = async () => {
   queryData.value.page = 1;

@@ -151,12 +151,11 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <template #header-extra>
-        <NButton @click="handleAddTable">{{ $t('generate.create-access-rule') }}</NButton>
-        <NButton class="ml-10px">{{ $t('device_template.release') }}</NButton>
-        <!--
+  <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <template #header-extra>
+      <NButton @click="handleAddTable">{{ $t('generate.create-access-rule') }}</NButton>
+      <NButton class="ml-10px">{{ $t('device_template.release') }}</NButton>
+      <!--
  <n-button type="error">
           <icon-ic-round-delete class="mr-4px text-20px" />
           删除
@@ -166,26 +165,24 @@ init();
           导出Excel
         </n-button>
 -->
-      </template>
-      <div class="h-full flex-col">
-        <NDataTable
-          :scroll-x="1088"
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          @get-table-data="getTableData"
-        />
-      </div>
-    </NCard>
-  </div>
+    </template>
+    <div class="h-full flex-col">
+      <NDataTable
+        :scroll-x="1088"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal
+        v-model:visible="visible"
+        :type="modalType"
+        :edit-data="editData"
+        @get-table-data="getTableData"
+      />
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

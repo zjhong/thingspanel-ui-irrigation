@@ -9,6 +9,7 @@ import { delrles, rlesList } from '@/service/api';
 import { $t } from '@/locales';
 import { formatDateTime } from '@/utils/common/datetime';
 import TableActionModal from './modules/table-action-modal.vue';
+import EditPermissionModal from './modules/edit-permission-modal.vue';
 import EditPasswordModal from './modules/edit-password-modal.vue';
 import type { ModalType } from './modules/table-action-modal.vue';
 // import ColumnSetting from './components/column-setting.vue'
@@ -16,6 +17,7 @@ import type { ModalType } from './modules/table-action-modal.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible } = useBoolean();
+const { bool: editPermissionVisible, setTrue: openEditPermissionModal } = useBoolean();
 
 type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
   page: number;
@@ -49,12 +51,12 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'name',
-    title: '角色名称',
+    title: $t('page.manage.role.roleName'),
     align: 'center'
   },
   {
     key: 'description',
-    title: '角色描述',
+    title: $t('page.manage.role.roleDesc'),
     align: 'center'
   },
   {
@@ -93,6 +95,9 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
               )
             }}
           </NPopconfirm>
+          <NButton type="primary" size={'small'} onClick={() => handleEditPermission(row.id)}>
+            {$t('page.manage.role.editPermission')}
+          </NButton>
         </NSpace>
       );
     }
@@ -131,6 +136,14 @@ function handleEditTable(rowId: string) {
   }
   setModalType('edit');
   openModal();
+}
+
+function handleEditPermission(rowId: string) {
+  const findItem = tableData.value.find(item => item.id === rowId);
+  if (findItem) {
+    setEditData(findItem);
+  }
+  openEditPermissionModal();
 }
 
 async function handleDeleteTable(rowId: string) {
@@ -189,7 +202,7 @@ init();
         <NSpace>
           <NButton type="primary" @click="handleAddTable">
             <icon-ic-round-plus class="mr-4px text-20px" />
-            {{ $t('device_template.add') }}
+            {{ $t('page.manage.role.addRole') }}
           </NButton>
         </NSpace>
       </NSpace>
@@ -202,6 +215,7 @@ init();
         class="flex-1-hidden"
       />
       <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+      <EditPermissionModal v-model:visible="editPermissionVisible" :edit-data="editData" />
       <EditPasswordModal
         v-model:visible="editPwdVisible"
         :edit-data="editData"

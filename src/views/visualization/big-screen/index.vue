@@ -5,6 +5,7 @@ import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, use
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
 import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
 
 const { routerPushByKey } = useRouterPush();
@@ -79,6 +80,25 @@ const deleteBoard = async (id: string) => {
   await fetchBoards(); // 刷新大屏列表
 };
 
+// Edit big screen with Visual Editor
+const editWithVEditor = board => {
+  const id = board.id;
+  const token = localStg.get('token');
+  sessionStorage.setItem('thingspanel_token', token || '');
+  const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
+  const url = `${visualUrl}/editor?id=${id}&token=${token}`;
+  window.open(url, '_blank');
+};
+
+// View big screen in Visual Editor
+const viewWithVEditor = board => {
+  const id = board.id;
+  const token = localStg.get('token');
+  const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
+  const url = `${visualUrl}/display?id=${id}&token=${token}`;
+  window.open(url, '_blank');
+};
+
 // 页面跳转
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
@@ -121,7 +141,7 @@ onMounted(fetchBoards);
             :span="6"
             @click="goRouter('visualization_panel-details', board.id as string)"
           >
-            <NCard hoverable>
+            <NCard hoverable @click.stop="viewWithVEditor(board)">
               <div class="mb-8px text-16px font-600">{{ board.name }}</div>
               <!-- 使用NTooltip组件 -->
               <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
@@ -131,16 +151,38 @@ onMounted(fetchBoards);
                 {{ board.description }}
               </NTooltip>
               <div class="mt-4 flex justify-end gap-2">
-                <NButton strong secondary circle @click.stop="editBoard(board)">
-                  <template #icon>
-                    <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="editWithVEditor(board)">
+                      <template #icon>
+                        <icon-material-symbols:edit-square class="text-24px text-blue" />
+                      </template>
+                    </NButton>
                   </template>
-                </NButton>
-                <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
-                  <template #icon>
-                    <icon-material-symbols:delete-outline class="text-24px text-red" />
+                  可视化编辑
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="editBoard(board)">
+                      <template #icon>
+                        <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                      </template>
+                    </NButton>
                   </template>
-                </NButton>
+                  编辑名称和描述
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
+                      <template #icon>
+                        <icon-material-symbols:delete-outline class="text-24px text-red" />
+                      </template>
+                    </NButton>
+                  </template>
+                  删除
+                </n-tooltip>
               </div>
             </NCard>
           </NGridItem>

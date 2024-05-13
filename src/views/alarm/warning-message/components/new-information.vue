@@ -263,30 +263,26 @@ async function deleteInfo() {
 </script>
 
 <template>
-  <NCard NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-    <NSpace class="pb-12px" justify="space-between">
-      <NSpace>
-        <NButton type="primary" @click="addWarningMessageBut">
-          <IconIcRoundPlus class="mr-4px text-20px" />
-          {{ $t('generate.addAlarm') }}
-        </NButton>
-      </NSpace>
-    </NSpace>
-    <div class="h-full flex-col">
-      <NDataTable
-        remote
-        :loading="loading"
-        :row-key="rowKey"
-        :columns="columns"
-        :data="tableData"
-        :pagination="pagination"
-        virtual-scroll
-        class="flex-1-hidden"
-      />
-    </div>
+  <NSpace class="pb-12px">
+    <NButton type="primary" @click="addWarningMessageBut">
+      <IconIcRoundPlus class="mr-4px text-20px" />
+      {{ $t('generate.addAlarm') }}
+    </NButton>
+  </NSpace>
+  <div class="h-full flex-col">
+    <NDataTable
+      remote
+      :loading="loading"
+      :row-key="rowKey"
+      :columns="columns"
+      :data="tableData"
+      :pagination="pagination"
+      virtual-scroll
+      class="flex-1-hidden"
+    />
+  </div>
 
-    <popUp v-model:visible="visible" :type="modalType" :edit-data="editData" @new-edit="newEdit" />
-  </NCard>
+  <popUp v-model:visible="visible" :type="modalType" :edit-data="editData" @new-edit="newEdit" />
 </template>
 
 <style scoped>

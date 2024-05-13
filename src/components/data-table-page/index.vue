@@ -1,6 +1,6 @@
 <script lang="tsx" setup>
 import type { VueElement } from 'vue';
-import { computed, defineProps, ref, watchEffect } from 'vue';
+import { computed, defineProps, getCurrentInstance, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
@@ -253,6 +253,11 @@ const loadOptionsOnMount2 = async () => {
     }
   }
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 使用throttle减少动态加载选项时的请求频率
 const throttledLoadOptionsOnMount = throttle(loadOptionsOnMount, 300);
 
@@ -263,12 +268,17 @@ loadOptionsOnMount2();
 
 <template>
   <n-card>
-    <div class="flex flex-col gap-6 rounded-lg">
+    <div class="flex flex-col gap-15px rounded-lg">
       <!-- 搜索区域与操作按钮 -->
       <div class="row flex items-end justify-between gap-4">
         <!-- 搜索输入和选择器 -->
         <div class="flex flex-1 flex-wrap items-end gap-4">
-          <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
+          <div
+            v-for="config in searchConfigs"
+            :key="config.key"
+            class="flex flex-col gap-2"
+            :class="getPlatform ? 'min-w-100%' : ''"
+          >
             <template v-if="config.type === 'input'">
               <NInput
                 v-model:value="searchCriteria[config.key]"
@@ -325,11 +335,14 @@ loadOptionsOnMount2();
               />
             </template>
           </div>
-          <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">{{ $t('common.search') }}</NButton>
-          <NButton class="btn-style" size="small" @click="handleReset">{{ $t('common.reset') }}</NButton>
+          <div>
+            <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">{{ $t('common.search') }}</NButton>
+            <NButton class="btn-style" size="small" @click="handleReset">{{ $t('common.reset') }}</NButton>
+          </div>
         </div>
         <!-- 新建与返回按钮 -->
       </div>
+
       <div class="h-2px w-full bg-[#f6f9f8]"></div>
       <div class="flex items-center justify-between">
         <div class="flex gap-2">

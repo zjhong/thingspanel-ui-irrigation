@@ -86,8 +86,8 @@ onMounted(fetchBoards);
 </script>
 
 <template>
-  <div class="h-full w-full">
-    <NFlex class="h-full bg-#fff p-4" justify="justify-between">
+  <div>
+    <NCard>
       <div class="flex-1-hidden">
         <div class="mb-4 flex items-center justify-between">
           <!-- 新建按钮 -->
@@ -112,14 +112,13 @@ onMounted(fetchBoards);
           </div>
         </div>
         <!-- 看板列表 -->
-        <NGrid x-gap="24" y-gap="16" :cols="24">
+        <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
           <NGridItem
             v-for="board in boards"
             :key="board.id"
-            :span="6"
             @click="goRouter('visualization_panel-details', board.id as string)"
           >
-            <NCard hoverable>
+            <NCard hoverable style="height: 180px">
               <div class="flex justify-between">
                 <div class="text-16px font-600">
                   {{ board.name }}
@@ -165,7 +164,7 @@ onMounted(fetchBoards);
           />
         </NFlex>
       </div>
-    </NFlex>
+    </NCard>
     <!-- 新建和编辑看板的模态框 -->
     <NModal v-model:show="showModal" :title="isEditMode ? '编辑看板' : '新建看板'" class="w-600px">
       <NCard bordered>
@@ -214,7 +213,8 @@ onMounted(fetchBoards);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block; /* 确保这是一个块级元素 */
+  display: block;
+  /* 确保这是一个块级元素 */
   max-width: 100%;
   color: #666;
   margin-bottom: 12px;

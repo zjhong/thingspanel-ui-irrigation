@@ -61,5 +61,3 @@ onBeforeUnmount(() => {
     </AppProvider>
   </NConfigProvider>
 </template>
-
-<style scoped></style>

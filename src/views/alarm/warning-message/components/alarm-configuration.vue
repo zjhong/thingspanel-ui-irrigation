@@ -280,66 +280,62 @@ function handleEditPwd(row) {
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm ref="queryFormRef" inline label-placement="left" :model="listData">
-          <NFormItem path="status">
-            <n-date-picker
-              v-model:value="range"
-              type="monthrange"
-              value-format="yyyy-MM-dd"
-              format="yyyy-MM-dd "
-              clearable
-              @update:value="pickerChange"
-            />
-          </NFormItem>
-          <NFormItem :label="$t('generate.alarm-level')" path="status">
-            <NSelect
-              v-model:value="listData.alarmLevel"
-              clearable
-              class="w-200px"
-              :options="options"
-              @update:value="alarmLevelChang"
-            />
-          </NFormItem>
-          <NFormItem :label="$t('generate.final-result')" path="status">
-            <NSelect
-              v-model:value="listData.processingResult"
-              clearable
-              class="w-200px"
-              :options="dispose"
-              @update:value="processingResultBlur"
-            />
-          </NFormItem>
-        </NForm>
-      </div>
-      <NSpace vertical>
-        <n-data-table
-          remote
-          :loading="loading"
-          :columns="columns"
-          :data="tableData"
-          :pagination="pagination"
-          :row-key="rowKey"
-          virtual-scroll
-          @update:checked-row-keys="handleCheck"
+  <div class="h-full flex-col">
+    <NForm ref="queryFormRef" inline label-placement="left" :model="listData">
+      <NFormItem path="status">
+        <n-date-picker
+          v-model:value="range"
+          type="monthrange"
+          value-format="yyyy-MM-dd"
+          format="yyyy-MM-dd "
+          clearable
+          @update:value="pickerChange"
         />
-        <NSpace>
-          <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>
-          <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
-        </NSpace>
-      </NSpace>
-      <NModal v-model:show="particulars" preset="card" :title="$t('page.irrigation.time.log.detail')" class="w-800px">
-        <div class="pop-up">
-          <div>{{ $t('generate.alarm-content') }}</div>
-          <div class="pop-up-content">
-            {{ particularsText }}
-          </div>
-        </div>
-      </NModal>
-    </NCard>
+      </NFormItem>
+      <NFormItem :label="$t('generate.alarm-level')" path="status">
+        <NSelect
+          v-model:value="listData.alarmLevel"
+          clearable
+          class="w-200px"
+          :options="options"
+          @update:value="alarmLevelChang"
+        />
+      </NFormItem>
+      <NFormItem :label="$t('generate.final-result')" path="status">
+        <NSelect
+          v-model:value="listData.processingResult"
+          clearable
+          class="w-200px"
+          :options="dispose"
+          @update:value="processingResultBlur"
+        />
+      </NFormItem>
+    </NForm>
   </div>
+  <NSpace vertical>
+    <n-data-table
+      remote
+      :loading="loading"
+      :columns="columns"
+      :data="tableData"
+      :pagination="pagination"
+      :row-key="rowKey"
+      virtual-scroll
+      @update:checked-row-keys="handleCheck"
+    />
+    <NSpace>
+      <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>
+      <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
+    </NSpace>
+  </NSpace>
+  <NModal v-model:show="particulars" preset="card" :title="$t('page.irrigation.time.log.detail')" class="w-800px">
+    <div class="pop-up">
+      <div>{{ $t('generate.alarm-content') }}</div>
+      <div class="pop-up-content">
+        {{ particularsText }}
+      </div>
+    </div>
+  </NModal>
 </template>
 
 <style scoped>

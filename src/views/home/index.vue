@@ -48,6 +48,13 @@ onMounted(getLayout);
       </template>
     </n-result>
   </div>
+
+  <!--
+ <div v-else>
+
+
+  </div> 
+-->
   <CardRender
     v-else
     ref="cr"

@@ -34,6 +34,13 @@ async function setupApp() {
   setupIconifyOffline();
   setupDayjs();
   await setupRouter(app);
+  app.config.globalProperties.getPlatform = () => {
+    const { appVersion }: any = window.navigator;
+    if (['iPhone', 'Android', 'iPad'].includes(appVersion) || window.innerWidth < 760) {
+      return true;
+    }
+    return false;
+  };
   app.mount('#app');
 }
 

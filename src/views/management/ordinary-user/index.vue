@@ -256,7 +256,7 @@ init();
 
 <template>
   <div class="overflow-auto">
-    <NCard :title="$t('route.management_ordinary-user')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('route.management_ordinary-user')">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.manage.user.userEmail')" path="email">

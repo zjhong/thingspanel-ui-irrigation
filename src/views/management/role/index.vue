@@ -196,33 +196,35 @@ init();
 </script>
 
 <template>
-  <n-card :bordered="false" class="h-full rounded-8px shadow-sm">
-    <div class="h-full flex-col">
-      <NSpace class="pb-12px" justify="space-between">
-        <NSpace>
-          <NButton type="primary" @click="handleAddTable">
-            <icon-ic-round-plus class="mr-4px text-20px" />
-            {{ $t('page.manage.role.addRole') }}
-          </NButton>
+  <div>
+    <n-card>
+      <div class="h-full flex-col">
+        <NSpace class="pb-12px" justify="space-between">
+          <NSpace>
+            <NButton type="primary" @click="handleAddTable">
+              <icon-ic-round-plus class="mr-4px text-20px" />
+              {{ $t('page.manage.role.addRole') }}
+            </NButton>
+          </NSpace>
         </NSpace>
-      </NSpace>
 
-      <n-data-table
-        :columns="columns"
-        :data="tableData"
-        :loading="loading"
-        :pagination="pagination"
-        class="flex-1-hidden"
-      />
-      <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-      <EditPermissionModal v-model:visible="editPermissionVisible" :edit-data="editData" />
-      <EditPasswordModal
-        v-model:visible="editPwdVisible"
-        :edit-data="editData"
-        @success="getTableData"
-      ></EditPasswordModal>
-    </div>
-  </n-card>
+        <n-data-table
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          class="flex-1-hidden"
+        />
+        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <EditPermissionModal v-model:visible="editPermissionVisible" :edit-data="editData" />
+        <EditPasswordModal
+          v-model:visible="editPwdVisible"
+          :edit-data="editData"
+          @success="getTableData"
+        ></EditPasswordModal>
+      </div>
+    </n-card>
+  </div>
 </template>
 
 <style scoped></style>

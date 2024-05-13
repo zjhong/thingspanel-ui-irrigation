@@ -49,64 +49,66 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-20px">
-    <NFlex justify="space-between" class="mb-4">
-      <NButton type="primary" @click="showModal()">{{ $t('generate.createDeviceConfig') }}</NButton>
-      <NFlex align="center" justify="flex-end" :wrap="false">
-        <NInput
-          v-model:value="queryData.name"
-          :placeholder="$t('generate.enter-config-name')"
-          type="text"
-          clearable
-          @clear="handleClearQuery"
-          @keydown.enter="handleQuery"
-        >
-          <template #prefix>
-            <NIcon>
-              <IosSearch />
-            </NIcon>
-          </template>
-        </NInput>
-        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+  <div>
+    <NCard>
+      <NFlex justify="space-between" class="mb-4">
+        <NButton type="primary" @click="showModal()">{{ $t('generate.createDeviceConfig') }}</NButton>
+        <NFlex align="center" justify="flex-end" :wrap="false">
+          <NInput
+            v-model:value="queryData.name"
+            :placeholder="$t('generate.enter-config-name')"
+            type="text"
+            clearable
+            @clear="handleClearQuery"
+            @keydown.enter="handleQuery"
+          >
+            <template #prefix>
+              <NIcon>
+                <IosSearch />
+              </NIcon>
+            </template>
+          </NInput>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+        </NFlex>
       </NFlex>
-    </NFlex>
-    <n-empty
-      v-if="deviceConfigList.length === 0"
-      size="huge"
-      description="暂无数据"
-      class="min-h-60 justify-center"
-    ></n-empty>
-    <template v-else>
-      <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
-        <NGridItem v-for="item in deviceConfigList" :key="item.id" @click="goRouter('device_config-detail', item.id)">
-          <NCard hoverable style="height: 180px">
-            <div class="title text-16px font-600">
-              {{ item.name }}
-            </div>
-            <NFlex justify="space-between" align="center" class="mt-4">
-              <div>
-                {{ item.device_count }}
-                <span>{{ $t('generate.individual') }}</span>
-                <span>{{ $t('generate.device') }}</span>
+      <n-empty
+        v-if="deviceConfigList.length === 0"
+        size="huge"
+        description="暂无数据"
+        class="min-h-60 justify-center"
+      ></n-empty>
+      <template v-else>
+        <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+          <NGridItem v-for="item in deviceConfigList" :key="item.id" @click="goRouter('device_config-detail', item.id)">
+            <NCard hoverable style="height: 180px">
+              <div class="title text-16px font-600">
+                {{ item.name }}
               </div>
-              <div>
-                <template v-if="item.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
-                <template v-if="item.device_type === '2'">{{ $t('generate.gateway') }}</template>
-                <template v-if="item.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
-              </div>
-            </NFlex>
-          </NCard>
-        </NGridItem>
-      </NGrid>
-      <NFlex justify="end" class="mt-4">
-        <NPagination
-          v-model:page="queryData.page"
-          :page-size="queryData.page_size"
-          :item-count="dataTotal"
-          @update:page="getData"
-        />
-      </NFlex>
-    </template>
+              <NFlex justify="space-between" align="center" class="mt-4">
+                <div>
+                  {{ item.device_count }}
+                  <span>{{ $t('generate.individual') }}</span>
+                  <span>{{ $t('generate.device') }}</span>
+                </div>
+                <div>
+                  <template v-if="item.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
+                  <template v-if="item.device_type === '2'">{{ $t('generate.gateway') }}</template>
+                  <template v-if="item.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
+                </div>
+              </NFlex>
+            </NCard>
+          </NGridItem>
+        </NGrid>
+        <NFlex justify="end" class="mt-4">
+          <NPagination
+            v-model:page="queryData.page"
+            :page-size="queryData.page_size"
+            :item-count="dataTotal"
+            @update:page="getData"
+          />
+        </NFlex>
+      </template>
+    </NCard>
   </div>
 </template>
 

@@ -148,6 +148,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'name',
     title: '告警名称',
     align: 'center',
+    minWidth: '140px',
     ellipsis: {
       tooltip: true
     }
@@ -156,6 +157,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'description',
     title: '告警描述',
     align: 'center',
+    minWidth: '180px',
     ellipsis: {
       tooltip: true
     }
@@ -164,6 +166,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_level',
     title: '级别',
     align: 'center',
+    minWidth: '100px',
     render(row) {
       if (row.alarm_level === 'H') {
         return '高';
@@ -178,6 +181,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'notification_group_name',
     title: '通知组',
     align: 'center',
+    minWidth: '140px',
     ellipsis: {
       tooltip: true
     }
@@ -186,6 +190,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'enabled',
     title: '运行状态',
     align: 'center',
+    minWidth: '100px',
     render(row) {
       if (row.enabled === 'Y') {
         return '启用';
@@ -196,7 +201,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
 
   {
     key: 'actions',
-    width: 350,
+    minWidth: '140px',
     title: '操作',
     align: 'center',
     render: (row: any) => {
@@ -222,7 +227,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           { onClick: () => handleEditPwd(row, item.type) }
         );
       });
-      return operatorBtn;
+      return <div class="flex">{operatorBtn}</div>;
     }
   }
 ]) as Ref<DataTableColumns<ColumnsData>>;

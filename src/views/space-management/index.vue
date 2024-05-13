@@ -89,22 +89,25 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     key: 'image_url',
     title: '图片',
     align: 'center',
-    width: '120px'
+    minWidth: '140px'
   },
   {
     key: 'name',
     title: '区域名称',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'irrigation_type',
     title: '灌溉类型',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
     title: '土壤类型',
     align: 'left',
+    minWidth: '140px',
     render: row => {
       if (row.signMode) {
         return <span>{dataServiceSignModeLabels[row.signMode]}</span>;
@@ -115,12 +118,14 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'crop_type',
     title: '种植作物',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'water_requirement',
     title: '作物需水量',
     align: 'left',
+    minWidth: '140px',
     render: row => {
       if (row.flag) {
         return <span>{dataServiceFlagLabels[row.flag]}</span>;
@@ -131,18 +136,20 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'area',
     title: '区域面积',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'area',
     title: '土壤参数',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'actions',
     title: '操作',
     align: 'center',
-    width: 350,
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
@@ -172,16 +179,19 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'name',
     title: '设备名称',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'irrigation_type',
     title: '设备编码',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
     title: '空间/区域',
+    minWidth: '140px',
     align: 'left',
     render: row => {
       if (row.signMode) {
@@ -192,6 +202,7 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'crop_type',
+    minWidth: '140px',
     title: '设备类型',
     align: 'left'
   }

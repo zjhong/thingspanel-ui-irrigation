@@ -233,7 +233,6 @@ watch(
               <template #icon>
                 <svg-icon icon="material-symbols:fitbit-arrow-upward" />
               </template>
-
               {{ $t('custom.grouping_details.previousLevel') }}
             </NButton>
             <NButton @click="goWhere('first')">{{ $t('custom.grouping_details.backToGroupList') }}</NButton>
@@ -241,7 +240,7 @@ watch(
         </template>
         <NTabs type="line" animated>
           <NTabPane name="详情" :tab="$t('custom.grouping_details.detail')">
-            <NDescriptions label-placement="top" bordered :column="6">
+            <NDescriptions label-class="min-w-100px" label-placement="top" bordered :column="6">
               <NDescriptionsItem :label="$t('custom.grouping_details.groupLevel')">
                 {{ details_data.tier.group_path }}
               </NDescriptionsItem>

@@ -78,22 +78,27 @@ async function handleRegisterConfig(record: productPackageRecord) {
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-package.packageName')
   },
   {
     key: 'target_version',
+    minWidth: '140px',
     title: $t('page.product.update-package.version')
   },
   {
     key: 'version',
+    minWidth: '140px',
     title: $t('page.product.update-package.versionCode')
   },
   {
     key: 'device_config_name',
+    minWidth: '140px',
     title: $t('page.product.update-package.deviceConfig')
   },
   {
     key: 'package_type',
+    minWidth: '140px',
     title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
       if (row.package_type === 1) {
@@ -106,10 +111,12 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'module',
+    minWidth: '140px',
     title: $t('page.product.update-package.moduleName')
   },
   {
     key: 'created_at',
+    minWidth: '140px',
     title: $t('page.product.update-package.createTime'),
     render: row => {
       return formatDateTime(row.created_at);
@@ -117,10 +124,12 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'description',
+    minWidth: '140px',
     title: $t('page.product.update-package.desc')
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('common.action'),
     align: 'center',
     render: (row: productPackageRecord) => {
@@ -184,7 +193,7 @@ init();
         <NSpace class="pb-12px" justify="space-between">
           <NSpace></NSpace>
           <NSpace align="center" :size="18">
-            <NButton size="small" type="primary" @click="getTableData">
+            <NButton type="primary" @click="getTableData">
               <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
               {{ $t('common.refreshTable') }}
             </NButton>

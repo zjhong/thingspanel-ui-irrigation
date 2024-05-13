@@ -9,13 +9,19 @@ defineProps<{
 }>();
 const attributeRef = ref();
 const columns0 = [
-  { title: '属性标识符', key: 'key' },
-  { title: '属性名称', key: 'data_name' },
-  { title: '属性值', key: 'value', render: row => `${row.value}(${row.unit})` },
-  { title: '更新时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
+  { title: '属性标识符', minWidth: '140px', key: 'key' },
+  { title: '属性名称', minWidth: '140px', key: 'data_name' },
+  { title: '属性值', minWidth: '140px', key: 'value', render: row => `${row.value}(${row.unit})` },
+  {
+    title: '更新时间',
+    minWidth: '140px',
+    key: 'created_at',
+    render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+  },
   {
     title: '操作',
     key: 'created_at',
+    minWidth: '140px',
     render: row => (
       <NPopconfirm
         onPositiveClick={async () => {
@@ -65,12 +71,17 @@ const formatStatus = status => {
 };
 
 const columns = [
-  { title: '属性下发时间', key: 'created_at', render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '消息id', key: 'message_id' },
-  { title: '发送内容', key: 'data' },
-  { title: '操作类型', key: 'operation_type', render: row => formatOperationType(row.status) },
-  { title: '状态', key: 'status', render: row => formatStatus(row.status) },
-  { title: '错误信息', key: 'error_message' }
+  {
+    title: '属性下发时间',
+    minWidth: '140px',
+    key: 'created_at',
+    render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
+  },
+  { title: '消息id', minWidth: '140px', key: 'message_id' },
+  { title: '发送内容', minWidth: '140px', key: 'data' },
+  { title: '操作类型', minWidth: '140px', key: 'operation_type', render: row => formatOperationType(row.status) },
+  { title: '状态', minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
+  { title: '错误信息', minWidth: '140px', key: 'error_message' }
 ];
 </script>
 

@@ -70,7 +70,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     key: 'description',
     title: () => $t('page.manage.menu.title'),
     align: 'left',
-    width: '200px',
+    minWidth: '140px',
     render: row => {
       if (row.multilingual && row.multilingual !== 'default') {
         return <span>{$t(row.multilingual)}</span>;
@@ -83,6 +83,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     key: 'param2',
     title: () => $t('page.manage.menu.icon'),
     align: 'left',
+    minWidth: '140px',
     render: row => {
       if (row.param2) {
         return <svg-icon icon={row.param2} />;
@@ -92,21 +93,25 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'element_code',
+    minWidth: '140px',
     title: () => $t('page.manage.menu.menuName'),
     align: 'left'
   },
   {
     key: 'param1',
+    minWidth: '140px',
     title: () => $t('page.manage.menu.routeName'),
     align: 'left'
   },
   {
     key: 'param3',
+    minWidth: '140px',
     title: () => $t('page.manage.menu.componentType'),
     align: 'left'
   },
   {
     key: 'element_type',
+    minWidth: '140px',
     title: () => $t('page.manage.menu.menuType'),
     align: 'left',
     render: row => {
@@ -125,6 +130,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'authority',
+    minWidth: '140px',
     title: () => $t('page.manage.menu.authority'),
     align: 'left',
     render: row => {
@@ -147,6 +153,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
   },
   {
     key: 'remark',
+    minWidth: '140px',
     title: () => $t('common.remark'),
     align: 'left'
   },
@@ -154,6 +161,7 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     key: 'actions',
     title: () => $t('common.action'),
     align: 'left',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace>

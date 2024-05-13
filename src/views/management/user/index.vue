@@ -82,27 +82,32 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'email',
+    minWidth: '140px',
     title: () => $t('page.manage.user.userEmail'),
     align: 'center'
   },
   {
     key: 'name',
+    minWidth: '140px',
     title: () => $t('page.manage.user.userName'),
     align: 'center'
   },
   {
     key: 'phone_number',
+    minWidth: '140px',
     title: () => $t('page.manage.user.userPhone'),
     align: 'center'
   },
   {
     key: 'created_at',
+    minWidth: '140px',
     title: () => $t('common.creationTime'),
     align: 'center',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   {
     key: 'status',
+    minWidth: '140px',
     title: () => $t('page.manage.user.userStatus'),
     align: 'center',
     render: row => {
@@ -135,11 +140,13 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   // },
   {
     key: 'remark',
+    minWidth: '140px',
     title: () => $t('common.remark'),
     align: 'center'
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: () => $t('common.action'),
     align: 'center',
     render: row => {

@@ -69,7 +69,9 @@ const handleRemove = async (id: string) => {
         <div class="mb-4 flex items-center justify-between">
           <!-- 新建按钮 -->
           <div>
-            <NButton @click="handleAddTemplate">{{ $t('generate.add-device-function-template') }}</NButton>
+            <NButton type="primary" @click="handleAddTemplate">
+              +{{ $t('generate.add-device-function-template') }}
+            </NButton>
           </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">

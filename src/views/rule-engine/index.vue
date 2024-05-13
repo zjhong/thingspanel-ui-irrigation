@@ -35,16 +35,18 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
     key: 'index',
     title: '序号',
     align: 'center',
-    width: '120px'
+    minWidth: '140px'
   },
   {
     key: 'name',
     title: '规则名称',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'status',
     title: '接口状态',
+    minWidth: '140px',
     align: 'left',
     render: row => {
       if (row.status) {
@@ -61,7 +63,7 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
     key: 'actions',
     title: '操作',
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>

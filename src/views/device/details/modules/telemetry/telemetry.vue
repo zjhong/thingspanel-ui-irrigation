@@ -107,20 +107,23 @@ const { status, send, close } = useWebSocket(wsUrl, {
 });
 
 const columns = [
-  { title: '指令', key: 'data' },
+  { title: '指令', minWidth: '140px', key: 'data' },
   {
     title: '操作类型',
     key: 'operation_type',
+    minWidth: '140px',
     render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
   },
-  { title: '操作用户', key: 'username' },
+  { title: '操作用户', minWidth: '140px', key: 'username' },
   {
     title: '操作时间',
     key: 'created_at',
+    minWidth: '140px',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   {
     title: '发送结果',
+    minWidth: '140px',
     key: 'status',
     render: row => (row.status === '1' ? '成功' : '失败')
   }

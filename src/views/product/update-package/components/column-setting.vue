@@ -47,7 +47,7 @@ watch(
 <template>
   <NPopover placement="bottom" trigger="click">
     <template #trigger>
-      <NButton size="small" type="primary">
+      <NButton type="primary">
         <IconAntDesignSettingOutlined class="mr-4px text-16px" />
         {{ $t('common.changeTableColumns') }}
       </NButton>

@@ -51,17 +51,20 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'name',
+    minWidth: '100px',
     title: $t('page.manage.role.roleName'),
     align: 'center'
   },
   {
     key: 'description',
+    minWidth: '100px',
     title: $t('page.manage.role.roleDesc'),
     align: 'center'
   },
   {
     key: 'created_at',
     title: '创建日期',
+    minWidth: '180px',
     align: 'center',
     render: row => {
       return formatDateTime(row.created_at);
@@ -70,6 +73,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'updated_at',
     title: '修改日期',
+    minWidth: '180px',
     align: 'center',
     render: row => {
       return formatDateTime(row.updated_at);
@@ -79,6 +83,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
     key: 'actions',
     title: '操作',
     align: 'center',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
@@ -198,14 +203,12 @@ init();
 <template>
   <div>
     <n-card>
-      <div class="h-full flex-col">
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <icon-ic-round-plus class="mr-4px text-20px" />
-              {{ $t('page.manage.role.addRole') }}
-            </NButton>
-          </NSpace>
+      <div class="h-full flex-col gap-15px">
+        <NSpace>
+          <NButton type="primary" @click="handleAddTable">
+            <icon-ic-round-plus class="mr-4px text-20px" />
+            {{ $t('page.manage.role.addRole') }}
+          </NButton>
         </NSpace>
 
         <n-data-table

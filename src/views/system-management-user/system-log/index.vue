@@ -67,36 +67,40 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'created_at',
     title: '时间',
+    minWidth: '140px',
     align: 'left',
-    width: '280',
     render: (row: any) => {
       return formatDateTime(row.created_at);
     }
   },
   {
     key: 'ip',
+    minWidth: '140px',
     title: 'IP',
     align: 'left'
   },
   {
     key: 'path',
     title: '请求路径',
-    align: 'left',
-    width: '200'
+    minWidth: '140px',
+    align: 'left'
   },
   {
     key: 'name',
+    minWidth: '140px',
     title: '请求方法',
     align: 'left'
   },
   {
     key: 'latency',
     title: '请求耗时',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'username',
     title: '用户名',
+    minWidth: '140px',
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;

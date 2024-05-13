@@ -75,15 +75,18 @@ const handleSetAddress = async (id, subDeviceAddr) => {
 const columns: Ref<any> = ref([
   {
     title: '设备名称',
+    minWidth: '140px',
     key: 'name'
   },
   {
     title: '子设备地址',
+    minWidth: '140px',
     key: 'subDeviceAddr'
   },
   {
     title: '操作',
     key: '',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace>

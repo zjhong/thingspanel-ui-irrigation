@@ -99,14 +99,17 @@ const getDeviceConfigOptions = async pattern => {
 const columns_to_show: Ref<any> = ref([
   {
     key: 'name',
+    minWidth: '180px',
     label: () => $t('custom.devicePage.deviceName')
   },
   {
     key: 'device_number',
+    minWidth: '180px',
     label: () => $t('custom.devicePage.deviceNumber')
   },
   {
     key: 'is_online',
+    minWidth: '100px',
     label: () => $t('custom.devicePage.onlineStatus'),
     render: row => {
       if (row?.is_online === 1) {
@@ -127,6 +130,7 @@ const columns_to_show: Ref<any> = ref([
   },
   {
     key: 'warn_status',
+    minWidth: '100px',
     label: () => $t('custom.devicePage.alarmStatus'),
     render: row => {
       if (row?.warn_status === 'Y') {
@@ -147,14 +151,17 @@ const columns_to_show: Ref<any> = ref([
   },
   {
     key: 'device_config_name',
+    minWidth: '100px',
     label: () => $t('custom.devicePage.deviceConfig')
   },
   {
     key: 'ts',
+    minWidth: '140px',
     label: () => $t('custom.devicePage.lastPushTime')
   },
   {
     key: 'access_way',
+    minWidth: '160px',
     label: () => $t('custom.devicePage.accessServiceProtocol'),
     render: row => {
       if (row?.access_way === '') return '此项为空';
@@ -324,7 +331,7 @@ const topActions = [
   {
     element: () => (
       <n-dropdown options={dropOption} trigger="hover" onSelect={handleSelect}>
-        <n-button type="primary">{$t('custom.devicePage.addDevice')}</n-button>
+        <n-button type="primary">+{$t('custom.devicePage.addDevice')}</n-button>
       </n-dropdown>
     )
   }

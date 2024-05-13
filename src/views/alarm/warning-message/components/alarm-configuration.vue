@@ -84,7 +84,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_time',
     title: '告警时间',
     align: 'center',
-    width: '200',
+    minWidth: '200px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
       return dayjs(row.alarm_time).format('YYYY-MM-DD HH:mm:ss');
     }
@@ -93,6 +93,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'name',
     title: '告警名称',
     align: 'center',
+    minWidth: '140px',
     ellipsis: {
       tooltip: true
     }
@@ -101,6 +102,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_level',
     title: '级别',
     align: 'center',
+    minWidth: '100px',
     render(row) {
       if (row.alarm_level === 'H') {
         return '高';
@@ -114,6 +116,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'description',
     title: '告警描述',
     align: 'center',
+    minWidth: '180px',
     ellipsis: {
       tooltip: true
     }
@@ -122,6 +125,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'processing_result',
     title: '处理结果',
     align: 'center',
+    minWidth: '140px',
     render(row) {
       if (row.alarm_level === 'DOP') {
         return '已处理';
@@ -134,13 +138,14 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'processor_name',
     title: '处理人',
+    minWidth: '140px',
     align: 'center'
   },
 
   {
     key: 'actions',
-    width: 350,
     title: '操作',
+    minWidth: '140px',
     align: 'center',
     render: row => {
       return (

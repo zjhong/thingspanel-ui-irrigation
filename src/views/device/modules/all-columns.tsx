@@ -1,15 +1,12 @@
 import { type DataTableColumns, NButton, NFlex, NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
 import { $t } from '@/locales';
-import { useAppStore } from '@/store/modules/app';
 
-const appS = useAppStore();
-
-console.log(appS.locale, '5430954392504');
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
   {
     title: () => $t('custom.groupPage.groupName'),
     key: 'name',
+    minWidth:'140px',
     ellipsis: {
       tooltip: {
         width: 320
@@ -18,7 +15,7 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
   },
   {
     title: () => $t('custom.groupPage.description'),
-    key: 'description',
+    key: 'description',minWidth:'140px',
     ellipsis: {
       tooltip: {
         width: 320
@@ -27,15 +24,14 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
   },
   {
     title: () => $t('custom.groupPage.createdAt'),
-    key: 'created_at',
+    key: 'created_at',minWidth:'180px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
       return dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss');
     }
   },
   {
     title: () => $t('custom.groupPage.actions'),
-    key: 'actions',
-    width: 190,
+    key: 'actions',minWidth:'140px',
     render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
       return (
         <div
@@ -78,20 +74,20 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
 
 export const createDeviceColumns = (): DataTableColumns<DeviceManagement.DeviceData> => [
   {
-    type: 'selection'
+    type: 'selection', minWidth:'140px',
   },
   {
     title: () => $t('custom.devicePage.deviceName'),
-    key: 'name',
+    key: 'name', minWidth:'140px',
     render: row => row.name || '-'
   },
   {
     title: () => $t('custom.devicePage.deviceNumber'),
-    key: 'device_number',
+    key: 'device_number', minWidth:'140px',
     render: row => row.device_number || '-'
   },
   {
-    title: () => $t('custom.devicePage.deviceConfig'),
+    title: () => $t('custom.devicePage.deviceConfig'), minWidth:'140px',
     key: 'device_config_name'
   }
 ];
@@ -103,22 +99,21 @@ export const createNoSelectDeviceColumns = (
   return [
     {
       title: () => $t('custom.devicePage.deviceName'),
-      key: 'name',
+      key: 'name', minWidth:'140px',
       render: row => row.name || '-'
     },
     {
       title: () => $t('custom.devicePage.deviceNumber'),
-      key: 'device_number',
+      key: 'device_number', minWidth:'140px',
       render: row => row.device_number || '-'
     },
     {
-      title: () => $t('custom.devicePage.deviceConfig'),
+      title: () => $t('custom.devicePage.deviceConfig'), minWidth:'140px',
       key: 'device_config_name'
     },
     {
       title: () => $t('custom.groupPage.actions'),
-      key: 'actions',
-      width: 250,
+      key: 'actions', minWidth:'140px',
       render: row => {
         return (
           <NFlex justify={'start'}>

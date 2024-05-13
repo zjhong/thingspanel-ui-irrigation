@@ -76,12 +76,14 @@ const columns = ref([
   {
     key: 'name',
     title: '通知组名称',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
     title: '通知类型',
     align: 'left',
+    minWidth: '140px',
     render: (row: any) => {
       const notificationType = notificationOptions.find(option => option.value === row.notification_type)?.label || '';
       return notificationType;
@@ -91,6 +93,7 @@ const columns = ref([
     key: 'status',
     title: '状态',
     align: 'left',
+    minWidth: '140px',
     render: (row: any) => {
       return <NSwitch value={row.status === 'OPEN'} onChange={value => handleSwitchChange(row, value)} />;
     }
@@ -99,7 +102,7 @@ const columns = ref([
     key: 'actions',
     title: '操作',
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: (row: any) => {
       return (
         <NSpace justify={'center'}>
@@ -140,7 +143,7 @@ getTableData();
   <div>
     <NCard :title="$t('generate.notification-group')">
       <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
+        <NButton type="primary" @click="handleAddTable">+{{ $t('device_template.add') }}</NButton>
       </template>
       <div class="h-full flex-col">
         <NDataTable :columns="columns" :data="tableData" :loading="loading" />

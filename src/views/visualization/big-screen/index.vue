@@ -115,7 +115,7 @@ onMounted(fetchBoards);
           <div class="mb-4 flex items-center justify-between">
             <!-- 新建按钮 -->
             <div>
-              <NButton @click="showModal = true">{{ $t('generate.create-large-screen') }}</NButton>
+              <NButton type="primary" @click="showModal = true">+{{ $t('generate.create-large-screen') }}</NButton>
             </div>
             <!-- 搜索部分 -->
             <div class="flex items-center gap-2">
@@ -240,7 +240,8 @@ onMounted(fetchBoards);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block; /* 确保这是一个块级元素 */
+  display: block;
+  /* 确保这是一个块级元素 */
   max-width: 100%;
   color: #666;
   margin-bottom: 12px;

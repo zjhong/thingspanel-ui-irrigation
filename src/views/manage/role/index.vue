@@ -55,24 +55,24 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'roleName',
       title: $t('page.manage.role.roleName'),
       align: 'center',
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'roleCode',
       title: $t('page.manage.role.roleCode'),
       align: 'center',
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'roleDesc',
       title: $t('page.manage.role.roleDesc'),
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'status',
       title: $t('page.manage.role.roleStatus'),
       align: 'center',
-      width: 100,
+      minWidth: '140px',
       render: row => {
         if (row.status === null) {
           return null;
@@ -92,7 +92,7 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      minWidth: '180px',
       render: row => (
         <div class="flex-center gap-8px">
           <NButton type="primary" ghost size="small" onClick={() => handleEdit(row.id)}>

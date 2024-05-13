@@ -106,13 +106,10 @@ const generatedColumns = computed(() => {
     columns = (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(item => {
       if (item.render) {
         // 使用自定义的render函数渲染列
-        return {
-          title: item.label,
-          key: item.key,
-          render: row => item.render(row)
-        };
+        return { ...item, title: item.label, key: item.key, render: row => item.render(row) };
       }
       return {
+        ...item,
         title: item.label,
         key: item.key,
         render: row => {

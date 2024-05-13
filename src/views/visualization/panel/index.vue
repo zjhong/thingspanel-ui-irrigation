@@ -92,7 +92,7 @@ onMounted(fetchBoards);
         <div class="mb-4 flex items-center justify-between">
           <!-- 新建按钮 -->
           <div>
-            <NButton @click="showModal = true">{{ $t('dashboard_panel.addKanBan') }}</NButton>
+            <NButton type="primary" @click="showModal = true">+{{ $t('dashboard_panel.addKanBan') }}</NButton>
           </div>
           <!-- 搜索部分 -->
           <div class="flex items-center gap-2">

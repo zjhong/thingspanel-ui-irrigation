@@ -147,25 +147,30 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
     title: '名称',
+    minWidth: '140px',
     align: 'center'
   },
   {
     key: 'type',
+    minWidth: '140px',
     title: '类型',
     align: 'center'
   },
   {
     key: 'default_value',
     title: '默认值',
+    minWidth: '140px',
     align: 'center'
   },
   {
     key: 'desc',
     title: '描述',
+    minWidth: '140px',
     align: 'center'
   },
   {
     key: 'enable',
+    minWidth: '140px',
     title: '启用',
     align: 'center',
     render: (row: any) => {
@@ -174,6 +179,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   },
   {
     key: 'operate',
+    minWidth: '140px',
     title: '操作',
     align: 'center',
     render: (row: any) => {

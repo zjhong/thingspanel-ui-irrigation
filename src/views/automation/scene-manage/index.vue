@@ -108,17 +108,20 @@ const columns: Ref<any> = ref([
   {
     key: 'name',
     title: '场景名称',
+    minWidth: '100px',
     align: 'left'
   },
   {
     key: 'description',
     title: '场景描述',
+    minWidth: '100px',
     align: 'left'
   },
   {
     key: 'created_at',
     title: '创建时间',
     align: 'left',
+    minWidth: '100px',
     render: (row: any) => {
       return formatDateTime(row.created_at);
     }
@@ -127,6 +130,7 @@ const columns: Ref<any> = ref([
     key: 'updated_at',
     title: '修改时间',
     align: 'left',
+    minWidth: '100px',
     render: (row: any) => {
       return formatDateTime(row.updated_at);
     }
@@ -135,6 +139,7 @@ const columns: Ref<any> = ref([
     key: 'actions',
     title: '操作',
     align: 'left',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
@@ -202,7 +207,7 @@ onMounted(() => {
 
 <template>
   <div class="h-full w-full">
-    <NCard :bordered="false">
+    <NCard>
       <NFlex justify="space-between" class="mb-4">
         <NButton type="primary" @click="sceneAdd()">{{ $t('generate.+add-scene') }}</NButton>
         <NFlex align="center" justify="flex-end" :wrap="false">

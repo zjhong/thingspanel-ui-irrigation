@@ -67,26 +67,32 @@ async function handleRegisterConfig(record: productRecord) {
 const columns: Ref<DataTableColumns<productRecord>> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.list.productName')
   },
   {
     key: 'product_type',
+    minWidth: '140px',
     title: $t('page.product.list.deviceType')
   },
   {
     key: 'product_model',
+    minWidth: '140px',
     title: $t('page.product.list.productNumber')
   },
   {
     key: 'device_config_name',
+    minWidth: '140px',
     title: $t('page.product.list.deviceConfig')
   },
   {
     key: 'description',
+    minWidth: '140px',
     title: $t('page.product.list.productDesc')
   },
   {
     key: 'created_at',
+    minWidth: '140px',
     title: $t('page.product.list.createTime'),
     render: row => {
       return moment(row.created_at).format('YYYY-MM-DD hh:mm:ss');
@@ -94,9 +100,9 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('page.product.list.operate'),
     align: 'center',
-    width: '300px',
     render: row => {
       return (
         <NSpace justify={'center'}>
@@ -191,7 +197,7 @@ init();
             </NButton>
           </NSpace>
           <NSpace align="center" :size="18">
-            <NButton size="small" type="primary" @click="getTableData">
+            <NButton type="primary" @click="getTableData">
               <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
               {{ $t('common.refreshTable') }}
             </NButton>

@@ -92,11 +92,13 @@ const runDel = (rowId: string) => {
 const columns: Ref<any> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.planName'),
     align: 'center'
   },
   {
     key: 'schedule_type',
+    minWidth: '140px',
     title: () => $t('page.irrigation.group.controlModel'),
     align: 'center',
     render: row => {
@@ -105,11 +107,13 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'start_irrigation_datetime',
+    minWidth: '140px',
     title: () => $t('page.irrigation.group.startTime'),
     align: 'center'
   },
   {
     key: 'id',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.orderCode'),
     align: 'center',
     ellipsis: {
@@ -118,6 +122,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'valve_opening',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.doorOpeing'),
     align: 'center',
     render: row => {
@@ -126,6 +131,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'status',
+    minWidth: '140px',
     title: () => $t('page.irrigation.planStatus'),
     align: 'center',
     render: row => {
@@ -134,6 +140,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'control_type',
+    minWidth: '140px',
     title: () => $t('page.irrigation.controlType'),
     align: 'center',
     render: row => {
@@ -142,7 +149,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'actions',
-    width: 350,
+    minWidth: '140px',
     title: () => $t('common.action'),
     align: 'center',
     render: row => {

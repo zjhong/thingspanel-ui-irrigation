@@ -71,17 +71,20 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
     key: 'send_time',
     title: '发送时间',
     align: 'left',
+    minWidth: '180px',
     render: (row: any) => {
       return formatDateTime(row.send_time);
     }
   },
   {
     key: 'send_content',
+    minWidth: '180px',
     title: '发送标题和内容',
     align: 'left'
   },
   {
     key: 'send_target',
+    minWidth: '100px',
     title: '接收人',
     align: 'left',
     width: '200'
@@ -89,11 +92,13 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'send_result',
     title: '发送结果',
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
     title: '通知类型',
+    minWidth: '140px',
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;

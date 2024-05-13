@@ -109,18 +109,22 @@ const getDeviceOptions = async () => {
 const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: '设备名称'
   },
   {
     key: 'device_number',
+    minWidth: '140px',
     title: '设备编码'
   },
   {
     key: 'activate_flag',
+    minWidth: '140px',
     title: '在线状态'
   },
   {
     key: 'ts',
+    minWidth: '140px',
     title: '推送时间',
     render: row => {
       if (row.ts) {

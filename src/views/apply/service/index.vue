@@ -56,11 +56,13 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.serviceName'),
     align: 'left'
   },
   {
     key: 'device_type',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.deviceType'),
     align: 'left',
     render: row => {
@@ -72,26 +74,31 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   },
   {
     key: 'protocol_type',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.protocolType'),
     align: 'left'
   },
   {
     key: 'access_address',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.accessAddress'),
     align: 'left'
   },
   {
     key: 'http_address',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.httpAddress'),
     align: 'left'
   },
   {
     key: 'sub_topic_prefix',
+    minWidth: '140px',
     title: () => $t('page.apply.service.form.subTopicPrefix'),
     align: 'left'
   },
   {
     key: 'description',
+    minWidth: '140px',
     title: () => $t('common.description'),
     align: 'left'
   },
@@ -99,7 +106,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     key: 'actions',
     title: () => $t('common.action'),
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>

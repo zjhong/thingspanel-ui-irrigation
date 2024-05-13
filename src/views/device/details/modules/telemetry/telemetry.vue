@@ -176,18 +176,6 @@ const fetchData = async () => {
   }
 };
 
-const sends = async () => {
-  // 发送属性的逻辑...
-  const { error } = await telemetryDataPub({
-    device_id: props.id,
-    value: formValue.value
-  });
-  if (!error) {
-    showDialog.value = false;
-    fetchData();
-  }
-};
-
 const token = localStg.get('token');
 
 const fetchTelemetry = async () => {
@@ -261,6 +249,19 @@ const copy = event => {
   input.select();
   document.execCommand('copy');
   window.$message?.success('复制成功');
+};
+
+const sends = async () => {
+  // 发送属性的逻辑...
+  const { error } = await telemetryDataPub({
+    device_id: props.id,
+    value: formValue.value
+  });
+  if (!error) {
+    showDialog.value = false;
+    fetchData();
+    fetchTelemetry();
+  }
 };
 onMounted(() => {
   fetchData();

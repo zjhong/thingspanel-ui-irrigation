@@ -16,6 +16,8 @@ declare namespace StorageType {
     token: string;
     /** The refresh token */
     refreshToken: string;
+    /** The expires in time */
+    token_expires_in: string;
     /** The user info */
     userInfo: Api.Auth.UserInfo;
     /** The theme color */

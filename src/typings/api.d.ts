@@ -70,6 +70,7 @@ declare namespace Api {
     interface LoginToken {
       token: string;
       refreshToken: string;
+      expires_in: number;
     }
 
     /** 用户信息 */

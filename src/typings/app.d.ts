@@ -480,6 +480,7 @@ declare namespace App {
             };
             addRole: string;
             editRole: string;
+            editPermission: string;
           };
           user: {
             title: string;
@@ -1403,8 +1404,6 @@ declare namespace App {
         timeoutMinutes: string;
         phoneNumber: string;
         location: string;
-        latitude: string;
-        longitude: string;
         pluginDemoUrl: string;
         vue3DocumentationUrl: string;
         deviceAccessType: string;

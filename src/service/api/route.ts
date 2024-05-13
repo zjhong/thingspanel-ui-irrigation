@@ -35,6 +35,12 @@ export const delElement = async (id: string) => {
   return data;
 };
 
+/** Get UI Element List */
+export const fetchUIElementList = async () => {
+  const data = await request.get<Api.Route.Data>('/ui_elements/select/form');
+  return data?.data?.list || [];
+};
+
 /**
  * whether the route is existed
  *

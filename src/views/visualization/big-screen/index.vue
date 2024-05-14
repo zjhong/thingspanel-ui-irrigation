@@ -84,9 +84,10 @@ const deleteBoard = async (id: string) => {
 const editWithVEditor = board => {
   const id = board.id;
   const token = localStg.get('token');
+  const expiresTime = localStg.get('token_expires_in');
   sessionStorage.setItem('thingspanel_token', token || '');
   const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
-  const url = `${visualUrl}/editor?id=${id}&token=${token}`;
+  const url = `${visualUrl}/editor?id=${id}&token=${token}&expiresTime=${expiresTime}`;
   window.open(url, '_blank');
 };
 
@@ -94,8 +95,9 @@ const editWithVEditor = board => {
 const viewWithVEditor = board => {
   const id = board.id;
   const token = localStg.get('token');
+  const expiresTime = localStg.get('token_expires_in');
   const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
-  const url = `${visualUrl}/display?id=${id}&token=${token}`;
+  const url = `${visualUrl}/display?id=${id}&token=${token}&expiresTime=${expiresTime}`;
   window.open(url, '_blank');
 };
 

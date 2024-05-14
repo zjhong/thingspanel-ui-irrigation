@@ -181,7 +181,7 @@ onMounted(() => {
       ></n-empty>
       <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
         <NGridItem v-for="(item, index) in sceneLinkageList" :key="index">
-          <NCard hoverable style="height: 180px">
+          <NCard hoverable style="height: 160px">
             <NFlex justify="space-between" align="center" class="mb-4">
               <div class="text-16px font-600">
                 {{ item.name }}

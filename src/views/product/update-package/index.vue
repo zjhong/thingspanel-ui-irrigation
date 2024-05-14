@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -207,7 +207,10 @@ const getList = async (name?: string) => {
     });
   }
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 function init() {
   getList();
   getTableData();
@@ -221,40 +224,38 @@ init();
   <div>
     <NCard :title="$t('page.product.update-package.packageList')">
       <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NGrid :cols="24" :x-gap="18">
-            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceConfig')" path="email">
-              <NSelect
-                v-model:value="queryParams.device_config_id"
-                filterable
-                :options="deviceOptions"
-                @search="getList"
-              />
-            </NFormItemGridItem>
-            <NFormItemGridItem :span="6" :label="$t('page.product.update-package.packageName')" path="name">
-              <NInput v-model:value="queryParams.name" />
-            </NFormItemGridItem>
-            <NFormItemGridItem>
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-            </NFormItemGridItem>
-          </NGrid>
+        <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
+          <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
+            <NSelect
+              v-model:value="queryParams.device_config_id"
+              filterable
+              :options="deviceOptions"
+              @search="getList"
+            />
+          </NFormItem>
+          <NFormItem :label="$t('page.product.update-package.packageName')" path="name">
+            <NInput v-model:value="queryParams.name" />
+          </NFormItem>
+          <NFormItem>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+          </NFormItem>
         </NForm>
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
+        <div class="flex flex-wrap items-center gap-15px pb-12px">
+          <div class="flex-1">
             <NButton type="primary" @click="handleAddTable">
               <IconIcRoundPlus class="mr-4px text-20px" />
               {{ $t('common.add') }}
             </NButton>
-          </NSpace>
-          <NSpace align="center" :size="18">
+          </div>
+          <div class="flex flex-1 items-center gap-15px" :class="getPlatform ? '' : 'flex-justify-end'">
             <NButton type="primary" @click="getTableData">
-              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+              <IconMdiRefresh class="text-16px" :class="{ 'animate-spin': loading }" />
               {{ $t('common.refreshTable') }}
             </NButton>
             <ColumnSetting v-model:columns="columns" />
-          </NSpace>
-        </NSpace>
+          </div>
+        </div>
         <NDataTable
           remote
           :columns="columns"

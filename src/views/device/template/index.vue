@@ -7,7 +7,7 @@ import { $t } from '@/locales';
 import TemplateModal from './components/template-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks/src';
 
-const { loading, startLoading, endLoading } = useLoading(false);
+const { startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -65,62 +65,59 @@ const handleRemove = async (id: string) => {
 <template>
   <div>
     <n-card>
-      <div class="flex-1-hidden">
-        <div class="mb-4 flex items-center justify-between">
-          <!-- 新建按钮 -->
-          <div>
-            <NButton type="primary" @click="handleAddTemplate">
-              +{{ $t('generate.add-device-function-template') }}
-            </NButton>
-          </div>
-          <!-- 搜索部分 -->
-          <div class="flex items-center gap-2">
-            <NInput v-model:value="queryParams.name" clearable :placeholder="$t('generate.enter-template-name')" />
-            <NButton type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-          </div>
+      <div class="m-b-20px flex flex-wrap items-center gap-15px">
+        <!-- 新建按钮 -->
+        <div class="flex-1">
+          <NButton type="primary" @click="handleAddTemplate">
+            +{{ $t('generate.add-device-function-template') }}
+          </NButton>
         </div>
+        <!-- 搜索部分 -->
 
-        <n-spin size="small" :show="loading">
-          <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
-            <NGridItem v-for="item in deviceTemplateList" :key="item.id" @click="handleEdit(item.id)">
-              <NCard hoverable>
-                <div class="flex-col justify-between">
-                  <div class="title text-16px font-600">
-                    {{ item.name }}
-                  </div>
-                  <div class="description mt-2 text-14px">
-                    {{ item.description || '--' }}
-                  </div>
-                </div>
-                <template v-for="tag in (item.label || '').split(',')" :key="tag">
-                  <div style="display: inline-block; margin: 0px 8px 8px 0px">
-                    <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
-                  </div>
+        <div class="flex items-center gap-2">
+          <NInput v-model:value="queryParams.name" clearable :placeholder="$t('generate.enter-template-name')" />
+          <NButton type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+        </div>
+      </div>
+
+      <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem v-for="item in deviceTemplateList" :key="item.id" @click="handleEdit(item.id)">
+          <NCard hoverable>
+            <div class="flex-col justify-between">
+              <div class="title text-16px font-600">
+                {{ item.name }}
+              </div>
+              <div class="description mt-2 text-14px">
+                {{ item.description || '--' }}
+              </div>
+            </div>
+            <template v-for="tag in (item.label || '').split(',')" :key="tag">
+              <div style="display: inline-block; margin: 0px 8px 8px 0px">
+                <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
+              </div>
+            </template>
+
+            <div class="mt-4 flex justify-end gap-2">
+              <NButton circle strong secondary @click.stop="handleRemove(item.id)">
+                <template #icon>
+                  <Delete20Regular class="text-24px text-primary" />
                 </template>
-
-                <div class="mt-4 flex justify-end gap-2">
-                  <NButton strong circle secondary @click.stop="handleRemove(item.id)">
-                    <template #icon>
-                      <Delete20Regular class="text-24px text-primary" />
-                    </template>
-                  </NButton>
-                </div>
-              </NCard>
-            </NGridItem>
-          </NGrid>
-        </n-spin>
-        <div class="pagination-box">
-          <NPagination
-            v-model:page="pagination.page"
-            :page-count="pagination.pageCount"
-            @update:page="
-              page => {
-                pagination.page = page;
-                getData();
-              }
-            "
-          />
-        </div>
+              </NButton>
+            </div>
+          </NCard>
+        </NGridItem>
+      </NGrid>
+      <div class="pagination-box">
+        <NPagination
+          v-model:page="pagination.page"
+          :page-count="pagination.pageCount"
+          @update:page="
+            page => {
+              pagination.page = page;
+              getData();
+            }
+          "
+        />
       </div>
 
       <TemplateModal v-model:visible="visible" :type="modalType" :template-id="templateId" :get-table-data="getData" />

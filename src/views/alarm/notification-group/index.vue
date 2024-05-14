@@ -75,13 +75,13 @@ const handleEditTable = async (rowId: string) => {
 const columns = ref([
   {
     key: 'name',
-    title: '通知组名称',
+    title: $t('generate.notification-group-name'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
-    title: '通知类型',
+    title: $t('generate.notification-type'),
     align: 'left',
     minWidth: '140px',
     render: (row: any) => {
@@ -91,7 +91,7 @@ const columns = ref([
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('generate.status'),
     align: 'left',
     minWidth: '140px',
     render: (row: any) => {

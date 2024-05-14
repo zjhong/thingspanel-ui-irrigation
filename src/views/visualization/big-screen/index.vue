@@ -110,95 +110,86 @@ onMounted(fetchBoards);
 <template>
   <div class="h-full w-full">
     <NCard>
-      <NFlex class="h-full" justify="justify-between">
-        <div class="flex-1-hidden">
-          <div class="mb-4 flex items-center justify-between">
-            <!-- 新建按钮 -->
-            <div>
-              <NButton type="primary" @click="showModal = true">+{{ $t('generate.create-large-screen') }}</NButton>
-            </div>
-            <!-- 搜索部分 -->
-            <div class="flex items-center gap-2">
-              <NInput
-                v-model:value="nameSearch"
-                clearable
-                :placeholder="$t('generate.search-by-name')"
-                @clear="
-                  () => {
-                    nameSearch = '';
-                    fetchBoards();
-                  }
-                "
-              />
-
-              <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
-            </div>
+      <div class="flex-1-hidden">
+        <div class="m-b-20px flex flex-wrap items-center gap-15px">
+          <!-- 新建按钮 -->
+          <div class="flex-1">
+            <NButton type="primary" @click="showModal = true">+{{ $t('generate.create-large-screen') }}</NButton>
           </div>
-          <!-- 大屏列表 -->
-          <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
-            <NGridItem
-              v-for="board in boards"
-              :key="board.id"
-              @click="goRouter('visualization_panel-details', board.id as string)"
-            >
-              <NCard hoverable style="height: 180px" @click.stop="viewWithVEditor(board)">
-                <div class="mb-8px text-16px font-600">{{ board.name }}</div>
-                <!-- 使用NTooltip组件 -->
-                <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
-                  <template #trigger>
-                    <div class="description">{{ board.description }}</div>
-                  </template>
-                  {{ board.description }}
-                </NTooltip>
-                <div class="mt-4 flex justify-end gap-2">
-                  <n-tooltip trigger="hover" placement="top">
-                    <template #trigger>
-                      <NButton strong secondary circle @click.stop="editWithVEditor(board)">
-                        <template #icon>
-                          <icon-material-symbols:edit-square class="text-24px text-blue" />
-                        </template>
-                      </NButton>
-                    </template>
-                    可视化编辑
-                  </n-tooltip>
-
-                  <n-tooltip trigger="hover" placement="top">
-                    <template #trigger>
-                      <NButton strong secondary circle @click.stop="editBoard(board)">
-                        <template #icon>
-                          <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
-                        </template>
-                      </NButton>
-                    </template>
-                    编辑名称和描述
-                  </n-tooltip>
-
-                  <n-tooltip trigger="hover" placement="top">
-                    <template #trigger>
-                      <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
-                        <template #icon>
-                          <icon-material-symbols:delete-outline class="text-24px text-red" />
-                        </template>
-                      </NButton>
-                    </template>
-                    删除
-                  </n-tooltip>
-                </div>
-              </NCard>
-            </NGridItem>
-          </NGrid>
-        </div>
-        <!-- 大屏列表后面添加分页器 -->
-        <div class="mt-4 h-60px w-full">
-          <NFlex justify="end">
-            <NPagination
-              v-model:page="currentPage"
-              :page-size="pageSize"
-              :item-count="total"
-              @update:page="fetchBoards"
+          <!-- 搜索部分 -->
+          <div class="flex items-center gap-20px">
+            <NInput
+              v-model:value="nameSearch"
+              clearable
+              :placeholder="$t('generate.search-by-name')"
+              @clear="
+                () => {
+                  nameSearch = '';
+                  fetchBoards();
+                }
+              "
             />
-          </NFlex>
+
+            <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
+          </div>
         </div>
+        <!-- 大屏列表 -->
+        <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
+          <NGridItem
+            v-for="board in boards"
+            :key="board.id"
+            @click="goRouter('visualization_panel-details', board.id as string)"
+          >
+            <NCard hoverable style="height: 160px" @click.stop="viewWithVEditor(board)">
+              <div class="mb-8px text-16px font-600">{{ board.name }}</div>
+              <!-- 使用NTooltip组件 -->
+              <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
+                <template #trigger>
+                  <div class="description">{{ board.description }}</div>
+                </template>
+                {{ board.description }}
+              </NTooltip>
+              <div class="mt-4 flex justify-end gap-2">
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="editWithVEditor(board)">
+                      <template #icon>
+                        <icon-material-symbols:edit-square class="text-24px text-blue" />
+                      </template>
+                    </NButton>
+                  </template>
+                  可视化编辑
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="editBoard(board)">
+                      <template #icon>
+                        <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                      </template>
+                    </NButton>
+                  </template>
+                  编辑名称和描述
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
+                      <template #icon>
+                        <icon-material-symbols:delete-outline class="text-24px text-red" />
+                      </template>
+                    </NButton>
+                  </template>
+                  删除
+                </n-tooltip>
+              </div>
+            </NCard>
+          </NGridItem>
+        </NGrid>
+      </div>
+      <!-- 大屏列表后面添加分页器 -->
+      <NFlex justify="end">
+        <NPagination v-model:page="currentPage" :page-size="pageSize" :item-count="total" @update:page="fetchBoards" />
       </NFlex>
     </NCard>
     <!-- 新建和编辑大屏的模态框 -->

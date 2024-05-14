@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -106,7 +106,10 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 function handleQuery() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
@@ -114,11 +117,12 @@ getTableData();
   <div>
     <NCard :title="$t('generate.notification-record')">
       <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
+        <NForm label-placement="left" :inline="!getPlatform" :model="queryParams">
           <NFormItem path="name" :label="$t('generate.notification-type')">
-            <NSelect
+            <n-select
               v-model:value="queryParams.notification_type"
               :options="notificationOptions"
+              :placeholder="$t('generate.notification-type')"
               class="input-style min-w-160px"
             />
           </NFormItem>

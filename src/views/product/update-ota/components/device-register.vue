@@ -77,21 +77,25 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 任务名称
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-ota.taskName')
   },
   // 设备数量
   {
     key: 'device_count',
+    minWidth: '140px',
     title: $t('page.product.update-ota.deviceNum')
   },
   // 描述
   {
     key: 'description',
+    minWidth: '140px',
     title: $t('page.product.update-ota.desc')
   },
   // 创建日期
   {
     key: 'created_at',
+    minWidth: '140px',
     title: $t('page.product.update-ota.createTime'),
     render: (row: any) => {
       return formatDateTime(row.created_at);
@@ -99,6 +103,7 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('common.action'),
     align: 'center',
     render: (row: any) => {

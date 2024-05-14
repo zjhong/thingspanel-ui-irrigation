@@ -21,7 +21,7 @@ const queryParams = reactive({
 const currentMid = ref();
 const tableData = ref<productPackageRecord[]>([]);
 function setTableData(data: productPackageRecord[]) {
-  tableData.value = data;
+  tableData.value = data || [];
 }
 function handleQuery() {
   Object.assign(queryParams, {
@@ -63,8 +63,8 @@ async function getTableData() {
     const list: productPackageRecord[] = data.list;
     setTableData(list);
     pagination.pageCount = Math.ceil(data.total / queryParams.page_size);
-    endLoading();
   }
+  endLoading();
 }
 const drawerTitle: Ref<string> = ref('');
 const editData: any = ref<productPackageRecord>();

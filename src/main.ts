@@ -36,7 +36,7 @@ async function setupApp() {
   await setupRouter(app);
   app.config.globalProperties.getPlatform = () => {
     const { appVersion }: any = window.navigator;
-    if (['iPhone', 'Android', 'iPad'].includes(appVersion) || window.innerWidth < 760) {
+    if (['iPhone', 'Android', 'iPad'].includes(appVersion) || window.innerWidth < 680) {
       return true;
     }
     return false;

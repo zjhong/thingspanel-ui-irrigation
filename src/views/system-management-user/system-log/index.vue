@@ -119,7 +119,7 @@ getTableData();
   <div>
     <NCard :title="$t('generate.system-log')">
       <NForm class="m-b-20px" :inline="!getPlatform" label-placement="left" :model="queryParams">
-        <NFormItem :label="$t('generate.username')" path="name">
+        <NFormItem class="max-w-200px" :label="$t('generate.username')" path="name">
           <NInput v-model:value="queryParams.username" />
         </NFormItem>
         <NFormItem path="selected_time">

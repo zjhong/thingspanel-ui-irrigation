@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { $t } from '@/locales';
 import ThemeSetting from './components/theme-setting.vue';
+import FunctionSetting from './components/function-setting.vue';
 import DataClearSetting from './components/data-clear-setting.vue';
 </script>
 
@@ -14,6 +15,9 @@ import DataClearSetting from './components/data-clear-setting.vue';
           </NTabPane>
           <NTabPane name="2" :tab="$t('page.manage.setting.dataClearSetting.title')">
             <DataClearSetting></DataClearSetting>
+          </NTabPane>
+          <NTabPane name="3" tab="功能设置">
+            <FunctionSetting></FunctionSetting>
           </NTabPane>
         </NTabs>
       </div>

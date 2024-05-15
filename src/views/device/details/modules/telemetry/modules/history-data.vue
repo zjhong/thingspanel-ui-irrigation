@@ -6,6 +6,7 @@ import { addMonths } from 'date-fns';
 import { telemetryHistoryData } from '@/service/api';
 import { $t } from '@/locales';
 import { useLoading } from '~/packages/hooks';
+import { createServiceConfig } from '~/env.config';
 
 interface Created {
   deviceId: string;
@@ -13,7 +14,7 @@ interface Created {
 }
 
 const props = defineProps<Created>();
-
+const { baseURL } = createServiceConfig(import.meta.env);
 interface Params {
   device_id: string;
   end_time: number;
@@ -74,10 +75,16 @@ const getTelemetryHistoryData = async () => {
 
   if (params.export_excel) {
     endLoading();
+    if (baseURL.includes('api/v1')) {
+      const urls = baseURL.split('api/v1');
+      window.open(urls[0] + data);
+    }
   }
+
   if (!error && !params.export_excel) {
     tableData.value = data || [];
     pagination.pageCount = Math.ceil(data?.length || 1 / pagination.pageSize);
+
     endLoading();
   }
 };

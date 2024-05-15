@@ -197,6 +197,7 @@ const activeOptions = [
         <NFormItem :label="$t('page.product.list.activeStatus')" path="activate_flag">
           <NSelect
             v-model:value="queryParams.activate_flag"
+            class="w-150px"
             :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
             :options="activeOptions"
           />

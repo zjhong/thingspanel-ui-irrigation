@@ -85,15 +85,17 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     key: 'name',
+    minWidth: '100px',
     title: $t('page.product.update-package.packageName')
   },
   {
     key: 'target_version',
+    minWidth: '140px',
     title: $t('page.product.update-package.version')
   },
   {
     key: 'version',
-    minWidth: '140px',
+    minWidth: '110px',
     title: $t('page.product.update-package.versionCode')
   },
   {
@@ -103,7 +105,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'package_type',
-    minWidth: '140px',
+    minWidth: '110px',
     title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
       if (row.package_type === 1) {

@@ -184,8 +184,8 @@ const activeOptions = [
 </script>
 
 <template>
-  <div class="h-full overflow-hidden">
-    <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
+  <div class="h-full overflow-y-auto">
+    <NCard>
       <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
         <NFormItem :label="$t('page.product.list.batchNumber')" path="batchNumber">
           <NInput v-model:value="queryParams.batch_number" />
@@ -197,6 +197,7 @@ const activeOptions = [
         <NFormItem :label="$t('page.product.list.activeStatus')" path="activate_flag">
           <NSelect
             v-model:value="queryParams.activate_flag"
+            class="w-150px"
             :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
             :options="activeOptions"
           />
@@ -231,22 +232,24 @@ const activeOptions = [
           <ColumnSetting v-model:columns="columns" />
         </div>
       </div>
-      <NDataTable
-        :columns="columns"
-        :data="tableData"
-        :loading="loading"
-        :pagination="pagination"
-        remote
-        flex-height
-        class="flex-1-hidden"
-      />
-      <TableDeviceModal
-        v-model:visible="visible"
-        :pid="props.pid"
-        :type="modalType"
-        :edit-data="(editData as unknown as deviceAddType)"
-        @success="getTableData"
-      />
+
+      <div class="flex flex-1 overflow-y-auto">
+        <NDataTable
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          remote
+          class="flex-1-hidden"
+        />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :pid="props.pid"
+          :type="modalType"
+          :edit-data="(editData as unknown as deviceAddType)"
+          @success="getTableData"
+        />
+      </div>
     </NCard>
   </div>
 </template>

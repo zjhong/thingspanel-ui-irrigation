@@ -76,7 +76,7 @@ onMounted(getConfigInfo);
       <template v-for="item in additionInfo" :key="item.name">
         <NFlex justify="space-between" class="mb-24px items-center">
           <div class="flex items-center">
-            <div class="w-60px">{{ item.name }}:</div>
+            <div class="w-100px">{{ item.name }}:</div>
             <NInput v-model:value="item.value" />
           </div>
         </NFlex>

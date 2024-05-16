@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineExpose, onMounted, ref } from 'vue';
+import { computed, defineExpose, getCurrentInstance, onMounted, ref } from 'vue';
 import { NButton, NDataTable, NForm, NFormItem, NInput, NModal, NPagination } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { Refresh } from '@vicons/ionicons5';
@@ -82,6 +82,11 @@ const getOptions = async show => {
   }
 };
 onMounted(fetchDataFunction);
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -95,7 +100,12 @@ onMounted(fetchDataFunction);
         {{ $t('generate.refresh') }}
       </NButton>
     </NFlex>
-    <NModal v-if="submitApi" v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="bg- w-400px">
+    <NModal
+      v-if="submitApi"
+      v-model:show="showDialog"
+      :title="$t('generate.issue-attribute')"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
+    >
       <n-card>
         <NForm>
           <NFormItem v-if="isCommand" :label="$t('generate.command-identifier')" required :options="options">

@@ -90,15 +90,16 @@ async function handleSubmit() {
   const currentPermissions = [...selectedPermissions.value];
   currentPermissions.shift();
   selectedPermissions.value = [];
+
   if (currentPermissions.length === 0) {
     data = await delRolePermissions(props.editData?.id);
   } else {
     data = await modifyRolePermissions(props.editData?.id, currentPermissions);
   }
+  closeModal();
   if (!data.error) {
     emit('success');
   }
-  closeModal();
 }
 </script>
 
@@ -107,7 +108,6 @@ async function handleSubmit() {
     v-model:show="modalVisible"
     preset="card"
     :title="title"
-    class="w-700px"
     :on-after-enter="
       () => {
         initUIElementList(), initRolePermissions();

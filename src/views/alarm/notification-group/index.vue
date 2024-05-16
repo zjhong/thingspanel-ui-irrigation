@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NSwitch } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -136,6 +136,10 @@ function handleAddTable() {
   setModalType('add');
 }
 
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
@@ -152,6 +156,7 @@ getTableData();
         </div>
         <TableActionModal
           v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
           :type="modalType"
           :edit-data="editData"
           @get-table-data="getTableData"

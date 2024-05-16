@@ -1,5 +1,5 @@
 <script lang="tsx" setup>
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { NButton, NCard, NFlex, NGrid, NGridItem, NPagination, useDialog, useMessage } from 'naive-ui';
 import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import moment from 'moment';
@@ -152,6 +152,11 @@ const closeLog = () => {
   };
   showLog.value = false;
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(() => {
   getData();
 });
@@ -251,6 +256,7 @@ onMounted(() => {
       :title="$t('page.irrigation.time.log.name')"
       size="huge"
       :bordered="false"
+      :class="getPlatform ? 'max-w-90%' : 'w-600px'"
       @close="closeLog()"
     >
       <NFlex class="mb-6">
@@ -270,14 +276,14 @@ onMounted(() => {
           <thead>
             <tr>
               <th>{{ $t('generate.order-number') }}</th>
-              <th class="w-180px">{{ $t('generate.execution-time') }}</th>
+              <th class="min-w-180px">{{ $t('generate.execution-time') }}</th>
               <th>{{ $t('generate.execution-description') }}</th>
-              <th class="w-120px">{{ $t('generate.execution-status') }}</th>
+              <th class="min-w-120px">{{ $t('generate.execution-status') }}</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(sceneItem, index) in logData" :key="index">
-              <td class="w-100px">{{ index + 1 }}</td>
+              <td class="min-w-100px">{{ index + 1 }}</td>
               <td>{{ moment(sceneItem['executed_at']).format('yyyy-MM-DD HH:mm:ss') }}</td>
               <td>{{ sceneItem['detail'] }}</td>
               <td>

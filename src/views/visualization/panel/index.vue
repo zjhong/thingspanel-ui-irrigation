@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 // import {useRouter} from 'vue-router';
 import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, useMessage } from 'naive-ui';
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
@@ -81,7 +81,10 @@ const deleteBoard = async (id: string) => {
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(fetchBoards);
 </script>
 
@@ -164,7 +167,11 @@ onMounted(fetchBoards);
       </div>
     </NCard>
     <!-- 新建和编辑看板的模态框 -->
-    <NModal v-model:show="showModal" :title="isEditMode ? '编辑看板' : '新建看板'" class="w-600px">
+    <NModal
+      v-model:show="showModal"
+      :title="isEditMode ? '编辑看板' : '新建看板'"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
+    >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
           <NFormItem :label="$t('generate.dashboard-name')" path="name">

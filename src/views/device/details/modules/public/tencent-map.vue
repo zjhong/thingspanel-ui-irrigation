@@ -48,7 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="domRef" class="h-400px w-400px"></div>
+  <div ref="domRef" class="100%"></div>
 </template>
 
 <style scoped></style>

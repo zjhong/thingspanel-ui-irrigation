@@ -319,9 +319,16 @@ init();
           :pagination="pagination"
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

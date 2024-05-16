@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { deviceConfigInfo, deviceDetail, deviceLocation } from '@/service/api';
 import { $t } from '@/locales';
@@ -54,7 +54,10 @@ const handleSave = () => {
     additional_info: JSON.stringify({ extendedInfo: additionInfo.value })
   });
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(getConfigInfo);
 </script>
 
@@ -81,10 +84,11 @@ onMounted(getConfigInfo);
     </NCard>
 
     <NButton @click="handleSave">{{ $t('common.save') }}</NButton>
-    <NModal v-model:show="isShow" class="w-440px flex-center">
-      <NCard>
+    <NModal v-model:show="isShow" class="flex-center" :class="getPlatform ? 'max-w-90%' : 'max-w-640px'">
+      <NCard class="flex flex-1">
         <TencentMap
           v-show="isShow"
+          class="flex-1"
           :longitude="longitude"
           :latitude="latitude"
           @position-selected="onPositionSelected"

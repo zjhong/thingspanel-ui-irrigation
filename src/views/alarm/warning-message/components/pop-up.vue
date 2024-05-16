@@ -285,49 +285,47 @@ watch(props, newValue => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title">
     <NForm ref="formRef" label-placement="top" :rules="rules" :model="formData">
-      <n-grid :cols="24" :x-gap="24">
-        <n-form-item-gi :span="24" :label="$t('generate.alarm-name')" path="name">
-          <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.alarm-name')" path="name">
+        <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" :label="$t('generate.alarm-description')">
-          <n-input v-model:value="formData.description" :placeholder="$t('generate.alarm-description')" />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.alarm-description')">
+        <n-input v-model:value="formData.description" :placeholder="$t('generate.alarm-description')" />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" :label="$t('generate.alarm-level')" path="alarm_level">
-          <n-select
-            v-model:value="formData.alarm_level"
-            :placeholder="$t('generate.alarm-level')"
-            :options="alarmLevel"
-          />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.alarm-level')" path="alarm_level">
+        <n-select
+          v-model:value="formData.alarm_level"
+          :placeholder="$t('generate.alarm-level')"
+          :options="alarmLevel"
+        />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
-          <n-select
-            v-model:value="formData.alarm_repeat_time"
-            :placeholder="$t('generate.trigger-repeat-count')"
-            :options="alarmRepeatTime"
-          />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
+        <n-select
+          v-model:value="formData.alarm_repeat_time"
+          :placeholder="$t('generate.trigger-repeat-count')"
+          :options="alarmRepeatTime"
+        />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" :label="$t('generate.trigger-duration')" path="alarm_keep_time">
-          <n-select
-            v-model:value="formData.alarm_keep_time"
-            :placeholder="$t('generate.trigger-duration')"
-            :options="alarmKeepTime"
-          />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.trigger-duration')" path="alarm_keep_time">
+        <n-select
+          v-model:value="formData.alarm_keep_time"
+          :placeholder="$t('generate.trigger-duration')"
+          :options="alarmKeepTime"
+        />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" :label="$t('generate.notification-group')" path="selectValue">
-          <n-select
-            v-model:value="formData.notification_group_id"
-            :placeholder="$t('generate.select-notification-group')"
-            :options="generalOptions"
-          />
-        </n-form-item-gi>
-      </n-grid>
+      <n-form-item :label="$t('generate.notification-group')" path="selectValue">
+        <n-select
+          v-model:value="formData.notification_group_id"
+          :placeholder="$t('generate.select-notification-group')"
+          :options="generalOptions"
+        />
+      </n-form-item>
 
       <NSpace class="w-full pt-16px" :size="24" justify="end">
         <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>

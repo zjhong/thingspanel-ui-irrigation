@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 // import {useRouter} from 'vue-router';
 import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, useMessage } from 'naive-ui';
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
@@ -105,7 +105,10 @@ const viewWithVEditor = board => {
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(fetchBoards);
 </script>
 
@@ -154,7 +157,7 @@ onMounted(fetchBoards);
               <div class="mt-4 flex justify-end gap-2">
                 <n-tooltip trigger="hover" placement="top">
                   <template #trigger>
-                    <NButton strong secondary circle @click.stop="editWithVEditor(board)">
+                    <NButton circle strong secondary @click.stop="editWithVEditor(board)">
                       <template #icon>
                         <icon-material-symbols:edit-square class="text-24px text-blue" />
                       </template>
@@ -195,7 +198,11 @@ onMounted(fetchBoards);
       </NFlex>
     </NCard>
     <!-- 新建和编辑大屏的模态框 -->
-    <NModal v-model:show="showModal" :title="isEditMode ? '编辑大屏' : '新建大屏'" class="w-600px">
+    <NModal
+      v-model:show="showModal"
+      :title="isEditMode ? '编辑大屏' : '新建大屏'"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
+    >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
           <NFormItem :label="$t('generate.large-screen-name')" path="name">

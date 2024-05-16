@@ -277,14 +277,15 @@ function processingResultBlur() {
 list();
 const particulars = ref(false);
 const particularsText = ref('');
-const getPlatform = computed(() => {
-  const { proxy }: any = getCurrentInstance();
-  return proxy.getPlatform();
-});
+
 function handleEditPwd(row) {
   particularsText.value = row.content;
   particulars.value = true;
 }
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -336,7 +337,12 @@ function handleEditPwd(row) {
       <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
     </NSpace>
   </NSpace>
-  <NModal v-model:show="particulars" preset="card" :title="$t('page.irrigation.time.log.detail')" class="w-800px">
+  <NModal
+    v-model:show="particulars"
+    preset="card"
+    :title="$t('page.irrigation.time.log.detail')"
+    :class="getPlatform ? 'w-90%' : 'w-800px'"
+  >
     <div class="pop-up">
       <div>{{ $t('generate.alarm-content') }}</div>
       <div class="pop-up-content">

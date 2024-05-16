@@ -30,3 +30,11 @@ export const editDataClear = async (params: any) => {
 export const dictQuery = async (params: any) => {
   return await request.get<Api.BaseApi.Data | any>('dict/enum', { params });
 };
+/** 编辑清理设置 */
+export const getFunction = async () => {
+  return await request.get<Api.BaseApi.Data | any>('/sys_function');
+};
+/** 编辑清理设置 */
+export const editFunction = async (param: { function_id: string }) => {
+  return await request.put<Api.BaseApi.Data | any>(`/sys_function/${param.function_id}`);
+};

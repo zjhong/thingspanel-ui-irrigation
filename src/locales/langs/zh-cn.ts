@@ -1145,6 +1145,9 @@ const local: App.I18n.Schema = {
     secondElement: '二',
     thirdElement: '三',
     individual: '个'
+  },
+  kanban: {
+    'add-cards': '添加卡片'
   }
 };
 

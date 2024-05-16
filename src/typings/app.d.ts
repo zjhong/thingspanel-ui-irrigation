@@ -1431,6 +1431,9 @@ declare namespace App {
         thirdElement: string;
         individual: string;
       };
+      kanban: {
+        'add-cards': string;
+      };
     };
 
     type GetI18nKey<T extends Record<string, unknown>, K extends keyof T = keyof T> = K extends string

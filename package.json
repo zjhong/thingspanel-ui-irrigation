@@ -14,7 +14,10 @@
   "bugs": {
     "url": "https://github.com/ThingsPanel/thingspanel-ui/issues"
   },
-  "keywords": ["Soybean Admin", "ThingsPanel"],
+  "keywords": [
+    "Soybean Admin",
+    "ThingsPanel"
+  ],
   "scripts": {
     "build": "npm run typecheck && cross-env VITE_SERVICE_ENV=prod vite build",
     "build:dev": "npm run typecheck && cross-env VITE_SERVICE_ENV=dev vite build",
@@ -60,6 +63,7 @@
     "dayjs": "1.11.10",
     "echarts": "5.5.0",
     "form-data": "4.0.0",
+    "grid-layout-plus": "^1.0.5",
     "lodash-es": "4.17.21",
     "moment": "^2.30.1",
     "moving-numbers-vue3": "^1.1.3",

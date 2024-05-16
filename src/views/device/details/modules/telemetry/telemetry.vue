@@ -313,9 +313,9 @@ const getPlatform = computed(() => {
     <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" :class="getPlatform ? 'w-90%' : 'w-40%'">
       <n-card>
         <n-form>
-          <div class="m-b-20px flex">
+          <div class="m-b-20px" :class="getPlatform ? ' flex-col ' : ' flex'">
             <span class="flex-1">{{ $t('generate.mqtt') }}</span>
-            <span>{{ $t('generate.copy-commands-to-local') }}</span>
+            <span class="flex-1">{{ $t('generate.copy-commands-to-local') }}</span>
           </div>
           <div class="flex items-center gap-15px">
             <n-input v-model:value="device_order" type="textarea" class="flex-1" @click="copy" />
@@ -349,7 +349,11 @@ const getPlatform = computed(() => {
       </n-card>
     </n-modal>
 
-    <n-modal v-model:show="showHistory" :title="$t('generate.telemetry-history-data')" class="w-[600px]">
+    <n-modal
+      v-model:show="showHistory"
+      :title="$t('generate.telemetry-history-data')"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
+    >
       <NCard>
         <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
         <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />

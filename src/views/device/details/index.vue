@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useLoading } from '@sa/hooks';
 import { useWebSocket } from '@vueuse/core';
@@ -179,6 +179,10 @@ watch(
     }, 50);
   }
 );
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -192,7 +196,11 @@ watch(
           </NButton>
         </div>
 
-        <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
+        <n-modal
+          v-model:show="showDialog"
+          :title="$t('generate.issue-attribute')"
+          :class="getPlatform ? 'w-90%' : 'w-400px'"
+        >
           <n-card>
             <n-form :model="deviceDataStore.deviceData" :rules="rules">
               <div>

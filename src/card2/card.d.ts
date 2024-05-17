@@ -9,7 +9,7 @@ export interface CardItemBase {
     defaultTitle?: string; // 卡片标题 尽量使用国际化标题
     showTitle?: boolean;
   }; // 初始标题 可以不定义
-  poster: any; // 示例图 尺寸193*120
+
   scene: SceneType; // 'mobile' | 'pc' | 'all';
   minWH: {
     minW: number | string | -1; // 卡片最小宽度,字符串单位为像素，数字则表示占几个格子，当前默认共48格
@@ -18,7 +18,9 @@ export interface CardItemBase {
   preset?: Record<string, any>; // 初始设定,可自定义
 }
 
-export interface CardItem extends CardItemBase {
+export interface CardItem {
+  cardItemBase: CardItemBase;
+  poster: any; // 示例图 尺寸193*120
   component: any; // 卡片组件，一般就是 ./component.vue
   configForm: any; // 卡片配置文件，一般就是 card-config.vue
 }

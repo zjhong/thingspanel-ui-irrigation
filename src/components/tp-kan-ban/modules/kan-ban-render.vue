@@ -193,7 +193,7 @@ onBeforeUnmount(() => {
         >
           <div class="cursor-pointer overflow-hidden border rounded p-2px duration-200 hover:border-primary">
             <div class="text-center text-12px">
-              {{ item.basicSettings.defaultTitle }}
+              {{ item.cardItemBase.basicSettings.defaultTitle }}
             </div>
             <div class="h-100px w-full">
               <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />

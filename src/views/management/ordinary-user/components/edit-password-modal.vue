@@ -77,9 +77,10 @@ async function handleSubmit() {
   const data: any = await editUser(formModel);
   if (!data.error) {
     window.$message?.success(data.msg);
-    emit('success');
+
     handleUpdateFormModel(createDefaultFormModel());
     closeModal();
+    emit('success');
   }
 }
 
@@ -94,19 +95,17 @@ watch(
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="$t('page.login.resetPwd.title')" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="$t('page.login.resetPwd.title')">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
-      <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" :label="$t('page.manage.user.userName')" path="email">
-          <NInput v-model:value="formModel.email" readonly />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.manage.user.password')" path="password">
-          <NInput v-model:value="formModel.password" type="password" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.manage.user.confirmPwd')" path="confirmPwd">
-          <NInput v-model:value="formModel.confirmPwd" type="password" />
-        </NFormItemGridItem>
-      </NGrid>
+      <NFormItem :label="$t('page.manage.user.userName')" path="email">
+        <NInput v-model:value="formModel.email" readonly />
+      </NFormItem>
+      <NFormItem :label="$t('page.manage.user.password')" path="password">
+        <NInput v-model:value="formModel.password" type="password" />
+      </NFormItem>
+      <NFormItem :label="$t('page.manage.user.confirmPwd')" path="confirmPwd">
+        <NInput v-model:value="formModel.confirmPwd" type="password" />
+      </NFormItem>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
         <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>

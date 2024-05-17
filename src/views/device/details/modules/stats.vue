@@ -11,7 +11,12 @@ const attributeRef = ref();
 const columns0 = [
   { title: '属性标识符', minWidth: '140px', key: 'key' },
   { title: '属性名称', minWidth: '140px', key: 'data_name' },
-  { title: '属性值', minWidth: '140px', key: 'value', render: row => `${row.value}(${row.unit})` },
+  {
+    title: '属性值',
+    minWidth: '140px',
+    key: 'value',
+    render: row => `${row.value}${row.unit !== null ? row.unit : ''}`
+  },
   {
     title: '更新时间',
     minWidth: '140px',

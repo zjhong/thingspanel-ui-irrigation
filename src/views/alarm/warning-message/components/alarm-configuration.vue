@@ -7,7 +7,7 @@
  * @LastEditTime: 2024-03-24 16:04:26
 -->
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace, useMessage } from 'naive-ui';
 import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
@@ -84,7 +84,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_time',
     title: '告警时间',
     align: 'center',
-    minWidth: '200px',
+    minWidth: '140px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
       return dayjs(row.alarm_time).format('YYYY-MM-DD HH:mm:ss');
     }
@@ -93,7 +93,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'name',
     title: '告警名称',
     align: 'center',
-    minWidth: '140px',
+    minWidth: '100px',
     ellipsis: {
       tooltip: true
     }
@@ -102,7 +102,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_level',
     title: '级别',
     align: 'center',
-    minWidth: '100px',
+    minWidth: '90px',
     render(row) {
       if (row.alarm_level === 'H') {
         return '高';
@@ -125,7 +125,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'processing_result',
     title: '处理结果',
     align: 'center',
-    minWidth: '140px',
+    minWidth: '100px',
     render(row) {
       if (row.alarm_level === 'DOP') {
         return '已处理';
@@ -138,7 +138,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'processor_name',
     title: '处理人',
-    minWidth: '140px',
+    minWidth: '100px',
     align: 'center'
   },
 
@@ -282,11 +282,15 @@ function handleEditPwd(row) {
   particularsText.value = row.content;
   particulars.value = true;
 }
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
   <div class="h-full flex-col">
-    <NForm ref="queryFormRef" inline label-placement="left" :model="listData">
+    <NForm ref="queryFormRef" :inline="!getPlatform" label-placement="left" :model="listData">
       <NFormItem path="status">
         <n-date-picker
           v-model:value="range"
@@ -333,7 +337,12 @@ function handleEditPwd(row) {
       <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
     </NSpace>
   </NSpace>
-  <NModal v-model:show="particulars" preset="card" :title="$t('page.irrigation.time.log.detail')" class="w-800px">
+  <NModal
+    v-model:show="particulars"
+    preset="card"
+    :title="$t('page.irrigation.time.log.detail')"
+    :class="getPlatform ? 'w-90%' : 'w-800px'"
+  >
     <div class="pop-up">
       <div>{{ $t('generate.alarm-content') }}</div>
       <div class="pop-up-content">

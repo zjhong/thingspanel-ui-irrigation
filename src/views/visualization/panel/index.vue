@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 // import {useRouter} from 'vue-router';
 import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, useMessage } from 'naive-ui';
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
@@ -81,78 +81,79 @@ const deleteBoard = async (id: string) => {
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(fetchBoards);
 </script>
 
 <template>
   <div>
     <NCard>
-      <div class="flex-1-hidden">
-        <div class="mb-4 flex items-center justify-between">
-          <!-- 新建按钮 -->
-          <div>
-            <NButton type="primary" @click="showModal = true">+{{ $t('dashboard_panel.addKanBan') }}</NButton>
-          </div>
-          <!-- 搜索部分 -->
-          <div class="flex items-center gap-2">
-            <NInput
-              v-model:value="nameSearch"
-              clearable
-              :placeholder="$t('generate.search-by-name')"
-              @clear="
-                () => {
-                  nameSearch = '';
-                  fetchBoards();
-                }
-              "
-            />
-
-            <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
-          </div>
+      <div class="m-b-20px flex flex-wrap items-center gap-15px">
+        <!-- 新建按钮 -->
+        <div class="flex-1">
+          <NButton type="primary" @click="showModal = true">+{{ $t('dashboard_panel.addKanBan') }}</NButton>
         </div>
-        <!-- 看板列表 -->
-        <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
-          <NGridItem
-            v-for="board in boards"
-            :key="board.id"
-            @click="goRouter('visualization_panel-details', board.id as string)"
-          >
-            <NCard hoverable style="height: 180px">
-              <div class="flex justify-between">
-                <div class="text-16px font-600">
-                  {{ board.name }}
-                </div>
-                <div
-                  v-if="board.home_flag === 'Y'"
-                  class="mr--4 mt--2 h-24px w-24px border border-red-4 rounded-50 text-center text-12px text-red font-600"
-                >
-                  {{ $t('generate.first') }}
-                </div>
-              </div>
-              <!-- 使用NTooltip组件 -->
-              <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
-                <template #trigger>
-                  <div class="description">{{ board.description }}</div>
-                </template>
-                {{ board.description }}
-              </NTooltip>
-              <div class="mt-4 flex justify-end gap-2">
-                <NButton circle strong secondary @click.stop="editBoard(board)">
-                  <template #icon>
-                    <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
-                  </template>
-                </NButton>
-                <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
-                  <template #icon>
-                    <icon-material-symbols:delete-outline class="text-24px text-red" />
-                  </template>
-                </NButton>
-              </div>
-            </NCard>
-          </NGridItem>
-        </NGrid>
+        <!-- 搜索部分 -->
+        <div class="flex items-center gap-20px">
+          <NInput
+            v-model:value="nameSearch"
+            clearable
+            :placeholder="$t('generate.search-by-name')"
+            @clear="
+              () => {
+                nameSearch = '';
+                fetchBoards();
+              }
+            "
+          />
+
+          <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
+        </div>
       </div>
+      <!-- 看板列表 -->
+      <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem
+          v-for="board in boards"
+          :key="board.id"
+          @click="goRouter('visualization_panel-details', board.id as string)"
+        >
+          <NCard hoverable style="height: 160px">
+            <div class="flex justify-between">
+              <div class="text-16px font-600">
+                {{ board.name }}
+              </div>
+              <div
+                v-if="board.home_flag === 'Y'"
+                class="mr--4 mt--2 h-24px w-24px border border-red-4 rounded-50 text-center text-12px text-red font-600"
+              >
+                {{ $t('generate.first') }}
+              </div>
+            </div>
+            <!-- 使用NTooltip组件 -->
+            <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
+              <template #trigger>
+                <div class="description">{{ board.description }}</div>
+              </template>
+              {{ board.description }}
+            </NTooltip>
+            <div class="mt-4 flex justify-end gap-2">
+              <NButton circle strong secondary @click.stop="editBoard(board)">
+                <template #icon>
+                  <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                </template>
+              </NButton>
+              <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
+                <template #icon>
+                  <icon-material-symbols:delete-outline class="text-24px text-red" />
+                </template>
+              </NButton>
+            </div>
+          </NCard>
+        </NGridItem>
+      </NGrid>
       <!-- 看板列表后面添加分页器 -->
       <div class="mt-4 h-60px w-full">
         <NFlex justify="end">
@@ -166,7 +167,11 @@ onMounted(fetchBoards);
       </div>
     </NCard>
     <!-- 新建和编辑看板的模态框 -->
-    <NModal v-model:show="showModal" :title="isEditMode ? '编辑看板' : '新建看板'" class="w-600px">
+    <NModal
+      v-model:show="showModal"
+      :title="isEditMode ? '编辑看板' : '新建看板'"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
+    >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
           <NFormItem :label="$t('generate.dashboard-name')" path="name">

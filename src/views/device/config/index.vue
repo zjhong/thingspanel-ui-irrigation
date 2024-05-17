@@ -80,7 +80,7 @@ onMounted(() => {
       <template v-else>
         <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
           <NGridItem v-for="item in deviceConfigList" :key="item.id" @click="goRouter('device_config-detail', item.id)">
-            <NCard hoverable style="height: 180px">
+            <NCard hoverable style="height: 160px">
               <div class="title text-16px font-600">
                 {{ item.name }}
               </div>

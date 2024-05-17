@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NSwitch } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -75,13 +75,13 @@ const handleEditTable = async (rowId: string) => {
 const columns = ref([
   {
     key: 'name',
-    title: '通知组名称',
+    title: $t('generate.notification-group-name'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
-    title: '通知类型',
+    title: $t('generate.notification-type'),
     align: 'left',
     minWidth: '140px',
     render: (row: any) => {
@@ -91,7 +91,7 @@ const columns = ref([
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('generate.status'),
     align: 'left',
     minWidth: '140px',
     render: (row: any) => {
@@ -136,6 +136,10 @@ function handleAddTable() {
   setModalType('add');
 }
 
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
@@ -152,6 +156,7 @@ getTableData();
         </div>
         <TableActionModal
           v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
           :type="modalType"
           :edit-data="editData"
           @get-table-data="getTableData"

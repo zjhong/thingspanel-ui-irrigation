@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from 'vue';
 import type { NumberAnimationInst } from 'naive-ui';
 import dayjs from 'dayjs';
 import { Activity } from '@vicons/tabler';
@@ -275,6 +275,11 @@ onUnmounted(() => {
     close();
   }
 });
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -288,7 +293,11 @@ onUnmounted(() => {
       </n-button>
     </NFlex>
 
-    <n-modal v-model:show="showDialog" :title="$t('generate.issue-attribute')" class="w-[400px]">
+    <n-modal
+      v-model:show="showDialog"
+      :title="$t('generate.issue-attribute')"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
+    >
       <n-card>
         <n-form>
           <n-form-item :label="$t('generate.attribute')">
@@ -301,21 +310,21 @@ onUnmounted(() => {
         </n-form>
       </n-card>
     </n-modal>
-    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" class="w-[900px]">
+    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" :class="getPlatform ? 'w-90%' : 'w-40%'">
       <n-card>
         <n-form>
-          <div style="display: flex; width: 700px; justify-content: space-between">
-            <span>{{ $t('generate.mqtt') }}</span>
-            <span>{{ $t('generate.copy-commands-to-local') }}</span>
+          <div class="m-b-20px" :class="getPlatform ? ' flex-col ' : ' flex'">
+            <span class="flex-1">{{ $t('generate.mqtt') }}</span>
+            <span class="flex-1">{{ $t('generate.copy-commands-to-local') }}</span>
           </div>
-          <div style="display: flex; margin-top: 15px; margin-bottom: 15px">
-            <n-input v-model:value="device_order" type="textarea" style="width: 700px" @click="copy" />
+          <div class="flex items-center gap-15px">
+            <n-input v-model:value="device_order" type="textarea" class="flex-1" @click="copy" />
 
-            <n-button style="width: 100px; margin-left: 20px; margin-top: 40px" @click="sendSimulationList">
+            <n-button @click="sendSimulationList">
               {{ $t('generate.send') }}
             </n-button>
           </div>
-          <div v-if="showError" style="display: flex; width: 700px; border: 2px solid #eee; border-radius: 5px">
+          <div v-if="showError" class="w-100% flex" style="border: 2px solid #eee; border-radius: 5px">
             <SvgIcon
               local-icon="AlertFilled"
               style="margin-left: 5px; color: red; margin-right: 5px; margin-top: 5px; margin-bottom: 5px"
@@ -333,14 +342,18 @@ onUnmounted(() => {
                 text-overflow: ellipsis;
               "
             >
-              {{ erroMessage }}
+              {{ erroMessage }}99999
             </span>
           </div>
         </n-form>
       </n-card>
     </n-modal>
 
-    <n-modal v-model:show="showHistory" :title="$t('generate.telemetry-history-data')" class="w-[600px]">
+    <n-modal
+      v-model:show="showHistory"
+      :title="$t('generate.telemetry-history-data')"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
+    >
       <NCard>
         <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
         <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />

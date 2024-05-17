@@ -201,7 +201,9 @@ const goWhere = (key: string) => {
   }
 
   if (key === 'back') {
-    router.push({ name: 'device_grouping-details', query: { id: editData.value.parent_id } });
+    if (details_data.value.detail.parent_id !== '0') {
+      router.push({ name: 'device_grouping-details', query: { id: editData.value.parent_id } });
+    }
   } else {
     router.push({ name: 'device_grouping' });
   }

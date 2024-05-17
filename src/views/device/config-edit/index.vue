@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import type { FormInst } from 'naive-ui';
 // import {useMessage} from 'naive-ui';
@@ -118,10 +118,15 @@ onMounted(async () => {
   }
   getDeviceTemplate();
 });
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <div class="overflow-hidden">
+  <div class="overflow-y-auto">
     <NCard :title="`${modalTitle}设备配置`">
       <NForm
         ref="configFormRef"
@@ -129,7 +134,7 @@ onMounted(async () => {
         :rules="configFormRules"
         label-placement="left"
         label-width="auto"
-        class="w-600"
+        :class="getPlatform ? '90%' : 'w-600'"
       >
         <NFormItem :label="$t('generate.device-configuration-name')" path="name">
           <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-device-name')" />

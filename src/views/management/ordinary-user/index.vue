@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { computed, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NTag } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -256,7 +256,10 @@ function handleReset() {
 function init() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 初始化
 init();
 </script>
@@ -265,7 +268,7 @@ init();
   <div class="overflow-auto">
     <NCard :title="$t('route.management_ordinary-user')">
       <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
+        <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
           <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
             <NInput v-model:value="queryParams.email" />
           </NFormItem>
@@ -316,9 +319,16 @@ init();
           :pagination="pagination"
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

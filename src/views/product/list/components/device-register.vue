@@ -1,8 +1,8 @@
 <script setup lang="tsx">
 /* ————————————————————————————————————————————— 产品预注册列表 ——————————————————————————————————————————————— */
-import { reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NSpace } from 'naive-ui';
+import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
@@ -95,18 +95,22 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   {
     key: 'device_number',
+    minWidth: '140px',
     title: $t('page.product.list.deviceNumber')
   },
   {
     key: 'batch_number',
+    minWidth: '140px',
     title: $t('page.product.list.batchNumber')
   },
   {
     key: 'current_version',
+    minWidth: '140px',
     title: $t('page.product.list.firmwareVersion')
   },
   {
     key: 'activate_flag',
+    minWidth: '140px',
     title: $t('page.product.list.activeStatus'),
     render: row => {
       if (row.activate_flag === 'inactive' || row.activate_flag === 'N') {
@@ -119,6 +123,7 @@ const columns: Ref<DataTableColumns<PreproductDeviceRecord>> = ref([
   },
   {
     key: 'activate_at',
+    minWidth: '140px',
     title: $t('page.product.list.activeDate'),
     render: row => {
       return row.activate_at ? formatDateTime(row.activate_at) : '-';
@@ -160,6 +165,10 @@ watch(
   },
   { deep: true }
 );
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 初始化
 init();
 const activeOptions = [
@@ -175,63 +184,62 @@ const activeOptions = [
 </script>
 
 <template>
-  <div class="h-full overflow-hidden">
-    <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NGrid :cols="24" :x-gap="18">
-            <NFormItemGridItem :span="6" :label="$t('page.product.list.batchNumber')" path="batchNumber">
-              <NInput v-model:value="queryParams.batch_number" />
-            </NFormItemGridItem>
-            <NFormItemGridItem :span="6" :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
-              <NInput v-model:value="queryParams.device_number" />
-            </NFormItemGridItem>
-            <!-- 激活状态 -->
-            <NFormItemGridItem :span="6" :label="$t('page.product.list.activeStatus')" path="activate_flag">
-              <NSelect
-                v-model:value="queryParams.activate_flag"
-                :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
-                :options="activeOptions"
-              />
-            </NFormItemGridItem>
-            <NFormItemGridItem :span="6">
-              <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-              <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-            </NFormItemGridItem>
-          </NGrid>
-        </NForm>
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <template #icon>
-                <IconIcRoundPlus class="mr-4px text-20px" />
-              </template>
-              <!-- 创建批次 -->
-              {{ $t('page.product.list.batchAdd') }}
-            </NButton>
-            <NButton type="primary" @click="exportFile">
-              <template #icon>
-                <IconAntDesignExportOutlined class="mr-4px text-20px" />
-              </template>
+  <div class="h-full overflow-y-auto">
+    <NCard>
+      <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
+        <NFormItem :label="$t('page.product.list.batchNumber')" path="batchNumber">
+          <NInput v-model:value="queryParams.batch_number" />
+        </NFormItem>
+        <NFormItem :label="$t('page.product.list.deviceNumber')" path="deviceNumber">
+          <NInput v-model:value="queryParams.device_number" />
+        </NFormItem>
+        <!-- 激活状态 -->
+        <NFormItem :label="$t('page.product.list.activeStatus')" path="activate_flag">
+          <NSelect
+            v-model:value="queryParams.activate_flag"
+            class="w-150px"
+            :placeholder="$t('common.select') + $t('page.product.list.activeStatus')"
+            :options="activeOptions"
+          />
+        </NFormItem>
+        <NFormItem>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+          <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+        </NFormItem>
+      </NForm>
+      <div class="m-b-20px flex flex-wrap items-center gap-15px">
+        <div class="flex flex-1 gap-15px">
+          <NButton type="primary" @click="handleAddTable">
+            <template #icon>
+              <IconIcRoundPlus class="mr-4px text-20px" />
+            </template>
+            <!-- 创建批次 -->
+            {{ $t('page.product.list.batchAdd') }}
+          </NButton>
+          <NButton type="primary" @click="exportFile">
+            <template #icon>
+              <IconAntDesignExportOutlined class="mr-4px text-20px" />
+            </template>
 
-              {{ $t('common.export') }}
-            </NButton>
-          </NSpace>
-          <NSpace align="center" :size="18">
-            <NButton size="small" type="primary" @click="getTableData">
-              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
-              {{ $t('common.refreshTable') }}
-            </NButton>
-            <ColumnSetting v-model:columns="columns" />
-          </NSpace>
-        </NSpace>
+            {{ $t('common.export') }}
+          </NButton>
+        </div>
+        <div class="flex items-center gap-15px">
+          <NButton type="primary" @click="getTableData">
+            <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+            {{ $t('common.refreshTable') }}
+          </NButton>
+          <ColumnSetting v-model:columns="columns" />
+        </div>
+      </div>
+
+      <div class="flex flex-1 overflow-y-auto">
         <NDataTable
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
           remote
-          flex-height
           class="flex-1-hidden"
         />
         <TableDeviceModal

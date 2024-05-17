@@ -99,6 +99,8 @@ function handleUpdateFormModelByModalType() {
 
 async function handleSubmit() {
   await formRef.value?.validate();
+
+  closeModal();
   let data: any;
   if (props.type === 'add') {
     data = await addrles(formModel);
@@ -108,7 +110,6 @@ async function handleSubmit() {
   if (!data.error) {
     emit('success');
   }
-  closeModal();
 }
 
 watch(
@@ -122,16 +123,14 @@ watch(
 </script>
 
 <template>
-  <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
+  <n-modal v-model:show="modalVisible" preset="card" :title="title">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
-      <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="24" :label="$t('page.manage.role.roleName')" path="name">
-          <n-input v-model:value="formModel.name" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('generate.role-description')">
-          <n-input v-model:value="formModel.description" type="textarea" />
-        </n-form-item-grid-item>
-      </n-grid>
+      <n-form-item :label="$t('page.manage.role.roleName')" path="name">
+        <n-input v-model:value="formModel.name" />
+      </n-form-item>
+      <n-form-item :label="$t('generate.role-description')">
+        <n-input v-model:value="formModel.description" type="textarea" />
+      </n-form-item>
       <n-space class="w-full pt-16px" :size="24" justify="end">
         <n-button class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</n-button>
         <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</n-button>

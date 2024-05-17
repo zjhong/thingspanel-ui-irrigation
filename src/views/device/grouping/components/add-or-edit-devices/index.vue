@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue';
 import type { FormInst, FormRules } from 'naive-ui';
 // import {useMessage} from 'naive-ui';
 import { deviceGroup, deviceGroupTree, putDeviceGroup } from '@/service/api/device';
@@ -146,7 +146,10 @@ watch(
   },
   { deep: true, immediate: true }
 );
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // Expose showModal for parent component
 </script>
 
@@ -157,7 +160,7 @@ watch(
       :bordered="false"
       :title="props.isEdit ? $t('custom.groupPage.addGroup') : $t('custom.groupPage.editGroup')"
       size="huge"
-      style="width: 600px"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
     >
       <NForm ref="formRef" :model="formItem" :rules="rules" label-placement="left" label-width="auto">
         <!-- Parent group selection using tree select component -->

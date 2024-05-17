@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -108,27 +108,28 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 function handleQuery() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
 <template>
   <div>
     <NCard :title="$t('generate.system-log')">
-      <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('generate.username')" path="name">
-            <NInput v-model:value="queryParams.username" />
-          </NFormItem>
-          <NFormItem path="selected_time">
-            <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
-          </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
-        </NForm>
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
-        </div>
+      <NForm class="m-b-20px" :inline="!getPlatform" label-placement="left" :model="queryParams">
+        <NFormItem class="max-w-200px" :label="$t('generate.username')" path="name">
+          <NInput v-model:value="queryParams.username" />
+        </NFormItem>
+        <NFormItem path="selected_time">
+          <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
+        </NFormItem>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
+      </NForm>
+      <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
+      <div class="pagination-box">
+        <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
       </div>
     </NCard>
   </div>

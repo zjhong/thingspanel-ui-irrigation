@@ -41,6 +41,8 @@ declare module 'vue' {
     IconSelect: typeof import('./../components/custom/icon-select.vue')['default']
     ImageVerify: typeof import('./../components/custom/image-verify.vue')['default']
     JsonToForm: typeof import('./../components/json-to-form/index.vue')['default']
+    KanBanHeader: typeof import('./../components/tp-kan-ban/modules/kan-ban-header.vue')['default']
+    KanBanRender: typeof import('./../components/tp-kan-ban/modules/kan-ban-render.vue')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
     LoginAgreement: typeof import('./../components/business/login-agreement.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']
@@ -129,6 +131,8 @@ declare module 'vue' {
     TableHeaderOperation: typeof import('./../components/advanced/table-header-operation.vue')['default']
     TencentMap: typeof import('./../components/data-table-page/modules/tencent-map.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
+    TpCardItem: typeof import('./../components/tp-kan-ban/modules/tp-card-item.vue')['default']
+    TpKanBan: typeof import('./../components/tp-kan-ban/index.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
   }
 }

@@ -16,11 +16,42 @@ const getLayout = async () => {
 
   if (!isError.value && data) {
     const configJson = JSON.parse(data.config);
+    updateConfigData(configJson);
     layout.value = [...configJson, ...layout.value];
   }
 };
 
 onMounted(getLayout);
+
+/**
+ * Todo: Once all config data in server are updated to use unique number as "i" attribute, we can remove this function.
+ * Convert a string to a unique number.
+ *
+ * @param str
+ * @returns
+ */
+function stringToUniqueNumber(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) {
+    hash = hash * 31 + str.charCodeAt(i);
+  }
+  return hash;
+}
+
+/**
+ * Todo: Once all config data in server are updated to use unique number as "i" attribute, we can remove this function.
+ * The attribute "i" of each config data may be a string instead of a number, so we need to convert it to a unique
+ * number to avoid Vue's warning.
+ *
+ * @param configJson
+ */
+function updateConfigData(configJson: ICardView[]) {
+  for (const item of configJson) {
+    if (typeof item.i === 'string') {
+      item.i = stringToUniqueNumber(item.i);
+    }
+  }
+}
 </script>
 
 <template>

@@ -156,7 +156,7 @@ const collectData = (v, o) => {
 };
 
 onUpdated(() => {
-  console.log(webChartConfig.value, '4234324324');
+  // console.log(webChartConfig.value, '4234324324');
   if (props?.data?.dataSource?.deviceSource && props?.data?.dataSource?.deviceSource?.length > 0) {
     deviceSelectId.value = props?.data?.dataSource?.deviceSource[0]?.deviceId || '';
     collectData(
@@ -337,7 +337,7 @@ onMounted(() => {
           </NTabPane>
         </NTabs>
         <n-float-button v-if="count === 2" position="absolute" :left="4" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">{{ $t('generate.expand-card') }}</spna>
+          <span class="text-12px text-primary-600">{{ $t('generate.expand-card') }}</span>
         </n-float-button>
       </div>
       <div :class="'h-full flex-center justify-center border-r bg-[#f6f9f8] p-2 overflow-hidden ' + widths[1]">
@@ -380,7 +380,7 @@ onMounted(() => {
           />
         </div>
         <n-float-button v-if="count === 1" position="absolute" :right="0" top="42%" width="20" shape="square">
-          <spna class="text-12px text-primary-600">{{ $t('generate.expand-configuration') }}</spna>
+          <span class="text-12px text-primary-600">{{ $t('generate.expand-configuration') }}</span>
         </n-float-button>
       </div>
     </div>

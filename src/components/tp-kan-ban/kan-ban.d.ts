@@ -25,6 +25,11 @@ export interface CardData {
 }
 
 export interface CardView extends LayoutItem {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  i: string | number; // cardId
   data?: CardData;
 }
 

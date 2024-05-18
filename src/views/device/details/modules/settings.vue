@@ -209,13 +209,12 @@ const selectConfig = v => {
     </div>
     <div class="flex items-center">
       {{ $t('generate.device-firmware') }}
-      <spna class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</spna>
+      <span class="ml-4">{{ deviceDataStore?.deviceData?.current_version || '--' }}</span>
     </div>
 
     <div class="flex-1">
       <div class="mb-4">{{ $t('generate.device-group') }}</div>
       <n-transfer
-        ref="transfer"
         v-model:value="valueRef"
         :options="options"
         :render-source-list="renderSourceList"

@@ -238,7 +238,7 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
+            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
@@ -256,7 +256,7 @@ const getPlatform = computed(() => {
               class="text-20px text-primary"
               :stroke="icon_type"
             />
-            <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+            <!-- <span style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</span> -->
 
             <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}

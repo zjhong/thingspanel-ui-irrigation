@@ -40,7 +40,7 @@ const statisticData: StatisticData[] = [
           <h3 class="text-18px font-semibold">
             <span>早安</span>
             ，{{ auth.userInfo.userName }},
-            <spna>今天又是充满活力的一天</spna>
+            <span>今天又是充满活力的一天</span>
             ！
           </h3>
           <p class="text-#999 leading-30px">{{ $t('generate.weather-forecast') }}</p>

@@ -13,6 +13,6 @@ export const STATIC_BASE_URL = IS_DEV
   ? createServiceConfig(import.meta.env).otherBaseURL.demo.replace('/api/v1', '')
   : '';
 
-export const KANBANCOLNUM = 48;
+export const KANBANCOLNUM = 24;
 
-export const KANBANROWHEIGHT = 20;
+export const KANBANROWHEIGHT = 30;

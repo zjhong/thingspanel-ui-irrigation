@@ -9,10 +9,7 @@ const fullUI = ref();
 const { isFullscreen, toggle } = useFullscreen(fullUI);
 const active = ref(false);
 
-const layout = ref<CardView[]>([
-  { x: 0, y: 0, w: 2, h: 2, i: '0' },
-  { x: 2, y: 0, w: 2, h: 4, i: '1' }
-]);
+const layout = ref<CardView[]>([]);
 
 const saveKanBan = async () => {
   console.log('ss');
@@ -38,7 +35,7 @@ const saveKanBan = async () => {
       ref="fullUI"
       :class="!layout.length ? 'h-[calc(100vh-226px)] flex-col items-center justify-center' : 'h-[calc(100vh-228px)] '"
     >
-      <KanBanRender v-model:layout="layout" v-model:active="active" />
+      <KanBanRender v-model:active="active" :is-preview="true" :layout="layout" />
     </div>
   </div>
 </template>

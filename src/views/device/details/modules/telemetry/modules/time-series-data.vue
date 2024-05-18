@@ -114,6 +114,8 @@ const initialOptions = ref({
 watch(
   selectedOption,
   async v => {
+    // 这里是当 selectedOption 变化时需要执行的逻辑
+
     if (v.time_range === 'custom' && (!v.start_time || !v.end_time)) {
       window.NMessage.destroyAll();
       window.NMessage.info('当时间为自定义时， 必须选择时间范围');
@@ -123,12 +125,9 @@ watch(
     const { data, error } = await deviceTelemetryList({
       ...v
     });
-    if (typeof data === 'object' && data === null) {
-      endLoading();
-      tableData.value = [];
-    }
     if (!error && data && initialOptions.value.series) {
-      tableData.value = data.reverse();
+      tableData.value = data;
+      // 这里是当 通过接口改变 initialOptions的数据
       initialOptions.value.series.forEach(series => {
         series.data = data.map(item => {
           return [item.x, item.y];
@@ -136,8 +135,6 @@ watch(
       });
       endLoading();
     }
-
-    // 这里可以放置当 selectedOption 变化时需要执行的逻辑
   },
   { deep: true }
 );
@@ -154,10 +151,7 @@ watch(
       </div>
     </div>
     <div :class="`${isFullscreen ? 'h-full' : 'h-320px'}  p-2 `">
-      <ChartComponent v-if="tableData?.length > 0" :initial-options="initialOptions" />
-      <div class="h-full flex items-center justify-center">
-        <n-empty v-if="tableData?.length === 0" description="无数据"></n-empty>
-      </div>
+      <ChartComponent :initial-options="initialOptions" />
     </div>
   </n-card>
   <div class="mt-8">

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, onUpdated } from 'vue';
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
-import { v4 as uuidv4 } from 'uuid';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
 import { $t } from '@/locales';
@@ -13,6 +12,13 @@ const props = defineProps<{
   rowHeight: number;
   isPreview?: boolean;
 }>();
+
+const generateUniqueNumberId = () => {
+  const timestamp = Date.now(); // 获取当前时间戳
+  const random = Math.floor(Math.random() * 1000); // 生成一个随机数
+  const uniqueId = timestamp * 1000 + random; // 结合时间戳和随机数生成唯一 ID
+  return uniqueId;
+};
 
 const countSpace = (data: ICardView[], y: number) => {
   const cols = data.filter(d => d.y === y).sort((a, b) => (a.x > b.x ? 1 : -1));
@@ -71,7 +77,7 @@ defineExpose({
         y,
         w: props.defaultCardCol,
         h: 4,
-        i: uuidv4(),
+        i: generateUniqueNumberId(),
         data
       }
     ]);
@@ -92,6 +98,9 @@ onMounted(() => {
     switch_h();
   }, 500);
 });
+onUpdated(() => {
+  console.log(props.layout, 'props.layout');
+});
 </script>
 
 <template>
@@ -110,6 +119,7 @@ onMounted(() => {
         :key="item.i"
         :static="isPreview"
         v-bind="gridItemProps"
+        :responsive="true"
         :min-h="2"
         :x="item.x"
         :y="item.y"
@@ -141,7 +151,7 @@ onMounted(() => {
             </template>
             <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
           </NPopconfirm>
-          <CardItem :data="item.data!" :view="isPreview" />
+          <CardItem :data="item.data!" :view="isPreview" class="h-full w-full" />
         </div>
       </GridItem>
     </template>

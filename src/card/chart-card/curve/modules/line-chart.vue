@@ -450,7 +450,7 @@ const setSeries: (dataSource) => void = async dataSource => {
           // Mouse moves into add unit
           tooltip: {
             valueFormatter(value) {
-              return value + detail?.value.data[0].unit;
+              return value + detail?.value?.data[0].unit;
             }
           }
         };
@@ -481,10 +481,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="m--6">
+  <div class="m--6 h-full">
     <div class="mb-4 mt-4 flex justify-between">
       <div class="name-unit">
-        {{ name + ' ' + detail?.data[0].unit }}
+        {{ name + ' ' + (detail && detail.data[0] ? detail?.data[0].unit : '') }}
       </div>
       <div class="flex justify-end">
         <n-popselect

@@ -4,6 +4,7 @@ export type SceneType = 'mobile' | 'pc' | 'all';
 export interface CardItemBase {
   type: CardType; // 卡片类型
   id: string; // 卡片唯一标识，按照card_type_cardName命名不会错
+  cardName: string; // 卡片名字
   renderID?: string;
   sourceNumber: number; // 数据个数，必须限制，开发卡片时想好
   basicSettings?: {

@@ -1,22 +1,34 @@
 <script setup lang="ts">
-import { inject, reactive, watch } from 'vue';
+import { reactive, watch } from 'vue';
+import { debounce } from 'lodash';
 
 defineOptions({ name: 'CardBaseForm' });
-const updataCardConfig = inject<(value: Record<string, any>) => void>('updataCardConfig');
-const basic = reactive<any>({});
+const props = defineProps<{
+  changeCtxConfig: (key: string, data: any) => void;
+}>();
+
+const basisData = reactive({
+  phone: ''
+});
+
+const throttledWatcher = debounce(() => {
+  props.changeCtxConfig('basis', basisData);
+  // 在这里处理你的业务逻辑
+}, 300);
+
 watch(
-  () => basic,
+  () => basisData,
   () => {
-    updataCardConfig?.({ basic });
+    throttledWatcher();
   },
   { deep: true }
 );
 </script>
 
 <template>
-  <n-form :model="basic">
+  <n-form :model="basisData">
     <n-form-item label="电话号码" path="phone">
-      <n-input v-model:value="basic.phone" placeholder="电话号码" />
+      <n-input v-model:value="basisData.phone" placeholder="电话号码" />
     </n-form-item>
   </n-form>
 </template>

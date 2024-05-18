@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import { inject } from 'vue';
 import type { CardData } from '@/components/tp-kan-ban/kan-ban';
-import CardConfigFrom from './card-congig-form.vue';
-
-const showModal = inject<boolean>('showModal');
-// const toggleModal = inject<(f: boolean) => void>('toggleModal');
 
 const props = defineProps<{
   view?: boolean;
@@ -12,24 +7,16 @@ const props = defineProps<{
 }>();
 
 const { card } = props;
-const { config, cardItem, cardId, deviceList, xdata } = card;
-
-console.log(config, cardItem, cardId, deviceList, xdata);
-
-// const closeModal = () => {
-//   toggleModal?.(false);
-// };
+const { config, cardId, deviceList, xdata } = card; // 卡片数据解析 分别为  config 配置，cardId 卡片id，deviceList 设备指标列表，xdata 卡片上的数据
+console.log(config, cardId, deviceList, xdata);
+const { title, showTitle, basis, source, cardUI } = config; // 配置数据解析 分别为  title 标题，showTitle 是否显示标题，basis 基础配置，source 数据源配置，cardUI 卡片UI配置
+console.log(title, showTitle, basis, source, cardUI);
 </script>
 
 <template>
   <div>{{ card?.cardId }}</div>
 
-  <n-modal v-model:show="showModal as boolean">
-    <!-- 弹窗内容 -->
-    <n-card style="width: 600px">
-      <CardConfigFrom />
-    </n-card>
-  </n-modal>
+  <div>phone:{{ basis?.phone }}</div>
 </template>
 
 <style scoped></style>

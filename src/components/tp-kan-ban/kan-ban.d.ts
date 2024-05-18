@@ -9,6 +9,9 @@ export type deviceParams = {
 export type cardConfig = {
   title: string;
   showTitle: boolean;
+  basis: Record<string, any>;
+  source: Record<string, any>;
+  cardUI: Record<string, any>;
   [propName: string]: any;
 };
 
@@ -18,10 +21,7 @@ export interface CardData {
   // 渲染id，请确保当前看板的唯一性  没有就是cardId
   config: cardConfig; // 配置数据
   deviceList?: deviceParams[]; // 和设备有关的卡片才需要这个
-  xdata?: {
-    dataSource: 'sys' | 'device' | 'other' | ''; // 数据的数据源 系统  设备  其他
-    data: string; // 一定是json字符串
-  }[]; // 外部数据，数据源可共同存在，使用欠判断dataSource
+  xdata?: string; // 卡片数据 json字符串
 }
 
 export interface CardView extends LayoutItem {
@@ -42,6 +42,6 @@ export interface CardFormIns {
 }
 
 export interface IConfigCtx {
-  config: Record<string, any>;
+  config: cardConfig;
   view?: boolean; // 预览模式
 }

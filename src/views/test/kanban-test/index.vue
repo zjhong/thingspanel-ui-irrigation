@@ -3,3 +3,5 @@
 <template>
   <TpKanBan />
 </template>
+
+<style scoped></style>

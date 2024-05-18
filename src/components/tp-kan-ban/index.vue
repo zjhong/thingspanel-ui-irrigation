@@ -1,19 +1,41 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, reactive, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
-import type { CardView } from '@/components/tp-kan-ban/kan-ban';
+import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
+import type { CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
 
+const formRef = ref<CardFormIns>();
 const appStore = useAppStore();
 const fullUI = ref();
 const { isFullscreen, toggle } = useFullscreen(fullUI);
 const active = ref(false);
-
-const layout = ref<CardView[]>([]);
-
+const showModal = ref(false);
+const state = reactive({
+  curCardData: null as null | Record<string, any>
+});
+const activeType = ref<string>('plugins');
+const { layouts, addItem, updateLayouts } = useLayouts();
 const saveKanBan = async () => {
   console.log('ss');
 };
+
+function toggleModal(f) {
+  showModal.value = f;
+}
+
+function selectCard(item: CardView) {
+  toggleModal(true);
+  state.curCardData = {
+    cardId: item.data?.cardId,
+    type: item.data?.cardItem.type,
+    title: item.data?.config.title,
+    config: item.data?.config || {}
+  };
+  nextTick(() => {
+    formRef.value?.setCard(state.curCardData as any);
+  });
+}
 </script>
 
 <template>
@@ -33,9 +55,32 @@ const saveKanBan = async () => {
     </div>
     <div
       ref="fullUI"
-      :class="!layout.length ? 'h-[calc(100vh-226px)] flex-col items-center justify-center' : 'h-[calc(100vh-228px)] '"
+      :class="!layouts.length ? 'h-[calc(100vh-226px)] flex-col items-center justify-center' : 'h-[calc(100vh-228px)] '"
     >
-      <KanBanRender v-model:active="active" :is-preview="true" :layout="layout" />
+      <KanBanRender
+        :is-preview="false"
+        :layout="layouts"
+        :add-item="addItem"
+        :update-layouts="updateLayouts"
+        :select-card="selectCard"
+      />
+      <n-drawer
+        v-model:show="active"
+        :width="236"
+        placement="left"
+        :show-mask="false"
+        style="box-shadow: 0 8px 16px 0 rgba(156, 107, 255, 0.4)"
+      >
+        <n-drawer-content title="卡片列表" class="shadow-sm" closable>
+          <KanBanCardList v-model:active-type="activeType" />
+        </n-drawer-content>
+      </n-drawer>
+
+      <n-modal v-model:show="showModal">
+        <n-card style="width: 800px" title="模态框" :bordered="false" size="huge" role="dialog" aria-modal="true">
+          <KanBanCardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
+        </n-card>
+      </n-modal>
     </div>
   </div>
 </template>

@@ -140,6 +140,9 @@ importers:
       vue3-drr-grid-layout:
         specifier: ^1.9.7
         version: 1.9.7(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)(typescript@5.3.3)(vue@3.4.19)
+      vue3-grid-layout:
+        specifier: ^1.0.0
+        version: 1.0.0(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)(typescript@5.3.3)
       vuedraggable:
         specifier: 4.1.0
         version: 4.1.0(vue@3.4.19)
@@ -12113,6 +12116,22 @@ packages:
       element-resize-detector: 1.2.4
       mitt: 3.0.1
       vue: 3.4.19(typescript@5.3.3)
+    transitivePeerDependencies:
+      - '@interactjs/core'
+      - '@interactjs/utils'
+      - typescript
+    dev: false
+
+  /vue3-grid-layout@1.0.0(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)(typescript@5.3.3):
+    resolution: {integrity: sha512-rFiHnlBFxkY9ojh0YB+cSKCE9A9/mhdbgaPARWD7r2yHPWxV9tHDPbMAN+uycsIDF7ikBpNgeQ9PfeiGaXHUWw==}
+    dependencies:
+      '@interactjs/actions': 1.10.27(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)
+      '@interactjs/auto-start': 1.10.27(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)
+      '@interactjs/dev-tools': 1.10.27(@interactjs/modifiers@1.10.27)(@interactjs/utils@1.10.27)(typescript@5.3.3)
+      '@interactjs/interactjs': 1.10.27(typescript@5.3.3)
+      '@interactjs/modifiers': 1.10.27(@interactjs/core@1.10.27)(@interactjs/utils@1.10.27)
+      element-resize-detector: 1.2.4
+      lodash: 4.17.21
     transitivePeerDependencies:
       - '@interactjs/core'
       - '@interactjs/utils'

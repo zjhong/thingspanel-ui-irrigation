@@ -927,11 +927,22 @@ export const generatedRoutes: GeneratedRoute[] = [
   {
     name: 'test',
     path: '/test',
-    component: 'layout.base$view.test',
+    component: 'layout.base',
     meta: {
       title: 'test',
       i18nKey: 'route.test'
-    }
+    },
+    children: [
+      {
+        name: 'test_kanban-test',
+        path: '/test/kanban-test',
+        component: 'view.test_kanban-test',
+        meta: {
+          title: 'test_kanban-test',
+          i18nKey: 'route.test_kanban-test'
+        }
+      }
+    ]
   },
   {
     name: 'user-center',

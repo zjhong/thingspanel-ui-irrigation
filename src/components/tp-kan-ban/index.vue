@@ -3,7 +3,7 @@ import { nextTick, reactive, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
-import type { CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
+import type { CardData, CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
 
 const formRef = ref<CardFormIns>();
 const appStore = useAppStore();
@@ -11,8 +11,8 @@ const fullUI = ref();
 const { isFullscreen, toggle } = useFullscreen(fullUI);
 const active = ref(false);
 const showModal = ref(false);
-const state = reactive({
-  curCardData: null as null | Record<string, any>
+const state = reactive<{ curCardData: null | CardView }>({
+  curCardData: null
 });
 const activeType = ref<string>('plugins');
 const { layouts, addItem, updateLayouts } = useLayouts();
@@ -27,15 +27,18 @@ function toggleModal(f) {
 function selectCard(item: CardView) {
   toggleModal(true);
   state.curCardData = {
-    cardId: item.data?.cardId,
-    type: item.data?.cardItem.type,
-    title: item.data?.config.title,
-    config: item.data?.config || {}
+    ...item
   };
   nextTick(() => {
-    formRef.value?.setCard(state.curCardData as any);
+    formRef.value?.setCard(state.curCardData as CardView);
   });
 }
+
+const changeCurCardData = (data: CardData) => {
+  const index = layouts.value.findIndex(i => i.data?.renderID === data.renderID);
+  if (index === -1) return;
+  updateLayouts(data, index);
+};
 </script>
 
 <template>
@@ -57,13 +60,7 @@ function selectCard(item: CardView) {
       ref="fullUI"
       :class="!layouts.length ? 'h-[calc(100vh-226px)] flex-col items-center justify-center' : 'h-[calc(100vh-228px)] '"
     >
-      <KanBanRender
-        :is-preview="false"
-        :layout="layouts"
-        :add-item="addItem"
-        :update-layouts="updateLayouts"
-        :select-card="selectCard"
-      />
+      <KanBanRender :is-preview="false" :layout="layouts" :add-item="addItem" :select-card="selectCard" />
       <n-drawer
         v-model:show="active"
         :width="236"
@@ -78,7 +75,7 @@ function selectCard(item: CardView) {
 
       <n-modal v-model:show="showModal">
         <n-card style="width: 800px" title="模态框" :bordered="false" size="huge" role="dialog" aria-modal="true">
-          <KanBanCardForm ref="formRef" @update="(data: any) => (state.curCardData = data)" />
+          <KanBanCardForm ref="formRef" @update="changeCurCardData" />
         </n-card>
       </n-modal>
     </div>

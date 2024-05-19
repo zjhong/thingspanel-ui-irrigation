@@ -1,16 +1,29 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue';
 import type { CardItem } from '@/card2/card';
-import type { CardData, cardConfig } from '@/components/tp-kan-ban/kan-ban';
+import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
 import { useKanBanStore } from '@/card2/kan-ban-store';
 
 const { cardMap } = useKanBanStore();
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
-const defData = {
+const defData: CardData = {
+  cardItem: {
+    type: 'plugins',
+    id: '',
+    cardName: '',
+    renderID: '',
+    sourceNumber: 9
+  },
+  sourceNumber: 9,
   cardId: '',
-  type: 'builtin',
-  title: '',
-  config: {} as cardConfig
+  renderID: '',
+  config: {
+    title: '',
+    showTitle: '',
+    basis: { title: '', showTitle: false },
+    source: {},
+    cardUI: {}
+  }
 };
 
 const state = reactive({
@@ -25,17 +38,15 @@ const emit = defineEmits<{
 watch(
   () => state.data.config,
   () => {
-    console.log(state.data.config, '879988');
     emit('update', state.data as any);
   },
   { deep: true }
 );
 
 defineExpose({
-  setCard: (data?: CardData) => {
-    console.log(3);
+  setCard: (data?: CardView) => {
     state.selectCard = null;
-    state.data = copy(data || defData);
+    state.data = copy(data?.data || defData);
     setTimeout(() => {
       state.selectCard = cardMap.get(state.data.cardId) || null;
     });

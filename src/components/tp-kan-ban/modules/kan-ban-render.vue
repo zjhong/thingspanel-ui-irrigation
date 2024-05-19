@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import { GridItem, GridLayout } from 'grid-layout-plus';
-import type { CardView } from '@/components/tp-kan-ban/kan-ban';
+import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
 import { KANBANCOLNUM, KANBANROWHEIGHT } from '@/constants/common';
 import { $t } from '@/locales';
 import TpCardItem from '@/components/tp-kan-ban/modules/tp-card-item.vue';
@@ -13,7 +13,6 @@ const props = defineProps<{
   isPreview: boolean;
   layout: CardView[];
   addItem: (item: CardView) => void;
-  updateLayouts: (item: CardView, index: number) => void;
   selectCard: (item: CardView) => void;
 }>();
 const wrapper = ref<HTMLElement>();
@@ -53,7 +52,7 @@ function onDrop(event) {
   mouseAt.y = event.clientY - rect.top; // 鼠标位置相对于 drop-area 元素的 Y 坐标
   console.log(mouseAt.x, mouseAt.y);
 
-  const itemId = `${theLayout.value.length.toString()}_${cardItem.cardItemBase.id}`;
+  const itemId = cardItem?.cardItemBase?.renderID || `${theLayout.value.length.toString()}_${cardItem.cardItemBase.id}`;
   const item: CardView = {
     x: (theLayout.value.length * 2) % KANBANCOLNUM,
     y: theLayout.value.length + KANBANCOLNUM,
@@ -65,15 +64,16 @@ function onDrop(event) {
     data: {
       cardItem: cardItem.cardItemBase,
       cardId: cardItem.cardItemBase.id,
+      renderID: itemId,
+      sourceNumber: cardItem.cardItemBase.sourceNumber,
       config: {
-        title: cardItem.cardItemBase.basicSettings.defaultTitle,
-        showTitle: cardItem.cardItemBase.basicSettings.showTitle,
-        basis: {},
+        basis: {
+          title: cardItem.cardItemBase.basicSettings.defaultTitle,
+          showTitle: cardItem.cardItemBase.basicSettings.showTitle
+        },
         source: {},
         cardUI: {}
-      },
-      deviceList: [],
-      xdata: '{}'
+      }
     }
   };
 
@@ -151,7 +151,7 @@ onMounted(() => {
               </template>
               <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
             </NPopconfirm>
-            <TpCardItem :data="item.data!" :view="isPreview" />
+            <TpCardItem :data="item.data as CardData" :view="isPreview" />
           </div>
         </GridItem>
       </GridLayout>

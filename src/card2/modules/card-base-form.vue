@@ -5,11 +5,10 @@ import { debounce } from 'lodash';
 defineOptions({ name: 'CardBaseForm' });
 const props = defineProps<{
   changeCtxConfig: (key: string, data: any) => void;
+  defaultBasisData: Record<string, any>;
 }>();
 
-const basisData = reactive({
-  phone: ''
-});
+const basisData = reactive({ ...props.defaultBasisData });
 
 const throttledWatcher = debounce(() => {
   props.changeCtxConfig('basis', basisData);
@@ -26,9 +25,12 @@ watch(
 </script>
 
 <template>
-  <n-form :model="basisData">
-    <n-form-item label="电话号码" path="phone">
-      <n-input v-model:value="basisData.phone" placeholder="电话号码" />
+  <n-form :model="basisData" label-placement="left" :label-width="70">
+    <n-form-item label="标题" path="title">
+      <n-input v-model:value="basisData.title" :disabled="!basisData.showTitle" placeholder="标题" />
+    </n-form-item>
+    <n-form-item label="是否显示" path="showTitle">
+      <n-switch v-model:value="basisData.showTitle" />
     </n-form-item>
   </n-form>
 </template>

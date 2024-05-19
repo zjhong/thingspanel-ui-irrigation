@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from 'vue';
 import type { CardData } from '@/components/tp-kan-ban/kan-ban';
 import { useKanBanStore } from '@/card2/kan-ban-store';
 
@@ -7,15 +8,23 @@ defineOptions({ name: 'TpCardItem' });
 const props = defineProps<{ data: CardData; view: boolean }>();
 
 const { cardMap } = useKanBanStore();
+
+watch(
+  () => props.data,
+  () => {
+    console.log(props.data, '09888');
+  },
+  { deep: true }
+);
 </script>
 
 <template>
   <NCard class="relative h-full w-full" content-style="padding: 0px">
     <div
-      v-if="data?.config?.showTitle"
+      v-if="data?.config?.basis.showTitle"
       class="h-7 w-full truncate border-b border-gray-200 px-2 text-sm leading-7 dark:border-gray-200/10"
     >
-      {{ data?.config?.title }}
+      {{ data?.config?.basis.title }}
     </div>
     <div class="w p-4">
       <component

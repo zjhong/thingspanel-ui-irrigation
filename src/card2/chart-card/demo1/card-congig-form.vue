@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, onMounted } from 'vue';
 import CardBaseForm from '@/card2/modules/card-base-form.vue';
 import CardDataSourceForm from '@/card2/modules/card-data-source-form.vue';
-import type { IConfigCtx } from '@/components/tp-kan-ban/kan-ban';
+import type { CardData, IConfigCtx } from '@/components/tp-kan-ban/kan-ban';
 import { $t } from '@/locales';
 
 console.log($t);
+const props = defineProps<{
+  data: CardData;
+}>();
+
 // 固定写法开始
 const ctx = inject<IConfigCtx>('kan-ban-config-ctx')!;
 // ctx.config会传递给看板编辑
 const changeCtxConfig = (key: string, data: any) => {
-  ctx.config[key] = data;
+  console.log(data, '4324432');
+  ctx.config[key] = { ...data };
 }; // 改变ctx.config的方法
 // 固定写法结束
-//
+onMounted(() => {
+  // ctx.config = {...props.data.config}
+  ctx.config = props.data.config;
+});
 </script>
 
 <template>
@@ -27,11 +35,15 @@ const changeCtxConfig = (key: string, data: any) => {
   >
     <!-- 固定模式基础配置，迭代时才需要修改下面的组件-->
     <n-tab-pane name="basic" tab="基础配置">
-      <CardBaseForm :change-ctx-config="changeCtxConfig" />
+      <CardBaseForm :default-basis-data="props.data.config.basis" :change-ctx-config="changeCtxConfig" />
     </n-tab-pane>
     <!--固定模式数据源配置，迭代时才需要修改下面的组件-->
     <n-tab-pane name="source" tab="数据源">
-      <CardDataSourceForm :change-ctx="changeCtxConfig" />
+      <CardDataSourceForm
+        :max-source-number="props.data.sourceNumber || 9"
+        :default-source-data="props.data.config.source"
+        :change-ctx-config="changeCtxConfig"
+      />
     </n-tab-pane>
     <n-tab-pane name="card-config" tab="卡片配置">
       <!-- 你需要编写配置的地方-->

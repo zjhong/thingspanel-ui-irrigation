@@ -11,9 +11,8 @@ export interface CardItemBase {
     defaultTitle?: string; // 卡片标题 尽量使用国际化标题
     showTitle?: boolean;
   }; // 初始标题 可以不定义
-
-  scene: SceneType; // 'mobile' | 'pc' | 'all';
-  minWH: {
+  scene?: SceneType; // 'mobile' | 'pc' | 'all';
+  minWH?: {
     minW: number | string | -1; // 卡片最小宽度,字符串单位为像素，数字则表示占几个格子，当前默认共48格
     minH: number | string | -1; // 卡片最小高度,字符串单位为像素，数字则表示占几个格子，当前默认共48格
   };

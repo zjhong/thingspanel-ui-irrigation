@@ -32,7 +32,7 @@ interface AddFrom {
   author: string;
   description: string;
   path: string;
-  lable: string;
+  label: string;
   id?: string;
 }
 
@@ -43,7 +43,7 @@ const addFrom: AddFrom = reactive({
   author: '',
   description: '',
   path: '',
-  lable: ''
+  label: ''
 });
 
 type Rule = {
@@ -104,12 +104,12 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
 const next: () => void = async () => {
   await formRef.value?.validate();
   if (addFrom.id) {
-    addFrom.lable = addFrom.templateTage.join(',');
+    addFrom.label = addFrom.templateTage.join(',');
     const response: any = await putTemplat(addFrom);
     emit('update:stepCurrent', 2);
     emit('update:deviceTemplateId', response.data.id);
   } else {
-    addFrom.lable = addFrom.templateTage.join(',');
+    addFrom.label = addFrom.templateTage.join(',');
     const response: any = await addTemplat(addFrom);
     emit('update:stepCurrent', 2);
     emit('update:deviceTemplateId', response.data.id);
@@ -133,7 +133,7 @@ watchEffect(async () => {
         addFrom.description = data.description;
         addFrom.version = data.version;
         addFrom.author = data.author;
-        addFrom.templateTage = data.lable && data.lable.length > 0 ? data.lable?.split(',') : [];
+        addFrom.templateTage = data.label && data.label.length > 0 ? data.label?.split(',') : [];
         pngPath.value = data.path === '' ? '' : `${url.value.replace('api/v1', '') + data.path}`;
       }
     }

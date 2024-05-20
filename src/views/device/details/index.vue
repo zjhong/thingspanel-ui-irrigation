@@ -41,7 +41,7 @@ let components = [
 
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
-const lables = ref<string[]>([]);
+const labels = ref<string[]>([]);
 
 const deviceData: any = ref({});
 const device_type = ref('');
@@ -69,7 +69,7 @@ const { send } = useWebSocket(wsUrl, {
 });
 
 const queryParams = reactive({
-  lable: '',
+  label: '',
   id: '',
   name: '',
   device_number: '',
@@ -156,7 +156,7 @@ const save = async () => {
   queryParams.id = deviceData.value?.id;
   queryParams.name = deviceData.value?.name;
   queryParams.device_number = deviceData.value?.device_number;
-  queryParams.lable = lables.value.join(',');
+  queryParams.label = labels.value.join(',');
   queryParams.description = deviceData.value?.description;
 
   const { error } = await deviceUpdate(queryParams);
@@ -211,8 +211,8 @@ const getPlatform = computed(() => {
               <n-form-item :label="$t('generate.device-number')" path="device_number">
                 <n-input v-model:value="deviceData.device_number" />
               </n-form-item>
-              <n-form-item :label="$t('custom.devicePage.label')" path="lable">
-                <n-dynamic-tags v-model:value="lables" />
+              <n-form-item :label="$t('custom.devicePage.label')" path="label">
+                <n-dynamic-tags v-model:value="labels" />
               </n-form-item>
               <n-form-item :label="$t('generate.device-description')">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->

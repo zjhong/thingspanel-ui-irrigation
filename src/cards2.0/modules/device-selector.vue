@@ -87,7 +87,7 @@ const adjustDeviceCount = (value: number | null) => {
 const deviceOption = ref<SelectOption[]>();
 const getDeviceList = async () => {
   const res = await deviceListForPanel({});
-  deviceOption.value = res.data;
+  deviceOption.value = res.data||[];
 };
 const deviceSelectChange = async (v, item) => {
   console.log(v);

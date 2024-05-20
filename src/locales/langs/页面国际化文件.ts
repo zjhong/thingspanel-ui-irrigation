@@ -43,7 +43,7 @@ export const pzh_cn = {
     unlimitedAlarmStatus: '不限告警状态',
     alarm: '告警',
     noAlarm: '不告警',
-    unlimitedAccessType: '不限接入类型',
+    unlimitedAccessType: '不限设备类型',
     directConnectedDevices: '直连设备',
     gateway: '网关',
     gatewaySubEquipment: '网关子设备',

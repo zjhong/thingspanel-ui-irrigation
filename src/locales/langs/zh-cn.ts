@@ -760,7 +760,6 @@ const local: App.I18n.Schema = {
       PleaseEeventIdentifier: '请输入事件标识符'
     }
   },
-
   custom: pzh_cn,
   generate: {
     code: '代码',

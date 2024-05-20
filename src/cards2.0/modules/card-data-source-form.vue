@@ -1,7 +1,8 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { reactive, watch } from 'vue';
 import { debounce } from 'lodash';
 import { $t } from '@/locales';
+import DeviceSelector from '@/cards2.0/modules/device-selector.vue';
 
 defineOptions({ name: 'CardDataSourceForm' });
 
@@ -14,7 +15,6 @@ const props = defineProps<{
 const sourceData = reactive<{
   dataSource?: string;
   sourceNum?: number;
-  deviceCount?: number;
   systemCount?: number;
   systemSource?: any[];
   deviceSource?: any[];
@@ -24,6 +24,9 @@ const throttledWatcher = debounce(() => {
   props.changeCtxConfig('source', sourceData);
 }, 300);
 
+const selection = v => {
+  sourceData.deviceSource = v;
+};
 watch(
   () => sourceData,
   () => {
@@ -43,45 +46,13 @@ watch(
         </NSpace>
       </NRadioGroup>
     </NFormItem>
-    <div v-if="sourceData.dataSource && sourceData.dataSource === 'system'">
-      systemDataList
-      <NFormItem>
-        <n-input-number
-          v-model:value="sourceData.systemCount"
-          :min="1"
-          :max="maxSourceNumber"
-          class="m-b-2 w-360px"
-          @update:value="
-            () => {
-              console.log(1);
-            }
-          "
-        >
-          <template #prefix>
-            <span class="text-#999">系统数据个数</span>
-          </template>
-        </n-input-number>
-      </NFormItem>
-    </div>
+    <div v-if="sourceData.dataSource && sourceData.dataSource === 'system'">systemDataList</div>
     <div v-if="sourceData.dataSource && sourceData.dataSource === 'device'">
-      deviceDataList
-      <NFormItem>
-        <n-input-number
-          v-model:value="sourceData.deviceCount"
-          :min="1"
-          :max="maxSourceNumber"
-          class="m-b-2 w-360px"
-          @update:value="
-            () => {
-              console.log(1);
-            }
-          "
-        >
-          <template #prefix>
-            <span class="text-#999">{{ $t('generate.device-count') }}</span>
-          </template>
-        </n-input-number>
-      </NFormItem>
+      <DeviceSelector
+        :max-source-number="maxSourceNumber"
+        :device-source="sourceData.deviceSource"
+        @update:selection="selection"
+      />
     </div>
   </NForm>
 </template>

@@ -1,5 +1,5 @@
 import type { LayoutItem } from 'grid-layout-plus';
-import type { CardItemBase } from '@/card2/card';
+import type { CardItemBase } from '@/cards2.0/card';
 
 export type cardConfig = {
   basis: {

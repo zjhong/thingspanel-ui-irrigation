@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { inject, onMounted } from 'vue';
-import CardBaseForm from '@/card2/modules/card-base-form.vue';
-import CardDataSourceForm from '@/card2/modules/card-data-source-form.vue';
+import CardBaseForm from '@/cards2.0/modules/card-base-form.vue';
+import CardDataSourceForm from '@/cards2.0/modules/card-data-source-form.vue';
 import type { CardData, IConfigCtx } from '@/components/tp-kan-ban/kan-ban';
 import { $t } from '@/locales';
 

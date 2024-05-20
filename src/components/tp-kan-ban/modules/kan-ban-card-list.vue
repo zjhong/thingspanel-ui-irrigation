@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineEmits, onMounted, ref } from 'vue';
-import { KanBanCards } from '@/card2';
+import { KanBanCards } from '@/cards2.0';
 
 defineOptions({ name: 'KanBanCardList' });
 

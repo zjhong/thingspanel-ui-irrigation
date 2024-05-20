@@ -2,8 +2,8 @@ import { markRaw, ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useMessage } from 'naive-ui';
 import { objectEntries } from '@vueuse/core';
-import { KanBanCards } from '@/card2/index';
-import type { CardItem } from '@/card2/card';
+import { KanBanCards } from '@/cards2.0/index';
+import type { CardItem } from '@/cards2.0/card';
 
 export const useKanBanStore = defineStore('kan-ban-store', () => {
   const cardMap = ref<Map<string, CardItem>>(new Map());

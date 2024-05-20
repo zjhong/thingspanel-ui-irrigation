@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import type { CardItem } from '@/card2/card';
+import type { CardItem } from '@/cards2.0/card';
 import poster from './poster.png';
 
 export default {
@@ -7,7 +7,7 @@ export default {
     type: 'chart', // 卡片类型 'system' | 'plugins' | 'chart';
     id: 'chart-demo1', // 卡片唯一标识，按照card_type_cardName命名不会错
     cardName: 'chart-demo1',
-    sourceNumber: 99, // 数据个数，必须限制，开发卡片时想好
+    sourceNumber: 9, // 数据个数，必须限制，开发卡片时想好
     basicSettings: {
       defaultTitle: 'chart-demo1', // 卡片标题 尽量使用国际化标题
       showTitle: false

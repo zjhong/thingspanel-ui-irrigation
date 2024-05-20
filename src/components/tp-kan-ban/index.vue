@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue';
+import { NButton } from 'naive-ui';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
@@ -76,6 +77,9 @@ const changeCurCardData = (data: CardData) => {
       <n-modal v-model:show="showModal">
         <n-card style="width: 800px" title="模态框" :bordered="false" size="huge" role="dialog" aria-modal="true">
           <KanBanCardForm ref="formRef" @update="changeCurCardData" />
+          <n-space justify="center">
+            <NButton type="primary" class="text-center" @click="showModal = false">完成</NButton>
+          </n-space>
         </n-card>
       </n-modal>
     </div>

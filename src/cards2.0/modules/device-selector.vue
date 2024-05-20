@@ -5,7 +5,6 @@ import { NButton, NForm, NFormItem, NFormItemGi, NInputNumber, NSpace } from 'na
 import { debounce } from 'lodash-es';
 import { $t } from '@/locales';
 import { deviceListForPanel, deviceMetricsList } from '@/service/api';
-
 defineOptions({ name: 'DeviceSelector' });
 const emits = defineEmits(['update:selection']);
 const props = defineProps<{ maxSourceNumber: number; deviceSource?: any[] }>();
@@ -19,11 +18,13 @@ const totalPages = computed(() => Math.ceil(sourceCount.value / pageSize));
 const currentBatchDevices = computed(() => {
   return selections[currentPage.value - 1] || [];
 });
+
 const adjustDeviceCount = (value: number | null) => {
+  console.log('value', value);
   if (!value) return;
   const totalBatches = Math.ceil(value / pageSize);
 
-  // 如果需要的 batch 数量超过当前 selection 数量，则增加 batch
+  // Add or remove batches as needed
   while (selections.length < totalBatches) {
     selections.push([]);
   }
@@ -40,28 +41,49 @@ const adjustDeviceCount = (value: number | null) => {
     const batchStart = i * pageSize;
     const batchEnd = Math.min(batchStart + pageSize, value);
 
-    // 确保batchStart始终小于或等于batchEnd
     if (batchStart >= batchEnd) {
-      batch.length = 0; // 清空batch，因为此区间内没有项目
+      batch.length = 0; // Clear batch if no items in this range
+    } else if (batch.length > batchEnd - batchStart) {
+      batch.length = batchEnd - batchStart; // Reduce batch size if necessary
     } else {
-      // 调整当前 batch 的长度
-      // eslint-disable-next-line no-lonely-if
-      if (batch.length > batchEnd - batchStart) {
-        batch.length = batchEnd - batchStart;
-      } else {
-        while (batch.length < batchEnd - batchStart) {
-          batch.push({ ...obj });
-        }
+      while (batch.length < batchEnd - batchStart) {
+        batch.push({ ...obj });
       }
     }
   });
 
-  // 如果selections中的batch数量大于需要的batch数量，调整selections长度
+  // Adjust selections length to totalBatches
   if (selections.length > totalBatches) {
     selections.length = totalBatches;
   }
-};
 
+  // If props.deviceSource exists, split it into batches and assign to selections
+  if (props.deviceSource && props.deviceSource.length > 0) {
+    const truncatedSource = props.deviceSource.slice(0, value);
+    const newSelections: typeof selections = [];
+    for (let i = 0; i < totalBatches; i += 1) {
+      const batchStart = i * pageSize;
+      const batchEnd = Math.min(batchStart + pageSize, value);
+      const sourceBatchStart = i * pageSize;
+      const sourceBatchEnd = Math.min(sourceBatchStart + pageSize, truncatedSource.length);
+      const sourceBatch = truncatedSource.slice(sourceBatchStart, sourceBatchEnd).map(item => ({
+        deviceId: item.deviceId || '',
+        metricsId: item.metricsId || '',
+        metricsShow: false,
+        metricsOptions: item.metricsOptions || [],
+        metricsName: item.metricsName || ''
+      }));
+
+      // Fill the rest of the batch with empty objects if truncatedSource is exhausted
+      while (sourceBatch.length < batchEnd - batchStart) {
+        sourceBatch.push({ ...obj });
+      }
+
+      newSelections.push(sourceBatch);
+    }
+    selections.splice(0, selections.length, ...newSelections);
+  }
+};
 const deviceOption = ref<SelectOption[]>();
 const getDeviceList = async () => {
   const res = await deviceListForPanel({});
@@ -137,8 +159,9 @@ watch(selections, () => {
 });
 
 getDeviceList();
-if (props?.deviceSource?.length) {
-  sourceCount.value = props?.deviceSource?.length;
+if (props.deviceSource && props.deviceSource.length > 0) {
+  console.log(props.deviceSource.length);
+  sourceCount.value = props.deviceSource.length;
   adjustDeviceCount(props.deviceSource.length);
 } else {
   adjustDeviceCount(1);

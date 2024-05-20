@@ -32,10 +32,6 @@ export interface CardView extends LayoutItem {
   data?: CardData;
 }
 
-export interface CardRender {
-  addCard(data: CardData): void;
-}
-
 export interface CardFormIns {
   setCard: (card?: CardView | null) => void;
 }

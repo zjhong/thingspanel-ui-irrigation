@@ -960,6 +960,9 @@ declare namespace App {
           alarm: string;
           noAlarm: string;
           unlimitedAccessType: string;
+          directConnectedDevices: 'directConnectedDevices',
+          gateway: 'gateway',
+          gatewaySubEquipment: 'gatewaySubEquipment',
           unlimitedAccessMode: string;
           byProtocol: string;
           byService: string;

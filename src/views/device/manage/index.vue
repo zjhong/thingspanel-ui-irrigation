@@ -76,7 +76,7 @@ const getDeviceGroupOptions = async () => {
 };
 
 const getDeviceConfigOptions = async pattern => {
-  console.log(pattern);
+  console.log(pattern, '我请求了筛选');
   const res = await getDeviceConfigList({
     page: 1,
     page_size: 99,
@@ -159,17 +159,18 @@ const columns_to_show: Ref<any> = ref([
     minWidth: '140px',
     label: () => $t('custom.devicePage.lastPushTime')
   },
-  {
-    key: 'access_way',
-    minWidth: '160px',
-    label: () => $t('custom.devicePage.accessServiceProtocol'),
-    render: row => {
-      if (row?.access_way === '') return '此项为空';
-      return row?.access_way === 'A'
-        ? `${$t('custom.devicePage.byProtocol')}(${row?.protocol_type || '-'})`
-        : `${$t('custom.devicePage.byService')}(${row?.protocol_type || '-'})`;
-    }
-  }
+  // {
+  //   key: 'device_type',
+  //   minWidth: '160px',
+  //   label: () => $t('custom.devicePage.accessServiceProtocol'),
+  //   render: row => {
+  //     console.log(row, '当前行')
+  //     if (row?.access_way === '') return '此项为空';
+  //     return row?.access_way === 'A'
+  //       ? `${$t('custom.devicePage.byProtocol')}(${row?.protocol_type || '-'})`
+  //       : `${$t('custom.devicePage.byService')}(${row?.protocol_type || '-'})`;
+  //   }
+  // }
 ]) as Ref<any>;
 
 const { routerPushByKey } = useRouterPush();
@@ -232,14 +233,17 @@ const searchConfigs = ref<SearchConfig[]>([
     ]
   },
   {
-    key: 'access_way',
+    key: 'device_type',
     label: $t('custom.devicePage.unlimitedAccessType'),
     type: 'select',
     options: [
       { label: $t('custom.devicePage.unlimitedAccessType'), value: '' },
-      { label: $t('custom.devicePage.byProtocol'), value: 'A' },
-      { label: $t('custom.devicePage.byService'), value: 'B' }
-    ]
+      { label: $t('custom.devicePage.directConnectedDevices'), value: '1' },
+      { label: $t('custom.devicePage.gateway'), value: '2' },
+      { label: $t('custom.devicePage.gatewaySubEquipment'), value: '3' },
+      // { label: $t('custom.devicePage.byProtocol'), value: 'A' },
+      // { label: $t('custom.devicePage.byService'), value: 'B' }
+    ],
   },
   {
     key: 'procotol_dict',

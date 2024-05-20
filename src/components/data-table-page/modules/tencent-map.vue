@@ -37,7 +37,7 @@ async function renderMap() {
       center: new TMap.LatLng(39.98412, 116.307484),
       zoom: 11,
       maxZoom: 13,
-      minZoom: 2,
+      minZoom: 3,
       viewMode: '3D'
     });
     map.on('click', () => {

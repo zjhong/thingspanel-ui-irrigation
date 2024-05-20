@@ -29,13 +29,15 @@ const showMarker = (markerArr, bounds) => {
 };
 let ignoreMapClick = false;
 
-async function renderMap(devices) {
+async function renderMap() {
   await load(true);
   if (!domRef.value) return;
   if (!map) {
     map = new TMap.Map(domRef.value, {
       center: new TMap.LatLng(39.98412, 116.307484),
       zoom: 11,
+      maxZoom: 13,
+      minZoom: 2,
       viewMode: '3D'
     });
     map.on('click', () => {
@@ -56,18 +58,21 @@ async function renderMap(devices) {
   if (multiMarker) {
     multiMarker.setMap(null); // 移除旧的MultiMarker
   }
+  const markers: any = [];
+  props.devices.map(device => {
+    if (device?.location) {
+      const locations = device.location.split(',');
+      const latitude = Number(locations[1] || 0);
+      const longitude = Number(locations[0] || 0);
 
-  const markers = devices.map(device => {
-    const locations = device.location && device.location.split(',');
-    const latitude = !Number.isNaN(Number(locations[1])) ? Number(locations[1]) : undefined;
-    const longitude = !Number.isNaN(Number(locations[0])) ? Number(locations[0]) : undefined;
-    return {
-      position: new TMap.LatLng(latitude, longitude),
-      id: device.id,
-      data: device
-    };
+      markers.push({
+        position: new TMap.LatLng(latitude, longitude),
+        id: device.id,
+        data: device
+      });
+    }
   });
-
+  console.log(markers.length);
   multiMarker = new TMap.MultiMarker({
     map,
     styles: {
@@ -123,11 +128,11 @@ async function renderMap(devices) {
 }
 
 onMounted(() => {
-  renderMap(props.devices);
+  renderMap();
 });
 
 watchEffect(() => {
-  renderMap(props.devices);
+  renderMap();
 });
 </script>
 

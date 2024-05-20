@@ -37,7 +37,7 @@ async function renderMap() {
       center: new TMap.LatLng(39.98412, 116.307484),
       zoom: 11,
       maxZoom: 13,
-      minZoom: 6,
+      minZoom: 2,
       viewMode: '3D'
     });
     map.on('click', () => {
@@ -89,7 +89,6 @@ async function renderMap() {
   showMarker(markers, bounds);
   infoWindow = new TMap.InfoWindow({
     map,
-    zoom: 11,
     position: new TMap.LatLng(39.984104, 116.307503),
     offset: { x: 0, y: -32 }, // 设置信息窗相对position偏移像素
     enableCustom: true

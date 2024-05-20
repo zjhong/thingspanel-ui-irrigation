@@ -11,10 +11,10 @@ export interface CardItemBase {
     defaultTitle?: string; // 卡片标题 尽量使用国际化标题
     showTitle?: boolean;
   }; // 初始标题 可以不定义
-  scene?: SceneType; // 'mobile' | 'pc' | 'all';
+  scene?: SceneType; // 'mobile' | 'pc' | 'all';，暂时没用可以不管
   minWH?: {
-    minW: number | string | -1; // 卡片最小宽度,字符串单位为像素，数字则表示占几个格子，当前默认共48格
-    minH: number | string | -1; // 卡片最小高度,字符串单位为像素，数字则表示占几个格子，当前默认共48格
+    minW: number | -1; // 卡片最小宽度,数字则表示占几列，当前默认共24格，-1为不限，自行计算
+    minH: number | -1; // 卡片最小高度,数字则表示占几行，当前默一行30px，-1为不限，自行计算
   };
   preset?: Record<string, any>; // 初始设定,可自定义
 }

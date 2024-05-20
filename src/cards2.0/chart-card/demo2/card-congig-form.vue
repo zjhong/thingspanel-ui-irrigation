@@ -49,7 +49,7 @@ onMounted(() => {
       <!-- 你需要编写配置的地方-->
       <NForm :model="ctx.config.cardUI">
         <NFormItem label="字体大小">
-          <n-input-number v-model:value="ctx.config.cardUI.textNUmber" :min="12" :max="50" />
+          <n-color-picker v-model:value="ctx.config.cardUI.shadowColor" />
         </NFormItem>
       </NForm>
     </n-tab-pane>

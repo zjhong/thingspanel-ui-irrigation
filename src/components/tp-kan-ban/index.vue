@@ -5,20 +5,35 @@ import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
 import type { CardData, CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
+import { PutBoard } from '@/service/api';
 
 const formRef = ref<CardFormIns>();
 const appStore = useAppStore();
 const fullUI = ref();
 const { isFullscreen, toggle } = useFullscreen(fullUI);
+const props = defineProps<{ panelId: string }>();
 const active = ref(false);
 const showModal = ref(false);
 const state = reactive<{ curCardData: null | CardView }>({
   curCardData: null
 });
 const activeType = ref<string>('plugins');
-const { layouts, addItem, updateLayouts } = useLayouts();
+const { layouts, addItem, updateLayouts, panelDate } = useLayouts(props.panelId);
+console.log(layouts);
 const saveKanBan = async () => {
-  console.log('ss');
+  if (!props.panelId) {
+    window.NMessage.destroyAll();
+    window.NMessage.error('无效的看板id');
+  } else {
+    const layoutJson = JSON.stringify(layouts.value);
+
+    await PutBoard({
+      id: props.panelId,
+      config: layoutJson,
+      name: panelDate.value?.name,
+      home_flag: panelDate.value?.home_flag
+    });
+  }
 };
 
 function toggleModal(f) {

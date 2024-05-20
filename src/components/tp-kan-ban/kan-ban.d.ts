@@ -8,7 +8,7 @@ export type cardConfig = {
     [propName: string]: any;
   };
   source: {
-    dataSource?: string;
+    dataSource?: any;
     [propName: string]: any;
   };
   cardUI: Record<string, any>;

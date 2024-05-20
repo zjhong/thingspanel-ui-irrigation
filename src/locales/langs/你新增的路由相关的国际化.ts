@@ -73,7 +73,8 @@ export const czh_cn = {
   'edit-area': '编辑区域',
   'new-area': '新建区域',
   'automation_scene-edit': `场景编辑`,
-  'test_kanban-test': '测试1'
+  'test_kan-ban-details-test': '看板详情测试',
+  'test_kan-ban-test': '看板测试'
 };
 
 export const cen = {
@@ -147,5 +148,6 @@ export const cen = {
   'edit-area': 'Edit Area',
   'new-area': 'New Area',
   'automation_scene-edit': `场景编辑`,
-  'test_kanban-test': 'test1'
+  'test_kan-ban-details-test': 'test_kan-ban-details-test',
+  'test_kan-ban-test': 'test_kan-ban-test'
 };

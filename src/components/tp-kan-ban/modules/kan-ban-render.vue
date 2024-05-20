@@ -87,10 +87,14 @@ function removeItem(id: string) {
   }
 }
 
-watch(props.layout, val => {
-  theLayout.value = val;
-});
+watch(
+  () => props.layout,
+  val => {
+    theLayout.value = val;
+  }
+);
 onMounted(() => {
+  console.log('layout', props.layout);
   theLayout.value = props.layout;
 });
 </script>

@@ -1,9 +1,11 @@
 <script lang="tsx" setup>
-import { onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, reactive, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
+// eslint-disable-next-line vue/prefer-import-from-vue
+import type { UnwrapRefSimple } from '@vue/reactivity';
 import { router } from '@/router';
-import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
-import { PutBoard, getBoard } from '@/service/api';
+import type { ICardData, ICardFormIns, ICardRender, ICardView } from '@/components/panel/card';
+import { PutBoard, deviceTemplateSelect, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { $t } from '@/locales';
 
@@ -11,6 +13,19 @@ const props = defineProps<{ panelId: string }>();
 const panelDate = ref<Panel.Board>();
 const cr = ref<ICardRender>();
 const fullui = ref();
+
+const showingCardList = ref(false);
+const editingCard = ref(false);
+const deviceOptions = ref<UnwrapRefSimple<any>[]>();
+const webChartConfig = ref<any>([]);
+
+const getDeviceOptions = async () => {
+  const { data, error } = await deviceTemplateSelect();
+  if (!error) {
+    deviceOptions.value = data;
+  }
+};
+
 const { isFullscreen, toggle } = useFullscreen(fullui);
 const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
@@ -57,31 +72,45 @@ function updateConfigData(configJson: ICardView[]) {
 }
 
 const state = reactive({
-  openAddPanel: false,
   cardData: null as null | ICardData
 });
 
 const editView = ref<ICardView | null>();
+const formRef = ref<ICardFormIns>();
 
 const insertCard = (card: ICardData) => {
-  if (editView.value) {
-    editView.value.data = card;
-  } else {
-    cr.value?.addCard(card);
-  }
-  editView.value = null;
-  state.openAddPanel = false;
-};
-
-const add = () => {
+  cr.value?.addCard(card);
   editView.value = null;
   state.cardData = null;
-  state.openAddPanel = true;
 };
+
+const updateCard = (card: ICardData) => {
+  if (editView.value) {
+    editView.value.data = card;
+  }
+};
+
 const edit = (view: ICardView) => {
+  editingCard.value = true;
+
   editView.value = view;
   state.cardData = view.data || null;
-  state.openAddPanel = true;
+
+  if (state.cardData?.dataSource?.deviceSource && state.cardData?.dataSource?.deviceSource?.length > 0) {
+    const deviceSelectId = state.cardData?.dataSource?.deviceSource[0]?.deviceId || '';
+    const deviceOption = deviceOptions.value?.find(item => item.device_id === deviceSelectId);
+    if (deviceOption && deviceOption.web_chart_config) {
+      webChartConfig.value = JSON.parse(deviceOption?.web_chart_config);
+    } else {
+      webChartConfig.value = [];
+    }
+  }
+  nextTick(() => {
+    formRef.value?.setCard(state.cardData as any);
+  });
+};
+const toEditMode = () => {
+  showingCardList.value = true;
 };
 
 const savePanel = async () => {
@@ -95,7 +124,10 @@ const savePanel = async () => {
   });
 };
 
-onMounted(fetchBroad);
+onMounted(() => {
+  fetchBroad();
+  getDeviceOptions();
+});
 </script>
 
 <template>
@@ -109,17 +141,18 @@ onMounted(fetchBroad);
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           {{ $t('page.login.common.back') }}
         </NButton>
-      </div>
-      <NSpace align="center">
-        <NButton @click="add">
+        <NButton class="ml-5" @mouseover="toEditMode">
           <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
           {{ $t('generate.add-component') }}
         </NButton>
+      </div>
+      <NSpace align="center">
+        <span class="text-lg font-medium">看板：{{ panelDate?.name }}</span>
+
         <!--        <NButton>-->
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->
         <NDivider vertical />
-        <!--        <NButton>取消</NButton>-->
         <NButton @click="savePanel">{{ $t('common.save') }}</NButton>
         <FullScreen
           :full="isFullscreen"
@@ -131,21 +164,62 @@ onMounted(fetchBroad);
         />
       </NSpace>
     </div>
-    <div
-      ref="fullui"
-      :class="!layout.length ? 'h-full flex-col items-center justify-center bg-white' : 'h-full  bg-white'"
-    >
-      <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
-        <NEmpty description="暂未添加组件"></NEmpty>
+    <div ref="fullui" class="h-edit-area flex bg-white">
+      <n-drawer
+        v-model:show="showingCardList"
+        :width="400"
+        placement="left"
+        :show-mask="false"
+        style="box-shadow: 0 8px 16px 0 rgba(156, 107, 255, 0.4)"
+      >
+        <n-drawer-content title="卡片列表" class="shadow-sm" closable>
+          <CardSelector v-if="showingCardList" class="h-full w-full overflow-auto" @select-card="insertCard" />
+        </n-drawer-content>
+      </n-drawer>
+
+      <div class="h-full flex-1 overflow-auto">
+        <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
+          <NEmpty description="暂未添加组件"></NEmpty>
+        </div>
+        <CardRender
+          ref="cr"
+          v-model:layout="layout"
+          :is-preview="false"
+          :col-num="12"
+          :default-card-col="4"
+          :row-height="85"
+          @edit="edit"
+        />
       </div>
-      <CardRender ref="cr" v-model:layout="layout" :col-num="12" :default-card-col="4" :row-height="85" @edit="edit" />
+
+      <n-drawer
+        v-model:show="editingCard"
+        :width="500"
+        placement="right"
+        :show-mask="false"
+        style="box-shadow: 0 8px 16px 0 rgba(156, 107, 255, 0.4)"
+      >
+        <n-drawer-content title="卡片配置" class="shadow-sm" closable>
+          <CardForm
+            ref="formRef"
+            class="h-full w-full overflow-auto"
+            :device-web-chart-config="webChartConfig"
+            @update="(data: any) => updateCard(data)"
+          />
+        </n-drawer-content>
+      </n-drawer>
     </div>
-    <AddCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .panel {
   @apply border border-transparent;
+}
+.h-content {
+  height: calc(100% - 48px);
+}
+.h-edit-area {
+  height: calc(100% - 30px);
 }
 </style>

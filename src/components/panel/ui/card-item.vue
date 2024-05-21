@@ -18,14 +18,17 @@ const findCardComponent = (id: string) => {
 </script>
 
 <template>
-  <NCard class="relative h-full w-full" content-style="padding: 0px">
+  <NCard
+    class="relative h-full w-full"
+    content-style="padding: 0px; display: flex; flex-direction: column; height: 100%;"
+  >
     <div
       v-if="data.basicSettings?.showTitle"
-      class="h-7 w-full truncate border-b border-gray-200 px-2 text-sm leading-7 dark:border-gray-200/10"
+      class="min-title-height h-7 w-full truncate border-b border-gray-200 px-2 text-sm leading-7 dark:border-gray-200/10"
     >
       {{ data.basicSettings?.title }}
     </div>
-    <div class="w p-4">
+    <div class="w-full flex-1 p-4">
       <component
         :is="findCardComponent(cardId || '')"
         class="relative h-full w-full"
@@ -41,5 +44,8 @@ const findCardComponent = (id: string) => {
 .w {
   width: 100%;
   height: 100%;
+}
+.min-title-height {
+  min-height: 28px;
 }
 </style>

@@ -145,7 +145,7 @@ export interface CardItem {
 
 ## 3. UI示例，
 
-### 最需要注意的就是 cardData.config,起的数据，需要的时候打印 cardData进行查看
+### 最需要注意的就是 cardData.config,的数据，其他的东西，如果需要的时候打印 cardData进行查看，后使用
 
 ```typescript
 export type cardConfig = {

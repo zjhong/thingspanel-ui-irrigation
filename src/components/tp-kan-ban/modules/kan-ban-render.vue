@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
-import { GridItem, GridLayout } from 'grid-layout-plus';
-import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
-import { KANBANCOLNUM, KANBANROWHEIGHT } from '@/constants/common';
-import { $t } from '@/locales';
+import {onMounted, ref, watch} from 'vue';
+import {GridItem, GridLayout} from 'grid-layout-plus';
+import type {CardData, CardView} from '@/components/tp-kan-ban/kan-ban';
+import {KANBANCOLNUM, KANBANROWHEIGHT} from '@/constants/common';
+import {$t} from '@/locales';
 import TpCardItem from '@/components/tp-kan-ban/modules/tp-card-item.vue';
 
-defineOptions({ name: 'KanBanRender' });
-const mouseAt = { x: -1, y: -1 };
+defineOptions({name: 'KanBanRender'});
+const mouseAt = {x: -1, y: -1};
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
   isPreview: boolean;
@@ -100,7 +100,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-card class="h-full w-full" content-class="h-full w-full overflow-auto" content-style="padding:0;margin:0">
+  <n-card class="h-full w-full" content-class="h-full w-full custom-scroll"
+          content-style="padding:0;margin:0">
     <div ref="wrapper" key="layoutKey" class="h-full w-full" @dragover.prevent @drop="onDrop">
       <div v-if="!theLayout.length" class="h-full flex items-center justify-center">
         <NEmpty description="暂未添加组件,移入添加按钮，然后拖入卡片吧"></NEmpty>
@@ -137,7 +138,7 @@ onMounted(() => {
               class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
               @click="selectCard(item)"
             >
-              <SvgIcon icon="uil:setting" class="text-base" />
+              <SvgIcon icon="uil:setting" class="text-base"/>
             </NIcon>
             <NPopconfirm
               v-if="!isPreview"
@@ -150,12 +151,12 @@ onMounted(() => {
                 <NIcon
                   class="absolute right-2 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
                 >
-                  <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
+                  <SvgIcon icon="material-symbols:delete-outline" class="text-base"/>
                 </NIcon>
               </template>
               <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
             </NPopconfirm>
-            <TpCardItem :data="item.data as CardData" :view="isPreview" />
+            <TpCardItem :data="item.data as CardData" :view="isPreview"/>
           </div>
         </GridItem>
       </GridLayout>
@@ -163,4 +164,12 @@ onMounted(() => {
   </n-card>
 </template>
 
-<style scoped></style>
+<style>
+/* 针对具体 div 的滚动条样式 */
+.custom-scroll {
+  overflow: auto;
+  scrollbar-width: thin; /* Firefox */
+}
+
+
+</style>

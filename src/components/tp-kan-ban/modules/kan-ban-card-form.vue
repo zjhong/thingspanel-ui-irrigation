@@ -2,7 +2,7 @@
 import { reactive, watch } from 'vue';
 import type { CardItem } from '@/cards2.0/card';
 import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
-import { useKanBanStore } from '@/cards2.0/kan-ban-store';
+import { useKanBanStore } from '@/cards2.0/store/kan-ban-store';
 
 const { cardMap } = useKanBanStore();
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));

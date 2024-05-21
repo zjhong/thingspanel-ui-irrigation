@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch } from 'vue';
 import type { CardData } from '@/components/tp-kan-ban/kan-ban';
-import { useKanBanStore } from '@/cards2.0/kan-ban-store';
+import { useKanBanStore } from '@/cards2.0/store/kan-ban-store';
 
 defineOptions({ name: 'TpCardItem' });
 

@@ -27,15 +27,7 @@ onMounted(() => {
       一张网络图片（这字的大小是{{ cardData?.config?.cardUI?.textsize || 12 }}px）
     </div>
     <div>
-      <n-image
-        :width="100"
-        :height="100"
-        :src="
-          cardData?.config?.cardUI?.src ||
-          'https://hbimg.huaban.com/3dd0cd22fd0fea348e94c5ded4fad93fb2c56e9722513-MGTRCX_fw658'
-        "
-        class="h-full w-full"
-      />
+      <n-image :width="100" :height="100" :src="cardData?.config?.cardUI?.src" class="h-full w-full" />
     </div>
   </div>
 </template>

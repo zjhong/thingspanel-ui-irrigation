@@ -934,12 +934,21 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
-        name: 'test_kanban-test',
-        path: '/test/kanban-test',
-        component: 'view.test_kanban-test',
+        name: 'test_kan-ban-details-test',
+        path: '/test/kan-ban-details-test',
+        component: 'view.test_kan-ban-details-test',
         meta: {
-          title: 'test_kanban-test',
-          i18nKey: 'route.test_kanban-test'
+          title: 'test_kan-ban-details-test',
+          i18nKey: 'route.test_kan-ban-details-test'
+        }
+      },
+      {
+        name: 'test_kan-ban-test',
+        path: '/test/kan-ban-test',
+        component: 'view.test_kan-ban-test',
+        meta: {
+          title: 'test_kan-ban-test',
+          i18nKey: 'route.test_kan-ban-test'
         }
       }
     ]

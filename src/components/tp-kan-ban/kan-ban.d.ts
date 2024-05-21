@@ -1,5 +1,5 @@
 import type { LayoutItem } from 'grid-layout-plus';
-import type { CardItemBase } from '@/card2/card';
+import type { CardItemBase } from '@/cards2.0/card';
 
 export type cardConfig = {
   basis: {
@@ -8,7 +8,7 @@ export type cardConfig = {
     [propName: string]: any;
   };
   source: {
-    dataSource?: string;
+    dataSource?: any;
     [propName: string]: any;
   };
   cardUI: Record<string, any>;
@@ -30,10 +30,6 @@ export interface CardView extends LayoutItem {
   h: number;
   i: string | number; // cardId
   data?: CardData;
-}
-
-export interface CardRender {
-  addCard(data: CardData): void;
 }
 
 export interface CardFormIns {

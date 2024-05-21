@@ -15,6 +15,7 @@ declare module 'vue' {
     CardForm: typeof import('./../components/panel/ui/card-form.vue')['default']
     CardItem: typeof import('./../components/panel/ui/card-item.vue')['default']
     CardRender: typeof import('./../components/panel/ui/card-render.vue')['default']
+    CardSelector: typeof import('./../components/panel/ui/card-selector.vue')['default']
     ChartComponent: typeof import('./../components/custom/ChartComponent.vue')['default']
     Component: typeof import('./../components/panel/builtin-card/bug-num/component.vue')['default']
     ConfigCtx: typeof import('./../components/panel/ui/config-ctx.vue')['default']

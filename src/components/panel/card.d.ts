@@ -9,6 +9,12 @@ export interface ICardData {
     showTitle?: boolean;
     title?: string;
   };
+  layout?: {
+    w?: number;
+    h?: number;
+    minW?: number;
+    minH?: number;
+  };
   // 数据源
   dataSource?: {
     // 系统 或 设备
@@ -36,6 +42,8 @@ export interface ICardView {
   w: number;
   h: number;
   i: number;
+  minW?: number;
+  minH?: number;
   data?: ICardData;
 }
 
@@ -57,6 +65,8 @@ export interface ICardDefine {
     iCardViewDefault?: {
       w?: number; // 卡片初始占几行，尽量配一下
       h?: number; // 卡片初始大几列，尽量配一下
+      minW?: number; // 卡片最小占几行
+      minH?: number; // 卡片最小大几列
     };
   };
 }

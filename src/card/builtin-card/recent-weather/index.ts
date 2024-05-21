@@ -8,5 +8,12 @@ export default {
   poster,
   title: 'dashboard_panel.cardName.weatherOverview',
   w: 619,
-  h: 233
+  h: 233,
+  preset: {
+    iCardViewDefault: {
+      w: 6,
+      h: 4,
+      minH: 2
+    }
+  }
 } as ICardDefine;

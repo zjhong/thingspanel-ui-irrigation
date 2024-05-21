@@ -68,7 +68,7 @@ const changeCurCardData = (data: CardData) => {
         :toggle="toggle"
         :is-fullscreen="isFullscreen"
         :save-kan-ban="saveKanBan"
-        :tittle="panelDate?.name"
+        :tittle="panelDate?.name||'未定义'"
         class="w-full"
       />
     </div>

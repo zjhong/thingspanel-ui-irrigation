@@ -31,17 +31,6 @@ const countSpace = (data: ICardView[], y: number) => {
   }
   return start;
 };
-const switch_h: () => void = () => {
-  const obj = props.layout.filter((item: any) => {
-    if (item.data.cardId === 'chart-switch') {
-      console.log(item, 'item');
-      item.h = 2;
-      item.w = 5;
-    }
-    return item;
-  });
-  console.log(obj, '测试');
-};
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void;
   (e: 'edit', view: ICardView): void;
@@ -83,9 +72,6 @@ defineExpose({
         data
       }
     ]);
-    setTimeout(() => {
-      switch_h();
-    }, 500);
   }
 });
 
@@ -95,11 +81,7 @@ const removeLayout = (i: number) => {
     props.layout.filter(item => item.i !== i)
   );
 };
-onMounted(() => {
-  setTimeout(() => {
-    switch_h();
-  }, 500);
-});
+onMounted(() => {});
 onUpdated(() => {
   console.log(props.layout, 'props.layout');
 });

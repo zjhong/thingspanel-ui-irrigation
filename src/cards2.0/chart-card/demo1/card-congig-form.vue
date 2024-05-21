@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { inject, onMounted } from 'vue';
+import {inject, onMounted} from 'vue';
 import CardBaseForm from '@/cards2.0/modules/card-base-form.vue';
 import CardDataSourceForm from '@/cards2.0/modules/card-data-source-form.vue';
-import type { CardData, IConfigCtx } from '@/components/tp-kan-ban/kan-ban';
-import { $t } from '@/locales';
+import type {CardData, IConfigCtx} from '@/components/tp-kan-ban/kan-ban';
+import {$t} from '@/locales';
 
 // 控制台打印多语言函数，用于调试
 console.log($t);
@@ -58,10 +58,10 @@ onMounted(() => {
     <n-tab-pane name="card-config" tab="卡片配置">
       <!-- 需要用户编写配置的区域 -->
       <NForm :model="ctx.config.cardUI">
-        <NFormItem>
-          <!-- 绑定输入框与卡片 UI 配置 -->
-          <n-input-number v-model:value="ctx.config.cardUI.textNUmber" :min="12" :max="50" />
         <NFormItem label="字体大小">
+          <!-- 绑定输入框与卡片 UI 配置 -->
+          <n-input-number v-model:value="ctx.config.cardUI.textNUmber" :min="12" :max="50"/>
+        </NFormItem>
       </NForm>
     </n-tab-pane>
   </n-tabs>

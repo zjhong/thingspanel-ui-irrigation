@@ -77,9 +77,9 @@ async function handleSubmit() {
   const data: any = await editUser(formModel);
   if (!data.error) {
     window.$message?.success(data.msg);
-    emit('success');
     handleUpdateFormModel(createDefaultFormModel());
     closeModal();
+    emit('success');
   }
 }
 
@@ -94,19 +94,17 @@ watch(
 </script>
 
 <template>
-  <n-modal v-model:show="modalVisible" preset="card" :title="$t('generate.change-password')" class="w-700px">
+  <n-modal v-model:show="modalVisible" preset="card" :title="$t('generate.change-password')">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
-      <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="24" :label="$t('page.manage.user.userEmail')" path="email">
-          <n-input v-model:value="formModel.email" readonly />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('page.manage.user.password')" path="password">
-          <n-input v-model:value="formModel.password" type="password" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" :label="$t('generate.confirm-password')" path="confirmPwd">
-          <n-input v-model:value="formModel.confirmPwd" type="password" />
-        </n-form-item-grid-item>
-      </n-grid>
+      <n-form-item :label="$t('page.manage.user.userEmail')" path="email">
+        <n-input v-model:value="formModel.email" readonly />
+      </n-form-item>
+      <n-form-item :label="$t('page.manage.user.password')" path="password">
+        <n-input v-model:value="formModel.password" type="password" />
+      </n-form-item>
+      <n-form-item :label="$t('generate.confirm-password')" path="confirmPwd">
+        <n-input v-model:value="formModel.confirmPwd" type="password" />
+      </n-form-item>
       <n-space class="w-full pt-16px" :size="24" justify="end">
         <n-button class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</n-button>
         <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</n-button>

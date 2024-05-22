@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -181,6 +181,11 @@ watch(
   },
   { deep: true }
 );
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 初始化
 init();
 </script>
@@ -212,8 +217,19 @@ init();
           remote
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <NDrawer v-model:show="editPwdVisible" width="80%" display-directive="show" placement="right">
+        <TableActionModal
+          v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
+        <NDrawer
+          v-model:show="editPwdVisible"
+          :class="getPlatform ? 'w-90%' : 'w-80%'"
+          display-directive="show"
+          placement="right"
+        >
           <NDrawerContent :title="drawerTitle" closable>
             <DeviceRegister :pid="(editData?.id as unknown as string)" />
           </NDrawerContent>

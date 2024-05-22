@@ -13,7 +13,7 @@ import NewInformation from './components/new-information.vue';
 </script>
 
 <template>
-  <div>
+  <div class="table-box">
     <NCard :title="$t('generate.alarm-center')">
       <n-tabs type="line" size="large">
         <n-tab-pane name="告警信息">

@@ -170,7 +170,7 @@ ThingsPanel
 │   ├── config                     //构建打包配置
 │   │   └── proxy.ts               //网络请求代理
 │   └── plugins                    //构建插件
-│       ├── index.ts               //插件汇总
+│       ├── index.ts.432432               //插件汇总
 │       ├── router.ts              //elegant-router插件
 │       ├── unocss.ts              //unocss插件
 │       └── unplugin.ts            //自动导入UI组件、自动解析iconify图标、自动解析本地svg作为图标
@@ -235,7 +235,7 @@ ThingsPanel
 │   │   ├── elegant            //elegant-router插件生成的路由声明、导入和转换等文件
 │   │   ├── guard              //路由守卫
 │   │   ├── routes             //路由声明入口
-│   │   └── index.ts           //路由入口
+│   │   └── index.ts.432432           //路由入口
 │   ├── service                //网络请求
 │   │   ├── api                //接口api
 │   │   └── request            //封装的请求函数
@@ -1251,7 +1251,7 @@ const naiveTheme = computed(() => getNaiveTheme(themeColors.value));
 ::: tip 代码位置
 src/store/modules/theme/shared.ts
 
-src/store/modules/theme/index.ts
+src/store/modules/theme/index.ts.432432
 :::
 
 **应用主题变量**
@@ -1320,7 +1320,7 @@ const antdTheme = computed(() =>
 ::: tip 代码位置
 src/store/modules/theme/shared.ts
 
-src/store/modules/theme/index.ts
+src/store/modules/theme/index.ts.432432
 :::
 
 **应用主题变量**

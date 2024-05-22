@@ -760,7 +760,6 @@ const local: App.I18n.Schema = {
       PleaseEeventIdentifier: '请输入事件标识符'
     }
   },
-
   custom: pzh_cn,
   generate: {
     code: '代码',
@@ -898,7 +897,7 @@ const local: App.I18n.Schema = {
     'modify-device-info': '修改设备信息',
     'trigger-duration': '触发持续时间',
     'multiple-email-phone-using-comma': '多个邮箱/手机号使用英文逗号隔开',
-    'device-count': '设备数量:',
+    'device-count': '设备数据个数:',
     'add-alarm': '新增告警',
     'set-email-phone': '设置收件邮箱/接收手机号',
     edit: '编辑',
@@ -1145,6 +1144,9 @@ const local: App.I18n.Schema = {
     secondElement: '二',
     thirdElement: '三',
     individual: '个'
+  },
+  kanban: {
+    'add-cards': '添加卡片'
   }
 };
 

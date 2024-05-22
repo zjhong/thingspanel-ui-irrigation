@@ -115,9 +115,9 @@ onUnmounted(() => {
         <div class="bt-data">
           <NIcon size="58"><ClipboardCode20Regular /></NIcon>
           <div>
-            <span class="value">{{ detail?.data[0].value }}</span>
+            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
           </div>
-          <span class="unit">{{ detail?.data[0].unit }}</span>
+          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
         </div>
       </NCard>
     </div>

@@ -189,8 +189,8 @@ const downloadPackage = () => {
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           remote
+          flex-height
           class="flex-1-hidden"
         />
         <div v-if="activeTab === 'info'">

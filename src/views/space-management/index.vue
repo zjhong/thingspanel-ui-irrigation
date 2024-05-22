@@ -275,7 +275,7 @@ init();
       <n-scrollbar style="max-height: 500px">
         <NCard v-for="(item, index) in spaces" :key="index">
           <div class="space-name">
-            <spna>{{ $t('generate.space-name') }}</spna>
+            <span>{{ $t('generate.space-name') }}</span>
             : {{ item.name }}
           </div>
           <NDataTable :columns="columns" :data="item.rows" :loading="loading" :pagination="pagination" />

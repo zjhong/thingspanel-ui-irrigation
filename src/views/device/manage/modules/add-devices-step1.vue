@@ -14,7 +14,7 @@ const formRef = ref<FormInst | null>(null);
 const message = useMessage();
 const formValue = ref({
   name: '',
-  lable: [],
+  label: [],
   device_config_id: ''
 });
 const rules = {
@@ -29,7 +29,7 @@ function handleValidateClick(e: MouseEvent) {
   e.preventDefault();
   formRef.value?.validate(async errors => {
     if (!errors) {
-      const res = await deviceAdd({ ...formValue.value, lable: formValue.value.lable.join(','), access_way: 'A' });
+      const res = await deviceAdd({ ...formValue.value, label: formValue.value.label.join(','), access_way: 'A' });
       const configId = formValue.value.device_config_id;
       const deviceId = res.data.id;
       props.setIdCallback(deviceId, configId, res.data.voucher);
@@ -49,8 +49,8 @@ function handleValidateClick(e: MouseEvent) {
         <n-form-item :label="$t('custom.devicePage.deviceName')" path="name">
           <n-input v-model:value="formValue.name" :placeholder="() => $t('custom.devicePage.inputDeviceName')" />
         </n-form-item>
-        <n-form-item :label="$t('custom.devicePage.label')" path="lable">
-          <n-dynamic-tags v-model:value="formValue.lable" />
+        <n-form-item :label="$t('custom.devicePage.label')" path="label">
+          <n-dynamic-tags v-model:value="formValue.label" />
         </n-form-item>
         <n-form-item :label="$t('custom.devicePage.deviceConfig')" path="device_config_id">
           <n-select

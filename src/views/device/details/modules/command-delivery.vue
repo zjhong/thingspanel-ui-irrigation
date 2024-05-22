@@ -2,7 +2,7 @@
 import dayjs from 'dayjs';
 import DistributionAndTable from '@/views/device/details/modules/public/distribution-and-table.vue';
 import { commandDataPub, getCommandDataSetLogs } from '@/service/api';
-
+import { $t } from '@/locales';
 defineProps<{
   id: string;
 }>();
@@ -24,8 +24,8 @@ const formatStatus = status => {
 };
 
 const columns = [
-  { title: '命令标识符', minWidth: '140px', key: 'identify' },
-  { title: '命令名称', minWidth: '140px', key: '' },
+  { title: $t('device_template.table_header.commandIdentifier'), minWidth: '140px', key: 'identify' },
+  { title: $t('device_template.table_header.commandName'), minWidth: '140px', key: '' },
   {
     title: '命令下发时间',
     minWidth: '140px',

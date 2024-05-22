@@ -115,6 +115,8 @@ declare module "@elegant-router/types" {
     "system-management-user_equipment-map": "/system-management-user/equipment-map";
     "system-management-user_system-log": "/system-management-user/system-log";
     "test": "/test";
+    "test_kan-ban-details-test": "/test/kan-ban-details-test";
+    "test_kan-ban-test": "/test/kan-ban-test";
     "user-center": "/user-center";
     "visualization": "/visualization";
     "visualization_big-screen": "/visualization/big-screen";
@@ -274,7 +276,8 @@ declare module "@elegant-router/types" {
     | "space-management"
     | "system-management-user_equipment-map"
     | "system-management-user_system-log"
-    | "test"
+    | "test_kan-ban-details-test"
+    | "test_kan-ban-test"
     | "user-center"
     | "visualization_big-screen"
     | "visualization_panel-details"

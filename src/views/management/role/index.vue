@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -195,7 +195,10 @@ const pagination: PaginationProps = reactive({
 function init() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 初始化
 init();
 </script>
@@ -218,10 +221,21 @@ init();
           :pagination="pagination"
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <EditPermissionModal v-model:visible="editPermissionVisible" :edit-data="editData" />
+        <TableActionModal
+          v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
+        <EditPermissionModal
+          v-model:visible="editPermissionVisible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :edit-data="editData"
+        />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
+          :class="getPlatform ? 'w-90%' : 'w-700px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

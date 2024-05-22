@@ -108,7 +108,7 @@ onMounted(() => {
 
 <template>
   <div class="h-full overflow-hidden">
-    <NCard :title="$t('generate.table')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <NCard :title="$t('generate.table')">
       <NSpace :vertical="true">
         <NSpace>
           <NButton @click="getDataSource">{{ $t('generate.has-data') }}</NButton>

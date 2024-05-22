@@ -39,14 +39,14 @@ let components = [
 
 const tabValue = ref<any>('telemetry');
 const showDialog = ref(false);
-const lables = ref<string[]>([]);
+const labels = ref<string[]>([]);
 const device_color = ref('#ccc');
 const device_type = ref('');
 const icon_type = ref('');
 const device_number = ref('');
 
 const queryParams = reactive({
-  lable: '',
+  label: '',
   id: '',
   name: '',
   device_number: '',
@@ -84,7 +84,7 @@ const save = async () => {
   queryParams.id = deviceDataStore?.deviceData?.id;
   queryParams.name = deviceDataStore?.deviceData?.name;
   queryParams.device_number = deviceDataStore?.deviceData?.device_number;
-  queryParams.lable = lables.value.join(',');
+  queryParams.label = labels.value.join(',');
   queryParams.description = deviceDataStore?.deviceData?.description;
 
   const { error } = await deviceUpdate(queryParams);
@@ -165,8 +165,8 @@ watch(
               <n-form-item :label="$t('generate.device-number')" path="device_number">
                 <n-input v-model:value="deviceDataStore.deviceData.device_number" />
               </n-form-item>
-              <n-form-item :label="$t('custom.devicePage.label')" path="lable">
-                <n-dynamic-tags v-model:value="lables" />
+              <n-form-item :label="$t('custom.devicePage.label')" path="label">
+                <n-dynamic-tags v-model:value="labels" />
               </n-form-item>
               <n-form-item :label="$t('generate.device-description')">
                 <!-- <n-input v-model:value="queryParams.deviceDescribe" type="textarea"/> -->
@@ -190,7 +190,7 @@ watch(
             <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <spna class="mr-2">{{ $t('custom.device_details.status') }}:</spna> -->
+            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
@@ -212,7 +212,7 @@ watch(
               class="text-20px text-primary"
               :stroke="icon_type"
             />
-            <!-- <spna style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</spna> -->
+            <!-- <span style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</span> -->
 
             <span style="color: #ccc">
               {{ $t('custom.device_details.noAlarm') }}

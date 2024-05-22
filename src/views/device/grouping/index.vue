@@ -112,6 +112,7 @@ onMounted(getDevice); // Fetch device groups on component mount
               };
             }
           "
+          scroll-x="100%"
           :columns="columns"
           :data="data"
           :loading="loading"

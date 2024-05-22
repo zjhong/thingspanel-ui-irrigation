@@ -85,15 +85,17 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     key: 'name',
+    minWidth: '100px',
     title: $t('page.product.update-package.packageName')
   },
   {
     key: 'target_version',
+    minWidth: '140px',
     title: $t('page.product.update-package.version')
   },
   {
     key: 'version',
-    minWidth: '140px',
+    minWidth: '110px',
     title: $t('page.product.update-package.versionCode')
   },
   {
@@ -103,7 +105,7 @@ const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   },
   {
     key: 'package_type',
-    minWidth: '140px',
+    minWidth: '110px',
     title: $t('page.product.update-package.type'),
     render: (row: productPackageRecord) => {
       if (row.package_type === 1) {
@@ -223,49 +225,48 @@ init();
 <template>
   <div>
     <NCard :title="$t('page.product.update-package.packageList')">
-      <div class="h-full flex-col">
-        <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
-            <NSelect
-              v-model:value="queryParams.device_config_id"
-              filterable
-              :options="deviceOptions"
-              @search="getList"
-            />
-          </NFormItem>
-          <NFormItem :label="$t('page.product.update-package.packageName')" path="name">
-            <NInput v-model:value="queryParams.name" />
-          </NFormItem>
-          <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-          </NFormItem>
-        </NForm>
-        <div class="flex flex-wrap items-center gap-15px pb-12px">
-          <div class="flex-1">
-            <NButton type="primary" @click="handleAddTable">
-              <IconIcRoundPlus class="mr-4px text-20px" />
-              {{ $t('common.add') }}
-            </NButton>
-          </div>
-          <div class="flex flex-1 items-center gap-15px" :class="getPlatform ? '' : 'flex-justify-end'">
-            <NButton type="primary" @click="getTableData">
-              <IconMdiRefresh class="text-16px" :class="{ 'animate-spin': loading }" />
-              {{ $t('common.refreshTable') }}
-            </NButton>
-            <ColumnSetting v-model:columns="columns" />
-          </div>
+      <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
+        <NFormItem :label="$t('page.product.list.deviceConfig')" path="email">
+          <NSelect v-model:value="queryParams.device_config_id" filterable :options="deviceOptions" @search="getList" />
+        </NFormItem>
+        <NFormItem :label="$t('page.product.update-package.packageName')" path="name">
+          <NInput v-model:value="queryParams.name" />
+        </NFormItem>
+        <NFormItem>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+          <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+        </NFormItem>
+      </NForm>
+      <div class="flex flex-wrap items-center gap-15px pb-12px">
+        <div class="flex-1">
+          <NButton type="primary" @click="handleAddTable">
+            <IconIcRoundPlus class="mr-4px text-20px" />
+            {{ $t('common.add') }}
+          </NButton>
         </div>
-        <NDataTable
-          remote
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          class="flex-1-hidden"
-        />
-        <TablePackageModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <div class="flex flex-1 items-center gap-15px" :class="getPlatform ? '' : 'flex-justify-end'">
+          <NButton type="primary" @click="getTableData">
+            <IconMdiRefresh class="text-16px" :class="{ 'animate-spin': loading }" />
+            {{ $t('common.refreshTable') }}
+          </NButton>
+          <ColumnSetting v-model:columns="columns" />
+        </div>
       </div>
+      <NDataTable
+        remote
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TablePackageModal
+        v-model:visible="visible"
+        :class="getPlatform ? 'w-90%' : 'w-800px'"
+        :type="modalType"
+        :edit-data="editData"
+        @success="getTableData"
+      />
     </NCard>
   </div>
 </template>

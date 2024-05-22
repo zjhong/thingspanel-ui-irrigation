@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, onUpdated } from 'vue';
 import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
-import { v4 as uuidv4 } from 'uuid';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
 import { $t } from '@/locales';
@@ -14,6 +13,13 @@ const props = defineProps<{
   isPreview?: boolean;
 }>();
 
+const generateUniqueNumberId = () => {
+  const timestamp = Date.now(); // 获取当前时间戳
+  const random = Math.floor(Math.random() * 1000); // 生成一个随机数
+  const uniqueId = timestamp * 1000 + random; // 结合时间戳和随机数生成唯一 ID
+  return uniqueId;
+};
+
 const countSpace = (data: ICardView[], y: number) => {
   const cols = data.filter(d => d.y === y).sort((a, b) => (a.x > b.x ? 1 : -1));
   let start = 0;
@@ -24,17 +30,6 @@ const countSpace = (data: ICardView[], y: number) => {
     start += c.w;
   }
   return start;
-};
-const switch_h: () => void = () => {
-  const obj = props.layout.filter((item: any) => {
-    if (item.data.cardId === 'chart-switch') {
-      console.log(item, 'item');
-      item.h = 2;
-      item.w = 5;
-    }
-    return item;
-  });
-  console.log(obj, '测试');
 };
 const emit = defineEmits<{
   (e: 'update:layout', layout: ICardView[] | any): void;
@@ -69,15 +64,14 @@ defineExpose({
       {
         x,
         y,
-        w: props.defaultCardCol,
-        h: 4,
-        i: uuidv4(),
+        w: data.layout?.w || props.defaultCardCol,
+        h: data.layout?.h || 4,
+        minW: data.layout?.minW || 1,
+        minH: data.layout?.minH || 2,
+        i: generateUniqueNumberId(),
         data
       }
     ]);
-    setTimeout(() => {
-      switch_h();
-    }, 500);
   }
 });
 
@@ -87,10 +81,9 @@ const removeLayout = (i: number) => {
     props.layout.filter(item => item.i !== i)
   );
 };
-onMounted(() => {
-  setTimeout(() => {
-    switch_h();
-  }, 500);
+onMounted(() => {});
+onUpdated(() => {
+  console.log(props.layout, 'props.layout');
 });
 </script>
 
@@ -110,7 +103,9 @@ onMounted(() => {
         :key="item.i"
         :static="isPreview"
         v-bind="gridItemProps"
-        :min-h="2"
+        :responsive="true"
+        :min-h="item.minH || 2"
+        :min-w="item.minW || 1"
         :x="item.x"
         :y="item.y"
         :w="item.w"
@@ -121,7 +116,7 @@ onMounted(() => {
           <NIcon
             v-if="!isPreview"
             class="absolute right-8 top-1.5 z-50 cursor-pointer cursor-pointer opacity-50 duration-200 hover:opacity-100"
-            @click="emit('edit', item)"
+            @click.stop="emit('edit', item)"
           >
             <SvgIcon icon="uil:setting" class="text-base" />
           </NIcon>
@@ -141,7 +136,7 @@ onMounted(() => {
             </template>
             <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
           </NPopconfirm>
-          <CardItem :data="item.data!" :view="isPreview" />
+          <CardItem :data="item.data!" :view="isPreview" class="h-full w-full overflow-hidden" />
         </div>
       </GridItem>
     </template>

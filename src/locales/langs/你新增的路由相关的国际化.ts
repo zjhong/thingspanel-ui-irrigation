@@ -72,7 +72,9 @@ export const czh_cn = {
   'system-management-user_equipment-map': '设备地图',
   'edit-area': '编辑区域',
   'new-area': '新建区域',
-  'automation_scene-edit': `场景编辑`
+  'automation_scene-edit': `场景编辑`,
+  'test_kan-ban-details-test': '看板详情测试',
+  'test_kan-ban-test': '看板测试'
 };
 
 export const cen = {
@@ -145,5 +147,7 @@ export const cen = {
   'system-management-user_equipment-map': 'Equipment Map',
   'edit-area': 'Edit Area',
   'new-area': 'New Area',
-  'automation_scene-edit': `场景编辑`
+  'automation_scene-edit': `场景编辑`,
+  'test_kan-ban-details-test': 'test_kan-ban-details-test',
+  'test_kan-ban-test': 'test_kan-ban-test'
 };

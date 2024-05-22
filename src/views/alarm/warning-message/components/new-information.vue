@@ -7,10 +7,10 @@
  * @LastEditTime: 2024-03-20 19:48:13
 -->
 <script setup lang="tsx">
-import { h, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, h, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { NButton, NPopconfirm, NSpace, useMessage } from 'naive-ui';
+import { NButton, NPopconfirm, useMessage } from 'naive-ui';
 import { getNotificationGroupList } from '@/service/api/notification';
 import { delInfo, editInfo, warningMessageList } from '@/service/api/alarm';
 import { $t } from '@/locales';
@@ -265,15 +265,20 @@ async function deleteInfo() {
   }
   list();
 }
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <NSpace class="pb-12px">
+  <div class="p-y-12px">
     <NButton type="primary" @click="addWarningMessageBut">
       <IconIcRoundPlus class="mr-4px text-20px" />
       {{ $t('generate.addAlarm') }}
     </NButton>
-  </NSpace>
+  </div>
   <div class="h-full flex-col">
     <NDataTable
       remote
@@ -282,12 +287,17 @@ async function deleteInfo() {
       :columns="columns"
       :data="tableData"
       :pagination="pagination"
-      virtual-scroll
-      class="flex-1-hidden"
+      class="w-full"
     />
   </div>
 
-  <popUp v-model:visible="visible" :type="modalType" :edit-data="editData" @new-edit="newEdit" />
+  <popUp
+    v-model:visible="visible"
+    :class="getPlatform ? 'w-90%' : 'w-800px'"
+    :type="modalType"
+    :edit-data="editData"
+    @new-edit="newEdit"
+  />
 </template>
 
 <style scoped>

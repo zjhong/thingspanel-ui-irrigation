@@ -13,7 +13,7 @@ let map;
 async function renderMap() {
   await load(true);
   if (!domRef.value) return;
-  const center = new TMap.LatLng(props.latitude ?? 39.98412, props.longitude ?? 116.307484);
+  const center = new TMap.LatLng(props.latitude || 39.98412, props.longitude || 116.307484);
   map = new TMap.Map(domRef.value, {
     center,
     zoom: 9,
@@ -48,7 +48,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="domRef" class="h-400px w-400px"></div>
+  <div ref="domRef" class="100%"></div>
 </template>
 
 <style scoped></style>

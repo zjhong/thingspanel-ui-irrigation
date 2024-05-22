@@ -26,3 +26,9 @@
 * {
   box-sizing: border-box;
 }
+.table-box {
+  .n-data-table>.n-data-table-wrapper {
+    overflow-x: auto !important
+  }
+
+}

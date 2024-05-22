@@ -327,7 +327,6 @@ const getPlatform = computed(() => {
       :data="tableData"
       :pagination="pagination"
       :row-key="rowKey"
-      virtual-scroll
       class="w-100% flex-1-hidden"
       @update:checked-row-keys="handleCheck"
     />

@@ -287,7 +287,6 @@ const getPlatform = computed(() => {
       :columns="columns"
       :data="tableData"
       :pagination="pagination"
-      virtual-scroll
       class="w-full"
     />
   </div>

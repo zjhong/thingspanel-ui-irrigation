@@ -59,8 +59,12 @@ onMounted(() => {
   const data = localStorage.getItem('enableZcAndYzm') as string;
   if (data) {
     const param = JSON.parse(data);
-    showZc.value = param.enable_reg;
-    showYzm.value = param.use_captcha;
+    if (param !== undefined && param.contains('enable_reg')) {
+      showZc.value = param.enable_reg;
+    }
+    if (param !== undefined && param.contains('use_captcha')) {
+      showYzm.value = param.use_captcha;
+    }
   }
 });
 </script>

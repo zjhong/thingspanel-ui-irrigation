@@ -4,9 +4,9 @@
 
 ### 开发第二原则：如果必须扩展，写在最后，不要随便乱插，如果觉得每次都要滚到最后麻烦，就自己建个文件，把需要引用进去即可
 
-### 推送代码必须遵守的原则  <span style="color:red;">推送前请先进行页面测试， 并遵循先拉后推原则，推前必拉！， 没问题再进行推送</span>
+### 推送代码必须遵守的原则 <span style="color:red;">推送前请先进行页面测试， 并遵循先拉后推原则，推前必拉！， 没问题再进行推送</span>
 
-----
+---
 
 ### 代码规范
 
@@ -43,11 +43,9 @@ views
 ##### 3 构造函数、class 类、TS 类型命名：统一用 PascalCase 法命名，多个单词首字母大写
 
 ```ts
-function Person() {
-}
+function Person() {}
 
-class Person {
-}
+class Person {}
 
 type Person = {
   name: string;
@@ -63,8 +61,7 @@ interface Person {
 ```ts
 let num: number = 1;
 
-function getNum() {
-}
+function getNum() {}
 ```
 
 ##### 5 常量命名：统一用大写字母命名，多个单词用下划线连接
@@ -100,10 +97,10 @@ const MAX_COUNT = 10;
 支持现代浏览器, 不支持 IE
 
 | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/archive/internet-explorer_9-11/internet-explorer_9-11_48x48.png" alt="IE" width="24px" height="24px"  />](http://godban.github.io/browsers-support-badges/)IE | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt=" Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Edge | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Firefox | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Chrome | [<img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)Safari |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                                                                                                                not support                                                                                                                |                                                                                          last 2 versions                                                                                          |                                                                                               last 2 versions                                                                                                |                                                                                             last 2 versions                                                                                              |                                                                                             last 2 versions                                                                                              |
 
-##### 2 nodejs  v18 以上，建议使nodejs用多版本管理器  npm  使用方法 谷歌 百度搜一些，或者参照：[https://blog.csdn.net/qq_41904629/article/details/123552090](https://blog.csdn.net/qq_41904629/article/details/123552090)
+##### 2 nodejs v18 以上，建议使nodejs用多版本管理器 npm 使用方法 谷歌 百度搜一些，或者参照：[https://blog.csdn.net/qq_41904629/article/details/123552090](https://blog.csdn.net/qq_41904629/article/details/123552090)
 
 确保你的环境满足以下要求：
 
@@ -318,13 +315,14 @@ ThingsPanel
 ##### 请尽量使用 https://apifox.com/ ，在 [env.config.ts](env.config.ts)，修改 `const mockURL = 'https://mock.apifox.com/m1/4080832-0-default';`
 
 ##### 并将该文件排除提交
+
 ---
 
 ---
 
 ### 类型概览：
 
-##### 01 国际化类型:[src/typings/app.d.ts](src/typings/app.d.ts)   type（App.I18n.Schema）
+##### 01 国际化类型:[src/typings/app.d.ts](src/typings/app.d.ts) type（App.I18n.Schema）
 
 ##### 02 接口类型:[src/typings/api.d.ts](src/typings/api.d.ts)
 
@@ -340,21 +338,19 @@ ThingsPanel
 
 基本不用动 的类型
 
-##### 07 组件类型:[src/typings/components.d.ts](src/typings/components.d.ts)  不要动，只要在views里 基本都是自己生成的
+##### 07 组件类型:[src/typings/components.d.ts](src/typings/components.d.ts) 不要动，只要在views里 基本都是自己生成的
 
 ##### 08 naive-ui类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)
 
 基本不会用的类型
 
-##### 09  package类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts)  作者有个 package 二次封装了一些库的功能，跟这个有关，不明白就不动即可
+##### 09 package类型:[src/typings/naive-ui.d.ts](src/typings/naive-ui.d.ts) 作者有个 package 二次封装了一些库的功能，跟这个有关，不明白就不动即可
 
-##### 10 环境类型:[src/typings/env.d.ts](src/typings/env.d.ts)  尽量不动 ，估计业务层开发也用不上
+##### 10 环境类型:[src/typings/env.d.ts](src/typings/env.d.ts) 尽量不动 ，估计业务层开发也用不上
 
 ##### 11 联合密钥:[src/typings/union-key.d.ts](src/typings/union-key.d.ts) 作者用的一些类型吧，应该用不上
 
 ---
-
-
 
 ---
 
@@ -831,7 +827,7 @@ views
 ##### 高级的参数路由
 
 ```ts
-import type {RouteKey} from "@elegant-router/types";
+import type { RouteKey } from "@elegant-router/types";
 
 ElegantVueRouter({
   routePathTransformer(routeName, routePath) {
@@ -882,7 +878,7 @@ type CustomRouteKey = "root" | "notFound" | "two-level" | "two-level_route";
 ##### **复用已经存在的页面路由component**
 
 ```ts
-import type {CustomRoute} from "@elegant-router/types";
+import type { CustomRoute } from "@elegant-router/types";
 
 const customRoutes: CustomRoute[] = [
   {
@@ -1010,7 +1006,7 @@ interface RouteMeta {
    * @example
    *   假设路由是"user_detail"，如果设置为"user_list"，则会激活"用户列表"菜单项
    */
-  activeMenu?: import('@elegant-router/types').RouteKey;
+  activeMenu?: import("@elegant-router/types").RouteKey;
   /** 默认情况下，相同路径的路由会共享一个标签页，若设置为true，则使用多个标签页 */
   multiTab?: boolean;
   /** 若设置，路由将在标签页中固定显示，其值表示固定标签页的顺序 */
@@ -1152,18 +1148,17 @@ icon 图标值从这里获取：[https://icones.js.org/](https://icones.js.org/)
     :::
 
     ```typescript
-    import { useSvgIconRender } from '@sa/hooks';
-    import SvgIcon from '@/components/custom/svg-icon.vue';
+    import { useSvgIconRender } from "@sa/hooks";
+    import SvgIcon from "@/components/custom/svg-icon.vue";
 
     const { SvgIconVNode } = useSvgIconRender(SvgIcon);
 
-    SvgIconVNode({ icon: 'ant-design:close-outlined', fontSize: 18 }); // iconify
+    SvgIconVNode({ icon: "ant-design:close-outlined", fontSize: 18 }); // iconify
 
     SvgIconVNode({ localIcon: "custom-icon" }); // 本地svg图标
     ```
 
 ---
-
 
 ---
 
@@ -1192,7 +1187,7 @@ src/typings/app.d.ts
 ```ts
 export const themeSettings: App.Theme.ThemeSetting = {
   //默认配置
-}
+};
 ```
 
 ::: tip 代码位置
@@ -1216,6 +1211,7 @@ src/theme/settings.ts
 ##### 环境说明
 
 - 当项目处于`开发模式`时，主题配置不会被缓存，可以通过更新 `src/theme/settings.ts` 中的 `themeSettings` 来更新主题配置
+
   > 开发阶段为了能够实时看到主题配置的变化，所以不会缓存主题配置
 
 - 当项目处于`生产模式`时，主题配置会被缓存到 localStorage 中
@@ -1234,15 +1230,15 @@ src/theme/settings.ts
  * @param colors Theme colors
  */
 function getNaiveTheme(colors: App.Theme.ThemeColor) {
-  const {primary: colorLoading} = colors;
+  const { primary: colorLoading } = colors;
 
   const theme: GlobalThemeOverrides = {
     common: {
-      ...getNaiveThemeColors(colors)
+      ...getNaiveThemeColors(colors),
     },
     LoadingBar: {
-      colorLoading
-    }
+      colorLoading,
+    },
   };
 
   return theme;
@@ -1250,7 +1246,6 @@ function getNaiveTheme(colors: App.Theme.ThemeColor) {
 
 /** Naive theme */
 const naiveTheme = computed(() => getNaiveTheme(themeColors.value));
-
 ```
 
 ::: tip 代码位置
@@ -1262,7 +1257,6 @@ src/store/modules/theme/index.ts
 **应用主题变量**
 
 ```vue
-
 <template>
   <NConfigProvider
     :theme="naiveDarkTheme"
@@ -1272,7 +1266,7 @@ src/store/modules/theme/index.ts
     class="h-full"
   >
     <AppProvider>
-      <RouterView class="bg-layout"/>
+      <RouterView class="bg-layout" />
     </AppProvider>
   </NConfigProvider>
 </template>
@@ -1294,31 +1288,33 @@ src/App.vue
  * @param darkMode Is dark mode
  */
 function getAntdTheme(colors: App.Theme.ThemeColor, darkMode: boolean) {
-  const {defaultAlgorithm, darkAlgorithm} = antdTheme;
+  const { defaultAlgorithm, darkAlgorithm } = antdTheme;
 
-  const {primary, info, success, warning, error} = colors;
+  const { primary, info, success, warning, error } = colors;
 
-  const theme: ConfigProviderProps['theme'] = {
+  const theme: ConfigProviderProps["theme"] = {
     token: {
       colorPrimary: primary,
       colorInfo: info,
       colorSuccess: success,
       colorWarning: warning,
-      colorError: error
+      colorError: error,
     },
     algorithm: [darkMode ? darkAlgorithm : defaultAlgorithm],
     components: {
       Menu: {
-        colorSubItemBg: 'transparent'
-      }
-    }
+        colorSubItemBg: "transparent",
+      },
+    },
   };
 
   return theme;
 }
 
 /** Antd theme */
-const antdTheme = computed(() => getAntdTheme(themeColors.value, darkMode.value));
+const antdTheme = computed(() =>
+  getAntdTheme(themeColors.value, darkMode.value),
+);
 ```
 
 ::: tip 代码位置
@@ -1330,11 +1326,10 @@ src/store/modules/theme/index.ts
 **应用主题变量**
 
 ```vue
-
 <template>
   <ConfigProvider :theme="themeStore.antdTheme" :locale="antdLocale">
     <AppProvider>
-      <RouterView class="bg-layout"/>
+      <RouterView class="bg-layout" />
     </AppProvider>
   </ConfigProvider>
 </template>
@@ -1366,20 +1361,20 @@ src/typings/app.d.ts
 ```ts
 /** Theme vars */
 export const themeVars: App.Theme.ThemeToken = {
-    colors: {
-      ...colorPaletteVars,
-      nprogress: 'rgb(var(--nprogress-color))',
-      container: 'rgb(var(--container-bg-color))',
-      layout: 'rgb(var(--layout-bg-color))',
-      inverted: 'rgb(var(--inverted-bg-color))',
-      base_text: 'rgb(var(--base-text-color))'
-    },
-    boxShadow: {
-      header: 'var(--header-box-shadow)',
-      sider: 'var(--sider-box-shadow)',
-      tab: 'var(--tab-box-shadow)'
-    }
-  };
+  colors: {
+    ...colorPaletteVars,
+    nprogress: "rgb(var(--nprogress-color))",
+    container: "rgb(var(--container-bg-color))",
+    layout: "rgb(var(--layout-bg-color))",
+    inverted: "rgb(var(--inverted-bg-color))",
+    base_text: "rgb(var(--base-text-color))",
+  },
+  boxShadow: {
+    header: "var(--header-box-shadow)",
+    sider: "var(--sider-box-shadow)",
+    tab: "var(--tab-box-shadow)",
+  },
+};
 ```
 
 ::: tip 代码位置
@@ -1391,14 +1386,13 @@ src/theme/vars.ts
 通过上述的 `themeVars` 注入到 UnoCSS 的主题配置中
 
 ```ts
-import {themeVars} from './src/theme/vars';
+import { themeVars } from "./src/theme/vars";
 
 export default defineConfig<Theme>({
   theme: {
     ...themeVars,
-  }
+  },
 });
-
 ```
 
 这样，借助于 UnoCSS 的能力，可以使用类似 `text-primary bg-primary` 等 class 名称进而统一了组件库和 UnoCSS 的主题颜色的应用。
@@ -1414,14 +1408,13 @@ class 就会生效，从而达到暗黑模式的效果
 
 ```ts
 export default defineConfig<Theme>({
-  presets: [presetUno({dark: "class"})],
+  presets: [presetUno({ dark: "class" })],
 });
 ```
 
 ::: tip 代码位置
 ./uno.config.ts
 :::
-
 
 ---
 
@@ -1445,26 +1438,29 @@ export default defineConfig<Theme>({
 
 ```ts
 export function setupLoading() {
-  const themeColor = localStg.get('themeColor') || '#DB5A6B';
+  const themeColor = localStg.get("themeColor") || "#DB5A6B";
 
-  const {r, g, b} = getRgbOfColor(themeColor);
+  const { r, g, b } = getRgbOfColor(themeColor);
 
   const primaryColor = `--primary-color: ${r} ${g} ${b}`;
 
   const loadingClasses = [
-    'left-0 top-0',
-    'left-0 bottom-0 animate-delay-500',
-    'right-0 top-0 animate-delay-1000',
-    'right-0 bottom-0 animate-delay-1500'
+    "left-0 top-0",
+    "left-0 bottom-0 animate-delay-500",
+    "right-0 top-0 animate-delay-1000",
+    "right-0 bottom-0 animate-delay-1500",
   ];
 
-  const logoWithClass = systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
+  const logoWithClass = systemLogo.replace(
+    "<svg",
+    `<svg class="size-128px text-primary"`,
+  );
 
   const dot = loadingClasses
-    .map(item => {
+    .map((item) => {
       return `<div class="absolute w-16px h-16px bg-primary rounded-8px animate-pulse ${item}"></div>`;
     })
-    .join('\n');
+    .join("\n");
 
   const loading = `
 <div class="fixed-center flex-col" style="${primaryColor}">
@@ -1474,16 +1470,15 @@ export function setupLoading() {
       ${dot}
     </div>
   </div>
-  <h2 class="text-28px font-500 text-#646464">${$t('system.title')}</h2>
+  <h2 class="text-28px font-500 text-#646464">${$t("system.title")}</h2>
 </div>`;
 
-  const app = document.getElementById('app');
+  const app = document.getElementById("app");
 
   if (app) {
     app.innerHTML = loading;
   }
 }
-
 ```
 
 ::: tip 代码位置
@@ -1495,7 +1490,7 @@ src/plugins/loading.ts
 ```typescript
 async function setupApp() {
   setupLoading();
-  app.mount('#app');
+  app.mount("#app");
 }
 ```
 
@@ -1595,7 +1590,6 @@ src/typings/router.d.ts
 ❌ **错误示范**
 
 ```vue
-
 <template>
   <!-- 注释也算一个标签节点哦  -->
   <p1></p1>
@@ -1606,7 +1600,6 @@ src/typings/router.d.ts
 ✔ **正确示范**
 
 ```vue
-
 <template>
   <div>
     <p1></p1>
@@ -1630,7 +1623,9 @@ views
 ```
 
 - Vue 组件名称
+
   - 组件名称统一用 PascalCase 法命名，多个单词首字母大写
+
   ```vue
   <template>
     <AppProvider>
@@ -1638,23 +1633,23 @@ views
     </AppProvider>
   </template>
   ```
+
   - iconify 图标组件名称统一用 kebab-case 法命名，多个单词用中划线连接
+
   ```vue
   <template>
     <icon-mdi-emoticon />
   </template>
   ```
-  > 方便iconify插件直接展示图标
 
+  > 方便iconify插件直接展示图标
 
 - 构造函数、class 类、TS 类型命名：统一用 PascalCase 法命名，多个单词首字母大写
 
 ```ts
-function Person() {
-}
+function Person() {}
 
-class Person {
-}
+class Person {}
 
 type Person = {
   name: string;
@@ -1670,8 +1665,7 @@ interface Person {
 ```ts
 let num: number = 1;
 
-function getNum() {
-}
+function getNum() {}
 ```
 
 - 常量命名：统一用大写字母命名，多个单词用下划线连接

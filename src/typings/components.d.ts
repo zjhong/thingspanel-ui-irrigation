@@ -28,6 +28,7 @@ declare module 'vue' {
     IconAntDesignReloadOutlined: typeof import('~icons/ant-design/reload-outlined')['default']
     IconGridiconsFullscreen: typeof import('~icons/gridicons/fullscreen')['default']
     IconGridiconsFullscreenExit: typeof import('~icons/gridicons/fullscreen-exit')['default']
+    IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     'IconMaterialSymbols:contractEditOutline': typeof import('~icons/material-symbols/contract-edit-outline')['default']
     'IconMaterialSymbols:deleteOutline': typeof import('~icons/material-symbols/delete-outline')['default']
     'IconMaterialSymbols:mapRounded': typeof import('~icons/material-symbols/map-rounded')['default']

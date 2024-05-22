@@ -102,7 +102,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_level',
     title: '级别',
     align: 'center',
-    minWidth: '90px',
+    width: '90px',
     render(row) {
       if (row.alarm_level === 'H') {
         return '高';
@@ -125,7 +125,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'processing_result',
     title: '处理结果',
     align: 'center',
-    minWidth: '100px',
+    width: '90px',
     render(row) {
       if (row.alarm_level === 'DOP') {
         return '已处理';
@@ -138,7 +138,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'processor_name',
     title: '处理人',
-    minWidth: '100px',
+    width: '90px',
     align: 'center'
   },
 
@@ -329,7 +329,6 @@ const getPlatform = computed(() => {
       :data="tableData"
       :pagination="pagination"
       :row-key="rowKey"
-      virtual-scroll
       @update:checked-row-keys="handleCheck"
     />
     <NSpace>

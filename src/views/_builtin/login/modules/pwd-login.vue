@@ -57,7 +57,7 @@ onMounted(() => {
     isRememberPath.value = is_remember_rath === '1';
   }
   const data = localStorage.getItem('enableZcAndYzm') as string;
-  if (data !== undefined) {
+  if (data) {
     const param = JSON.parse(data);
     console.log(param);
     if (param !== undefined && param !== null && param.includes('enable_reg')) {

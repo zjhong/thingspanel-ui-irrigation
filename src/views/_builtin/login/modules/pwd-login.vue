@@ -57,10 +57,15 @@ onMounted(() => {
     isRememberPath.value = is_remember_rath === '1';
   }
   const data = localStorage.getItem('enableZcAndYzm') as string;
-  if (data !== undefined) {
+  if (data) {
     const param = JSON.parse(data);
-    showZc.value = param.enable_reg;
-    showYzm.value = param.use_captcha;
+    console.log(param);
+    if (param !== undefined && param !== null && param.includes('enable_reg')) {
+      showZc.value = param.enable_reg;
+    }
+    if (param !== undefined && param !== null && param.includes('use_captcha')) {
+      showYzm.value = param.use_captcha;
+    }
   }
 });
 </script>

@@ -60,6 +60,12 @@ export const deviceList = async (params: any) => {
     params
   });
 };
+/** 获取设备列表 */
+export const deviceListByGroup = async (params: any) => {
+  return await request.get<DeviceManagement.DeviceDatas | any>(`/device/group/relation/list`, {
+    params
+  });
+};
 
 /** 获取设备详情 */
 export const deviceDetail = async (id: any) => {

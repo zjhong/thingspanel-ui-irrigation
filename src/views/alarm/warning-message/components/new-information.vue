@@ -10,7 +10,7 @@
 import { computed, getCurrentInstance, h, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { NButton, NPopconfirm, NSpace, useMessage } from 'naive-ui';
+import { NButton, NPopconfirm, useMessage } from 'naive-ui';
 import { getNotificationGroupList } from '@/service/api/notification';
 import { delInfo, editInfo, warningMessageList } from '@/service/api/alarm';
 import { $t } from '@/locales';
@@ -273,12 +273,12 @@ const getPlatform = computed(() => {
 </script>
 
 <template>
-  <NSpace class="pb-12px">
+  <div class="p-y-12px">
     <NButton type="primary" @click="addWarningMessageBut">
       <IconIcRoundPlus class="mr-4px text-20px" />
       {{ $t('generate.addAlarm') }}
     </NButton>
-  </NSpace>
+  </div>
   <div class="h-full flex-col">
     <NDataTable
       remote
@@ -287,8 +287,7 @@ const getPlatform = computed(() => {
       :columns="columns"
       :data="tableData"
       :pagination="pagination"
-      virtual-scroll
-      class="flex-1-hidden"
+      class="w-full"
     />
   </div>
 

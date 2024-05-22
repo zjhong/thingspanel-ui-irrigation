@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import {nextTick, reactive, ref} from 'vue';
-import {NButton} from 'naive-ui';
-import {useFullscreen} from '@vueuse/core';
-import {useAppStore} from '@/store/modules/app';
-import {useLayouts} from '@/components/tp-kan-ban/hooks/useLayouts';
-import type {CardData, CardFormIns, CardView} from '@/components/tp-kan-ban/kan-ban';
-import {PutBoard} from '@/service/api';
+import { nextTick, reactive, ref } from 'vue';
+import { NButton } from 'naive-ui';
+import { useFullscreen } from '@vueuse/core';
+import { useAppStore } from '@/store/modules/app';
+import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
+import type { CardData, CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
+import { PutBoard } from '@/service/api';
 
 const formRef = ref<CardFormIns>();
 const appStore = useAppStore();
 const fullUI = ref();
-const {isFullscreen, toggle} = useFullscreen(fullUI);
+const { isFullscreen, toggle } = useFullscreen(fullUI);
 const props = defineProps<{ panelId: string }>();
 const active = ref(false);
 const showModal = ref(false);
@@ -18,7 +18,7 @@ const state = reactive<{ curCardData: null | CardView }>({
   curCardData: null
 });
 const activeType = ref<string>('plugins');
-const {layouts, addItem, updateLayouts, panelDate} = useLayouts(props.panelId);
+const { layouts, addItem, updateLayouts, panelDate } = useLayouts(props.panelId);
 console.log(layouts);
 const saveKanBan = async () => {
   if (!props.panelId) {
@@ -68,15 +68,12 @@ const changeCurCardData = (data: CardData) => {
         :toggle="toggle"
         :is-fullscreen="isFullscreen"
         :save-kan-ban="saveKanBan"
-        :tittle="panelDate?.name||'未定义'"
+        :tittle="panelDate?.name || '未定义'"
         class="w-full"
       />
     </div>
-    <div
-      ref="fullUI"
-      :class="!layouts.length ? 'flex-1 flex-col items-center justify-center' : 'flex-1'"
-    >
-      <KanBanRender :is-preview="false" :layout="layouts" :add-item="addItem" :select-card="selectCard"/>
+    <div ref="fullUI" :class="!layouts.length ? 'flex-1 flex-col items-center justify-center' : 'flex-1'">
+      <KanBanRender :is-preview="false" :layout="layouts" :add-item="addItem" :select-card="selectCard" />
       <n-drawer
         v-model:show="active"
         :width="236"
@@ -85,13 +82,13 @@ const changeCurCardData = (data: CardData) => {
         style="box-shadow: 0 8px 16px 0 rgba(156, 107, 255, 0.4)"
       >
         <n-drawer-content title="卡片列表" class="shadow-sm" closable>
-          <KanBanCardList v-model:active-type="activeType"/>
+          <KanBanCardList v-model:active-type="activeType" />
         </n-drawer-content>
       </n-drawer>
 
       <n-modal v-model:show="showModal">
         <n-card style="width: 800px" title="模态框" :bordered="false" size="huge" role="dialog" aria-modal="true">
-          <KanBanCardForm ref="formRef" @update="changeCurCardData"/>
+          <KanBanCardForm ref="formRef" @update="changeCurCardData" />
           <n-space justify="center">
             <NButton type="primary" class="text-center" @click="showModal = false">完成</NButton>
           </n-space>

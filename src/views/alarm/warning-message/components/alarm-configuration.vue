@@ -9,7 +9,7 @@
 <script setup lang="tsx">
 import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NSpace, useMessage } from 'naive-ui';
+import { NButton, useMessage } from 'naive-ui';
 import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
 import dayjs from 'dayjs';
 import { batchProcessing, infoList, processingOperation } from '@/service/api/alarm';
@@ -102,7 +102,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'alarm_level',
     title: '级别',
     align: 'center',
-    minWidth: '90px',
+    width: '90px',
     render(row) {
       if (row.alarm_level === 'H') {
         return '高';
@@ -125,7 +125,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     key: 'processing_result',
     title: '处理结果',
     align: 'center',
-    minWidth: '100px',
+    width: '90px',
     render(row) {
       if (row.alarm_level === 'DOP') {
         return '已处理';
@@ -138,18 +138,18 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'processor_name',
     title: '处理人',
-    minWidth: '100px',
+    width: '90px',
     align: 'center'
   },
 
   {
     key: 'actions',
     title: '操作',
-    minWidth: '140px',
+    minWidth: '200px',
     align: 'center',
     render: row => {
       return (
-        <NSpace justify={'center'}>
+        <div class="flex gap-20px">
           <NButton type="primary" size={'small'} onClick={() => handleEditPwd(row)}>
             详情
           </NButton>
@@ -159,7 +159,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           <NButton size={'small'} onClick={() => handOpenLogModal(row.id, 'IGN')}>
             忽略
           </NButton>
-        </NSpace>
+        </div>
       );
     }
   }
@@ -320,8 +320,6 @@ const getPlatform = computed(() => {
         />
       </NFormItem>
     </NForm>
-  </div>
-  <NSpace vertical>
     <n-data-table
       remote
       :loading="loading"
@@ -329,30 +327,30 @@ const getPlatform = computed(() => {
       :data="tableData"
       :pagination="pagination"
       :row-key="rowKey"
-      virtual-scroll
+      class="w-100% flex-1-hidden"
       @update:checked-row-keys="handleCheck"
     />
-    <NSpace>
+    <div class="flex gap-20px">
       <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>
       <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
-    </NSpace>
-  </NSpace>
-  <NModal
-    v-model:show="particulars"
-    preset="card"
-    :title="$t('page.irrigation.time.log.detail')"
-    :class="getPlatform ? 'w-90%' : 'w-800px'"
-  >
-    <div class="pop-up">
-      <div>{{ $t('generate.alarm-content') }}</div>
-      <div class="pop-up-content">
-        {{ particularsText }}
-      </div>
     </div>
-  </NModal>
+    <NModal
+      v-model:show="particulars"
+      preset="card"
+      :title="$t('page.irrigation.time.log.detail')"
+      :class="getPlatform ? 'w-90%' : 'w-800px'"
+    >
+      <div class="pop-up">
+        <div>{{ $t('generate.alarm-content') }}</div>
+        <div class="pop-up-content">
+          {{ particularsText }}
+        </div>
+      </div>
+    </NModal>
+  </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .pop-up {
   display: flex;
 }

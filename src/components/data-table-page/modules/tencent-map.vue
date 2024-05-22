@@ -3,7 +3,7 @@ import { createApp, onMounted, ref, watchEffect } from 'vue';
 import { NCard } from 'naive-ui';
 import { useScriptTag } from '@vueuse/core';
 import { TENCENT_MAP_SDK_URL } from '@/constants/map-sdk';
-
+import { $t } from '@/locales';
 defineOptions({ name: 'TencentMap' });
 
 const props = defineProps<{ devices: any[] }>();
@@ -37,7 +37,7 @@ async function renderMap() {
       center: new TMap.LatLng(39.98412, 116.307484),
       zoom: 11,
       maxZoom: 13,
-      minZoom: 2,
+      minZoom: 3,
       viewMode: '3D'
     });
     map.on('click', () => {
@@ -106,10 +106,17 @@ async function renderMap() {
       render() {
         // 在模板中使用 Naive UI 的组件
         return (
-          <NCard title={`设备名称：${evt.geometry.data.name}`} class="h-130px w-200px">
-            上次推送时间：{evt.geometry.data.ts || '-'}
-            <br />
-            状态：{evt.geometry.data.ts}
+          <NCard
+            header-style="padding:10px"
+            title={`${$t('custom.devicePage.deviceName')}：${evt.geometry.data.name}`}
+            class="h-130px min-w-200px"
+          >
+            <div>
+              {$t('custom.devicePage.lastPushTime')}：{evt.geometry.data.ts || '-'}
+            </div>
+            <div>
+              {$t('custom.device_details.status')}：{evt.geometry.data.ts}
+            </div>
           </NCard>
         );
       }

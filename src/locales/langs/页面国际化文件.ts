@@ -121,6 +121,7 @@ export const pzh_cn = {
     deviceAnalysis: '子设备',
     message: '信息',
     stats: '属性',
+    command: '指令',
     eventReport: '事件(上报)',
     commandDelivery: '命令(下发)',
     automate: '自动化',
@@ -255,6 +256,7 @@ export const pen = {
     confirm: 'Confirm'
   },
   device_details: {
+    command: 'command',
     telemetry: 'telemetry',
     join: 'join',
     deviceAnalysis: 'deviceAnalysis',

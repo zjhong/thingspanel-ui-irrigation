@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {inject, onMounted} from 'vue';
+import { inject, onMounted } from 'vue';
 import CardBaseForm from '@/cards2.0/modules/card-base-form.vue';
 import CardDataSourceForm from '@/cards2.0/modules/card-data-source-form.vue';
-import type {CardData, IConfigCtx} from '@/components/tp-kan-ban/kan-ban';
-import {$t} from '@/locales';
+import type { CardData, IConfigCtx } from '@/components/tp-kan-ban/kan-ban';
+import { $t } from '@/locales';
 
 // 控制台打印多语言函数，用于调试
 console.log($t);
@@ -19,7 +19,7 @@ const ctx = inject<IConfigCtx>('kan-ban-config-ctx')!;
 // ctx.config 会传递给看板编辑器
 // 定义修改看板配置的方法
 const changeCtxConfig = (key: string, data: any) => {
-  ctx.config[key] = {...data};
+  ctx.config[key] = { ...data };
 }; // 改变 ctx.config 的方法
 // 固定写法结束
 
@@ -43,7 +43,7 @@ onMounted(() => {
     <!-- 基础配置标签页 必须有-->
     <n-tab-pane name="basic" tab="基础配置">
       <!-- 嵌入 CardBaseForm 组件，传递基础配置数据和修改配置的方法 -->
-      <CardBaseForm :default-basis-data="props.data.config.basis" :change-ctx-config="changeCtxConfig"/>
+      <CardBaseForm :default-basis-data="props.data.config.basis" :change-ctx-config="changeCtxConfig" />
     </n-tab-pane>
     <!-- 数据源配置标签页 可以没有，直接按下面的引入就行-->
     <n-tab-pane name="source" tab="数据源">
@@ -60,7 +60,7 @@ onMounted(() => {
       <NForm :model="ctx.config.cardUI">
         <NFormItem label="字体大小">
           <!-- 绑定输入框与卡片 UI 配置 -->
-          <n-input-number v-model:value="ctx.config.cardUI.textNUmber" :min="12" :max="50"/>
+          <n-input-number v-model:value="ctx.config.cardUI.textNUmber" :min="12" :max="50" />
         </NFormItem>
       </NForm>
     </n-tab-pane>

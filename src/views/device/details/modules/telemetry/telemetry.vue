@@ -107,7 +107,7 @@ const { status, send, close } = useWebSocket(wsUrl, {
 });
 
 const columns = [
-  { title: '指令', minWidth: '140px', key: 'data' },
+  { title: $t('custom.device_details.alarm'), minWidth: '140px', key: 'data' },
   {
     title: '操作类型',
     key: 'operation_type',
@@ -379,8 +379,8 @@ const getPlatform = computed(() => {
             </div>
             <template #header>
               <div class="line1" :title="i.key">
-                <template v-if="i.lable">
-                  <span v-if="i.lable">{{ i.lable }}</span>
+                <template v-if="i.label">
+                  <span v-if="i.label">{{ i.label }}</span>
                   <span>({{ i.key }})</span>
                 </template>
                 <template v-else>

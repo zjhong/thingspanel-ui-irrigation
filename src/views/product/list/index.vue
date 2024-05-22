@@ -276,25 +276,25 @@ cpType();
           remote
           class="flex-1-hidden"
         />
-        <TableActionModal
-          v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
-          :type="modalType"
-          :edit-data="editData"
-          @success="getTableData"
-        />
-        <NDrawer
-          v-model:show="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-80%'"
-          display-directive="show"
-          placement="right"
-        >
-          <NDrawerContent :title="drawerTitle" closable>
-            <DeviceRegister :pid="(editData?.id as unknown as string)" />
-          </NDrawerContent>
-        </NDrawer>
       </div>
     </n-card>
+    <TableActionModal
+      v-model:visible="visible"
+      :class="getPlatform ? 'w-90%' : 'w-700px'"
+      :type="modalType"
+      :edit-data="editData"
+      @success="getTableData"
+    />
+    <NDrawer
+      v-model:show="editPwdVisible"
+      :style="{ width: getPlatform ? 'w-90%' : 'w-50%' }"
+      display-directive="show"
+      placement="right"
+    >
+      <NDrawerContent :title="drawerTitle" closable>
+        <DeviceRegister :pid="(editData?.id as unknown as string)" />
+      </NDrawerContent>
+    </NDrawer>
   </div>
 </template>
 

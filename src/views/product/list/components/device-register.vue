@@ -184,7 +184,7 @@ const activeOptions = [
 </script>
 
 <template>
-  <div class="h-full overflow-y-auto">
+  <div class="flex-col overflow-y-auto">
     <NCard>
       <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
         <NFormItem :label="$t('page.product.list.batchNumber')" path="batchNumber">

@@ -103,12 +103,12 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     title: () => $t('page.manage.menu.routeName'),
     align: 'left'
   },
-  {
-    key: 'param3',
-    minWidth: '140px',
-    title: () => $t('page.manage.menu.componentType'),
-    align: 'left'
-  },
+  // {
+  //   key: 'param3',
+  //   minWidth: '140px',
+  //   title: () => $t('page.manage.menu.componentType'),
+  //   align: 'left'
+  // },
   {
     key: 'element_type',
     minWidth: '140px',
@@ -118,10 +118,10 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
       if (row.element_type) {
         const tagTypes: Record<CustomRoute.routerTypeKey, NaiveUI.ThemeColor> = {
           '1': 'success',
-          '2': 'error',
-          '3': 'warning',
-          '4': 'default',
-          '5': 'info'
+          // "2": "error",
+          '3': 'warning'
+          // "4": "default",
+          // "5": "info",
         };
         return <NTag type={tagTypes[row.element_type]}>{routerTypeLabels[row.element_type]}</NTag>;
       }

@@ -141,7 +141,7 @@ const columnsList: any = reactive([
     addBtn: () => {
       addAndEditModalVisible.value = true;
     },
-    data: [{ data_name: '测试' }],
+    data: [{ data_name: $t('common.test') }],
     name: 'telemetry',
     text: $t('device_template.telemetry'),
     col: [

@@ -6,6 +6,7 @@ export const pzh_cn: any = {
     kanbanNameNull: '看板名称不能为空'
   },
   groupPage: {
+    handle: '处理',
     deviceAvailable: '设备可用',
     groupName: '分组名称',
     description: '描述',
@@ -118,6 +119,7 @@ export const pzh_cn: any = {
     confirm: '确定'
   },
   device_details: {
+    notificationType: '通知类型',
     sendContent: '发送内容',
     sequential: '时序',
     history: '历史',
@@ -151,7 +153,9 @@ export const pzh_cn: any = {
     whole: '全部',
     triggerOperation: '触发操作',
     messageId: '消息ID',
-    attributeDistributionTime: '属性下发时间'
+    titleOrContent: '发送标题和内容',
+    attributeDistributionTime: '属性下发时间',
+    sendTime: '发送时间'
   }
 };
 
@@ -187,6 +191,7 @@ export const pen: any = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    handle: 'handle',
     subDeviceAddress: 'Sub device address',
     deviceKey: 'Key verification error, service unavailable',
     deviceName: 'Device Name',
@@ -281,6 +286,9 @@ export const pen: any = {
     confirm: 'Confirm'
   },
   device_details: {
+    sendTime: 'Sending time',
+    titleOrContent: 'Send title and content',
+    notificationType: 'Notification type',
     attributeDistributionTime: 'Attribute distribution time',
     triggerOperation: 'trigger operation',
     whole: 'whole',

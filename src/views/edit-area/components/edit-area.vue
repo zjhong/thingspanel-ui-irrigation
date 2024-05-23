@@ -48,12 +48,12 @@ export default {
         name: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请输入空间名称'
+          message: $t('common.addSuccess')
         },
         location: {
           required: true,
           trigger: ['blur', 'change'],
-          message: '请设置空间位置'
+          message: $t('generate.spaceLocation')
         }
       },
       locationData: false, // 设置位置判断
@@ -163,7 +163,7 @@ export default {
             }
           } else {
             state.buttonData = 'error';
-            message.error('请设置空间位置');
+            message.error($t('generate.spaceLocation'));
           }
         });
       },

@@ -30,92 +30,92 @@ const premiseForm = ref({
 const premiseFormRules = ref({
   ifType: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_conditions_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_source: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_param: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_operator: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_value: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   minValue: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   maxValue: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   onceTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   expiration_time: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   task_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   hourTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   dayTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weekChoseValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weekTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   monthChoseValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   monthTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   startTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   endTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weatherValue: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   }
 });

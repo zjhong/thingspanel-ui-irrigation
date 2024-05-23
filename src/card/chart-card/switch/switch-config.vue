@@ -43,7 +43,7 @@ const blurClick: () => void = () => {
 watch(
   () => props.data?.dataSource?.deviceSource,
   () => {
-    console.log(props?.data?.dataSource, '测试');
+    console.log(props?.data?.dataSource, $t('common.test'));
   },
   { deep: true, immediate: true }
 );

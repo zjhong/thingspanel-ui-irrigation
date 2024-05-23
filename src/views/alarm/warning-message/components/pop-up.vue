@@ -102,15 +102,15 @@ const alarmRepeatTime = ref([
 ]);
 const alarmLevel = ref([
   {
-    label: '高',
+    label: $t('common.high'),
     value: 'H'
   },
   {
-    label: '中',
+    label: $t('common.middle'),
     value: 'M'
   },
   {
-    label: '低',
+    label: $t('common.low'),
     value: 'L'
   }
 ]);
@@ -208,7 +208,7 @@ const add = async () => {
   };
   const res = await addWarningMessage(data);
   if (res) {
-    message.success('添加成功');
+    message.success($t('common.addSuccess'));
     modalVisible.value = false;
     emit('newEdit');
   } else {

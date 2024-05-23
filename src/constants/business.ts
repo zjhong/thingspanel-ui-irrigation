@@ -68,8 +68,8 @@ export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 
 /** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
 export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
-  1: '直连设备',
-  2: '网关设备'
+  1: $t('generate.direct-connected-device'),
+  2: $t('generate.direct-connected-device')
 };
 
 export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);
@@ -118,8 +118,8 @@ export const userStatusOptions = transformObjectToOption(userStatusLabels);
 
 /** 系统管理 - 常规设置 - 数据清理 清理类型 */
 export const dataClearSettingEnabledTypeLabels: Record<GeneralSetting.EnabledTypeKey, string> = {
-  1: '启用',
-  2: '停用'
+  1: $t('page.manage.common.status.enable'),
+  2: $t('page.manage.common.status.disable')
 };
 export const dataClearSettingEnabledTypeOptions = transformObjectToOption(dataClearSettingEnabledTypeLabels);
 

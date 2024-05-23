@@ -73,6 +73,7 @@ type ProductLocal = {
     customInfo: string;
   };
   'update-ota': {
+    updateDate: string;
     lookTask: string;
     otaTitle: string;
     taskName: string;

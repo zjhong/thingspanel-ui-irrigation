@@ -68,8 +68,8 @@ const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   password: formRules.pwd,
   confirmPwd: getConfirmPwdRule(toRefs(formModel).password),
   remark: createRequiredFormRule($t('common.pleaseCheckValue')),
-  status: createRequiredFormRule('请选择用户状态'),
-  userRoles: createRequiredFormRule('请选择用户角色')
+  status: createRequiredFormRule($t('common.userStatus')),
+  userRoles: createRequiredFormRule($t('page.manage.user.form.userRole2'))
 };
 
 function createDefaultFormModel(): FormModel {
@@ -109,8 +109,8 @@ function handleUpdateFormModelByModalType() {
 const roleOptions = ref<any[]>([]);
 
 const userOptions = ref<any[]>([
-  { label: '正常', value: 'N' },
-  { label: '冻结', value: 'F' }
+  { label: $t('generate.normal'), value: 'N' },
+  { label: $t('page.manage.user.status.freeze'), value: 'F' }
 ]);
 
 async function getRoleOptions() {

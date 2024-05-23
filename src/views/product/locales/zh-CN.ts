@@ -71,6 +71,7 @@ export const productLocaleZhCn: ProductLocal = {
     packagePlaceholder: '请选择升级包'
   },
   'update-ota': {
+    updateDate: '修改日期',
     lookTask: '查看任务',
     otaTitle: 'OTA升级列表',
     taskName: '任务名称',

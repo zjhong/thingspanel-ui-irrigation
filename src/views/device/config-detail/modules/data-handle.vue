@@ -70,7 +70,7 @@ const configFormRules = ref({
   },
   enable_flag: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   script_type: {

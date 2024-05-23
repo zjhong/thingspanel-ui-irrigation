@@ -63,7 +63,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'created_at',
-    title: '创建日期',
+    title: $t('page.product.update-ota.createTime'),
     minWidth: '180px',
     align: 'center',
     render: row => {
@@ -72,7 +72,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'updated_at',
-    title: '修改日期',
+    title: $t('page.product.update-ota.updateDate'),
     minWidth: '180px',
     align: 'center',
     render: row => {

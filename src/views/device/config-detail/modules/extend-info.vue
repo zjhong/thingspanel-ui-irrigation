@@ -171,7 +171,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'enable',
     minWidth: '140px',
-    title: '启用',
+    title: $t('page.manage.common.status.enable'),
     align: 'center',
     render: (row: any) => {
       return <NSwitch value={Boolean(row.enable)} onChange={() => handleSwitchChange(row)} />;

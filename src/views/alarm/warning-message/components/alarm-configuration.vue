@@ -21,25 +21,25 @@ const rowKey = (row: DeviceManagement.DeviceData) => row.id;
 const message = useMessage();
 const options = ref([
   {
-    label: '高',
+    label: $t('common.high'),
     value: 'H'
   },
   {
-    label: '中',
+    label: $t('common.middle'),
     value: 'M'
   },
   {
-    label: '低',
+    label: $t('common.low'),
     value: 'L'
   }
 ]);
 const dispose = ref([
   {
-    label: '未处理',
+    label: $t('common.untreated'),
     value: 'UND'
   },
   {
-    label: '已处理',
+    label: $t('common.handled'),
     value: 'DOP'
   }
 ]);
@@ -82,7 +82,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   },
   {
     key: 'alarm_time',
-    title: '告警时间',
+    title: $t('common.alarm_level'),
     align: 'center',
     minWidth: '140px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
@@ -91,7 +91,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   },
   {
     key: 'name',
-    title: '告警名称',
+    title: $t('generate.alarm-name'),
     align: 'center',
     minWidth: '100px',
     ellipsis: {
@@ -100,21 +100,21 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   },
   {
     key: 'alarm_level',
-    title: '级别',
+    title: $t('common.alarm_level'),
     align: 'center',
     width: '90px',
     render(row) {
       if (row.alarm_level === 'H') {
-        return '高';
+        return $t('common.high');
       } else if (row.alarm_level === 'M') {
-        return '中';
+        return $t('common.middle');
       }
-      return '低';
+      return $t('common.low');
     }
   },
   {
     key: 'description',
-    title: '告警描述',
+    title: $t('generate.alarm-description'),
     align: 'center',
     minWidth: '180px',
     ellipsis: {
@@ -123,21 +123,21 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   },
   {
     key: 'processing_result',
-    title: '处理结果',
+    title: $t('generate.final-result'),
     align: 'center',
     width: '90px',
     render(row) {
       if (row.alarm_level === 'DOP') {
-        return '已处理';
+        return $t('common.handled');
       } else if (row.alarm_level === 'UND') {
-        return '未处理';
+        return $t('common.untreated');
       }
-      return '已忽略';
+      return $t('common.Ignored');
     }
   },
   {
     key: 'processor_name',
-    title: '处理人',
+    title: $t('common.processor_name'),
     width: '90px',
     align: 'center'
   },
@@ -151,13 +151,13 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
       return (
         <div class="flex gap-20px">
           <NButton type="primary" size={'small'} onClick={() => handleEditPwd(row)}>
-            详情
+            {$t('custom.devicePage.details')}
           </NButton>
           <NButton type="warning" size={'small'} onClick={() => handleEditTable(row.id, 'UND')}>
-            处理
+            {$t('custom.devicePage.handle')}
           </NButton>
           <NButton size={'small'} onClick={() => handOpenLogModal(row.id, 'IGN')}>
-            忽略
+            {$t('common.Ignored')}
           </NButton>
         </div>
       );
@@ -177,7 +177,7 @@ async function disposeData() {
     loading.value = false;
     message.success($t('custom.grouping_details.operationSuccess'));
   } else {
-    message.error('操作失败');
+    message.error($t('custom.grouping_details.operationFail'));
     loading.value = false;
   }
 }
@@ -200,7 +200,7 @@ function handOpenLogModal(rowId: string, type: string) {
 const batchData = ref({
   id: ref<DataTableRowKey[]>([]),
   processing_result: '',
-  processing_instructions: '测试'
+  processing_instructions: $t('common.test')
 });
 
 function handleCheck(rowKeys: DataTableRowKey[]) {
@@ -214,9 +214,9 @@ async function batchProcessings() {
   console.log(data);
   if (!data) {
     loading.value = false;
-    message.success('批量操作成功');
+    message.success($t('custom.grouping_details.operationSuccess'));
   } else {
-    message.error('批量操作失败');
+    message.error($t('custom.grouping_details.operationFail'));
     loading.value = false;
   }
 }

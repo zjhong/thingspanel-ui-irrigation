@@ -52,27 +52,27 @@ const configFormRules = ref({
   },
   actionType: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_target: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_param: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_value: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'change'
   }
 });

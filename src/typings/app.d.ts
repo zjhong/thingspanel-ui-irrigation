@@ -252,6 +252,26 @@ declare namespace App {
         title: string;
       };
       common: {
+        stopFail: string;
+        stopSuccess: string;
+        startSuccess: string;
+        startFail: string;
+        deleteFail: string;
+        test: string;
+        low: string;
+        middle: string;
+        high: string;
+        Ignored: string;
+        untreated: string;
+        handled: string;
+        alarm_time: string;
+        alarm_level: string;
+        processor_name: string;
+        spaceName: string;
+        userStatus: string;
+        requestTime: string;
+        requestMethod: string;
+        requestPath: string;
         manageDevices: string;
         screenNameNull: string;
         addScreen: string;
@@ -953,6 +973,7 @@ declare namespace App {
           additionSuccess: string;
         };
         devicePage: {
+          handle: string;
           deviceNumberMax: string;
           deviceNumberNotVvailable: string;
           subDeviceAddress: string;
@@ -1047,6 +1068,8 @@ declare namespace App {
           confirm: string;
         };
         device_details: {
+          sendTime: string;
+          titleOrContent: string;
           attributeDistributionTime: string;
           messageId: string;
           sendContent: string;
@@ -1082,6 +1105,13 @@ declare namespace App {
         };
       };
       generate: {
+        runstate: string;
+        gatewayDevice: string;
+        alarmConfig: string;
+        alarmInfo: string;
+        notificationGroup: string;
+        spaceLocation: string;
+        spaceOrArea: string;
         editRule: string;
         addRule: string;
         annotation: string;

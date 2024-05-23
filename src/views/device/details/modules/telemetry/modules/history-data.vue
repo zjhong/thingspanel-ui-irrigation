@@ -116,7 +116,13 @@ onMounted(getTelemetryHistoryData);
   <n-card>
     <n-flex justify="space-between" align="center">
       <n-flex justify="space-between" align="center">
-        <n-date-picker v-model:value="dateRange" class="w-300px" type="daterange" @update:value="checkDateRange" />
+        <n-date-picker
+          v-model:value="dateRange"
+          class="w-400px"
+          type="datetimerange"
+          format="yyyy-MM-dd hh:mm:ss"
+          @update:value="checkDateRange"
+        />
         <n-button class="ml-2" @click="refresh">{{ $t('generate.refresh') }}</n-button>
       </n-flex>
 
@@ -139,4 +145,8 @@ onMounted(getTelemetryHistoryData);
   </n-card>
 </template>
 
-<style scoped></style>
+<style scoped>
+.n-card {
+  width: 100%;
+}
+</style>

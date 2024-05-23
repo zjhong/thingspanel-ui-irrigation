@@ -352,7 +352,7 @@ const getPlatform = computed(() => {
     <n-modal
       v-model:show="showHistory"
       :title="$t('generate.telemetry-history-data')"
-      :class="getPlatform ? 'w-90%' : 'w-600px'"
+      :class="getPlatform ? 'w-90%' : 'w-650px'"
     >
       <NCard>
         <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />

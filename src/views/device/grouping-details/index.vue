@@ -6,7 +6,7 @@ import {
   deleteDeviceGroup,
   deleteDeviceGroupRelation,
   deviceGroupDetail,
-  deviceList,
+  deviceListByGroup,
   getDeviceGroup
 } from '@/service/api/device';
 import { AddOrEditDevices } from '@/views/device/grouping/components';
@@ -137,7 +137,7 @@ const queryParams2 = reactive<{ group_id: string; page: number; page_size: numbe
   page_size: 5
 });
 const getDeviceList = async (id: string) => {
-  const res = await deviceList({ ...queryParams2, group_id: id });
+  const res = await deviceListByGroup({ ...queryParams2, group_id: id });
   if (res.data?.list) {
     device_data.value = res.data?.list;
   } else {

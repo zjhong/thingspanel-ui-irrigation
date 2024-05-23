@@ -7,17 +7,23 @@ import moment from 'moment';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { deleteProduct, getProductList } from '@/service/product/list';
+import { dictQuery } from '@/service/api/setting';
 import TableActionModal from './components/table-action-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
 import ColumnSetting from './components/column-setting.vue';
 import DeviceRegister from './components/device-register.vue';
+
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible, setTrue: openConfig } = useBoolean();
 const editData = ref<productRecord | null>(null);
+const formRef = ref<any>();
+const productOptions = ref([]);
 
 const queryParams = reactive<QueryFormModel>({
   name: '',
+  product_type: '',
+  product_model: '',
   page: 1,
   page_size: 10
 });
@@ -45,6 +51,16 @@ const pagination: PaginationProps = reactive({
     getTableData();
   }
 });
+
+const cpType = async (name?: string) => {
+  const res: any = await dictQuery({
+    page: 1,
+    page_size: 10,
+    dict_code: 'PRODUCT_TYPE',
+    name
+  });
+  productOptions.value = res.data || [];
+};
 
 async function getTableData() {
   startLoading();
@@ -133,6 +149,12 @@ const modalType = ref<ModalType>('add');
 function setModalType(type: ModalType) {
   modalType.value = type;
 }
+function clear() {
+  queryParams.name = '';
+  queryParams.product_type = '';
+  queryParams.product_model = '';
+  getTableData();
+}
 
 function setEditData(data: productRecord | null) {
   editData.value = data;
@@ -188,12 +210,49 @@ const getPlatform = computed(() => {
 });
 // 初始化
 init();
+cpType();
 </script>
 
 <template>
   <div>
     <n-card :title="$t('page.product.list.productList')">
       <div class="h-full flex-col">
+        <NForm ref="formRef" inline :label-width="90" :model="queryParams" label-placement="left">
+          <NFormItem :class="getPlatform ? '100%' : 'w-50%'" :label="$t('page.product.list.productName')" path="name">
+            <NInput v-model:value="queryParams.name" />
+          </NFormItem>
+          <NFormItem
+            :class="getPlatform ? '100%' : 'w-50%'"
+            :label="$t('page.product.list.deviceType')"
+            path="product_type"
+          >
+            <NSelect
+              v-model:value="queryParams.product_type"
+              filterable
+              :options="productOptions"
+              label-field="translation"
+              value-field="dict_value"
+              @search="getProductList"
+            />
+          </NFormItem>
+          <NFormItem
+            :class="getPlatform ? '100%' : 'w-50%'"
+            :label="$t('page.product.list.productNumber')"
+            path="product_model"
+          >
+            <NInput v-model:value="queryParams.product_model" />
+          </NFormItem>
+          <NFormItem>
+            <NButton type="primary" @click="getTableData">
+              {{ $t('page.product.list.query') }}
+            </NButton>
+          </NFormItem>
+          <NFormItem :class="getPlatform ? '100%' : 'w-50%'" path="product_model">
+            <NButton type="primary" @click="clear">
+              {{ $t('page.product.list.Reset') }}
+            </NButton>
+          </NFormItem>
+        </NForm>
         <NSpace class="pb-12px" justify="space-between">
           <NSpace>
             <NButton type="primary" @click="handleAddTable">
@@ -217,25 +276,25 @@ init();
           remote
           class="flex-1-hidden"
         />
-        <TableActionModal
-          v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
-          :type="modalType"
-          :edit-data="editData"
-          @success="getTableData"
-        />
-        <NDrawer
-          v-model:show="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-80%'"
-          display-directive="show"
-          placement="right"
-        >
-          <NDrawerContent :title="drawerTitle" closable>
-            <DeviceRegister :pid="(editData?.id as unknown as string)" />
-          </NDrawerContent>
-        </NDrawer>
       </div>
     </n-card>
+    <TableActionModal
+      v-model:visible="visible"
+      :class="getPlatform ? 'w-90%' : 'w-700px'"
+      :type="modalType"
+      :edit-data="editData"
+      @success="getTableData"
+    />
+    <NDrawer
+      v-model:show="editPwdVisible"
+      :style="{ width: getPlatform ? 'w-90%' : 'w-50%' }"
+      display-directive="show"
+      placement="right"
+    >
+      <NDrawerContent :title="drawerTitle" closable>
+        <DeviceRegister :pid="(editData?.id as unknown as string)" />
+      </NDrawerContent>
+    </NDrawer>
   </div>
 </template>
 

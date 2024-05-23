@@ -66,7 +66,7 @@ const getTableData = async () => {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'created_at',
-    title: '时间',
+    title: $t('common.time'),
     minWidth: '140px',
     align: 'left',
     render: (row: any) => {

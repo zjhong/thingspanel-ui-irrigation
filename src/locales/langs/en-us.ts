@@ -8,6 +8,9 @@ const local: App.I18n.Schema = {
     title: 'ThingsPanel'
   },
   common: {
+    withinOneYear: 'The date range cannot exceed one year',
+    withinOneMonth: 'The date range cannot exceed one month',
+    time: 'time',
     complete: 'Complete',
     remark: 'Remark',
     action: 'Action',
@@ -719,8 +722,10 @@ const local: App.I18n.Schema = {
     addAndEditEvents: 'AddAndEditEvents',
     addAndEditCommand: 'AddAndEditCommand',
     table_header: {
+      eventContent: 'Event content',
       dataName: 'DataName',
       updateTime: 'updateTime',
+      eventReportingTime: 'Event reporting time',
       dataIdentifier: 'DataIdentifier',
       readAndWriteSign: 'ReadAndWriteSign',
       dataType: 'DataType',
@@ -767,6 +772,12 @@ const local: App.I18n.Schema = {
   },
   custom: pen,
   generate: {
+    commandIssuanceTime: 'Command issuance time',
+    issueCommand: 'issue command',
+    commandConetnt: 'command conetnt',
+    selectSubDevices: 'Please select sub devices',
+    setSubDevices: 'Set up sub devices',
+    unbind: 'unbind',
     errorMessage: 'error-message',
     returnSuccess: 'return success',
     returnFail: 'return fail',

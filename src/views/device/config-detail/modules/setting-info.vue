@@ -22,7 +22,7 @@ const deleteConfig = () => {
     negativeText: '取消',
     onPositiveClick: async () => {
       await deviceConfigDel({ id: props.configInfo.id });
-      // message.success('操作成功');
+      // message.success($t('custom.grouping_details.operationSuccess'));
       router.back();
     }
   });

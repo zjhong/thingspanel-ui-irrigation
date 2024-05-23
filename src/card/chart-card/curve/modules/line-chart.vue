@@ -19,6 +19,7 @@ import type {
   TooltipComponentOption
 } from 'echarts/components';
 import { addMonths } from 'date-fns';
+import { $t } from '@/locales';
 import { localStg } from '@/utils/storage';
 import { deviceTelemetryList } from '@/card/chart-card/curve/api';
 import type { ICardData } from '@/components/panel/card';
@@ -374,7 +375,7 @@ const checkDateRange = value => {
   const [start, end] = value;
   if (start && end && addMonths(start, 1) < end) {
     dateRange.value = null;
-    message.error('日期范围不能超过一个月');
+    message.error($t('common.withinOneMonth'));
   } else {
     params.start_time = start;
     params.end_time = end;

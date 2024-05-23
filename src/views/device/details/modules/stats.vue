@@ -10,7 +10,7 @@ defineProps<{
 }>();
 const attributeRef = ref();
 const columns0 = [
-  { title: '属性标识符', minWidth: '140px', key: 'key' },
+  { title: $t('device_template.table_header.attributeIdentifier'), minWidth: '140px', key: 'key' },
   { title: $t('device_template.table_header.attributeName'), minWidth: '140px', key: 'data_name' },
   {
     title: $t('device_template.table_header.attributeValue'),
@@ -77,7 +77,7 @@ const formatStatus = status => {
 };
 const columns = [
   {
-    title: '属性下发时间',
+    title: $t('custom.device_details.attributeDistributionTime'),
     minWidth: '140px',
     key: 'created_at',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
@@ -109,7 +109,7 @@ const columns = [
   <div>
     <DistributionAndTable
       :id="id as string"
-      button-name="下发属性"
+      :button-name="$t('generate.issue-attribute')"
       :table-columns="columns"
       :fetch-data-api="getAttributeDataSetLogs"
       :submit-api="attributeDataPub"

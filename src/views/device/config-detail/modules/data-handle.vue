@@ -166,7 +166,7 @@ const deleteData = async (item: any) => {
     negativeText: '取消',
     onPositiveClick: async () => {
       await dataScriptDel({ id: item.id });
-      // message.success('操作成功');
+      // message.success($t('custom.grouping_details.operationSuccess'));
       searchDataScript();
     }
   });

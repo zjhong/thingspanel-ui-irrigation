@@ -11,13 +11,13 @@ defineProps<{
 const formatStatus = status => {
   switch (status) {
     case '1':
-      return '发送成功';
+      return $t('generate.sendingSuccess');
     case '2':
-      return '发送失败';
+      return $t('generate.sendingFail');
     case '3':
-      return '返回成功';
+      return $t('generate.returnSuccess');
     case '4':
-      return '返回失败';
+      return $t('generate.returnFail');
     default:
       return '';
   }
@@ -27,13 +27,13 @@ const columns = [
   { title: $t('device_template.table_header.commandIdentifier'), minWidth: '140px', key: 'identify' },
   { title: $t('device_template.table_header.commandName'), minWidth: '140px', key: '' },
   {
-    title: '命令下发时间',
+    title: $t('generate.commandIssuanceTime'),
     minWidth: '140px',
     key: 'created_at',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   { title: $t('generate.status'), minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
-  { title: '命令内容', minWidth: '140px', key: 'data' },
+  { title: $t('generate.commandConetnt'), minWidth: '140px', key: 'data' },
   { title: $t('generate.errorMessage'), minWidth: '140px', key: 'error_message' }
 ];
 </script>
@@ -42,7 +42,7 @@ const columns = [
   <div>
     <DistributionAndTable
       :id="id as string"
-      button-name="下发命令"
+      :button-name="$t('generate.issueCommand')"
       :is-command="true"
       :table-columns="columns"
       :fetch-data-api="getCommandDataSetLogs"

@@ -487,7 +487,13 @@ watch(
             :placeholder="$t('custom.devicePage.enterDeviceNumber')"
             class="max-w-240px"
           ></n-input>
-          <NText v-if="showMessage" :style="messageStyle">{{ buttonDisabled ? '设备编号不可用' : '设备可用' }}</NText>
+          <NText v-if="showMessage" :style="messageStyle">
+            {{
+              buttonDisabled
+                ? $t('custom.devicePage.deviceNumberNotVvailable')
+                : $t('custom.devicePage.enterDeviceNumber')
+            }}
+          </NText>
         </div>
         <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">
           {{ $t('custom.devicePage.finish') }}

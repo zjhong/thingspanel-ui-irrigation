@@ -110,7 +110,7 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
     minWidth: '140px',
-    title: '设备名称'
+    title: $t('custom.devicePage.deviceName')
   },
   {
     key: 'device_number',

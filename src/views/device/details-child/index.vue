@@ -69,15 +69,15 @@ const close = async () => {
 };
 const save = async () => {
   if (!deviceDataStore?.deviceData?.name) {
-    window.NMessage.error('请输入设备名称');
+    window.NMessage.error($t('custom.devicePage.enterDeviceName'));
     return;
   }
   if (!deviceDataStore?.deviceData?.device_number) {
-    window.NMessage.error('请输入设备编号');
+    window.NMessage.error($t('custom.devicePage.enterDeviceNumber'));
     return;
   }
   if (deviceDataStore?.deviceData?.device_number.length > 36) {
-    window.NMessage.error('设备编号不能超过36位');
+    window.NMessage.error($t('custom.devicePage.deviceNumberMax'));
     return;
   }
   device_number.value = deviceDataStore.deviceData.device_number;

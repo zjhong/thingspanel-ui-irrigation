@@ -252,6 +252,9 @@ declare namespace App {
         title: string;
       };
       common: {
+        withinOneYear: string;
+        withinOneMonth: string;
+        time: string;
         complete: string;
         action: string;
         input: string;
@@ -867,9 +870,11 @@ declare namespace App {
         addAndEditCommand: string;
         table_header: {
           dataName: string;
+          eventContent: string;
           dataIdentifier: string;
           readAndWriteSign: string;
           dataType: string;
+          eventReportingTime: string;
           updateTime: string;
           attributeValue: string;
           unit: string;
@@ -920,6 +925,7 @@ declare namespace App {
           kanbanNameNull: string;
         };
         groupPage: {
+          deviceAvailable: string;
           groupName: string;
           description: string;
           createdAt: string;
@@ -941,6 +947,9 @@ declare namespace App {
           additionSuccess: string;
         };
         devicePage: {
+          deviceNumberMax: string;
+          deviceNumberNotVvailable: string;
+          subDeviceAddress: string;
           deviceKey: string;
           deviceName: string;
           deviceNumber: string;
@@ -1032,6 +1041,7 @@ declare namespace App {
           confirm: string;
         };
         device_details: {
+          attributeDistributionTime: string;
           messageId: string;
           sendContent: string;
           triggerOperation: string;
@@ -1066,6 +1076,12 @@ declare namespace App {
         };
       };
       generate: {
+        commandIssuanceTime: string;
+        issueCommand: string;
+        commandConetnt: string;
+        selectSubDevices: string;
+        setSubDevices: string;
+        unbind: string;
         errorMessage: string;
         returnFail: string;
         returnSuccess: string;

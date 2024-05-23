@@ -49,7 +49,7 @@ const linkActivation = async (item: any) => {
   if (!res.error) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     await getData();
-    message.success('操作成功');
+    message.success($t('custom.grouping_details.operationSuccess'));
   }
 };
 
@@ -135,7 +135,7 @@ const deleteLink = async (item: any) => {
       const res = await sceneAutomationsDel(item.id);
       if (!res.error) {
         await getData();
-        message.success('操作成功');
+        message.success($t('custom.grouping_details.operationSuccess'));
       }
     }
   });

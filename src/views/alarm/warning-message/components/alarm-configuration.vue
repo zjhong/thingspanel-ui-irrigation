@@ -175,7 +175,7 @@ async function disposeData() {
   const { data } = await processingOperation(paramsData.value);
   if (data) {
     loading.value = false;
-    message.success('操作成功');
+    message.success($t('custom.grouping_details.operationSuccess'));
   } else {
     message.error('操作失败');
     loading.value = false;

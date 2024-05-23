@@ -52,7 +52,7 @@ const queryTemplate = ref({
   page_size: 20,
   total: 0
 });
-const deviceTemplateOptions = ref([{ name: '不绑定', id: '' }]);
+const deviceTemplateOptions = ref([{ name: $t('generate.unbind'), id: '' }]);
 const getDeviceTemplate = () => {
   deviceTemplate(queryTemplate.value).then(res => {
     deviceTemplateOptions.value = deviceTemplateOptions.value.concat(res.data.list);

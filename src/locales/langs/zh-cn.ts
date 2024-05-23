@@ -9,6 +9,9 @@ const local: App.I18n.Schema = {
     title: 'System Name: {name}'
   },
   common: {
+    withinOneYear: '日期范围不能超过一个年',
+    withinOneMonth: '日期范围不能超过一个月',
+    time: '时间',
     complete: '完成',
     action: '操作',
     input: '请输入',
@@ -719,6 +722,7 @@ const local: App.I18n.Schema = {
     addAndEditEvents: '新增/编辑事件',
     addAndEditCommand: '新增/编辑命令',
     table_header: {
+      eventContent: '事件内容',
       dataName: '数据名称',
       dataIdentifier: '数据标识符',
       readAndWriteSign: '读写标志',
@@ -727,6 +731,7 @@ const local: App.I18n.Schema = {
       pleaseEnterTheUnit: '请输入单位',
       PleaseEnterADescription: '请输入描述',
       description: '描述',
+      eventReportingTime: '事件上报时间',
       attributeName: '属性名称',
       updateTime: '更新时间',
       attributeValue: '属性',
@@ -766,6 +771,12 @@ const local: App.I18n.Schema = {
     }
   },
   generate: {
+    commandIssuanceTime: '命令下发时间',
+    issueCommand: '下发命令',
+    commandConetnt: '命令内容',
+    selectSubDevices: '请选择子设备',
+    unbind: '不绑定',
+    setSubDevices: '设置子设备',
     errorMessage: '错误信息',
     returnSuccess: '返回成功',
     returnFail: '返回失败',

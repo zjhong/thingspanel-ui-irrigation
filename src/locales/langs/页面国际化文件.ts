@@ -6,6 +6,7 @@ export const pzh_cn: any = {
     kanbanNameNull: '看板名称不能为空'
   },
   groupPage: {
+    deviceAvailable: '设备可用',
     groupName: '分组名称',
     description: '描述',
     createdAt: '创建时间',
@@ -25,6 +26,9 @@ export const pzh_cn: any = {
     additionSuccess: '新增成功'
   },
   devicePage: {
+    deviceNumberMax: '设备编号不能超过36位',
+    deviceNumberNotVvailable: '设备编号不可用',
+    subDeviceAddress: '子设备地址',
     deviceKey: 'key验证错误，服务不可用',
     deviceName: '设备名称',
     deviceNumber: '设备编码',
@@ -146,7 +150,8 @@ export const pzh_cn: any = {
     sendResults: '发送结果',
     whole: '全部',
     triggerOperation: '触发操作',
-    messageId: '消息ID'
+    messageId: '消息ID',
+    attributeDistributionTime: '属性下发时间'
   }
 };
 
@@ -158,6 +163,9 @@ export const pen: any = {
     kanbanNameNull: 'Kanban name cannot be empty'
   },
   groupPage: {
+    deviceNumberMax: 'The equipment number cannot exceed 36 digits',
+    deviceNumberNotVvailable: 'Equipment number not available',
+    deviceAvailable: 'Device available',
     groupName: 'Group Name',
     description: 'Description',
     createdAt: 'Created At',
@@ -179,6 +187,7 @@ export const pen: any = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    subDeviceAddress: 'Sub device address',
     deviceKey: 'Key verification error, service unavailable',
     deviceName: 'Device Name',
     deviceNumber: 'Device Number',
@@ -272,6 +281,7 @@ export const pen: any = {
     confirm: 'Confirm'
   },
   device_details: {
+    attributeDistributionTime: 'Attribute distribution time',
     triggerOperation: 'trigger operation',
     whole: 'whole',
     sendResults: 'send results',

@@ -3,7 +3,6 @@ import { nextTick, onMounted, reactive, ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 // eslint-disable-next-line vue/prefer-import-from-vue
 import type { UnwrapRefSimple } from '@vue/reactivity';
-import { router } from '@/router';
 import type { ICardData, ICardFormIns, ICardRender, ICardView } from '@/components/panel/card';
 import { PutBoard, deviceTemplateSelect, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
@@ -15,6 +14,7 @@ const cr = ref<ICardRender>();
 const fullui = ref();
 
 const showingCardList = ref(false);
+const isEditing = ref(false);
 const editingCard = ref(false);
 const deviceOptions = ref<UnwrapRefSimple<any>[]>();
 const webChartConfig = ref<any>([]);
@@ -109,8 +109,14 @@ const edit = (view: ICardView) => {
     formRef.value?.setCard(state.cardData as any);
   });
 };
-const toEditMode = () => {
+const showCardList = () => {
   showingCardList.value = true;
+};
+const toEditMode = () => {
+  isEditing.value = true;
+};
+const quitEditMode = () => {
+  isEditing.value = false;
 };
 
 const savePanel = async () => {
@@ -137,11 +143,13 @@ onMounted(() => {
       class="flex items-center justify-between border-b border-gray-200 px-10px pb-3 dark:border-gray-200/10"
     >
       <div>
-        <NButton @click="router.go(-1)">
+        <!--
+        <<NButton @click="router.go(-1)">
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           {{ $t('page.login.common.back') }}
-        </NButton>
-        <NButton class="ml-5" @mouseover="toEditMode">
+        </NButton> 
+-->
+        <NButton @mouseover="showCardList">
           <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
           {{ $t('generate.add-component') }}
         </NButton>
@@ -153,6 +161,11 @@ onMounted(() => {
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->
         <NDivider vertical />
+        <NButton v-if="!isEditing" @click="toEditMode">
+          <SvgIcon icon="material-symbols:edit" class="mr-0.5 text-lg" />
+          {{ $t('generate.edit') }}
+        </NButton>
+        <NButton v-if="isEditing" @click="quitEditMode">退出编辑</NButton>
         <NButton @click="savePanel">{{ $t('common.save') }}</NButton>
         <FullScreen
           :full="isFullscreen"
@@ -184,7 +197,7 @@ onMounted(() => {
         <CardRender
           ref="cr"
           v-model:layout="layout"
-          :is-preview="false"
+          :is-preview="!isEditing"
           :col-num="12"
           :default-card-col="4"
           :row-height="85"

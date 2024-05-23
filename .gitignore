@@ -35,5 +35,6 @@ vite.config.ts.timestamp-*-*.mjs
 .env
 .tsbuildinfo
 .eslintcache
+.env.development
 
 

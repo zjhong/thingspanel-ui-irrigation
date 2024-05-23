@@ -4,8 +4,9 @@ import { NButton } from 'naive-ui';
 import { useFullscreen } from '@vueuse/core';
 import { useAppStore } from '@/store/modules/app';
 import { useLayouts } from '@/components/tp-kan-ban/hooks/useLayouts';
-import type { CardData, CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
+import type { CardFormIns, CardView } from '@/components/tp-kan-ban/kan-ban';
 import { PutBoard } from '@/service/api';
+import { useResponsiveStore } from '@/components/tp-kan-ban/store';
 
 const formRef = ref<CardFormIns>();
 const appStore = useAppStore();
@@ -18,13 +19,14 @@ const state = reactive<{ curCardData: null | CardView }>({
   curCardData: null
 });
 const activeType = ref<string>('plugins');
-const { layouts, addItem, updateLayouts, panelDate } = useLayouts(props.panelId);
-console.log(layouts);
+const responsive = useResponsiveStore();
+const { layouts, addItem, updateLayout, panelDate, removeItem, updateLayouts } = useLayouts(props.panelId);
 const saveKanBan = async () => {
   if (!props.panelId) {
     window.NMessage.destroyAll();
     window.NMessage.error('无效的看板id');
   } else {
+    console.log(layouts.value);
     const layoutJson = JSON.stringify(layouts.value);
 
     await PutBoard({
@@ -50,10 +52,10 @@ function selectCard(item: CardView) {
   });
 }
 
-const changeCurCardData = (data: CardData) => {
-  const index = layouts.value.findIndex(i => i.data?.renderID === data.renderID);
+const changeCurCardData = (data: CardView) => {
+  const index = layouts.value.findIndex(i => i.data?.renderID === data?.data?.renderID);
   if (index === -1) return;
-  updateLayouts(data, index);
+  updateLayout(data, index);
 };
 </script>
 
@@ -64,6 +66,7 @@ const changeCurCardData = (data: CardData) => {
       class="flex items-center justify-between border-b border-gray-200 p-0 dark:border-gray-200/10"
     >
       <KanBanHeader
+        v-model:responsive="responsive"
         v-model:active="active"
         :toggle="toggle"
         :is-fullscreen="isFullscreen"
@@ -73,7 +76,15 @@ const changeCurCardData = (data: CardData) => {
       />
     </div>
     <div ref="fullUI" :class="!layouts.length ? 'flex-1 flex-col items-center justify-center' : 'flex-1'">
-      <KanBanRender :is-preview="false" :layout="layouts" :add-item="addItem" :select-card="selectCard" />
+      <KanBanRender
+        :responsive="responsive"
+        :is-preview="false"
+        :layout="layouts"
+        :add-item="addItem"
+        :update-layouts="updateLayouts"
+        :select-card="selectCard"
+        :remove-item="removeItem"
+      />
       <n-drawer
         v-model:show="active"
         :width="236"

@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
+import type { CardView } from '@/components/tp-kan-ban/kan-ban';
 import { getBoard } from '@/service/api';
 
 export function useLayouts(panelId: string | undefined) {
@@ -11,8 +11,19 @@ export function useLayouts(panelId: string | undefined) {
     layouts.value.push(item);
   }
 
-  function updateLayouts(item: CardData, index: number) {
-    layouts.value[index].data = item;
+  function updateLayout(item: CardView, index: number) {
+    layouts.value[index] = item;
+  }
+
+  function updateLayouts(item: CardView[]) {
+    layouts.value = item;
+  }
+
+  async function removeItem(id: string) {
+    const index = layouts.value.findIndex(item => item.i === id);
+    if (index > -1) {
+      layouts.value.splice(index, 1);
+    }
   }
 
   async function initLayouts() {
@@ -31,7 +42,8 @@ export function useLayouts(panelId: string | undefined) {
       window.NMessage.error('无效的看板id');
     }
   }
+
   initLayouts().then();
 
-  return { layouts, addItem, updateLayouts, panelDate };
+  return { layouts, addItem, updateLayout, panelDate, removeItem, updateLayouts };
 }

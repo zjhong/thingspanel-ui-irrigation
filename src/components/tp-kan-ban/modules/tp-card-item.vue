@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue';
 import type { CardData } from '@/components/tp-kan-ban/kan-ban';
 import { useKanBanStore } from '@/cards2.0/store/kan-ban-store';
 
@@ -8,14 +7,6 @@ defineOptions({ name: 'TpCardItem' });
 const props = defineProps<{ data: CardData; view: boolean }>();
 
 const { cardMap } = useKanBanStore();
-
-watch(
-  () => props.data,
-  () => {
-    console.log(props.data, '09888');
-  },
-  { deep: true }
-);
 </script>
 
 <template>

@@ -18,7 +18,7 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible, setTrue: openConfig } = useBoolean();
 const editData = ref<productRecord | null>(null);
 const formRef = ref<any>();
-const productOptions = ref([]);
+const productOptions = ref<any>([]);
 
 const queryParams = reactive<QueryFormModel>({
   name: '',
@@ -89,7 +89,10 @@ const columns: Ref<DataTableColumns<productRecord>> = ref([
   {
     key: 'product_type',
     minWidth: '140px',
-    title: $t('page.product.list.deviceType')
+    title: $t('page.product.list.deviceType'),
+    render: row => {
+      return productOptions.value.filter((item: any) => item.dict_value === row.product_type)[0]?.translation;
+    }
   },
   {
     key: 'product_model',

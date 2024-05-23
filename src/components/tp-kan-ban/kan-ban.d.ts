@@ -1,4 +1,4 @@
-import type { LayoutItem } from 'grid-layout-plus';
+import type { LayoutItem } from '@/components/drg-grid-layout';
 import type { CardItemBase } from '@/cards2.0/card';
 
 export type cardConfig = {

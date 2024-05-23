@@ -4,5 +4,6 @@ export enum SetupStoreId {
   Auth = 'auth-store',
   Route = 'route-store',
   Tab = 'tab-store',
-  Device = 'device-data'
+  Device = 'device-data',
+  responsive = 'responsive'
 }

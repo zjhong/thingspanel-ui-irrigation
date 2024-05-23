@@ -484,7 +484,7 @@ onUnmounted(() => {
   <div class="m--6 h-full flex flex-col">
     <div class="mb-4 mt-4 flex justify-between">
       <div class="name-unit">
-        {{ name + ' ' + (detail?.value?.data[0]?.unit || '') }}
+        {{ name }}
       </div>
       <div class="flex justify-end">
         <n-popselect

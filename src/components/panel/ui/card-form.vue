@@ -193,7 +193,7 @@ watch(
         </div>
       </NTabPane>
       <NTabPane v-if="!!state.selectCard?.configForm" name="config" tab="组件设置">
-        <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
+        <div :class="`${mobile ? '' : 'overflow-y-auto'} py-5`">
           <div class="max-w-[600px]">
             <ConfigCtx v-model:config="state.data.config" mode="insert">
               <component :is="state.selectCard?.configForm" :data="state.data" />

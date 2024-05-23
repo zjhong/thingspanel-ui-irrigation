@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
-import { useWebSocket } from '@vueuse/core';
+import {onMounted, onUnmounted, ref, watch} from 'vue';
+import {useWebSocket} from '@vueuse/core';
 // import {ClipboardCode20Regular} from '@vicons/fluent';
-import { localStg } from '@/utils/storage';
-import type { CardData } from '@/components/tp-kan-ban/kan-ban';
-import { deviceDetail } from '../api';
+import {localStg} from '@/utils/storage';
+import type {CardData} from '@/components/tp-kan-ban/kan-ban';
+import {deviceDetail} from '../api';
 import icons from './icon';
-import { createServiceConfig } from '~/env.config';
+import {createServiceConfig} from '~/env.config';
 
 const iconMap = new Map(icons.map(c => [c.name, c.value]));
 // 正式环境可根据api获取
@@ -18,12 +18,12 @@ const props = defineProps<{
   // mode: IConfigCtx['view'];
 }>();
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
+const {otherBaseURL} = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/keys/ws`;
 // eslint-disable-next-line no-constant-binary-expression
 const keys = ['externalVol' || props?.card?.config?.source?.dataSource?.deviceSource?.[0]?.metricsId];
-const { data, send, close } = useWebSocket(wsUrl, {
+const {data, send, close} = useWebSocket(wsUrl, {
   heartbeat: {
     message: 'ping',
     interval: 8000,
@@ -75,7 +75,7 @@ watch(
   () => {
     setSeries(props.card?.config?.source?.dataSource);
   },
-  { deep: true }
+  {deep: true}
 );
 
 onMounted(() => {
@@ -117,9 +117,9 @@ onUnmounted(() => {
             />
           </NIcon>
           <div>
-            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
+            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : 'no-data' }}</span>
           </div>
-          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
+          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '无' }}</span>
         </div>
       </NCard>
     </div>

@@ -164,9 +164,11 @@ watch(visible, () => {
         <NFormItem :label="$t('page.manage.menu.routeName')" path="routeName">
           <NInput v-model:value="model.routeName" :placeholder="$t('page.manage.menu.form.routeName')" />
         </NFormItem>
+
         <NFormItem :label="$t('page.manage.menu.routePath')" path="routePath">
           <NInput v-model:value="model.routePath" :placeholder="$t('page.manage.menu.form.routePath')" />
         </NFormItem>
+
         <NFormItem :label="$t('page.manage.menu.menuStatus')" path="status">
           <NRadioGroup v-model:value="model.status">
             <NRadio

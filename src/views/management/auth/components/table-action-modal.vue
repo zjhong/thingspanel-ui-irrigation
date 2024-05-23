@@ -184,6 +184,7 @@ watch(
             key-field="id"
           />
         </NFormItemGridItem>
+
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.title')" path="description">
           <NInput v-model:value="formModel.description" />
         </NFormItemGridItem>
@@ -199,8 +200,11 @@ watch(
         <!--
  <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
           <NInput v-model:value="formModel.route_path" />
-        </NFormItemGridItem> 
+        </NFormItemGridItem>
 -->
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.routePath')" path="routePath">
+          <NInput v-model:value="formModel.route_path" :placeholder="$t('page.manage.menu.form.routePath')" />
+        </NFormItemGridItem>
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.icon')" path="param2">
           <IconSelect v-model:value="formModel.param2" :icons="icons" />
         </NFormItemGridItem>

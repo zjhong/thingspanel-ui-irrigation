@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
 import type { CardData } from '@/components/tp-kan-ban/kan-ban';
-
+import { $t } from '@/locales';
 const props = defineProps<{
   view?: boolean;
   card: CardData;
@@ -26,7 +26,7 @@ onMounted(() => {
     <n-descriptions-item label="基础配置">
       <n-space justify="space-between">
         <div>标题：{{ cardData?.config.basis.title }}</div>
-        <div>是否显示：{{ cardData?.config.basis.showTitle ? '是' : '否' }}</div>
+        <div>是否显示：{{ cardData?.config.basis.showTitle ? $t('common.yesOrNo.yes') : $t('common.yesOrNo.no') }}</div>
       </n-space>
     </n-descriptions-item>
     <n-descriptions-item label="数据源">

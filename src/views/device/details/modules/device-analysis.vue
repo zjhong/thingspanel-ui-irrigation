@@ -84,7 +84,7 @@ const columns: Ref<any> = ref([
     key: 'subDeviceAddr'
   },
   {
-    title: '操作',
+    title: $t('common.action'),
     key: '',
     minWidth: '140px',
     render: row => {

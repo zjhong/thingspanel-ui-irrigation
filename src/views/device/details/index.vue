@@ -238,7 +238,7 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
+            <!-- <span class="mr-2">{{ $t('generate.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"

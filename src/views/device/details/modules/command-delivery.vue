@@ -32,9 +32,9 @@ const columns = [
     key: 'created_at',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
-  { title: '状态', minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
+  { title: $t('generate.status'), minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
   { title: '命令内容', minWidth: '140px', key: 'data' },
-  { title: '错误信息', minWidth: '140px', key: 'error_message' }
+  { title: $t('generate.errorMessage'), minWidth: '140px', key: 'error_message' }
 ];
 </script>
 

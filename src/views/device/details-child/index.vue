@@ -190,7 +190,7 @@ watch(
             <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
+            <!-- <span class="mr-2">{{ $t('generate.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"

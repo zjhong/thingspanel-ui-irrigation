@@ -79,7 +79,7 @@ const bodyStyle = ref({
 });
 const execution_result_options = ref([
   {
-    label: '全部',
+    label: $t('custom.device_details.whole'),
     value: ''
   },
   {

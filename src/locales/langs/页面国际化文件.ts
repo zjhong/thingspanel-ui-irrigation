@@ -1,8 +1,9 @@
-export const pzh_cn = {
+export const pzh_cn: any = {
   home: {
     title: '首页未配置或配置异常',
     description: '一切尽在不言中',
-    refresh: '刷新'
+    refresh: '刷新',
+    kanbanNameNull: '看板名称不能为空'
   },
   groupPage: {
     groupName: '分组名称',
@@ -10,8 +11,6 @@ export const pzh_cn = {
     createdAt: '创建时间',
     actions: '操作',
     view: '查看',
-    confirmDelete: '确认删除',
-    delete: '删除',
     removeFromGroup: '从分组中移除',
     createGroupButton: '+创建分组',
     deviceGroupPlaceholder: '请输入设备分组名称',
@@ -26,6 +25,7 @@ export const pzh_cn = {
     additionSuccess: '新增成功'
   },
   devicePage: {
+    deviceKey: 'key验证错误，服务不可用',
     deviceName: '设备名称',
     deviceNumber: '设备编码',
     deviceConfig: '设备配置',
@@ -64,8 +64,6 @@ export const pzh_cn = {
     onlineStatus: '在线状态',
     alarmStatus: '告警',
     accessServiceProtocol: '通过服务/协议',
-    onlineOption: '在线',
-    offlineOption: '不在线',
     alarmOption: '告警',
     noAlarmOption: '不告警',
     step1Title: '创建设备',
@@ -116,6 +114,12 @@ export const pzh_cn = {
     confirm: '确定'
   },
   device_details: {
+    sendContent: '发送内容',
+    sequential: '时序',
+    history: '历史',
+    operationTime: '操作时间',
+    operationUsers: '操作用户',
+    operationType: '操作类型',
     telemetry: '遥测',
     join: '连接',
     deviceAnalysis: '子设备',
@@ -134,15 +138,24 @@ export const pzh_cn = {
     online: '在线',
     offline: '离线',
     alarm: '告警',
-    noAlarm: '无告警'
+    noAlarm: '无告警',
+    sendInputData: '请输入发送数据',
+    deleteAttribute: '删除属性',
+    manualOperation: '手动操作',
+    automaticTriggering: '自动触发',
+    sendResults: '发送结果',
+    whole: '全部',
+    triggerOperation: '触发操作',
+    messageId: '消息ID'
   }
 };
 
-export const pen = {
+export const pen: any = {
   home: {
     title: 'Homepage not configured or configuration abnormal',
     description: 'Everything speaks for itself',
-    refresh: 'Refresh'
+    refresh: 'Refresh',
+    kanbanNameNull: 'Kanban name cannot be empty'
   },
   groupPage: {
     groupName: 'Group Name',
@@ -166,6 +179,7 @@ export const pen = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    deviceKey: 'Key verification error, service unavailable',
     deviceName: 'Device Name',
     deviceNumber: 'Device Number',
     deviceConfig: 'Device Configuration',
@@ -235,7 +249,9 @@ export const pen = {
     back: 'Back'
   },
   grouping_details: {
+    messageId: 'messageId',
     previousPage: 'Previous Page',
+    sendContent: 'send content',
     previousLevel: 'Previous Level',
     backToGroupList: 'Back to Group List',
     groupLevel: 'Group Level',
@@ -256,6 +272,18 @@ export const pen = {
     confirm: 'Confirm'
   },
   device_details: {
+    triggerOperation: 'trigger operation',
+    whole: 'whole',
+    sendResults: 'send results',
+    automaticTriggering: 'automatic triggering',
+    manualOperation: 'manual operation',
+    sequential: 'sequential',
+    history: 'history',
+    deleteAttribute: 'delete attribute',
+    sendInputData: 'please input the sending data',
+    operationTime: 'operation time',
+    operationUsers: 'operation users',
+    operationType: 'operation type',
     command: 'command',
     telemetry: 'telemetry',
     join: 'join',

@@ -95,7 +95,7 @@ const copy = async param => {
   selection?.removeAllRanges();
   selection?.addRange(range);
   document.execCommand('Copy');
-  window.$message?.success('复制成功');
+  window.$message?.success($t('theme.configOperation.copySuccess'));
 };
 </script>
 

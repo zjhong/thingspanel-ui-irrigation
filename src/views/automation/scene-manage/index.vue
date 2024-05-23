@@ -137,7 +137,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'left',
     minWidth: '140px',
     render: row => {
@@ -170,7 +170,7 @@ const columns: Ref<any> = ref([
 
 const execution_result_options = ref([
   {
-    label: '全部',
+    label: $t('custom.device_details.whole'),
     value: ''
   },
   {

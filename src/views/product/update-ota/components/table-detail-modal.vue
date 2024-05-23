@@ -194,7 +194,7 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   {
     key: 'status',
     title: $t('page.product.update-ota.statusTask'),
-    // title: '状态',
+    // title: $t('generate.status'),
     render: (row: UpgradeTaskDetail) => {
       const text = {
         1: $t('page.product.update-ota.pendingTask'), // 待推送,

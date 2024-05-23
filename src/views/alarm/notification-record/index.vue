@@ -91,7 +91,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'send_result',
-    title: '发送结果',
+    title: $t('custom.device_details.sendResults'),
     minWidth: '140px',
     align: 'left'
   },

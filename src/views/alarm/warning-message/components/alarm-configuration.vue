@@ -144,7 +144,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
 
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     minWidth: '200px',
     align: 'center',
     render: row => {

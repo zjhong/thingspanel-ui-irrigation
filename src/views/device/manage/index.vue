@@ -189,7 +189,7 @@ const actions = [
   },
   {
     label: () => $t('custom.devicePage.delete'),
-    theKey: '删除',
+    theKey: $t('custom.devicePage.delete'),
     callback: async row => {
       await deleteDevice({ id: row?.id });
     }
@@ -202,7 +202,7 @@ const searchConfigs = ref<SearchConfig[]>([
     label: $t('custom.devicePage.group'),
     type: 'tree-select',
     multiple: false,
-    options: [{ label: '分组', key: '' }],
+    options: [{ label: $t('generate.group'), key: '' }],
     loadOptions: getDeviceGroupOptions
   },
   {

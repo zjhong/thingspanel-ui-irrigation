@@ -3,6 +3,7 @@ import { pzh_cn } from '@/locales/langs/页面国际化文件';
 import { czh_cn } from './你新增的路由相关的国际化';
 
 const local: App.I18n.Schema = {
+  custom: pzh_cn,
   default: '',
   system: {
     title: 'System Name: {name}'
@@ -32,7 +33,6 @@ const local: App.I18n.Schema = {
     lookForward: '敬请期待',
     modify: '修改',
     modifySuccess: '修改成功',
-    operate: '操作',
     pleaseCheckValue: '请检查输入的值是否合法',
     refresh: '刷新',
     reset: '重置',
@@ -129,6 +129,7 @@ const local: App.I18n.Schema = {
     themeDrawerTitle: '主题配置',
     pageFunTitle: '页面功能',
     configOperation: {
+      copySuccess: '复制成功',
       copyConfig: '复制配置',
       copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
       resetConfig: '重置配置',
@@ -500,7 +501,6 @@ const local: App.I18n.Schema = {
           commandIssuanceTime: '指令下发时间',
           instructionContent: '指令内容',
           result: '结果',
-          operationType: '操作类型',
           detail: '详情'
         }
       },
@@ -527,7 +527,6 @@ const local: App.I18n.Schema = {
         log: {
           planDetail: '(计划名称) 计划日志',
           runTime: '执行时间',
-          operationType: '操作类型',
           runResult: '执行结果',
           detail: '详情'
         },
@@ -536,8 +535,7 @@ const local: App.I18n.Schema = {
           spaceOrArea: '空间/区域',
           orderContent: '指令内容',
           result: '结果',
-          detail: '详情',
-          actionType: '操作类型'
+          detail: '详情'
         }
       },
       rotation: {
@@ -577,6 +575,10 @@ const local: App.I18n.Schema = {
       required: '请输入手机号',
       invalid: '手机号格式不正确'
     },
+    manycheck: {
+      required: '输入的值与密码不一致',
+      invalid: ''
+    },
     pwd: {
       required: '请输入密码',
       invalid: '密码格式不正确'
@@ -611,6 +613,7 @@ const local: App.I18n.Schema = {
   },
   dashboard_panel: {
     addKanBan: '新建看板',
+    editKanban: '编辑看板',
     cardName: {
       date: {
         january: '1月',
@@ -725,6 +728,8 @@ const local: App.I18n.Schema = {
       PleaseEnterADescription: '请输入描述',
       description: '描述',
       attributeName: '属性名称',
+      updateTime: '更新时间',
+      attributeValue: '属性',
       attributeIdentifier: '属性标识符',
       eventName: '事件名称',
       eventIdentifier: '事件标识符',
@@ -760,8 +765,12 @@ const local: App.I18n.Schema = {
       PleaseEeventIdentifier: '请输入事件标识符'
     }
   },
-  custom: pzh_cn,
   generate: {
+    errorMessage: '错误信息',
+    returnSuccess: '返回成功',
+    returnFail: '返回失败',
+    sendingSuccess: '发送失败',
+    sendingFail: '发送成功',
     code: '代码',
     name: '姓名',
     greeting: '你好',

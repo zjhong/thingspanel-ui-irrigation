@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { NButton, NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
+import { $t } from '@/locales';
 import DistributionAndTable from '@/views/device/details/modules/public/distribution-and-table.vue';
 import { attributeDataPub, deleteAttributeDataSet, getAttributeDataSet, getAttributeDataSetLogs } from '@/service/api';
 defineProps<{
@@ -10,21 +11,21 @@ defineProps<{
 const attributeRef = ref();
 const columns0 = [
   { title: '属性标识符', minWidth: '140px', key: 'key' },
-  { title: '属性名称', minWidth: '140px', key: 'data_name' },
+  { title: $t('device_template.table_header.attributeName'), minWidth: '140px', key: 'data_name' },
   {
-    title: '属性值',
+    title: $t('device_template.table_header.attributeValue'),
     minWidth: '140px',
     key: 'value',
     render: row => `${row.value}${row.unit !== null ? row.unit : ''}`
   },
   {
-    title: '更新时间',
+    title: $t('device_template.table_header.updateTime'),
     minWidth: '140px',
     key: 'created_at',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   {
-    title: '操作',
+    title: $t('common.action'),
     key: 'created_at',
     minWidth: '140px',
     render: row => (
@@ -37,10 +38,10 @@ const columns0 = [
         {{
           trigger: () => (
             <NButton text size="small">
-              删除
+              {$t('common.delete')}
             </NButton>
           ),
-          default: () => '确认删除'
+          default: () => $t('common.confirmDelete')
         }}
       </NPopconfirm>
     )
@@ -51,9 +52,9 @@ const columns0 = [
 const formatOperationType = status => {
   switch (status) {
     case '1':
-      return '手动操作';
+      return $t('custom.device_details.manualOperation');
     case '2':
-      return '自动触发';
+      return $t('custom.device_details.automaticTriggering');
     default:
       return '';
   }
@@ -63,18 +64,17 @@ const formatOperationType = status => {
 const formatStatus = status => {
   switch (status) {
     case '1':
-      return '发送成功';
+      return $t('generate.sendingSuccess');
     case '2':
-      return '发送失败';
+      return $t('generate.sendingFail');
     case '3':
-      return '返回成功';
+      return $t('generate.returnSuccess');
     case '4':
-      return '返回失败';
+      return $t('generate.returnFail');
     default:
       return '';
   }
 };
-
 const columns = [
   {
     title: '属性下发时间',
@@ -82,11 +82,16 @@ const columns = [
     key: 'created_at',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
-  { title: '消息id', minWidth: '140px', key: 'message_id' },
-  { title: '发送内容', minWidth: '140px', key: 'data' },
-  { title: '操作类型', minWidth: '140px', key: 'operation_type', render: row => formatOperationType(row.status) },
-  { title: '状态', minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
-  { title: '错误信息', minWidth: '140px', key: 'error_message' }
+  { title: $t('custom.device_details.messageId'), minWidth: '140px', key: 'message_id' },
+  { title: $t('custom.device_details.sendContent'), minWidth: '140px', key: 'data' },
+  {
+    title: $t('custom.device_details.operationType'),
+    minWidth: '140px',
+    key: 'operation_type',
+    render: row => formatOperationType(row.status)
+  },
+  { title: $t('generate.status'), minWidth: '140px', key: 'status', render: row => formatStatus(row.status) },
+  { title: $t('generate.errorMessage'), minWidth: '140px', key: 'error_message' }
 ];
 </script>
 

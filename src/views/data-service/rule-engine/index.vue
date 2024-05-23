@@ -103,7 +103,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('generate.status'),
     align: 'left',
     render: row => {
       if (row.status) {
@@ -118,7 +118,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     width: '300px',
     render: row => {

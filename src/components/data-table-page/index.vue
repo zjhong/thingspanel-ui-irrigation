@@ -122,7 +122,7 @@ const generatedColumns = computed(() => {
     });
     // 添加操作列
     columns.push({
-      title: '操作',
+      title: $t('custom.groupPage.actions'),
       key: 'actions',
       width: 150,
       render: row => (
@@ -133,7 +133,7 @@ const generatedColumns = computed(() => {
         >
           <NSpace>
             {tableActions.map(action => {
-              if (action.theKey === '删除') {
+              if (action.theKey === $t('custom.devicePage.delete')) {
                 return (
                   <NPopconfirm
                     onPositiveClick={async e => {
@@ -149,7 +149,7 @@ const generatedColumns = computed(() => {
                           {typeof action.label === 'function' ? action.label() : action.label || ''}
                         </NButton>
                       ),
-                      default: () => '确认删除'
+                      default: () => $t('custom.groupPage.confirmDelete')
                     }}
                   </NPopconfirm>
                 );

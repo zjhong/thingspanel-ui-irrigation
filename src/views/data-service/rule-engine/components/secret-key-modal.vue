@@ -43,7 +43,7 @@ function handleCopy() {
     return;
   }
   copy(props.secretKey);
-  window.$message?.success(`复制成功：${props.secretKey}`);
+  window.$message?.success(`$t('theme.configOperation.copySuccess')：${props.secretKey}`);
 }
 </script>
 

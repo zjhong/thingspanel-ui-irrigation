@@ -51,15 +51,15 @@ const total = ref(0);
 const showLog = ref(false);
 const device_order = ref('');
 const operationOptions = [
-  { label: '全部', value: '' },
-  { label: '手动操作', value: '1' },
-  { label: '触发操作', value: '2' }
+  { label: $t('custom.device_details.whole'), value: '' },
+  { label: $t('custom.device_details.manualOperation'), value: '1' },
+  { label: $t('custom.device_details.triggerOperation'), value: '2' }
   // 其他操作类型选项...
 ];
 const resultOptions = [
-  { label: '全部', value: '' },
-  { label: '成功', value: '1' },
-  { label: '失败', value: '2' }
+  { label: $t('custom.device_details.whole'), value: '' },
+  { label: $t('custom.devicePage.success'), value: '1' },
+  { label: $t('custom.devicePage.fail'), value: '2' }
   // 其他发送结果选项...
 ];
 const cardHeight = ref(160); // 卡片的高度
@@ -109,23 +109,26 @@ const { status, send, close } = useWebSocket(wsUrl, {
 const columns = [
   { title: $t('custom.device_details.alarm'), minWidth: '140px', key: 'data' },
   {
-    title: '操作类型',
+    title: $t('custom.device_details.operationType'),
     key: 'operation_type',
     minWidth: '140px',
-    render: row => (row.operation_type === '1' ? '手动操作' : '自动触发')
+    render: row =>
+      row.operation_type === '1'
+        ? $t('custom.device_details.manualOperation')
+        : $t('custom.device_details.manualOperation')
   },
-  { title: '操作用户', minWidth: '140px', key: 'username' },
+  { title: $t('custom.device_details.operationUsers'), minWidth: '140px', key: 'username' },
   {
-    title: '操作时间',
+    title: $t('custom.device_details.operationTime'),
     key: 'created_at',
     minWidth: '140px',
     render: row => dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss')
   },
   {
-    title: '发送结果',
+    title: $t('custom.device_details.sendResults'),
     minWidth: '140px',
     key: 'status',
-    render: row => (row.status === '1' ? '成功' : '失败')
+    render: row => (row.status === '1' ? $t('custom.devicePage.success') : $t('custom.devicePage.fail'))
   }
 ];
 const requestSimulationList = async () => {
@@ -148,7 +151,7 @@ const openUpLog = () => {
 
 const sendSimulationList = async () => {
   if (!device_order.value) {
-    window.$message?.error('请输入发送数据');
+    window.$message?.error($t('custom.device_details.sendInputData'));
     return;
   }
   const { error } = await sendSimulation({
@@ -223,7 +226,7 @@ getDeviceDetail();
 
 const options = ref([
   {
-    label: '删除属性',
+    label: $t('custom.device_details.deleteAttribute'),
     key: '1'
   }
 ]);
@@ -251,7 +254,7 @@ const copy = event => {
   const input = event.target;
   input.select();
   document.execCommand('copy');
-  window.$message?.success('复制成功');
+  window.$message?.success($t('theme.configOperation.copySuccess'));
 };
 
 const sends = async () => {
@@ -355,8 +358,16 @@ const getPlatform = computed(() => {
       :class="getPlatform ? 'w-90%' : 'w-600px'"
     >
       <NCard>
-        <HistoryData v-if="modelType === '历史'" :device-id="telemetryId" :the-key="telemetryKey" />
-        <TimeSeriesData v-if="modelType === '时序'" :device-id="telemetryId" :the-key="telemetryKey" />
+        <HistoryData
+          v-if="modelType === $t('custom.device_details.history')"
+          :device-id="telemetryId"
+          :the-key="telemetryKey"
+        />
+        <TimeSeriesData
+          v-if="modelType === $t('custom.device_details.sequential')"
+          :device-id="telemetryId"
+          :the-key="telemetryKey"
+        />
       </NCard>
     </n-modal>
     <!-- 第二行 -->
@@ -399,7 +410,7 @@ const getPlatform = computed(() => {
                   size="24"
                   @click="
                     () => {
-                      modelType = '历史';
+                      modelType = $t('custom.device_details.history');
                       telemetryKey = i.key;
                       telemetryId = i.device_id;
                       showHistory = true;
@@ -414,7 +425,7 @@ const getPlatform = computed(() => {
                   size="24"
                   @click="
                     () => {
-                      modelType = '时序';
+                      modelType = $t('custom.device_details.sequential');
                       telemetryKey = i.key;
                       telemetryId = i.device_id;
                       showHistory = true;

@@ -16,7 +16,7 @@ function handleCopy() {
     return;
   }
   copy(source.value);
-  window.$message?.success(`$t('theme.configOperation.copySuccess')：${source.value}`);
+  window.$message?.success(`${$t('theme.configOperation.copySuccess')}：${source.value}`);
 }
 </script>
 

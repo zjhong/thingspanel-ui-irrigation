@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const configFormRef = ref<HTMLElement & FormInst>();
 
-const modalTitle = ref('添加');
+const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 const scripTypeOpt = ref([
   {
@@ -83,7 +83,7 @@ const showModal = ref(false);
 
 const openModal = (type: any, item: any) => {
   modalTitle.value = type;
-  if (modalTitle.value === '编辑') {
+  if (modalTitle.value === $t('common.edit')) {
     // 查询详情
     configForm.value = JSON.parse(JSON.stringify(item));
   }
@@ -242,7 +242,7 @@ onMounted(() => {
       <div class="item-desc description">{{ item.description }}</div>
       <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
       <NFlex justify="end">
-        <NButton tertiary circle type="info" @click="openModal('编辑', item)">
+        <NButton tertiary circle type="info" @click="openModal($t('common.edit'), item)">
           <template #icon>
             <n-icon>
               <editIcon />

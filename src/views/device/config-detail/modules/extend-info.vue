@@ -186,14 +186,14 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}

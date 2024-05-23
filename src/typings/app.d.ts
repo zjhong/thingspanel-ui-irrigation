@@ -252,6 +252,12 @@ declare namespace App {
         title: string;
       };
       common: {
+        manageDevices: string;
+        screenNameNull: string;
+        addScreen: string;
+        editScreen: string;
+        editNameAndDesc: string;
+        visualEditing: string;
         withinOneYear: string;
         withinOneMonth: string;
         time: string;
@@ -1076,6 +1082,20 @@ declare namespace App {
         };
       };
       generate: {
+        editRule: string;
+        addRule: string;
+        annotation: string;
+        fieldName: string;
+        sqlInput: string;
+        selectStatus: string;
+        dataInterval: string;
+        appKey: string;
+        supportFlag: string;
+        IPwhitelist: string;
+        signatureMethod: string;
+        ruleName: string;
+        cropWaterDemand: string;
+        soilParam: string;
         commandIssuanceTime: string;
         issueCommand: string;
         commandConetnt: string;

@@ -84,7 +84,7 @@ const formRef = ref<HTMLElement & FormInst>();
 type FormModel = Pick<DataService.Data, any>;
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入规则名称'),
+  name: createRequiredFormRule($t('generate.ruleName')),
   description: createRequiredFormRule('请输入通知组描述'),
   notification_type: createRequiredFormRule('请选择通知方式')
 };
@@ -142,8 +142,8 @@ async function handleSubmit() {
   }
 
   // const titles: Record<ModalType, string> = {
-  //   add: '添加',
-  //   edit: '编辑'
+  //   add: $t('generate.add'),
+  //   edit: $t('common.edit')
   // };
   // window.$message?.success(`${titles[props.type]}成功!`);
   emit('getTableData');

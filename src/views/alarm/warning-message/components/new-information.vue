@@ -100,7 +100,7 @@ async function list() {
       tableData.value = data.list;
       const operatorBtn: { btnName: string; type: string; color: string }[] = [
         {
-          btnName: '编辑',
+          btnName: $t('common.edit'),
           type: 'edit',
           color: 'info'
         },
@@ -110,15 +110,15 @@ async function list() {
           color: 'warning'
         },
         {
-          btnName: '删除',
+          btnName: $t('common.delete'),
           type: 'delete',
           color: 'error'
         }
       ];
       const operatorBtns: { btnName: string; type: string; color: string }[] = [
-        { btnName: '编辑', type: 'edit', color: 'info' },
+        { btnName: $t('common.edit'), type: 'edit', color: 'info' },
         { btnName: '启用', type: 'enable', color: 'success' },
-        { btnName: '删除', type: 'delete', color: 'error' }
+        { btnName: $t('common.delete'), type: 'delete', color: 'error' }
       ];
       // eslint-disable-next-line array-callback-return
       tableData.value.map(item => {
@@ -210,7 +210,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           return h(
             <NPopconfirm onPositiveClick={() => handleDeleteTable(row)}>
               {{
-                default: () => '确认删除',
+                default: () => $t('common.confirmDelete'),
                 trigger: () => (
                   <NButton type={item.color} size={'small'}>
                     {item.btnName}
@@ -259,7 +259,7 @@ async function deleteInfo() {
   const { data } = await delInfo(deleteId.value);
   console.log('删除', data);
   if (!data) {
-    message.success('删除成功');
+    message.success($t('common.deleteSuccess'));
   } else {
     message.error('删除失败');
   }

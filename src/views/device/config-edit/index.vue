@@ -10,7 +10,7 @@ import { $t } from '@/locales';
 const route = useRoute();
 // const message = useMessage();
 const configId = ref(route.query.id || null);
-const modalTitle = ref('添加');
+const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 const isEdit = ref(false);
 
@@ -101,7 +101,7 @@ watch(
   () => configId.value,
   async newId => {
     if (newId) {
-      modalTitle.value = '编辑';
+      modalTitle.value = $t('common.edit');
     }
   }
 );
@@ -109,12 +109,12 @@ watch(
 onMounted(async () => {
   // configId.value=<string>route.query.id || ''
   if (configId.value) {
-    modalTitle.value = '编辑';
+    modalTitle.value = $t('common.edit');
     isEdit.value = true;
     await getConfig();
   } else {
     isEdit.value = false;
-    modalTitle.value = '添加';
+    modalTitle.value = $t('generate.add');
   }
   getDeviceTemplate();
 });

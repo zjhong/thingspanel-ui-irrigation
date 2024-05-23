@@ -128,14 +128,14 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
             查看密钥
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}

@@ -46,8 +46,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加规则',
-    edit: '编辑规则'
+    add: $t('generate.addRule'),
+    edit: $t('generate.editRule')
   };
   return titles[props.type];
 });
@@ -62,16 +62,16 @@ type FormModel = Pick<
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入规则名称'),
-  signMode: createRequiredFormRule('请选择签名方式'),
-  ip: createRequiredFormRule('请输入IP白名单'),
-  flag: createRequiredFormRule('请选择接口支持标志'),
-  desc: createRequiredFormRule('请输入描述'),
-  appKey: createRequiredFormRule('请输入appKey'),
-  dataInterval: createRequiredFormRule('请输入推送数据间隔'),
-  SQL: createRequiredFormRule('请输入SQL'),
-  status: createRequiredFormRule('请选择状态'),
-  SQLWritingAid: createRequiredFormRule('请选择状态')
+  name: createRequiredFormRule($t('generate.ruleName')),
+  signMode: createRequiredFormRule($t('generate.signatureMethod')),
+  ip: createRequiredFormRule($t('generate.IPwhitelist')),
+  flag: createRequiredFormRule($t('generate.supportFlag')),
+  desc: createRequiredFormRule($t('device_template.table_header.PleaseEnterADescription')),
+  appKey: createRequiredFormRule($t('generate.supportFlag')),
+  dataInterval: createRequiredFormRule($t('generate.dataInterval')),
+  SQL: createRequiredFormRule($t('generate.dataInterval')),
+  status: createRequiredFormRule($t('generate.selectStatus')),
+  SQLWritingAid: createRequiredFormRule($t('generate.selectStatus'))
 };
 
 function createDefaultFormModel(): FormModel {
@@ -112,7 +112,7 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate();
   const titles: Record<ModalType, string> = {
-    add: '添加',
+    add: $t('generate.add'),
     edit: '编辑'
   };
   window.$message?.success(`${titles[props.type]}成功!`);
@@ -129,17 +129,17 @@ interface Columns {
 const columns: Ref<DataTableColumns<Columns>> = ref([
   {
     key: 'name',
-    title: '字段名',
+    title: $t('generate.fieldName'),
     align: 'left'
   },
   {
     key: 'dataType',
-    title: '数据类型',
+    title: $t('device_template.table_header.dataType'),
     align: 'left'
   },
   {
     key: 'annotation',
-    title: '注释',
+    title: $t('generate.annotation'),
     align: 'left'
   }
 ]) as Ref<DataTableColumns<Columns>>;

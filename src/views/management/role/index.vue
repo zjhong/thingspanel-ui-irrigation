@@ -88,14 +88,14 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
       return (
         <NSpace justify={'center'}>
           <NButton type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -154,7 +154,7 @@ function handleEditPermission(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await delrles(rowId);
   if (!data.error) {
-    window.$message?.success('删除成功');
+    window.$message?.success($t('common.deleteSuccess'));
     getTableData();
   }
 }

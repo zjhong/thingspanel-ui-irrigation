@@ -9,6 +9,12 @@ const local: App.I18n.Schema = {
     title: 'System Name: {name}'
   },
   common: {
+    manageDevices: '管理设备',
+    screenNameNull: '大屏名称不能为空',
+    addScreen: '新建大屏',
+    editScreen: '编辑大屏',
+    editNameAndDesc: '编辑名称和描述',
+    visualEditing: '可视化编辑',
     withinOneYear: '日期范围不能超过一个年',
     withinOneMonth: '日期范围不能超过一个月',
     time: '时间',
@@ -771,6 +777,20 @@ const local: App.I18n.Schema = {
     }
   },
   generate: {
+    editRule: '编辑规则',
+    addRule: '添加规则',
+    annotation: '注释',
+    fieldName: '字段名',
+    selectStatus: '请选择状态',
+    sqlInput: '请输入SQL',
+    dataInterval: '请输入推送数据间隔',
+    appKey: '请输入appKey',
+    supportFlag: '请选择接口支持标志',
+    IPwhitelist: '请输入IP白名单',
+    signatureMethod: '请选择签名方式',
+    ruleName: '请输入规则名称',
+    cropWaterDemand: '作物需水量',
+    soilParam: '土壤参数',
     commandIssuanceTime: '命令下发时间',
     issueCommand: '下发命令',
     commandConetnt: '命令内容',

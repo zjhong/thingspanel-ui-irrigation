@@ -115,7 +115,7 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'device_number',
     minWidth: '140px',
-    title: '设备编码'
+    title: $t('page.irrigation.group.deviceCode')
   },
   {
     key: 'activate_flag',

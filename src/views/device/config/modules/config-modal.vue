@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   modalVisible: false,
   modalType: 'add'
 });
-const modalTitle = ref('添加');
+const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 
 function defaultConfigForm() {
@@ -75,9 +75,9 @@ watch(
   newValue => {
     visible.value = newValue;
     if (props.modalType === 'add') {
-      modalTitle.value = '添加';
+      modalTitle.value = $t('generate.add');
     } else {
-      modalTitle.value = '编辑';
+      modalTitle.value = $t('common.edit');
     }
     getDeviceTemplate();
   }

@@ -269,7 +269,7 @@ onMounted(() => {
 
 <template>
   <div class="linkage-edit">
-    <NCard :bordered="false" :title="`${configId ? '编辑' : '新增'}场景联动`">
+    <NCard :bordered="false" :title="`${configId ? $t('common.edit') : '新增'}场景联动`">
       <NForm
         ref="configFormRef"
         :model="configForm"

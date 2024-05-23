@@ -45,8 +45,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '添加规则',
-    edit: '编辑规则'
+    add: $t('generate.addRule'),
+    edit: $t('generate.editRule')
   };
   return titles[props.type];
 });
@@ -58,7 +58,7 @@ type FormModel = Pick<RuleEngine.Rule, 'name' | 'status'>;
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入规则名称'),
+  name: createRequiredFormRule($t('generate.ruleName')),
   status: createRequiredFormRule('请选择规则状态')
 };
 
@@ -92,8 +92,8 @@ function handleUpdateFormModelByModalType() {
 async function handleSubmit() {
   await formRef.value?.validate();
   const titles: Record<ModalType, string> = {
-    add: '添加',
-    edit: '编辑'
+    add: $t('generate.add'),
+    edit: $t('common.edit')
   };
   window.$message?.success(`${titles[props.type]}成功!`);
   emit('getTableData');

@@ -87,25 +87,25 @@ function RouterPush(url: string) {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'image_url',
-    title: '图片',
+    title: $t('page.product.list.productImage'),
     align: 'center',
     minWidth: '140px'
   },
   {
     key: 'name',
-    title: '区域名称',
+    title: $t('generate.area-name'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'irrigation_type',
-    title: '灌溉类型',
+    title: $t('generate.irrigation-type'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
-    title: '土壤类型',
+    title: $t('generate.soil-type'),
     align: 'left',
     minWidth: '140px',
     render: row => {
@@ -117,13 +117,13 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'crop_type',
-    title: '种植作物',
+    title: $t('generate.planting-crops'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'water_requirement',
-    title: '作物需水量',
+    title: $t('generate.cropWaterDemand'),
     align: 'left',
     minWidth: '140px',
     render: row => {
@@ -135,13 +135,13 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'area',
-    title: '区域面积',
+    title: $t('generate.area-size'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'area',
-    title: '土壤参数',
+    title: $t('generate.soilParam'),
     minWidth: '140px',
     align: 'left'
   },
@@ -154,17 +154,17 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleViewKey()}>
-            管理设备
+            {$t('common.manageDevices')}
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => RouterPush('/system-management-user/equipment-map')}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteArea(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -184,13 +184,13 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'irrigation_type',
-    title: '设备编码',
+    title: $t('page.irrigation.group.deviceCode'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
-    title: '空间/区域',
+    title: $t('page.irrigation.areaOrSpace'),
     minWidth: '140px',
     align: 'left',
     render: row => {
@@ -203,7 +203,7 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'crop_type',
     minWidth: '140px',
-    title: '设备类型',
+    title: $t('generate.device-type'),
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;
@@ -214,7 +214,7 @@ const editData = ref<DataService.Data | null>(null);
 
 function handleDeleteArea(rowId: string) {
   deleteArea(rowId);
-  window.$message?.success('删除成功');
+  window.$message?.success($t('common.deleteSuccess'));
   init();
 }
 

@@ -167,7 +167,7 @@ onMounted(() => {
     <div ref="fullui" class="h-edit-area flex bg-white">
       <n-drawer
         v-model:show="showingCardList"
-        :width="400"
+        :width="300"
         placement="left"
         :show-mask="false"
         style="box-shadow: 0 8px 16px 0 rgba(156, 107, 255, 0.4)"

@@ -67,7 +67,7 @@ defineExpose({
         w: data.layout?.w || props.defaultCardCol,
         h: data.layout?.h || 4,
         minW: data.layout?.minW || 1,
-        minH: data.layout?.minH || 2,
+        minH: data.layout?.minH || 1,
         i: generateUniqueNumberId(),
         data
       }

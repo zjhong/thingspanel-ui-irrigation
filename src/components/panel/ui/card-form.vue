@@ -13,11 +13,6 @@ const props = defineProps<{
   mobile?: boolean;
   deviceWebChartConfig: any;
 }>();
-const systemNorm = [
-  { label: '设备总数', value: 1 },
-  { label: '在线设备数量', value: 2 },
-  { label: '离线设备数量', value: 3 }
-];
 const store = usePanelStore();
 const defData = {
   cardId: '',
@@ -48,14 +43,6 @@ watch(
   },
   { deep: true }
 );
-
-const removeSource = (i: number) => {
-  if (state.data.dataSource.origin === 'system') {
-    state.data.dataSource.systemSource.splice(i, 1);
-  } else {
-    state.data.dataSource.deviceSource.splice(i, 1);
-  }
-};
 
 defineExpose({
   setCard: (data?: ICardData) => {
@@ -161,38 +148,6 @@ watch(
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
         <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
-            <NFormItem :label="$t('generate.data-source-type')">
-              <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
-                <NSpace>
-                  <NRadioButton value="system">{{ $t('generate.system') }}</NRadioButton>
-                  <NRadioButton value="device">{{ $t('generate.device') }}</NRadioButton>
-                </NSpace>
-              </NRadioGroup>
-            </NFormItem>
-            <div v-if="state.data.dataSource?.origin === 'system'">
-              <div v-for="(item, i) in state.data.dataSource.systemSource" :key="i" class="mb-4 flex space-x-2">
-                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm" />
-                <NInput v-model:value="item.name" :placeholder="$t('generate.data-source-name')" style="width: 200px" />
-                <NButton
-                  v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
-                  ghost
-                  tertiary
-                  type="warning"
-                  @click="removeSource(i)"
-                >
-                  <template #icon>
-                    <SvgIcon icon="material-symbols:delete-outline" />
-                  </template>
-                </NButton>
-              </div>
-              <NButton
-                v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
-                block
-                @click="state.data.dataSource?.systemSource?.push({})"
-              >
-                {{ $t('generate.add') }}
-              </NButton>
-            </div>
             <div v-if="state.data.dataSource?.origin === 'device'">
               <n-input-number
                 v-model:value="deviceCount"

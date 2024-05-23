@@ -241,7 +241,7 @@ watch(
           </NSpace>
         </template>
         <NTabs type="line" animated>
-          <NTabPane name="详情" :tab="$t('custom.grouping_details.detail')">
+          <NTabPane :name="$t('custom.devicePage.details')" :tab="$t('custom.grouping_details.detail')">
             <NDescriptions label-class="min-w-100px" label-placement="top" bordered :column="6">
               <NDescriptionsItem :label="$t('custom.grouping_details.groupLevel')">
                 {{ details_data.tier.group_path }}
@@ -302,7 +302,7 @@ watch(
             />
           </NTabPane>
 
-          <NTabPane name="编辑" :tab="$t('custom.grouping_details.setting')">
+          <NTabPane name="$t('common.edit')" :tab="$t('custom.grouping_details.setting')">
             <NButton type="primary" @click="showGroupModal">{{ $t('custom.grouping_details.detail') }}</NButton>
 
             <AddOrEditDevices

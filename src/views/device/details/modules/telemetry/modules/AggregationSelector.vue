@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { TimeOutline } from '@vicons/ionicons5';
 import { Circle24Regular, Target20Regular } from '@vicons/fluent';
 import { addYears, differenceInDays, differenceInHours, differenceInMonths } from 'date-fns';
-
+import { $t } from '@/locales';
 const emit = defineEmits<{
   (event: 'update:value', value): void;
 }>();
@@ -154,7 +154,7 @@ const checkDateRange = value => {
   const [start, end] = value;
   if (start && end && addYears(start, 1) < end) {
     dateRange.value = null;
-    window.NMessage.error('日期范围不能超过一个年');
+    window.NMessage.error($t('common.withinOneYear'));
   } else {
     aggregation_data.value.start_time = start;
     aggregation_data.value.end_time = end;

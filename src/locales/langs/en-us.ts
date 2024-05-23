@@ -8,6 +8,9 @@ const local: App.I18n.Schema = {
     title: 'ThingsPanel'
   },
   common: {
+    withinOneYear: 'The date range cannot exceed one year',
+    withinOneMonth: 'The date range cannot exceed one month',
+    time: 'time',
     complete: 'Complete',
     remark: 'Remark',
     action: 'Action',
@@ -32,7 +35,6 @@ const local: App.I18n.Schema = {
     lookForward: 'Coming soon',
     modify: 'Modify',
     modifySuccess: 'Modify Success',
-    operate: 'Operate',
     pleaseCheckValue: 'Please check whether the value is valid',
     refresh: 'Refresh',
     reset: 'Reset',
@@ -129,6 +131,7 @@ const local: App.I18n.Schema = {
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
     configOperation: {
+      copySuccess: 'Copy Success',
       copyConfig: 'Copy Config',
       copySuccessMsg: 'Copy Success, Please replace the variable "themeSettings" in "src/theme/settings.ts"',
       resetConfig: 'Reset Config',
@@ -501,7 +504,6 @@ const local: App.I18n.Schema = {
           commandIssuanceTime: 'Command Issuance Time',
           instructionContent: 'Instruction Content',
           result: 'Result',
-          operationType: 'Operation Type',
           detail: 'Detail'
         }
       },
@@ -528,7 +530,6 @@ const local: App.I18n.Schema = {
         log: {
           planDetail: 'Plan Log',
           runTime: 'Run Time',
-          operationType: 'Operation Type',
           runResult: 'Run Result',
           detail: 'Detail'
         },
@@ -537,8 +538,7 @@ const local: App.I18n.Schema = {
           spaceOrArea: 'SpaceOrArea',
           orderContent: 'Order Content',
           result: 'Result',
-          detail: 'Detail',
-          actionType: 'ActionType'
+          detail: 'Detail'
         }
       },
       rotation: {
@@ -569,6 +569,10 @@ const local: App.I18n.Schema = {
     }
   },
   form: {
+    manycheck: {
+      required: 'The entered value does not match the password',
+      invalid: ''
+    },
     required: 'Cannot be empty',
     userName: {
       required: 'Please enter user name',
@@ -612,6 +616,7 @@ const local: App.I18n.Schema = {
   },
   dashboard_panel: {
     addKanBan: 'NewKanban',
+    editKanban: 'EditKanban',
     cardName: {
       date: {
         january: 'January',
@@ -717,12 +722,16 @@ const local: App.I18n.Schema = {
     addAndEditEvents: 'AddAndEditEvents',
     addAndEditCommand: 'AddAndEditCommand',
     table_header: {
+      eventContent: 'Event content',
       dataName: 'DataName',
+      updateTime: 'updateTime',
+      eventReportingTime: 'Event reporting time',
       dataIdentifier: 'DataIdentifier',
       readAndWriteSign: 'ReadAndWriteSign',
       dataType: 'DataType',
       unit: 'Unit',
       description: 'Description',
+      attributeValue: 'attributeValue',
       attributeName: 'AttributeName',
       attributeIdentifier: 'AttributeIdentifier',
       eventName: 'EventName',
@@ -763,6 +772,17 @@ const local: App.I18n.Schema = {
   },
   custom: pen,
   generate: {
+    commandIssuanceTime: 'Command issuance time',
+    issueCommand: 'issue command',
+    commandConetnt: 'command conetnt',
+    selectSubDevices: 'Please select sub devices',
+    setSubDevices: 'Set up sub devices',
+    unbind: 'unbind',
+    errorMessage: 'error-message',
+    returnSuccess: 'return success',
+    returnFail: 'return fail',
+    sendingFail: 'sending fail',
+    sendingSuccess: 'sending success',
     code: 'code',
     name: 'name',
     greeting: 'hello',

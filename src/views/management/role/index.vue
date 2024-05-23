@@ -81,7 +81,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     minWidth: '140px',
     render: row => {

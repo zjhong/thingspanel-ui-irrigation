@@ -76,7 +76,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'operation_type',
-    title: () => $t('page.irrigation.time.log.operationType'),
+    title: () => $t('custom.device_details.operationType'),
     align: 'center'
   },
   {

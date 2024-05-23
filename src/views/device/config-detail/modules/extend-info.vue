@@ -180,7 +180,7 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'operate',
     minWidth: '140px',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     render: (row: any) => {
       return (

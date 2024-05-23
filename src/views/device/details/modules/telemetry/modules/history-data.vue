@@ -61,9 +61,9 @@ const pagination = reactive({
 const dateRange = ref<[number, number] | null>(null);
 const tableData = ref<HistoryData[]>([]);
 const columns = [
-  { title: '时间', key: 'time', render: row => dayjs(row.ts).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '数据标识符', key: 'key' },
-  { title: '值', key: 'value' }
+  { title: $t('common.time'), key: 'time', render: row => dayjs(row.ts).format('YYYY-MM-DD HH:mm:ss') },
+  { title: $t('device_template.table_header.dataIdentifier'), key: 'key' },
+  { title: $t('generate.fieldValue'), key: 'value' }
 ];
 const getTelemetryHistoryData = async () => {
   if (!props.deviceId && !props.theKey) {
@@ -92,7 +92,7 @@ const checkDateRange = value => {
   const [start, end] = value;
   if (start && end && addMonths(start, 1) < end) {
     dateRange.value = null;
-    message.error('日期范围不能超过一个月');
+    message.error($t('common.withinOneMonth'));
   } else {
     params.start_time = start;
     params.end_time = end;

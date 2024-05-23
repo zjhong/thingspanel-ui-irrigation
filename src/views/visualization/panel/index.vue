@@ -50,7 +50,7 @@ const fetchBoards = async () => {
 // 提交表单
 const submitForm = async () => {
   if (!formData.name) {
-    message.error('看板名称不能为空');
+    message.error($t('custom.home.kanbanNameNull'));
     return;
   }
 
@@ -169,7 +169,7 @@ onMounted(fetchBoards);
     <!-- 新建和编辑看板的模态框 -->
     <NModal
       v-model:show="showModal"
-      :title="isEditMode ? '编辑看板' : '新建看板'"
+      :title="isEditMode ? $t('dashboard_panel.editKanban') : $t('dashboard_panel.addKanBan')"
       :class="getPlatform ? 'w-90%' : 'w-600px'"
     >
       <NCard bordered>
@@ -181,8 +181,8 @@ onMounted(fetchBoards);
             <NSelect
               v-model:value="formData.home_flag"
               :options="[
-                { label: '是', value: 'Y' },
-                { label: '否', value: 'N' }
+                { label: $t('common.yesOrNo.yes'), value: 'Y' },
+                { label: $t('common.yesOrNo.no'), value: 'N' }
               ]"
             />
           </NFormItem>

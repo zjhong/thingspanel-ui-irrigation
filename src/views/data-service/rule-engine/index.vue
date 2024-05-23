@@ -103,7 +103,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('generate.status'),
     align: 'left',
     render: row => {
       if (row.status) {
@@ -118,7 +118,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     width: '300px',
     render: row => {
@@ -211,39 +211,41 @@ init();
 </script>
 
 <template>
-  <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
-    <template #header-extra>
-      <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
-    </template>
-    <div class="h-full flex-col">
-      <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
-        <NFormItem :label="$t('generate.rule-name')" path="name">
-          <NInput v-model:value="queryParams.name" />
-        </NFormItem>
-        <NFormItem :label="$t('generate.signature-method')" path="status">
-          <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
-        </NFormItem>
-        <NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-        </NFormItem>
-      </NForm>
-      <NDataTable
-        :scroll-x="1088"
-        :columns="columns"
-        :data="tableData"
-        :loading="loading"
-        :pagination="pagination"
-        class="flex-1-hidden"
-      />
-      <TableActionModal
-        v-model:visible="visible"
-        :type="modalType"
-        :edit-data="editData"
-        @get-table-data="getTableData"
-      />
-    </div>
-  </NCard>
-  <SecretKeyModal v-model:visible="secretKeyVisible" :secret-key="secretKey"></SecretKeyModal>
+  <div>
+    <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
+      <template #header-extra>
+        <NButton type="primary" @click="handleAddTable">{{ $t('device_template.add') }}</NButton>
+      </template>
+      <div class="h-full flex-col">
+        <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
+          <NFormItem :label="$t('generate.rule-name')" path="name">
+            <NInput v-model:value="queryParams.name" />
+          </NFormItem>
+          <NFormItem :label="$t('generate.signature-method')" path="status">
+            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
+          </NFormItem>
+          <NFormItem>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+          </NFormItem>
+        </NForm>
+        <NDataTable
+          :scroll-x="1088"
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          class="flex-1-hidden"
+        />
+        <TableActionModal
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          @get-table-data="getTableData"
+        />
+      </div>
+    </NCard>
+    <SecretKeyModal v-model:visible="secretKeyVisible" :secret-key="secretKey"></SecretKeyModal>
+  </div>
 </template>
 
 <style scoped></style>

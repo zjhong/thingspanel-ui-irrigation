@@ -3,6 +3,7 @@ import { defineProps, reactive, ref, watch } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import dayjs from 'dayjs';
 import { deviceTelemetryList } from '@/card/chart-card/curve/api';
+import { $t } from '@/locales';
 import ChartComponent from './ChartComponent.vue';
 import AggregationSelector from './AggregationSelector.vue';
 import { useLoading } from '~/packages/hooks';
@@ -20,8 +21,8 @@ const props = defineProps<Created>();
 const selectedOption = ref();
 const { loading, startLoading, endLoading } = useLoading();
 const columns = [
-  { title: '时间', key: 'x', render: row => dayjs(row.x).format('YYYY-MM-DD HH:mm:ss') },
-  { title: '值', key: 'y' }
+  { title: $t('common.time'), key: 'x', render: row => dayjs(row.x).format('YYYY-MM-DD HH:mm:ss') },
+  { title: $t('generate.fieldValue'), key: 'y' }
 ];
 const pagination = reactive({
   page: 1,

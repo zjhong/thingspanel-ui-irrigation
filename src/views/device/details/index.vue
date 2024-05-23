@@ -141,15 +141,15 @@ onBeforeMount(() => {
 
 const save = async () => {
   if (!deviceData.value?.name) {
-    window.NMessage.error('请输入设备名称');
+    window.NMessage.error($t('custom.devicePage.enterDeviceName'));
     return;
   }
   if (!deviceData.value?.device_number) {
-    window.NMessage.error('请输入设备编号');
+    window.NMessage.error($t('custom.devicePage.enterDeviceNumber'));
     return;
   }
   if (deviceData.value?.device_number.length > 36) {
-    window.NMessage.error('设备编号不能超过36位');
+    window.NMessage.error($t('custom.devicePage.deviceNumberMax'));
     return;
   }
   device_number.value = deviceData.value.device_number;
@@ -238,7 +238,7 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
+            <!-- <span class="mr-2">{{ $t('generate.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"

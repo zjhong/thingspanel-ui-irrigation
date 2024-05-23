@@ -90,7 +90,7 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
     },
     {
       key: 'operate',
-      title: $t('common.operate'),
+      title: $t('common.action'),
       align: 'center',
       minWidth: '180px',
       render: row => (

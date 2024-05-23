@@ -104,6 +104,10 @@ async function renderMap() {
     // 创建一个新的 Vue 实例
     const app = createApp({
       render() {
+        const statusText: any = {
+          0: $t('custom.devicePage.online'),
+          1: $t('custom.devicePage.offline')
+        };
         // 在模板中使用 Naive UI 的组件
         return (
           <NCard
@@ -115,7 +119,7 @@ async function renderMap() {
               {$t('custom.devicePage.lastPushTime')}：{evt.geometry.data.ts || '-'}
             </div>
             <div>
-              {$t('custom.device_details.status')}：{evt.geometry.data.ts}
+              {$t('generate.status')}：{statusText[evt.geometry.data.is_online]}
             </div>
           </NCard>
         );

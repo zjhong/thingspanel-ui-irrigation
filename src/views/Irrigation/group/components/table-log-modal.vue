@@ -87,7 +87,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'operation_type',
-    title: () => $t('page.irrigation.group.log.operationType'),
+    title: () => $t('custom.device_details.operationType'),
     align: 'center'
   },
   {

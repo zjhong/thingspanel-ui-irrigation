@@ -147,7 +147,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     minWidth: '140px',
     render: row => {
@@ -178,7 +178,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'name',
-    title: '设备名称',
+    title: $t('custom.devicePage.deviceName'),
     minWidth: '140px',
     align: 'left'
   },

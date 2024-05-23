@@ -252,6 +252,9 @@ declare namespace App {
         title: string;
       };
       common: {
+        withinOneYear: string;
+        withinOneMonth: string;
+        time: string;
         complete: string;
         action: string;
         input: string;
@@ -276,7 +279,6 @@ declare namespace App {
         lookForward: string;
         modify: string;
         modifySuccess: string;
-        operate: string;
         pleaseCheckValue: string;
         refresh: string;
         reset: string;
@@ -340,6 +342,7 @@ declare namespace App {
         themeDrawerTitle: string;
         pageFunTitle: string;
         configOperation: {
+          copySuccess: string;
           copyConfig: string;
           copySuccessMsg: string;
           resetConfig: string;
@@ -672,7 +675,6 @@ declare namespace App {
               commandIssuanceTime: string;
               instructionContent: string;
               result: string;
-              operationType: string;
               detail: string;
             };
           };
@@ -699,7 +701,6 @@ declare namespace App {
             log: {
               planDetail: string;
               runTime: string;
-              operationType: string;
               runResult: string;
               detail: string;
             };
@@ -709,7 +710,6 @@ declare namespace App {
               orderContent: string;
               result: string;
               detail: string;
-              actionType: string;
             };
           };
           rotation: {
@@ -746,9 +746,9 @@ declare namespace App {
         pwd: FormMsg;
         code: FormMsg;
         email: FormMsg;
+        manycheck: FormMsg;
       };
       dropdown: Record<Global.DropdownKey, string>;
-
       icon: {
         themeConfig: string;
         themeSchema: string;
@@ -763,6 +763,7 @@ declare namespace App {
       };
       dashboard_panel: {
         addKanBan: string;
+        editKanban: string;
         cardName: {
           date: {
             january: string;
@@ -869,9 +870,13 @@ declare namespace App {
         addAndEditCommand: string;
         table_header: {
           dataName: string;
+          eventContent: string;
           dataIdentifier: string;
           readAndWriteSign: string;
           dataType: string;
+          eventReportingTime: string;
+          updateTime: string;
+          attributeValue: string;
           unit: string;
           description: string;
           attributeName: string;
@@ -917,9 +922,10 @@ declare namespace App {
           title: string;
           description: string;
           refresh: string;
+          kanbanNameNull: string;
         };
-
         groupPage: {
+          deviceAvailable: string;
           groupName: string;
           description: string;
           createdAt: string;
@@ -940,8 +946,11 @@ declare namespace App {
           modificationSuccess: string;
           additionSuccess: string;
         };
-
         devicePage: {
+          deviceNumberMax: string;
+          deviceNumberNotVvailable: string;
+          subDeviceAddress: string;
+          deviceKey: string;
           deviceName: string;
           deviceNumber: string;
           deviceConfig: string;
@@ -1032,6 +1041,21 @@ declare namespace App {
           confirm: string;
         };
         device_details: {
+          attributeDistributionTime: string;
+          messageId: string;
+          sendContent: string;
+          triggerOperation: string;
+          whole: string;
+          sendResults: string;
+          automaticTriggering: string;
+          manualOperation: string;
+          history: string;
+          sequential: string;
+          deleteAttribute: string;
+          sendInputData: string;
+          operationTime: string;
+          operationUsers: string;
+          operationType: string;
           telemetry: string;
           join: string;
           deviceAnalysis: string;
@@ -1045,7 +1069,6 @@ declare namespace App {
           settings: string;
           deviceNumber: string;
           deviceConfig: string;
-          status: string;
           online: string;
           offline: string;
           alarm: string;
@@ -1053,6 +1076,17 @@ declare namespace App {
         };
       };
       generate: {
+        commandIssuanceTime: string;
+        issueCommand: string;
+        commandConetnt: string;
+        selectSubDevices: string;
+        setSubDevices: string;
+        unbind: string;
+        errorMessage: string;
+        returnFail: string;
+        returnSuccess: string;
+        sendingFail: string;
+        sendingSuccess: string;
         code: string;
         name: string;
         greeting: string;

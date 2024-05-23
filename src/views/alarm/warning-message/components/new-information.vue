@@ -202,7 +202,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'actions',
     minWidth: '140px',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     render: (row: any) => {
       const operatorBtn = row.operatorBtn.map(item => {

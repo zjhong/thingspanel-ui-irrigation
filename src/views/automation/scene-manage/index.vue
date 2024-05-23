@@ -38,7 +38,7 @@ const sceneActivation = (item: any) => {
       if (!res.error) {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         await getData();
-        message.success('操作成功');
+        message.success($t('custom.grouping_details.operationSuccess'));
       }
     }
   });
@@ -95,7 +95,7 @@ const deleteScene = async (item: any) => {
       const res = await sceneDel(item.id);
       if (!res.error) {
         await getData();
-        message.success('操作成功');
+        message.success($t('custom.grouping_details.operationSuccess'));
       }
     }
   });
@@ -137,7 +137,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'left',
     minWidth: '140px',
     render: row => {
@@ -170,7 +170,7 @@ const columns: Ref<any> = ref([
 
 const execution_result_options = ref([
   {
-    label: '全部',
+    label: $t('custom.device_details.whole'),
     value: ''
   },
   {

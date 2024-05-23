@@ -95,7 +95,7 @@ const copy = event => {
   const input = event.target;
   input.select();
   document.execCommand('copy');
-  window.$message?.success('复制成功');
+  window.$message?.success($t('theme.configOperation.copySuccess'));
 };
 </script>
 

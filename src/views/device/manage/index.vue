@@ -189,7 +189,7 @@ const actions = [
   },
   {
     label: () => $t('custom.devicePage.delete'),
-    theKey: '删除',
+    theKey: $t('custom.devicePage.delete'),
     callback: async row => {
       await deleteDevice({ id: row?.id });
     }
@@ -202,7 +202,7 @@ const searchConfigs = ref<SearchConfig[]>([
     label: $t('custom.devicePage.group'),
     type: 'tree-select',
     multiple: false,
-    options: [{ label: '分组', key: '' }],
+    options: [{ label: $t('generate.group'), key: '' }],
     loadOptions: getDeviceGroupOptions
   },
   {
@@ -487,7 +487,13 @@ watch(
             :placeholder="$t('custom.devicePage.enterDeviceNumber')"
             class="max-w-240px"
           ></n-input>
-          <NText v-if="showMessage" :style="messageStyle">{{ buttonDisabled ? '设备编号不可用' : '设备可用' }}</NText>
+          <NText v-if="showMessage" :style="messageStyle">
+            {{
+              buttonDisabled
+                ? $t('custom.devicePage.deviceNumberNotVvailable')
+                : $t('custom.devicePage.enterDeviceNumber')
+            }}
+          </NText>
         </div>
         <n-button type="primary" :disabled="buttonDisabled" @click="completeAdd">
           {{ $t('custom.devicePage.finish') }}

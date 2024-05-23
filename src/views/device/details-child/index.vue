@@ -69,15 +69,15 @@ const close = async () => {
 };
 const save = async () => {
   if (!deviceDataStore?.deviceData?.name) {
-    window.NMessage.error('请输入设备名称');
+    window.NMessage.error($t('custom.devicePage.enterDeviceName'));
     return;
   }
   if (!deviceDataStore?.deviceData?.device_number) {
-    window.NMessage.error('请输入设备编号');
+    window.NMessage.error($t('custom.devicePage.enterDeviceNumber'));
     return;
   }
   if (deviceDataStore?.deviceData?.device_number.length > 36) {
-    window.NMessage.error('设备编号不能超过36位');
+    window.NMessage.error($t('custom.devicePage.deviceNumberMax'));
     return;
   }
   device_number.value = deviceDataStore.deviceData.device_number;
@@ -190,7 +190,7 @@ watch(
             <span style="color: blue">{{ deviceDataStore?.deviceData?.device_config_name || '--' }}</span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
+            <!-- <span class="mr-2">{{ $t('generate.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"

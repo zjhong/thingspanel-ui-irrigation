@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
 
-const plugList = ref([{ name: '不绑定', id: '' }]);
+const plugList = ref([{ name: $t('generate.unbind'), id: '' }]);
 
 const selectValue = ref();
 

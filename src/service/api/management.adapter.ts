@@ -70,7 +70,10 @@ function replaceKeys(data: ElegantConstRoute[]): ElegantRoute[] {
     if (item.parent_id === '0') {
       component = transformLayoutAndPageToComponent('base', item.element_type === 1 ? '' : homeRoutePath);
     } else {
-      component = transformLayoutAndPageToComponent('', homeRoutePath);
+      component = transformLayoutAndPageToComponent(
+        item.element_type === 1 ? 'base' : '',
+        item.element_type === 1 ? '' : homeRoutePath
+      );
     }
     return {
       // id: item.id,

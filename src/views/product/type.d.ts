@@ -20,6 +20,8 @@ type ProductLocal = {
     productNumberPlaceholder: string;
     productDescPlaceholder: string;
     deviceConfigPlaceholder: string;
+    query: string;
+    Reset: string;
     productKey: string;
     productImage: string;
     preRegister: string;

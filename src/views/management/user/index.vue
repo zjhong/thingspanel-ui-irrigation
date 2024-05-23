@@ -262,7 +262,7 @@ init();
 </script>
 
 <template>
-  <div class="overflow-auto">
+  <div>
     <NCard :title="$t('route.management_user')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm inline label-placement="left" :model="queryParams">

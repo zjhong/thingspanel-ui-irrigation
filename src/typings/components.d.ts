@@ -34,6 +34,7 @@ declare module 'vue' {
     IconIcRoundPlus: typeof import('~icons/ic/round-plus')['default']
     'IconMaterialSymbols:contractEditOutline': typeof import('~icons/material-symbols/contract-edit-outline')['default']
     'IconMaterialSymbols:deleteOutline': typeof import('~icons/material-symbols/delete-outline')['default']
+    'IconMaterialSymbols:editSquare': typeof import('~icons/material-symbols/edit-square')['default']
     'IconMaterialSymbols:mapRounded': typeof import('~icons/material-symbols/map-rounded')['default']
     'IconMaterialSymbols:refresh': typeof import('~icons/material-symbols/refresh')['default']
     'IconMaterialSymbols:tableRowsNarrowOutlineSharp': typeof import('~icons/material-symbols/table-rows-narrow-outline-sharp')['default']

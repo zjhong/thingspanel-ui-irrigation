@@ -31,6 +31,11 @@ const state = reactive({
   selectCard: null as null | ICardDefine,
   data: copy(defData)
 });
+const findCard = (id: string) => {
+  const cIds = id.split('-');
+  const cId = `${cIds[0]}-${cIds[1]}`;
+  return store.$state.cardMap.get(cId) || null;
+};
 
 const emit = defineEmits<{
   (e: 'update', data: ICardData): void;
@@ -49,7 +54,7 @@ defineExpose({
     state.selectCard = null;
     state.data = copy(data || defData);
     setTimeout(() => {
-      state.selectCard = store.$state.cardMap.get(state.data.cardId) || null;
+      state.selectCard = findCard(state.data.cardId);
       if (state.data.type === 'chart') state.tab = 'dataSource';
       else if (state.selectCard?.configForm) state.tab = 'config';
       else state.tab = 'basic';

@@ -16,7 +16,7 @@ import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
-import { deviceDetail, deviceUpdate } from '@/service/api/device';
+import { deviceAlarmStatus, deviceDetail, deviceUpdate } from '@/service/api/device';
 import { localStg } from '@/utils/storage';
 import { useRouterPush } from '@/hooks/common/router';
 import { createServiceConfig } from '~/env.config';
@@ -138,8 +138,14 @@ const clickConfig: () => void = () => {
     }
   });
 };
+const alarmStatus = ref(false);
+const getAlarmStatus = async () => {
+  const res = await deviceAlarmStatus({ device_id: d_id });
+  alarmStatus.value = res.data.alarm;
+};
 onBeforeMount(() => {
   getDeviceDetail();
+  getAlarmStatus();
 });
 
 const save = async () => {
@@ -253,17 +259,24 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <SvgIcon
-              local-icon="AlertFilled"
-              style="color: #ccc; margin-right: 5px"
-              class="text-20px text-primary"
-              :stroke="icon_type"
-            />
-            <!-- <span style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</span> -->
-
-            <span style="color: #ccc">
-              {{ $t('custom.device_details.noAlarm') }}
-            </span>
+            <template v-if="alarmStatus === true">
+              <SvgIcon
+                local-icon="AlertFilled"
+                style="color: #ee0808; margin-right: 5px"
+                class="text-20px text-primary"
+                :stroke="icon_type"
+              />
+              <span style="color: #ee0808">{{ $t('custom.device_details.alarm') }}</span>
+            </template>
+            <template v-if="alarmStatus === false">
+              <SvgIcon
+                local-icon="AlertFilled"
+                style="color: #ccc; margin-right: 5px"
+                class="text-20px text-primary"
+                :stroke="icon_type"
+              />
+              <span style="color: #ccc">{{ $t('custom.device_details.noAlarm') }}</span>
+            </template>
           </div>
         </NFlex>
       </div>

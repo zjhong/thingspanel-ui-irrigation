@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { cloneDeep } from 'lodash-es';
-import { GridItem, GridLayout } from '@/components/drg-grid-layout';
+import { onMounted, ref, watch } from 'vue';
+import { GridItem, GridLayout } from 'grid-layout-plus';
 import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
 import { KANBANCOLNUM, KANBANROWHEIGHT } from '@/constants/common';
 import { $t } from '@/locales';
@@ -12,30 +11,25 @@ const mouseAt = { x: -1, y: -1 };
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps<{
   isPreview: boolean;
-  responsive: boolean;
   layout: CardView[];
   addItem: (item: CardView) => void;
-  removeItem: (id: string) => void;
   selectCard: (item: CardView) => void;
-  updateLayouts: (layout: CardView[]) => void;
 }>();
 const wrapper = ref<HTMLElement>();
 const gridLayout = ref<InstanceType<typeof GridLayout>>();
-const theLayout = ref<CardView[]>(cloneDeep(props.layout));
+const theLayout = ref<CardView[]>([]);
 
 function onDrop(event) {
-  console.log(0, event);
   event.preventDefault();
   // eslint-disable-next-line @typescript-eslint/no-shadow
   // theLayout.value = theLayout.value.filter(item => item.i !== dropId);
   const data = event.dataTransfer.getData('application/json');
   const cardItem = JSON.parse(data);
-
+  console.log(cardItem);
   const minWh = {
     minW: 2,
     minH: 2
   };
-
   if (cardItem.cardItemBase.minWH.minW !== -1) {
     if (typeof cardItem.cardItemBase.minWH.minW === 'number') {
       minWh.minW = cardItem.cardItemBase.minWH.minW;
@@ -53,13 +47,10 @@ function onDrop(event) {
       minWh.minH = Math.ceil(Number(h) / KANBANROWHEIGHT);
     }
   }
-  if (props.responsive) {
-    minWh.minW = 2;
-    minWh.minH = 2;
-  }
   const rect = event.currentTarget.getBoundingClientRect();
   mouseAt.x = event.clientX - rect.left; // 鼠标位置相对于 drop-area 元素的 X 坐标
   mouseAt.y = event.clientY - rect.top; // 鼠标位置相对于 drop-area 元素的 Y 坐标
+  console.log(mouseAt.x, mouseAt.y);
 
   const itemId = cardItem?.cardItemBase?.renderID || `${theLayout.value.length.toString()}_${cardItem.cardItemBase.id}`;
   const item: CardView = {
@@ -85,26 +76,27 @@ function onDrop(event) {
       }
     }
   };
+
   props.addItem(item);
 }
 
-// eslint-disable-next-line vue/no-dupe-keys
-function remove(id: string) {
-  props.removeItem(id);
+function removeItem(id: string) {
+  const index = theLayout.value.findIndex(item => item.i === id);
+  if (index > -1) {
+    theLayout.value.splice(index, 1);
+  }
 }
-
-const layoutUpdated = layout => {
-  props.updateLayouts(layout);
-};
 
 watch(
   () => props.layout,
-  () => {
-    console.log(1);
-    theLayout.value = props.layout;
-  },
-  { deep: true }
+  val => {
+    theLayout.value = val;
+  }
 );
+onMounted(() => {
+  console.log('layout', props.layout);
+  theLayout.value = props.layout;
+});
 </script>
 
 <template>
@@ -124,9 +116,8 @@ watch(
         :restore-on-drag="true"
         :col-num="KANBANCOLNUM"
         :row-height="KANBANROWHEIGHT"
-        :responsive="responsive"
+        :responsive="isPreview"
         :margin="[10, 10]"
-        @layout-updated="layoutUpdated"
       >
         <GridItem
           v-for="item in theLayout"
@@ -137,8 +128,8 @@ watch(
           :w="item.w"
           :h="item.h"
           :i="item.i"
-          :min-w="responsive ? 2 : item.minW"
-          :min-h="responsive ? 2 : item.minH"
+          :min-w="item['minW']"
+          :min-h="item['minH']"
         >
           <div class="relative h-full w-full">
             <NIcon
@@ -153,7 +144,7 @@ watch(
               :show-icon="false"
               :negative-button-props="{ size: 'tiny' }"
               :positive-button-props="{ size: 'tiny' }"
-              :on-positive-click="() => remove(item.i as string)"
+              :on-positive-click="() => removeItem(item.i as string)"
             >
               <template #trigger>
                 <NIcon

@@ -1270,7 +1270,8 @@ const local: App.I18n.Schema = {
     firstElement: '一',
     secondElement: '二',
     thirdElement: '三',
-    individual: '个'
+    individual: '个',
+    'alarm-info': '告警详情'
   },
   kanban: {
     'add-cards': '添加卡片'

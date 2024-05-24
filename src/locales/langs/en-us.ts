@@ -1275,7 +1275,8 @@ const local: App.I18n.Schema = {
     firstElement: 'One',
     secondElement: 'Two',
     thirdElement: 'Three',
-    individual: 'individual'
+    individual: 'individual',
+    'alarm-info': 'alarm info'
   },
   kanban: {
     'add-cards': 'add cards'

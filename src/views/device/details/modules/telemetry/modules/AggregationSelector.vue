@@ -31,22 +31,22 @@ const aggregation_data = ref<AggregationData>({
 const dateRange = ref<[number, number] | null>(null);
 const timeOptions = [
   { label: $t('common.custom'), value: 'custom' },
-  { label: $t('common.custom'), value: 'last_5m' },
-  { label: '最近15分钟', value: 'last_15m' },
-  { label: '最近30分钟', value: 'last_30m' },
-  { label: '最近1小时', value: 'last_1h' },
-  { label: '最近3小时', value: 'last_3h' },
-  { label: '最近6小时', value: 'last_6h' },
-  { label: '最近12小时', value: 'last_12h' },
-  { label: '最近24小时', value: 'last_24h' },
-  { label: '最近3天', value: 'last_3d' },
-  { label: '最近7天', value: 'last_7d' },
-  { label: '最近15天', value: 'last_15d' },
-  { label: '最近30天', value: 'last_30d' },
-  { label: '最近60天', value: 'last_60d' },
-  { label: '最近90天', value: 'last_90d' },
-  { label: '最近半年', value: 'last_6m' },
-  { label: '最近1年', value: 'last_1y' }
+  { label: $t('common.last_5m'), value: 'last_5m' },
+  { label: $t('common.last_15m'), value: 'last_15m' },
+  { label: $t('common.last_30m'), value: 'last_30m' },
+  { label: $t('common.lastHours1'), value: 'last_1h' },
+  { label: $t('common.lastHours3'), value: 'last_3h' },
+  { label: $t('common.lastHours6'), value: 'last_6h' },
+  { label: $t('common.lastHours12'), value: 'last_12h' },
+  { label: $t('common.lastHours24'), value: 'last_24h' },
+  { label: $t('common.lastDays3'), value: 'last_3d' },
+  { label: $t('common.lastDays7'), value: 'last_7d' },
+  { label: $t('common.lastDays15'), value: 'last_15d' },
+  { label: $t('common.lastDays30'), value: 'last_30d' },
+  { label: $t('common.lastDays60'), value: 'last_60d' },
+  { label: $t('common.lastDays90'), value: 'last_90d' },
+  { label: $t('common.halfYear'), value: 'last_6m' },
+  { label: $t('common.lastYears1'), value: 'last_1y' }
 ];
 const timeWeighting = {
   custom: 0,

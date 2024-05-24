@@ -252,6 +252,21 @@ declare namespace App {
         title: string;
       };
       common: {
+        halfYear: string;
+        lastYears1: string;
+        lastDays90: string;
+        lastDays60: string;
+        lastDays30: string;
+        lastDays15: string;
+        lastDays7: string;
+        lastDays3: string;
+        lastHours24: string;
+        lastHours12: string;
+        lastHours6: string;
+        lastHours3: string;
+        lastHours1: string;
+        last_30m: string;
+        last_15m: string;
         last_5m: string;
         custom: string;
         average: string;

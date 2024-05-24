@@ -252,6 +252,34 @@ declare namespace App {
         title: string;
       };
       common: {
+        custom: string;
+        average: string;
+        months1: string;
+        days7: string;
+        hours6: string;
+        hours3: string;
+        minute2: string;
+        minute1: string;
+        seconds30: string;
+        notAggre: string;
+        rangeMustSelected: string;
+        alreadyScatterPlot: string;
+        switchScatterPlots: string;
+        alreadyToChart: string;
+        switchBarChart: string;
+        alreadyCurveChart: string;
+        switchLineChart: string;
+        deleteDeviceConfig: string;
+        addExtendedInfo: string;
+        editExtendedInfo: string;
+        extensionInfoDeleted: string;
+        enterName: string;
+        devicesSetting: string;
+        protocolConfig: string;
+        associatedDevices: string;
+        propertiesAndFunctions: string;
+        dataProces: string;
+        deleteProcessing: string;
         timeConditions: string;
         deviceConditions: string;
         timeFrame: string;
@@ -262,8 +290,8 @@ declare namespace App {
         browserNotSupport: string;
         formatFile: string;
         pleaseUploadit: string;
-        day1: string;
-        hour1: string;
+        days1: string;
+        hours1: string;
         minutes30: string;
         minutes10: string;
         minutes5: string;
@@ -1025,6 +1053,11 @@ declare namespace App {
           additionSuccess: string;
         };
         devicePage: {
+          attributeDistribution: string;
+          attributeReporting: string;
+          transmissionPreprocessing: string;
+          reportPreprocessing: string;
+          pushTime: string;
           handle: string;
           deviceNumberMax: string;
           deviceNumberNotVvailable: string;

@@ -30,7 +30,7 @@ const aggregation_data = ref<AggregationData>({
 });
 const dateRange = ref<[number, number] | null>(null);
 const timeOptions = [
-  { label: '自定义', value: 'custom' },
+  { label: $t('common.custom'), value: 'custom' },
   { label: '最近5分钟', value: 'last_5m' },
   { label: '最近15分钟', value: 'last_15m' },
   { label: '最近30分钟', value: 'last_30m' },
@@ -68,23 +68,23 @@ const timeWeighting = {
   last_1y: 12
 };
 const aggregationIntervalOptions = [
-  { label: '不聚合', value: 'no_aggregate', disabled: false },
-  { label: '30秒', value: '30s', disabled: false },
-  { label: '1分钟', value: '1m', disabled: false },
-  { label: '2分钟', value: '2m', disabled: false },
+  { label: $t('common.notAggre'), value: 'no_aggregate', disabled: false },
+  { label: $t('common.seconds30'), value: '30s', disabled: false },
+  { label: $t('common.minute1'), value: '1m', disabled: false },
+  { label: $t('common.minute2'), value: '2m', disabled: false },
   { label: $t('common.minutes5'), value: '5m', disabled: false },
   { label: $t('common.minutes10'), value: '10m', disabled: false },
   { label: $t('common.minutes30'), value: '30m', disabled: false },
-  { label: $t('common.hour1'), value: '1h', disabled: false },
-  { label: '3小时', value: '3h', disabled: false },
-  { label: '6小时', value: '6h', disabled: false },
-  { label: $t('common.day1'), value: '1d', disabled: false },
-  { label: '7天', value: '7d', disabled: false },
-  { label: '1个月', value: '1mo', disabled: false }
+  { label: $t('common.hours1'), value: '1h', disabled: false },
+  { label: $t('common.hours3'), value: '3h', disabled: false },
+  { label: $t('common.hours6'), value: '6h', disabled: false },
+  { label: $t('common.days1'), value: '1d', disabled: false },
+  { label: $t('common.days7'), value: '7d', disabled: false },
+  { label: $t('common.months1'), value: '1mo', disabled: false }
 ];
 const statisticsOptions = [
-  { label: '平均数 ', value: 'avg', disabled: false },
-  { label: '最大值', value: 'max', disabled: false }
+  { label: $t('common.average'), value: 'avg', disabled: false },
+  { label: $t('generate.max-value'), value: 'max', disabled: false }
 ];
 
 const aggregationTtemToFalse = (weight: number) => {

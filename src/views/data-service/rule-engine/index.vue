@@ -53,7 +53,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'name',
-    title: '名称',
+    title: $t('page.manage.menu.form.name'),
     align: 'left'
   },
   {
@@ -90,7 +90,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'desc',
-    title: '描述',
+    title: $t('custom.groupPage.description'),
     align: 'left'
   },
   {

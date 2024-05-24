@@ -117,11 +117,11 @@ const alarmLevel = ref([
 /** 触发时间下拉 */
 const alarmKeepTime = ref([
   {
-    label: '1分钟',
+    label: $t('common.minute1'),
     value: '1'
   },
   {
-    label: '2分钟',
+    label: $t('common.minute2'),
     value: '2'
   },
   {

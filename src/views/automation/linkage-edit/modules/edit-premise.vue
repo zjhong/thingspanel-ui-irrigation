@@ -439,11 +439,11 @@ const expirationTimeOptions = ref([
     value: 30
   },
   {
-    label: $t('common.hour1'),
+    label: $t('common.hours1'),
     value: 60
   },
   {
-    label: $t('common.day1'),
+    label: $t('common.days1'),
     value: 1140
   }
 ]);

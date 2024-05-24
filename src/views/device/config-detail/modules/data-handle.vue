@@ -29,19 +29,19 @@ const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 const scripTypeOpt = ref([
   {
-    label: '遥测上报预处理',
+    label: $t('custom.devicePage.reportPreprocessing'),
     value: 'A'
   },
   {
-    label: '遥测下发预处理',
+    label: $t('custom.devicePage.transmissionPreprocessing'),
     value: 'B'
   },
   {
-    label: '属性上报预处理',
+    label: $t('custom.devicePage.attributeReporting'),
     value: 'C'
   },
   {
-    label: '属性下发预处理',
+    label: $t('custom.devicePage.attributeDistribution'),
     value: 'D'
   }
 ]);
@@ -65,7 +65,7 @@ function defaultConfigForm() {
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入标题',
+    message: $t('generate.enter-title'),
     trigger: 'blur'
   },
   enable_flag: {
@@ -75,7 +75,7 @@ const configFormRules = ref({
   },
   script_type: {
     required: true,
-    message: '请选择处理类型',
+    message: $t('generate.select-processing-type'),
     trigger: 'change'
   }
 });
@@ -161,7 +161,7 @@ const handleSubmit = async () => {
 const deleteData = async (item: any) => {
   dialog.warning({
     title: $t('common.tip'),
-    content: '请确认是否删除该数据处理？',
+    content: $t('common.deleteProcessing'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -264,7 +264,7 @@ onMounted(() => {
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    :title="`${modalTitle}数据处理`"
+    :title="modalTitle + $t('common.dataProces')"
     :show-icon="false"
     :style="bodyStyle"
     :closable="false"

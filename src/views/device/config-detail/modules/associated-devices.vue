@@ -120,12 +120,12 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'activate_flag',
     minWidth: '140px',
-    title: '在线状态'
+    title: $t('custom.devicePage.onlineStatus')
   },
   {
     key: 'ts',
     minWidth: '140px',
-    title: '推送时间',
+    title: $t('custom.devicePage.pushTime'),
     render: row => {
       if (row.ts) {
         return moment(row.ts).format('YYYY-MM-DD hh:mm:ss');
@@ -141,7 +141,7 @@ const getDeviceList = async () => {
   queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
   res.data.list.map(sitem => {
-    sitem.activate_flag = sitem.is_online === 0 ? '离线' : '在线';
+    sitem.activate_flag = sitem.is_online === 0 ? $t('custom.devicePage.offline') : $t('custom.devicePage.online');
     return sitem;
   });
   configDevice.value = res.data.list || [];

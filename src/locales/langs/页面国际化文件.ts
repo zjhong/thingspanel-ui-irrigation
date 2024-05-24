@@ -27,6 +27,11 @@ export const pzh_cn: any = {
     additionSuccess: '新增成功'
   },
   devicePage: {
+    attributeDistribution: '属性下发预处理',
+    attributeReporting: '属性上报预处理',
+    transmissionPreprocessing: '遥测下发预处理',
+    reportPreprocessing: '遥测上报预处理',
+    pushTime: '推送时间',
     deviceNumberMax: '设备编号不能超过36位',
     deviceNumberNotVvailable: '设备编号不可用',
     subDeviceAddress: '子设备地址',
@@ -191,6 +196,11 @@ export const pen: any = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    transmissionPreprocessing: 'Telemetry transmission preprocessing',
+    attributeDistribution: 'Pre processing of attribute distribution',
+    attributeReporting: 'Preprocessing of attribute reporting',
+    reportPreprocessing: 'Telemetry report preprocessing',
+    pushTime: 'Push time',
     handle: 'handle',
     subDeviceAddress: 'Sub device address',
     deviceKey: 'Key verification error, service unavailable',

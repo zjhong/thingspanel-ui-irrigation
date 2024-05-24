@@ -145,24 +145,24 @@ const timeOptions: SelectOption[] = [
 ];
 const timeOptionsValue = ref();
 const aggregateOptions: SelectOption[] = [
-  { label: '不聚合', value: 'no_aggregate', disabled: false },
-  { label: '30秒', value: '30s', disabled: false },
-  { label: '1分钟', value: '1m', disabled: false },
-  { label: '2分钟', value: '2m', disabled: false },
+  { label: $t('common.notAggre'), value: 'no_aggregate', disabled: false },
+  { label: $t('common.seconds30'), value: '30s', disabled: false },
+  { label: $t('common.minute1'), value: '1m', disabled: false },
+  { label: $t('common.minute2'), value: '2m', disabled: false },
   { label: $t('common.minutes5'), value: '5m', disabled: false },
   { label: $t('common.minutes10'), value: '10m', disabled: false },
   { label: $t('common.minutes30'), value: '30m', disabled: false },
-  { label: $t('common.hour1'), value: '1h', disabled: false },
-  { label: '3小时', value: '3h', disabled: false },
-  { label: '6小时', value: '6h', disabled: false },
-  { label: $t('common.day1'), value: '1d', disabled: false },
-  { label: '7天', value: '7d', disabled: false },
+  { label: $t('common.hours1'), value: '1h', disabled: false },
+  { label: $t('common.hours3'), value: '3h', disabled: false },
+  { label: $t('common.hours6'), value: '6h', disabled: false },
+  { label: $t('common.days1'), value: '1d', disabled: false },
+  { label: $t('common.days7'), value: '7d', disabled: false },
   { label: '1月', value: '1mo', disabled: false }
 ];
 const aggregateOptionsValue = ref<string>('');
 const aggregateFunctionOptions: SelectOption[] = [
-  { label: '平均数', value: 'avg' },
-  { label: '最大值', value: 'max' }
+  { label: $t('common.average'), value: 'avg' },
+  { label: $t('generate.max-value'), value: 'max' }
 ];
 const aggregateFunctionValue = ref<string>('avg');
 const getTelemetryList = async (device_id, key, index) => {
@@ -304,7 +304,7 @@ const updateTime = (v: number, o: SelectOption) => {
   timeOptionsValue.value = v;
   updateDisabledOptions(o.label as string);
   switch (o.label) {
-    case '自定义':
+    case $t('common.custom'):
       isTimeSelect.value = true;
       isAggregate.value = false;
       return;

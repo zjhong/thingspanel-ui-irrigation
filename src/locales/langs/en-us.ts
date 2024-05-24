@@ -8,6 +8,7 @@ const local: App.I18n.Schema = {
     title: 'ThingsPanel'
   },
   common: {
+    last_5m: 'Last 5 minutes',
     custom: 'custom',
     average: 'average',
     months1: '1 months',

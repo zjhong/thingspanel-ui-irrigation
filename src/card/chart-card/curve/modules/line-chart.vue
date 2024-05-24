@@ -116,7 +116,7 @@ const params = reactive({
   time_range: 'custom'
 });
 const timeOptions: SelectOption[] = [
-  { label: '最近5分钟', value: 300000 },
+  { label: $t('common.custom'), value: 300000 },
   { label: '最近15分钟', value: 900000 },
   { label: '最近30分钟', value: 1800000 },
   { label: '最近1小时', value: 3600000 },

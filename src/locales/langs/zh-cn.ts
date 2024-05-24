@@ -9,6 +9,7 @@ const local: App.I18n.Schema = {
     title: 'System Name: {name}'
   },
   common: {
+    last_5m: '最近5分钟',
     custom: '自定义',
     average: '平均数',
     months1: '1个月',

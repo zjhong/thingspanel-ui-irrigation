@@ -31,7 +31,7 @@ const aggregation_data = ref<AggregationData>({
 const dateRange = ref<[number, number] | null>(null);
 const timeOptions = [
   { label: $t('common.custom'), value: 'custom' },
-  { label: '最近5分钟', value: 'last_5m' },
+  { label: $t('common.custom'), value: 'last_5m' },
   { label: '最近15分钟', value: 'last_15m' },
   { label: '最近30分钟', value: 'last_30m' },
   { label: '最近1小时', value: 'last_1h' },

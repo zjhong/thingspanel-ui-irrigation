@@ -252,6 +252,7 @@ declare namespace App {
         title: string;
       };
       common: {
+        last_5m: string;
         custom: string;
         average: string;
         months1: string;

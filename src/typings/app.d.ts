@@ -1433,6 +1433,7 @@ declare namespace App {
         secondElement: string;
         thirdElement: string;
         individual: string;
+        'alarm-info': string;
       };
       kanban: {
         'add-cards': string;

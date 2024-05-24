@@ -128,8 +128,8 @@ onMounted(() => {
           :w="item.w"
           :h="item.h"
           :i="item.i"
-          :min-w="item.minW"
-          :min-h="item.minH"
+          :min-w="item['minW']"
+          :min-h="item['minH']"
         >
           <div class="relative h-full w-full">
             <NIcon

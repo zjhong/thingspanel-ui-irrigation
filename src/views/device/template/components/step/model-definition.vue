@@ -60,11 +60,28 @@ const SwitchCom = computed<any>(() => {
   })?.components;
 });
 
-const queryParams: any = reactive({
-  page: 1,
-  page_size: 10,
-  device_template_id: props.deviceTemplateId
-});
+const queryParams: any = reactive([
+  {
+    page: 1,
+    page_size: 1,
+    device_template_id: props.deviceTemplateId
+  },
+  {
+    page: 1,
+    page_size: 10,
+    device_template_id: props.deviceTemplateId
+  },
+  {
+    page: 1,
+    page_size: 10,
+    device_template_id: props.deviceTemplateId
+  },
+  {
+    page: 1,
+    page_size: 10,
+    device_template_id: props.deviceTemplateId
+  }
+]);
 
 const checkedTabs: (value: string | number) => void = value => {
   tabsCurrent.value = value;
@@ -74,7 +91,7 @@ const checkedTabs: (value: string | number) => void = value => {
 // 分页参数
 const pagination: PaginationProps = reactive({
   page: 1,
-  pageSize: 10,
+  pageSize: 1,
   showSizePicker: true,
   pageSizes: [10, 15, 20, 25, 30],
   onChange: (page: number) => {
@@ -141,6 +158,7 @@ const columnsList: any = reactive([
     addBtn: () => {
       addAndEditModalVisible.value = true;
     },
+    total: 0,
     data: [{ data_name: $t('common.test') }],
     name: 'telemetry',
     text: $t('device_template.telemetry'),
@@ -177,6 +195,7 @@ const columnsList: any = reactive([
     addBtn: () => {
       addAndEditModalVisible.value = true;
     },
+    total: 0,
     data: [],
     name: 'attributes',
     text: $t('device_template.attributes'),
@@ -213,6 +232,7 @@ const columnsList: any = reactive([
     addBtn: () => {
       addAndEditModalVisible.value = true;
     },
+    total: 0,
     data: [],
     name: 'events',
     text: $t('device_template.events'),
@@ -249,6 +269,7 @@ const columnsList: any = reactive([
     addBtn: () => {
       addAndEditModalVisible.value = true;
     },
+    total: 0,
     data: [],
     name: 'command',
     text: $t('device_template.command'),
@@ -287,30 +308,39 @@ const columnsList: any = reactive([
 
 const getTableData: (value?: string) => void = async value => {
   startLoading();
+  console.log(value);
   if (value) {
     if (value === 'telemetry') {
-      const { data: data0 }: any = await telemetryApi(queryParams);
+      const { data: data0 }: any = await telemetryApi(queryParams[0]);
       columnsList[0].data = data0?.list ?? [];
+      columnsList[0].total = data0?.total;
     } else if (value === 'attributes') {
-      const { data: data1 }: any = await attributesApi(queryParams);
+      const { data: data1 }: any = await attributesApi(queryParams[1]);
       columnsList[1].data = data1?.list ?? [];
+      columnsList[1].total = data1?.total;
     } else if (value === 'events') {
-      const { data: data2 }: any = await eventsApi(queryParams);
+      const { data: data2 }: any = await eventsApi(queryParams[2]);
       columnsList[2].data = data2?.list ?? [];
+      columnsList[2].total = data2?.total;
     } else {
-      const { data: data3 }: any = await commandsApi(queryParams);
+      const { data: data3 }: any = await commandsApi(queryParams[3]);
       columnsList[3].data = data3?.list ?? [];
+      columnsList[3].total = data3?.total;
     }
     endLoading();
   } else {
-    const { data: data0 }: any = await telemetryApi(queryParams);
+    const { data: data0 }: any = await telemetryApi(queryParams[0]);
     columnsList[0].data = data0?.list ?? [];
-    const { data: data1 }: any = await attributesApi(queryParams);
+    columnsList[0].total = data0?.total;
+    const { data: data1 }: any = await attributesApi(queryParams[1]);
     columnsList[1].data = data1?.list ?? [];
-    const { data: data2 }: any = await eventsApi(queryParams);
+    columnsList[1].total = data1?.total;
+    const { data: data2 }: any = await eventsApi(queryParams[2]);
     columnsList[2].data = data2?.list ?? [];
-    const { data: data3 }: any = await commandsApi(queryParams);
+    columnsList[2].total = data2?.total;
+    const { data: data3 }: any = await commandsApi(queryParams[3]);
     columnsList[3].data = data3?.list ?? [];
+    columnsList[3].total = data3?.total;
     console.log(data0, data1, data2, data3, '请求到了遥远的数据');
     endLoading();
   }
@@ -321,20 +351,27 @@ getTableData();
 <template>
   <div>
     <n-tabs type="line" animated @update:value="checkedTabs">
-      <n-tab-pane v-for="item in columnsList" :key="item.name" :name="item.name" :tab="item.text">
+      <n-tab-pane v-for="(item, index) in columnsList" :key="item.name" :name="item.name" :tab="item.text">
         <NButton class="addBtn" @click="item.addBtn">
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
           </template>
           {{ $t('device_template.add') }}
         </NButton>
-        <n-data-table
-          :columns="item.col"
-          :data="item.data"
-          :loading="loading"
-          :pagination="pagination"
-          class="m-t9 flex-1-hidden"
-        />
+        <n-data-table :columns="item.col" :data="item.data" :loading="loading" class="m-t9 flex-1-hidden" />
+
+        <div class="mt-4 w-full flex justify-end">
+          <n-pagination
+            :page-count="item.total"
+            :page-size="10"
+            @update:page="
+              page => {
+                queryParams[index].page = page;
+                getTableData(item.name);
+              }
+            "
+          />
+        </div>
       </n-tab-pane>
     </n-tabs>
   </div>

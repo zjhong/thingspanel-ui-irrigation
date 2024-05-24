@@ -2,8 +2,10 @@
 import { createApp, onMounted, ref, watchEffect } from 'vue';
 import { NCard } from 'naive-ui';
 import { useScriptTag } from '@vueuse/core';
+import dayjs from 'dayjs';
 import { TENCENT_MAP_SDK_URL } from '@/constants/map-sdk';
 import { $t } from '@/locales';
+import { telemetryLatestApi } from '@/service/api/system-data';
 defineOptions({ name: 'TencentMap' });
 
 const props = defineProps<{ devices: any[] }>();
@@ -28,6 +30,18 @@ const showMarker = (markerArr, bounds) => {
   });
 };
 let ignoreMapClick = false;
+const telemetryValue = ref<any>([]);
+// 获取最新一条设备遥测数据
+const telemetryData: (id: string) => void = async id => {
+  // const params = {
+  //   page: 1,
+  //   page_size: 10,
+  //   device_template_id: id
+  // }
+  const data: any = await telemetryLatestApi(id);
+  telemetryValue.value = data.data;
+  console.log(telemetryValue.value, '最新的遥测数据');
+};
 
 async function renderMap() {
   await load(true);
@@ -40,7 +54,7 @@ async function renderMap() {
       minZoom: 3,
       viewMode: '3D'
     });
-    map.on('click', () => {
+    map.on('click', async () => {
       // 在短暂的时间窗口内忽略点击事件
       console.log(1);
       if (ignoreMapClick) {
@@ -48,8 +62,8 @@ async function renderMap() {
         return;
       }
       // 执行正常的点击处理逻辑
-      console.log(2);
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      console.log(2);
       infoWindow.close();
       console.log(3);
     });
@@ -97,6 +111,8 @@ async function renderMap() {
   // 监听地图的点击事件
 
   multiMarker.on('click', (evt: any) => {
+    telemetryData(evt.geometry.data.id);
+
     ignoreMapClick = true;
     setTimeout(() => {
       ignoreMapClick = false;
@@ -116,7 +132,11 @@ async function renderMap() {
             class="h-130px min-w-200px"
           >
             <div>
-              {$t('custom.devicePage.lastPushTime')}：{evt.geometry.data.ts || '-'}
+              {$t('custom.devicePage.lastPushTime')}：
+              {evt.geometry.data.ts ? dayjs(evt.geometry.data.ts).format('YYYY-MM-DD HH:mm:ss') : '-'}
+            </div>
+            <div>
+              {'当前设备的温度和湿度'}：{evt?.geometry?.humidity ?? 0}%~{evt?.geometry?.temperature ?? 0}%
             </div>
             <div>
               {$t('generate.status')}：{statusText[evt.geometry.data.is_online]}
@@ -125,16 +145,19 @@ async function renderMap() {
         );
       }
     });
+    setTimeout(() => {
+      evt.geometry.humidity = telemetryValue.value[0]?.value ?? 0;
+      evt.geometry.temperature = telemetryValue.value[1]?.value ?? 0;
 
-    // 挂载这个实例，并获取它的 HTML
-    const html = app.mount(document.createElement('div')).$el.outerHTML;
-    // 设置infoWindow
-
-    infoWindow.open(); // 打开信息窗
-    infoWindow.setPosition(evt.geometry.position); // 设置信息窗位置
-    infoWindow.setContent(html); // 设置信息窗内容
-    console.log(evt);
-    evt.originalEvent.stopPropagation();
+      // 挂载这个实例，并获取它的 HTML
+      const html = app.mount(document.createElement('div')).$el.outerHTML;
+      // 设置infoWindow
+      infoWindow.open(); // 打开信息窗
+      infoWindow.setPosition(evt.geometry.position); // 设置信息窗位置
+      infoWindow.setContent(html); // 设置信息窗内容
+      evt.originalEvent.stopPropagation();
+      console.log(evt, telemetryValue.value, '点击了弹窗');
+    }, 10);
   });
 }
 

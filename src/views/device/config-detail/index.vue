@@ -77,7 +77,7 @@ onMounted(async () => {
           <Automate :config_id="configId" />
         </n-tab-pane>
         <n-tab-pane name="告警" tab="告警">
-          <AlarmInfo />
+          <AlarmInfo :config_id="configId" />
         </n-tab-pane>
         <n-tab-pane name="扩展信息" tab="扩展信息">
           <ExtendInfo :config-info="configForm" @up-date-config="getConfig" />

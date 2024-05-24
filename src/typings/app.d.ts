@@ -314,6 +314,8 @@ declare namespace App {
         middle: string;
         high: string;
         Ignored: string;
+        toIgnore: string;
+        maintenance: string;
         untreated: string;
         handled: string;
         alarm_time: string;
@@ -1169,6 +1171,7 @@ declare namespace App {
         gatewayDevice: string;
         alarmConfig: string;
         alarmInfo: string;
+        alarmHistory: string;
         notificationGroup: string;
         spaceLocation: string;
         spaceOrArea: string;
@@ -1350,6 +1353,7 @@ declare namespace App {
         'set-member-notification-method': string;
         'enter-device-name': string;
         'alarm-name': string;
+        'alarm-status': string;
         'signature-method': string;
         'is-homepage': string;
         'notification-method': string;

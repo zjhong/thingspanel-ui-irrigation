@@ -45,6 +45,13 @@ export const infoList = async (params: any): Promise<any> => {
   });
   return data;
 };
+/** 告警历史列表 */
+export const alarmHistory = async (params: any): Promise<any> => {
+  const data = await request.get<Api.UserManagement.Data | null>('/alarm/info/history', {
+    params
+  });
+  return data;
+};
 
 /** 告警信息处理 */
 export const processingOperation = async (params: any): Promise<any> => {

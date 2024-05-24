@@ -77,7 +77,7 @@ onMounted(async () => {
           <Automate :config_id="configId" />
         </n-tab-pane>
         <n-tab-pane :name="$t('route.alarm')" :tab="$t('route.alarm')">
-          <AlarmInfo />
+          <AlarmInfo :config_id="configId" />
         </n-tab-pane>
         <n-tab-pane :name="$t('generate.extension-info')" :tab="$t('generate.extension-info')">
           <ExtendInfo :config-info="configForm" @up-date-config="getConfig" />

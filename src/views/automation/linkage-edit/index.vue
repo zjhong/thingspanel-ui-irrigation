@@ -16,21 +16,21 @@ const route = useRoute();
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入场景联动名称',
+    message: $t('generate.enter-scene-linkage-name'),
     trigger: 'blur'
   },
   description: {
     required: true,
-    message: '请输入场景联动描述',
+    message: $t('generate.sceneLinkDesc'),
     trigger: 'blur'
   },
   trigger_condition_groups: {
     required: true,
-    message: '请添加执行条件'
+    message: $t('generate.addExecutionConditions')
   },
   actions: {
     required: true,
-    message: '请添加执行动作'
+    message: $t('generate.addExecutionAction')
   }
 });
 const configFormRef = ref<HTMLElement & FormInst>();
@@ -67,10 +67,10 @@ const submitData = async () => {
   await editPremise.value.premiseFormRefReturn()?.validate();
   await editAction.value.actionFormRefReturn()?.validate();
   dialog.warning({
-    title: '提示',
-    content: '请确认是否保存该场景信息？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: $t('common.saveSceneInfo'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       if (configId.value) {
         const res = await sceneAutomationsEdit(configForm.value);
@@ -269,7 +269,10 @@ onMounted(() => {
 
 <template>
   <div class="linkage-edit">
-    <NCard :bordered="false" :title="`${configId ? $t('common.edit') : '新增'}场景联动`">
+    <NCard
+      :bordered="false"
+      :title="(configId ? $t('common.edit') : $t('common.add')) + $t('route.automation_scene-linkage')"
+    >
       <NForm
         ref="configFormRef"
         :model="configForm"

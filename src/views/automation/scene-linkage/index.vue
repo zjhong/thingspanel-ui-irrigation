@@ -83,11 +83,11 @@ const execution_result_options = ref([
     value: ''
   },
   {
-    label: '执行成功',
+    label: $t('generate.execution-successful'),
     value: 'S'
   },
   {
-    label: '执行失败',
+    label: $t('generate.execution-failed'),
     value: 'F'
   }
 ]);
@@ -127,10 +127,10 @@ const openLog = (item: any) => {
 // 删除场景
 const deleteLink = async (item: any) => {
   dialog.warning({
-    title: '删除提示',
+    title: $t('common.deletePrompt'),
     content: '请确认是否删除该场景联动信息？',
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       const res = await sceneAutomationsDel(item.id);
       if (!res.error) {

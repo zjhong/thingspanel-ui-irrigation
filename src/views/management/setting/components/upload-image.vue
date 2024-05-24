@@ -5,7 +5,7 @@ import { createServiceConfig } from '~/env.config';
 import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { getFileName } from '@/utils/common/tool';
-
+import { $t } from '@/locales';
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 const url = ref(new URL(otherBaseURL.demo));
 defineOptions({ name: 'UploadFile' });
@@ -70,7 +70,7 @@ async function beforeUpload(data: { file: UploadFileInfo }) {
     isImg = true;
   }
   if (!isImg) {
-    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}图片格式文件!`);
+    window.$message?.error(`${$t('common.pleaseUploadit')}${props.fileType.join('/')}${$t('common.formatFile')}`);
     return false;
   }
   return true;

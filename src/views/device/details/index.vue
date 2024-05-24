@@ -116,6 +116,9 @@ const getDeviceDetail = async () => {
       if (device_type.value !== '2' || !data?.device_config_name) {
         components = components.filter(item => item.key !== 'device-analysis');
       }
+      if (device_type.value === '3') {
+        components = components.filter(item => item.key !== 'join');
+      }
     } else if (!data?.device_config_name) {
       components = components.filter(item => item.key !== 'device-analysis');
     }

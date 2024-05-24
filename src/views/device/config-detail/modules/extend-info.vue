@@ -81,7 +81,7 @@ const handleSave = async () => {
   postData.additional_info = JSON.stringify(extendInfoList.value);
   const res = await deviceConfigEdit(postData);
   if (!res.error) {
-    message.success('修改成功');
+    message.success($t('common.modifySuccess'));
     emit('upDateConfig');
   }
   handleClose();

@@ -35,11 +35,11 @@ const { copy, isSupported } = useClipboard();
 
 function handleCopy() {
   if (!isSupported) {
-    window.$message?.error('您的浏览器不支持Clipboard API');
+    window.$message?.error(`${$t('common.browserNotSupport')}Clipboard API`);
     return;
   }
   if (!props.secretKey) {
-    window.$message?.error('请输入要复制的内容');
+    window.$message?.error($t('common.contentToCopied'));
     return;
   }
   copy(props.secretKey);

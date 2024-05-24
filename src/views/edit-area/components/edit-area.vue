@@ -43,7 +43,7 @@ export default {
         spaces_id: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请选择所属空间'
+          message: $t('common.belongingSpace')
         },
         name: {
           required: true,

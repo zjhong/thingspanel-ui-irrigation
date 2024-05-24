@@ -52,7 +52,6 @@ const dataList = computed((): UploadFileInfo[] => {
 
 interface Emits {
   (e: 'update:value', val: string): void;
-
   (e: 'success', file: UploadFileInfo): void;
 }
 
@@ -74,7 +73,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
     isImg = true;
   }
   if (!isImg) {
-    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}图片格式文件!`);
+    window.$message?.error(`${$t('common.pleaseUploadit')}${props.fileType.join('/')}图片${$t('common.formatFile')}`);
     return false;
   }
   return true;

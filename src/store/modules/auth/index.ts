@@ -8,7 +8,9 @@ import { transformUser } from '@/service/api/auth';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
 import { useRouteStore } from '../route';
+import { useTabStore } from '../tab';
 import { clearAuthStorage, getToken, getUserInfo } from './shared';
+
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const routeStore = useRouteStore();
   const { route, toLogin, redirectFromLogin } = useRouterPush(false);
@@ -77,13 +79,15 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
    */
   async function enter(userId: string) {
     startLoading();
-
+    const { clearTabs } = useTabStore();
     const { data: loginToken, error } = await transformUser({
       become_user_id: userId
     });
 
     if (!error) {
       const pass = await loginByToken(loginToken);
+
+      clearTabs();
 
       if (pass) {
         await routeStore.initAuthRoute();

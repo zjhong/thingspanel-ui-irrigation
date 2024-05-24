@@ -113,7 +113,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const titles: Record<ModalType, string> = {
     add: $t('generate.add'),
-    edit: '编辑'
+    edit: $t('common.edit')
   };
   window.$message?.success(`${titles[props.type]}成功!`);
   emit('getTableData');

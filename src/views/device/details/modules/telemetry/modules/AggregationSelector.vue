@@ -72,13 +72,13 @@ const aggregationIntervalOptions = [
   { label: '30秒', value: '30s', disabled: false },
   { label: '1分钟', value: '1m', disabled: false },
   { label: '2分钟', value: '2m', disabled: false },
-  { label: '5分钟', value: '5m', disabled: false },
-  { label: '10分钟', value: '10m', disabled: false },
-  { label: '30分钟', value: '30m', disabled: false },
-  { label: '1小时', value: '1h', disabled: false },
+  { label: $t('common.minutes5'), value: '5m', disabled: false },
+  { label: $t('common.minutes10'), value: '10m', disabled: false },
+  { label: $t('common.minutes30'), value: '30m', disabled: false },
+  { label: $t('common.hour1'), value: '1h', disabled: false },
   { label: '3小时', value: '3h', disabled: false },
   { label: '6小时', value: '6h', disabled: false },
-  { label: '1天', value: '1d', disabled: false },
+  { label: $t('common.day1'), value: '1d', disabled: false },
   { label: '7天', value: '7d', disabled: false },
   { label: '1个月', value: '1mo', disabled: false }
 ];

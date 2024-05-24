@@ -33,19 +33,19 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
   {
     key: 'index',
-    title: '序号',
+    title: $t('common.index'),
     align: 'center',
     minWidth: '140px'
   },
   {
     key: 'name',
-    title: '规则名称',
+    title: $t('generate.rule-name'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'status',
-    title: '接口状态',
+    title: $t('generate.rule-name'),
     minWidth: '140px',
     align: 'left',
     render: row => {
@@ -68,10 +68,10 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} ghost type="primary" onClick={() => handleActivate(row.id)}>
-            启动
+            {$t('generate.startup')}
           </NButton>
           <NButton size={'small'} type="warning" onClick={() => handlePause(row.id)}>
-            暂停
+            {$t('generate.suspend')}
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
             {$t('common.edit')}
@@ -127,7 +127,7 @@ function handleEditTable(rowId: string) {
 }
 
 function handleDeleteTable(rowId: string) {
-  window.$message?.info(`点击了删除，rowId为${rowId}`);
+  window.$message?.info(`${$t('generate.clickDelete')}，rowId${$t('generate.by')}${rowId}`);
 }
 
 const pagination: PaginationProps = reactive({

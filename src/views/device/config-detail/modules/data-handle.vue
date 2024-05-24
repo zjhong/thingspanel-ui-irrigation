@@ -160,10 +160,10 @@ const handleSubmit = async () => {
 };
 const deleteData = async (item: any) => {
   dialog.warning({
-    title: '提示',
+    title: $t('common.tip'),
     content: '请确认是否删除该数据处理？',
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await dataScriptDel({ id: item.id });
       // message.success($t('custom.grouping_details.operationSuccess'));
@@ -223,7 +223,9 @@ onMounted(() => {
 <template>
   <NFlex class="mb-6">
     <n-select v-model:value="queryData.script_type" :options="scripTypeOpt" class="max-w-40" />
-    <NButton type="primary" @click="openModal('新增', null)">{{ $t('generate.add-data-processing') }}</NButton>
+    <NButton type="primary" @click="openModal($t('common.add'), null)">
+      {{ $t('generate.add-data-processing') }}
+    </NButton>
   </NFlex>
   <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
   <div v-else class="alarm-box">

@@ -52,7 +52,7 @@ const closeModal = () => {
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
     add: $t('page.manage.role.title'),
-    edit: '编辑角色'
+    edit: $t('page.manage.role.editRole')
   };
   return titles[props.type];
 });

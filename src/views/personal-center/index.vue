@@ -38,7 +38,7 @@ function modification(e) {
   console.log(895656, e);
   if (!e) {
     useAuthStore();
-    message.success('修改成功');
+    message.success($t('common.modifySuccess'));
   } else {
     message.error('修改失败');
   }

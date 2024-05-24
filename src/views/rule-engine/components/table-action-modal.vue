@@ -59,7 +59,7 @@ const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('generate.ruleName')),
-  status: createRequiredFormRule('请选择规则状态')
+  status: createRequiredFormRule($t('generate.selectRuleStatus'))
 };
 
 function createDefaultFormModel(): FormModel {
@@ -95,7 +95,7 @@ async function handleSubmit() {
     add: $t('generate.add'),
     edit: $t('common.edit')
   };
-  window.$message?.success(`${titles[props.type]}成功!`);
+  window.$message?.success(`${titles[props.type]}${$t('custom.devicePage.success')}!`);
   emit('getTableData');
   closeModal();
 }

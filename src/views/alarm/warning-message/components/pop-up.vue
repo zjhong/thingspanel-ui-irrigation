@@ -133,7 +133,7 @@ const alarmKeepTime = ref([
     value: '4'
   },
   {
-    label: '5分钟',
+    label: $t('common.minutes5'),
     value: '5'
   },
   {
@@ -153,7 +153,7 @@ const alarmKeepTime = ref([
     value: '9'
   },
   {
-    label: '10分钟',
+    label: $t('common.minutes10'),
     value: '10'
   }
 ]);
@@ -212,7 +212,7 @@ const add = async () => {
     modalVisible.value = false;
     emit('newEdit');
   } else {
-    message.error('添加失败');
+    message.error($t('common.addFail'));
   }
 };
 

@@ -22,7 +22,7 @@ const { loading, startLoading, endLoading } = useLoading();
 const buttonExample: ButtonExample[] = [
   {
     id: 0,
-    label: '基础',
+    label: $t('common.base'),
     buttons: [
       {
         id: 0,

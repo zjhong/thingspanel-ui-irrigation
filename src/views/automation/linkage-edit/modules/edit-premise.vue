@@ -124,11 +124,11 @@ const premiseFormRules = ref({
 // 选项一条件类型的下拉
 const ifTypeOptions = ref([
   {
-    label: '设备条件',
+    label: $t('common.deviceConditions'),
     value: '1'
   },
   {
-    label: '时间条件',
+    label: $t('common.timeConditions'),
     value: '2'
   }
   // {
@@ -146,12 +146,12 @@ const ifTypeChange = (ifItem: any, data: any) => {
 // 设备条件类型下选项2使用的下拉
 const deviceConditionOptions = ref([
   {
-    label: '单个设备',
+    label: $t('common.singleDevice'),
     value: '10',
     disabled: false
   },
   {
-    label: '单类设备',
+    label: $t('common.singleClassDevice'),
     value: '11',
     disabled: false
   }
@@ -304,22 +304,22 @@ const actionParamShow = async (ifItem: any, data: any) => {
 // 时间条件类型下选项2使用的下拉
 const timeConditionOptions = ref([
   {
-    label: '单次',
+    label: $t('common.single'),
     value: '20'
   },
   {
-    label: '重复',
+    label: $t('common.repeat'),
     value: '21'
   },
   {
-    label: '时间范围',
+    label: $t('common.timeFrame'),
     value: '22'
   }
 ]);
 // 服务条件类型下选项2使用的下拉
 const serviceConditionOptions = ref([
   {
-    label: '天气',
+    label: $t('common.weather'),
     value: 'weather'
   }
 ]);
@@ -329,19 +329,19 @@ const serviceConditionOptions = ref([
 // 时间条件下，重复时，使用的周期选项
 const cycleOptions = ref([
   {
-    label: '每小时',
+    label: $t('common.everyHour'),
     value: 'HOUR'
   },
   {
-    label: '每天',
+    label: $t('common.everyDay'),
     value: 'DAY'
   },
   {
-    label: '每周',
+    label: $t('common.weekly'),
     value: 'WEEK'
   },
   {
-    label: '每月',
+    label: $t('common.monthly'),
     value: 'MONTH'
   }
 ]);
@@ -349,42 +349,42 @@ const cycleOptions = ref([
 // 时间条件下，范围时，使用的周期选项
 const weekOptions = ref([
   {
-    label: '周一',
+    label: $t('page.irrigation.time.week.monday'),
     value: '1'
   },
   {
-    label: '周二',
+    label: $t('page.irrigation.time.week.tuesday'),
     value: '2'
   },
   {
-    label: '周三',
+    label: $t('page.irrigation.time.week.wednesday'),
     value: '3'
   },
   {
-    label: '周四',
+    label: $t('page.irrigation.time.week.thursday'),
     value: '4'
   },
   {
-    label: '周五',
+    label: $t('page.irrigation.time.week.friday'),
     value: '5'
   },
   {
-    label: '周六',
+    label: $t('page.irrigation.time.week.saturday'),
     value: '6'
   },
   {
-    label: '周天',
+    label: $t('page.irrigation.time.week.sunday'),
     value: '7'
   }
 ]);
 // 天气条件选项
 const weatherOptions = ref([
   {
-    label: '日出',
+    label: $t('common.sunrise'),
     value: 'sunrise'
   },
   {
-    label: '日落',
+    label: $t('common.sunset'),
     value: 'sunset'
   }
 ]);
@@ -392,58 +392,58 @@ const weatherOptions = ref([
 // 操作符选项
 const determineOptions = ref([
   {
-    label: '等于',
+    label: $t('common.equal'),
     value: '='
   },
   {
-    label: '不等于',
+    label: $t('common.unequal'),
     value: '!='
   },
   {
-    label: '大于',
+    label: $t('common.pass'),
     value: '>'
   },
   {
-    label: '小于',
+    label: $t('common.under'),
     value: '<'
   },
   {
-    label: '大于等于',
+    label: $t('common.greaterOrEqual'),
     value: '>='
   },
   {
-    label: '小于等于',
+    label: $t('common.lessOrEqual'),
     value: '<='
   },
   {
-    label: '介于',
+    label: $t('common.between'),
     value: 'between'
   },
   {
-    label: '包含在列表内',
+    label: $t('common.includeList'),
     value: 'in'
   }
 ]);
 // 过期时间选项
 const expirationTimeOptions = ref([
   {
-    label: '5分钟',
+    label: $t('common.minutes5'),
     value: 5
   },
   {
-    label: '10分钟',
+    label: $t('common.minutes10'),
     value: 10
   },
   {
-    label: '30分钟',
+    label: $t('common.minutes30'),
     value: 30
   },
   {
-    label: '1小时',
+    label: $t('common.hour1'),
     value: 60
   },
   {
-    label: '1天',
+    label: $t('common.day1'),
     value: 1140
   }
 ]);
@@ -816,7 +816,7 @@ onMounted(() => {
                     >
                       <NInput
                         v-model:value="ifItem.trigger_value"
-                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                        :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                       />
                     </NFormItem>
                   </template>
@@ -830,7 +830,7 @@ onMounted(() => {
                     >
                       <NInput
                         v-model:value="ifItem.trigger_value"
-                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                        :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                       />
                     </NFormItem>
                   </template>

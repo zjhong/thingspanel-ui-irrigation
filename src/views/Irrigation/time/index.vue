@@ -61,10 +61,10 @@ async function getTableData() {
 // 下发
 const runDistribute = (rowId: string, status: 2 | 3) => {
   dialog.warning({
-    title: '提示',
+    title: $t('common.tip'),
     content: status === 3 ? '确定将计划下发给设备吗' : '确定取消计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       if (status === 3) {
         await irrigationTimeDistribute(rowId, { status });
@@ -78,10 +78,10 @@ const runDistribute = (rowId: string, status: 2 | 3) => {
 // 删除
 const runDel = (rowId: string) => {
   dialog.warning({
-    title: '提示',
+    title: $t('common.tip'),
     content: '确定删除计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await irrigationTimeDel(rowId);
       init();

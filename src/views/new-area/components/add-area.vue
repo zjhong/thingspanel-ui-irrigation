@@ -42,7 +42,7 @@ export default {
         spaces_id: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请选择所属空间'
+          message: $t('common.belongingSpace')
         },
         name: {
           required: true,
@@ -131,7 +131,7 @@ export default {
             methods.mapInit();
             context.emit('saveAddAres', false);
           } else {
-            message.error('添加失败');
+            message.error($t('common.addFail'));
           }
         });
       },

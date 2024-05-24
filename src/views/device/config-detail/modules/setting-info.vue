@@ -16,10 +16,10 @@ const dialog = useDialog();
 // const message = useMessage();
 const deleteConfig = () => {
   dialog.warning({
-    title: '提示',
+    title: $t('common.tip'),
     content: '请确认是否删除该设备配置？',
-    positiveText: '确定',
-    negativeText: '取消',
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await deviceConfigDel({ id: props.configInfo.id });
       // message.success($t('custom.grouping_details.operationSuccess'));

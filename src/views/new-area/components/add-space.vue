@@ -83,7 +83,7 @@ export default {
             methods.mapInit();
             context.emit('saveAddSpace', false);
           } else {
-            message.error('添加失败');
+            message.error($t('common.addFail'));
           }
         });
       },

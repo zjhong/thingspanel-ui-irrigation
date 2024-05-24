@@ -47,7 +47,7 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'index',
-    title: '序号',
+    title: $t('common.index'),
     align: 'center',
     width: '120px'
   },
@@ -95,7 +95,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'createTime',
-    title: '创建时间',
+    title: $t('common.creationTime'),
     align: 'left',
     render: row => {
       return formatDateTime(row.createTime);
@@ -173,7 +173,7 @@ function handleEditTable(rowId: string) {
 }
 
 function handleDeleteTable(rowId: string) {
-  window.$message?.info(`点击了删除，rowId为${rowId}`);
+  window.$message?.info(`${$t('generate.clickDelete')}，rowId为${rowId}`);
 }
 
 const pagination: PaginationProps = reactive({

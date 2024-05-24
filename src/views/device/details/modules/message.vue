@@ -39,6 +39,8 @@ const getConfigInfo = async () => {
       const extendedInfo = deviceAdditionalInfo?.extendedInfo || [];
       additionInfo.value = (JSON.parse(tempAdditionalInfo) || []).map(item => {
         return {
+          enable: item.enable,
+          desc: item.desc,
           name: item.name,
           value: extendedInfo.find(info => info.name === item.name)?.value || item.default_value
         };
@@ -74,11 +76,11 @@ onMounted(getConfigInfo);
 
     <NCard :title="$t('generate.extension-info')" class="mb-4">
       <template v-for="item in additionInfo" :key="item.name">
-        <NFlex justify="space-between" class="mb-24px items-center">
-          <div class="flex items-center">
-            <div class="w-100px">{{ item.name }}:</div>
-            <NInput v-model:value="item.value" />
-          </div>
+        <NFlex v-if="item.enable === true" justify="" class="mb-24px items-center">
+          <NFormItem :label="item.name" path="name" class="flex items-center">
+            <NInput v-model:value="item.value" style="margin-left: 15px" />
+          </NFormItem>
+          <div>{{ item.desc }}</div>
         </NFlex>
       </template>
     </NCard>

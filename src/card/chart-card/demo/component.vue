@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useWebSocket } from '@vueuse/core';
-import { ClipboardCode20Regular } from '@vicons/fluent';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '../curve/modules/api';
 // import icons from "./icon";
+import { icons as iconOptions } from './icons';
 import { createServiceConfig } from '~/env.config';
 
 // const iconMap = new Map(icons.map((c) => [c.name, c.value]));
@@ -107,18 +107,14 @@ onUnmounted(() => {
       >
 -->
       <NCard :bordered="false" class="box">
-        <div class="top-data">
-          <span class="name">
-            {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
-          </span>
-        </div>
-        <div class="bt-data">
-          <NIcon size="58"><ClipboardCode20Regular /></NIcon>
-          <div>
-            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
-          </div>
-          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
-        </div>
+        <span class="name">
+          {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
+        </span>
+        <NIcon class="iconclass" :color="props?.card?.config?.color || 'black'">
+          <component :is="iconOptions[props?.card?.config?.iconName || 'ClipboardCode20Regular']" />
+        </NIcon>
+        <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
+        <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
       </NCard>
     </div>
   </div>
@@ -133,37 +129,47 @@ onUnmounted(() => {
 }
 .box {
   display: flex;
+  position: relative;
   flex-direction: column;
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
 }
-.top-data,
-.bt-data {
-  display: flex;
+.iconclass.n-icon svg {
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
+  height: 100%;
 }
-
 .bt-data {
   margin-top: 20%;
   padding: 0 10%;
   position: relative;
 }
 
+.iconclass {
+  position: absolute;
+  bottom: 20%;
+  left: 15%;
+  width: 20%;
+  height: 20%;
+}
+
 .unit {
   position: absolute;
-  top: 0;
-  right: 30px;
+  top: 30%;
+  left: 70%;
+  font-size: 2vw;
 }
 
 .name {
-  margin-top: 10px;
-  font-size: 18px;
+  position: absolute;
+  top: 20%;
+  left: 15%;
+  font-size: 2vw;
 }
 
 .value {
-  font-size: calc(100vw * 68 / 1920);
-  margin-right: 40px;
+  position: absolute;
+  bottom: 18%;
+  left: 55%;
+  font-size: 5vw;
 }
 </style>

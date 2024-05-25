@@ -338,11 +338,11 @@ const getPlatform = computed(() => {
       v-model:show="particulars"
       preset="card"
       :title="$t('page.irrigation.time.log.detail')"
-      :class="getPlatform ? 'w-90%' : 'w-800px'"
+      :class="getPlatform ? 'w-90%' : 'w-700px'"
     >
-      <div class="pop-up">
+      <div class="pop-up flex-wrap gap-20px">
         <div>{{ $t('generate.alarm-content') }}</div>
-        <div class="pop-up-content">
+        <div class="pop-up-content flex-1">
           {{ particularsText }}
         </div>
       </div>
@@ -356,8 +356,6 @@ const getPlatform = computed(() => {
 }
 
 .pop-up-content {
-  margin-left: 15px;
-  width: 90%;
   height: 200px;
   padding: 10px;
   border: 1px solid rgb(215, 213, 213);

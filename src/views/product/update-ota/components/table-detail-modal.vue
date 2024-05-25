@@ -162,29 +162,35 @@ const toUpdate = async ({ id }, action: number) => {
 const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   {
     key: 'device_number',
+    minWidth: '140px',
     title: $t('page.product.list.deviceNumber')
   },
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-ota.deviceName')
   },
   {
     key: 'current_version',
+    minWidth: '140px',
     title: $t('page.product.update-ota.currentVersion')
     // title: '当前版本号'
   },
   {
     key: 'version',
+    minWidth: '140px',
     title: $t('page.product.update-ota.targetVersion')
     // title: '目标版本号'
   },
   {
     key: 'steps',
+    minWidth: '140px',
     title: $t('page.product.update-ota.progress')
     // title: '升级进度'
   },
   {
     key: 'updated_at',
+    minWidth: '140px',
     title: $t('page.product.update-ota.updateTime'),
     render: row => {
       return formatDateTime(row.updated_at);
@@ -193,6 +199,7 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   },
   {
     key: 'status',
+    minWidth: '140px',
     title: $t('page.product.update-ota.statusTask'),
     // title: $t('generate.status'),
     render: (row: UpgradeTaskDetail) => {
@@ -209,11 +216,13 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   },
   {
     key: 'status_description',
+    minWidth: '140px',
     title: $t('page.product.update-ota.statusDetail')
     // title: '状态详情'
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('common.action'),
     align: 'center',
     render: row => {
@@ -260,7 +269,7 @@ function init() {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" :on-after-enter="init" preset="card" :title="title" class="w-1200px">
+  <NModal v-model:show="modalVisible" :on-after-enter="init" preset="card" :title="title">
     <div class="h-800px overflow-hidden">
       <div class="h-full flex-col">
         <NGrid :cols="24" x-gap="12px">

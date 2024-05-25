@@ -286,7 +286,7 @@ watch(props, newValue => {
 
 <template>
   <NModal v-model:show="modalVisible" preset="card" :title="title">
-    <NForm ref="formRef" label-placement="top" :rules="rules" :model="formData">
+    <NForm ref="formRef" :rules="rules" :model="formData">
       <n-form-item :label="$t('generate.alarm-name')" path="name">
         <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
       </n-form-item>

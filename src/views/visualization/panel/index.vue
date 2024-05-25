@@ -170,7 +170,7 @@ onMounted(fetchBoards);
     <NModal
       v-model:show="showModal"
       :title="isEditMode ? $t('dashboard_panel.editKanban') : $t('dashboard_panel.addKanBan')"
-      :class="getPlatform ? 'w-90%' : 'w-600px'"
+      :class="getPlatform ? 'w-90%' : 'w-500px'"
     >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">

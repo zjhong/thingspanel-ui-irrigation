@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { $t } from '@/locales';
@@ -117,13 +117,19 @@ watch(
   }
 );
 const deviceVisible = ref(false);
+
 const checkDevice = () => {
   deviceVisible.value = true;
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title" :class="getPlatform ? 'w-90%' : 'w-700px'">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
         <NFormItemGridItem :span="24" :label="$t('page.product.update-ota.taskName') /*任务名称*/" path="name">
@@ -147,6 +153,7 @@ const checkDevice = () => {
             <TableActionModal
               v-model:visible="deviceVisible"
               v-model:selected-keys="formModel.device_id_list"
+              :class="getPlatform ? 'w-90%' : 'w-800px'"
               :edit-data="props.editData"
             />
           </NSpace>

@@ -174,19 +174,19 @@ const getPlatform = computed(() => {
 
 const alarmStatusOptions = ref([
   {
-    label: '高级报警',
+    label: $t('common.highAlarm'),
     value: 'H'
   },
   {
-    label: '中级报警',
+    label: $t('common.intermediateAlarm'),
     value: 'M'
   },
   {
-    label: '低级报警',
+    label: $t('common.lowAlarm'),
     value: 'L'
   },
   {
-    label: '正常',
+    label: $t('common.normal'),
     value: 'N'
   }
 ]);
@@ -207,7 +207,7 @@ const cancelCallback = () => {
 };
 const submitCallback = async () => {
   if (description.value === '') {
-    window.$message?.error('请输入告警描述');
+    window.$message?.error($t('common.enterAlarmDesc'));
     return;
   }
   const putData = {
@@ -260,31 +260,31 @@ const submitCallback = async () => {
         <div>
           <NH3>{{ $t('generate.alarm-info') }}</NH3>
         </div>
-        <n-form-item label-placement="left" :show-feedback="false" label="告警配置名称:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('generate.alarmConfugName') + ':'">
           {{ infoData.name }}
         </n-form-item>
-        <n-form-item label-placement="left" :show-feedback="false" label="关联场景联动名称:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('generate.sceneLinkageName') + ':'">
           {{ infoData['alarm_config_name'] }}
         </n-form-item>
-        <n-form-item label-placement="left" :show-feedback="false" label="告警时间:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('common.alarm_time') + ':'">
           {{ moment(infoData['create_at']).format('YYYY-MM-DD HH:mm:ss') }}
         </n-form-item>
-        <n-form-item label-placement="left" :show-feedback="false" label="告警状态:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('generate.alarm-status') + ':'">
           {{ alarmStatusOptions.find(data => data.value === infoData['alarm_status'])?.label || '' }}
         </n-form-item>
-        <n-form-item label-placement="left" :show-feedback="false" label="告警原因:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('generate.alarmReason') + ':'">
           {{ infoData.content }}
         </n-form-item>
-        <n-form-item label-placement="left" :show-feedback="false" label="告警描述:">
+        <n-form-item label-placement="left" :show-feedback="false" :label="$t('generate.alarm-description') + ':'">
           {{ infoData.description }}
         </n-form-item>
-        <n-form-item label-placement="top" :show-feedback="false" label="告警设备列表:">
+        <n-form-item label-placement="top" :show-feedback="false" :label="$t('generate.alarmDevices') + ':'">
           <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
             <thead>
               <tr>
-                <th>序号</th>
-                <th class="min-w-180px">设备编码</th>
-                <th>设备名称</th>
+                <th>{{ $t('common.index') }}</th>
+                <th class="min-w-180px">{{ $t('generate.device-code') }}</th>
+                <th>{{ $t('custom.devicePage.deviceName') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -297,13 +297,13 @@ const submitCallback = async () => {
           </NTable>
         </n-form-item>
         <NFlex justify="flex-end">
-          <NButton @click="closeModal">关闭</NButton>
+          <NButton @click="closeModal">{{ $t('custom.devicePage.close') }}</NButton>
         </NFlex>
       </NCard>
     </n-modal>
     <n-modal v-model:show="showModal" class="max-w-[600px]">
       <NCard>
-        <n-form-item :show-feedback="false" label="告警描述">
+        <n-form-item :show-feedback="false" :label="$t('generate.alarm-description')">
           <NInput v-model:value="description" type="textarea" />
         </n-form-item>
         <NFlex justify="flex-end" class="mt-4">

@@ -37,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-empty v-if="alarmList.length === 0" size="huge" description="暂无数据"></n-empty>
+  <n-empty v-if="alarmList.length === 0" size="huge" :description="$t('common.nodata')"></n-empty>
   <div v-else class="alarm-box">
     <div v-for="(item, index) in alarmList" :key="index" class="alarm-item">
       <div class="item-name">

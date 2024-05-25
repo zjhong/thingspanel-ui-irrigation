@@ -204,7 +204,7 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <n-empty v-if="alarmHistory.length === 0" description="暂无数据"></n-empty>
+      <n-empty v-if="alarmHistory.length === 0" :description="$t('common.nodata')"></n-empty>
       <n-modal v-model:show="showDialog" :title="$t('generate.alarm-info')" class="max-w-[800px]">
         <NCard>
           <div>
@@ -272,7 +272,7 @@ onMounted(() => {
       <n-empty
         v-if="alarmList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">

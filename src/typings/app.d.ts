@@ -252,6 +252,7 @@ declare namespace App {
         title: string;
       };
       common: {
+        nodata: string;
         halfYear: string;
         lastYears1: string;
         lastDays90: string;

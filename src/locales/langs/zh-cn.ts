@@ -9,6 +9,7 @@ const local: App.I18n.Schema = {
     title: 'System Name: {name}'
   },
   common: {
+    nodata: '暂无数据',
     halfYear: '最近半年',
     lastYears1: '最近1年',
     lastDays90: '最近90天',

@@ -8,6 +8,7 @@ const local: App.I18n.Schema = {
     title: 'ThingsPanel'
   },
   common: {
+    nodata: 'There is currently no data available',
     halfYear: 'Half a year',
     lastYears1: 'Last 1 years',
     lastDays90: 'Last 90 days',

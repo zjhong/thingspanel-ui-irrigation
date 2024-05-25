@@ -293,7 +293,7 @@ const getPlatform = computed(() => {
 
   <popUp
     v-model:visible="visible"
-    :class="getPlatform ? 'w-90%' : 'w-800px'"
+    :class="getPlatform ? 'w-90%' : 'w-600px'"
     :type="modalType"
     :edit-data="editData"
     @new-edit="newEdit"

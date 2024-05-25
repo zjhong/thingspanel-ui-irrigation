@@ -41,7 +41,7 @@ const message = useMessage();
 const save = () => {
   if (!state?.curCardData?.cardId) {
     message.destroyAll();
-    message.warning('请先选一个卡片');
+    message.warning($t('common.selectCardFirst'));
     return;
   }
 
@@ -89,7 +89,7 @@ watch(props, pr => {
     <div class="h-[calc(100vh_-_170px)] w-full flex">
       <div class="relative h-full flex flex-col flex-[44] overflow-hidden p-4">
         <NTabs type="line" default-value="chart" animated class="h-full">
-          <NTabPane class="h-full" name="chart" value="chart" tab="图表">
+          <NTabPane class="h-full" name="chart" value="chart" :tab="$t('common.chart')">
             <n-scrollbar style="height: 100%; padding: 4px">
               <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
                 <n-gi v-for="item in PanelCards.chart" :key="item.id" class="min-w-240px">

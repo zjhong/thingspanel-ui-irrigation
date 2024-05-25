@@ -10,7 +10,7 @@ defineProps<{
 <template>
   <NCard>
     <div class="h-500px flex-center flex-col">
-      <!--      <n-empty description="暂无数据"></n-empty>-->
+      <!--      <n-empty :description="$t('common.nodata')"></n-empty>-->
       <sceneLinkage :device_config_id="config_id" />
     </div>
   </NCard>

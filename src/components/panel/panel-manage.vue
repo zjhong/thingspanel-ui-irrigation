@@ -147,7 +147,7 @@ onMounted(() => {
         <<NButton @click="router.go(-1)">
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           {{ $t('page.login.common.back') }}
-        </NButton> 
+        </NButton>
 -->
         <NButton @mouseover="showCardList">
           <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
@@ -192,7 +192,7 @@ onMounted(() => {
 
       <div class="h-full flex-1 overflow-auto">
         <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
-          <NEmpty description="暂未添加组件"></NEmpty>
+          <NEmpty :description="$t('common.componentsAddedYet')"></NEmpty>
         </div>
         <CardRender
           ref="cr"

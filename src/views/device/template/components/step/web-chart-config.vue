@@ -49,7 +49,9 @@ const next = async () => {
   });
 
   if (web_chart_config.value.length < 1 || flag) {
-    window.NMessage.error(flag ? `第${theIndex + 1}个图表没有配任何指标` : '至少选择一个图表');
+    window.NMessage.error(
+      flag ? `${$t('common.section')}${theIndex + 1}${$t('common.accompaniedIndicators')}` : $t('common.leastOneChart')
+    );
   } else {
     const res = await getTemplat(props.deviceTemplateId);
     await putTemplat({ ...res.data, web_chart_config: JSON.stringify(web_chart_config.value) });

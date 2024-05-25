@@ -261,7 +261,7 @@ export default {
               if (state.locationData) {
                 state.positionCoordinates.push(e.lnglat);
                 if (state.positionCoordinates.length > 1) {
-                  message.error('只能添加一个位置信息');
+                  message.error($t('common.locationInfoAdded'));
                 } else {
                   state.areaForm.location = String(e.lnglat.lng);
                   state.areaForm.dimensionality = String(e.lnglat.lat);

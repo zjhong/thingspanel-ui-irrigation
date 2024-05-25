@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import type { Ref } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace, NSwitch, useMessage } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
@@ -203,7 +203,10 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(() => {
   if (!props.configInfo.additional_info || props.configInfo.additional_info === '{}') {
     extendInfoList.value = [];
@@ -226,7 +229,7 @@ onMounted(() => {
       v-model:show="visible"
       :mask-closable="false"
       :title="isEdit ? $t('common.editExtendedInfo') : $t('common.addExtendedInfo')"
-      class="w-400px"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
       preset="card"
       @after-leave="modalClose"
     >

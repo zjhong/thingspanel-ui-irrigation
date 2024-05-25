@@ -223,19 +223,19 @@ init();
         />
         <TableActionModal
           v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
           :type="modalType"
           :edit-data="editData"
           @success="getTableData"
         />
         <EditPermissionModal
           v-model:visible="editPermissionVisible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :edit-data="editData"
         />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

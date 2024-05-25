@@ -6,7 +6,6 @@ export const pzh_cn: any = {
     kanbanNameNull: '看板名称不能为空'
   },
   groupPage: {
-    handle: '处理',
     deviceAvailable: '设备可用',
     groupName: '分组名称',
     description: '描述',
@@ -27,6 +26,8 @@ export const pzh_cn: any = {
     additionSuccess: '新增成功'
   },
   devicePage: {
+    maintenance: '维护',
+    handle: '处理',
     attributeDistribution: '属性下发预处理',
     attributeReporting: '属性上报预处理',
     transmissionPreprocessing: '遥测下发预处理',
@@ -196,12 +197,13 @@ export const pen: any = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    maintenance: 'maintenance',
+    handle: 'handle',
     transmissionPreprocessing: 'Telemetry transmission preprocessing',
     attributeDistribution: 'Pre processing of attribute distribution',
     attributeReporting: 'Preprocessing of attribute reporting',
     reportPreprocessing: 'Telemetry report preprocessing',
     pushTime: 'Push time',
-    handle: 'handle',
     subDeviceAddress: 'Sub device address',
     deviceKey: 'Key verification error, service unavailable',
     deviceName: 'Device Name',

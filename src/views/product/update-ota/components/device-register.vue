@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -158,6 +158,11 @@ const downloadPackage = () => {
     window.open(url);
   }
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -232,7 +237,12 @@ const downloadPackage = () => {
           :pid="props.record.id"
           @success="getTableData"
         />
-        <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
+        <TableDetailModal
+          v-model:visible="visibleTable"
+          :class="getPlatform ? 'w-90%' : ' w-1200px'"
+          :type="modalType"
+          :edit-data="rowData"
+        />
       </div>
     </NCard>
   </div>

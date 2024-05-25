@@ -87,7 +87,7 @@ const changeWidths = () => {
 const save = () => {
   if (!state?.curCardData?.cardId) {
     message.destroyAll();
-    message.warning('请先选一个卡片');
+    message.warning($t('common.selectCardFirst'));
     return;
   }
   count.value = 2;
@@ -365,7 +365,7 @@ onMounted(() => {
           () => {
             if (!state?.curCardData?.cardId) {
               message.destroyAll();
-              return message.warning('请先选一个卡片');
+              return message.warning($t('common.selectCardFirst'));
             }
             count = 1;
             changeWidths();

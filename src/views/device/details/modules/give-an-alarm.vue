@@ -36,19 +36,19 @@ const queryParams = ref({
 });
 const alarmStatusOptions = ref([
   {
-    label: '高级报警',
+    label: $t('common.highAlarm'),
     value: 'H'
   },
   {
-    label: '中级报警',
+    label: $t('common.intermediateAlarm'),
     value: 'M'
   },
   {
-    label: '低级报警',
+    label: $t('common.lowAlarm'),
     value: 'L'
   },
   {
-    label: '正常',
+    label: $t('common.normal'),
     value: 'N'
   }
 ]);
@@ -99,7 +99,7 @@ const cancelCallback = () => {
 };
 const submitCallback = async () => {
   if (description.value === '') {
-    window.$message?.error('请输入告警描述');
+    window.$message?.error($t('common.enterAlarmDesc'));
     return;
   }
   const putData = {
@@ -107,6 +107,7 @@ const submitCallback = async () => {
     description: description.value
   };
   await deviceAlarmHistoryPut(putData);
+  getAlarmHistory();
   cancelCallback();
 };
 const queryData = ref({
@@ -136,8 +137,12 @@ onMounted(() => {
   <div class="w-full">
     <NFlex justify="space-between" class="mb-4">
       <n-button-group>
-        <NButton :type="tabValue === 1 ? 'primary' : 'default'" @click="choseTab(1)">告警历史</NButton>
-        <NButton :type="tabValue === 2 ? 'primary' : 'default'" @click="choseTab(2)">告警规则</NButton>
+        <NButton :type="tabValue === 1 ? 'primary' : 'default'" @click="choseTab(1)">
+          {{ $t('common.alarmHistory') }}
+        </NButton>
+        <NButton :type="tabValue === 2 ? 'primary' : 'default'" @click="choseTab(2)">
+          {{ $t('common.alarmRules') }}
+        </NButton>
       </n-button-group>
       <NFlex v-if="tabValue === 1" class="w-70%" justify="flex-end">
         <NDatePicker
@@ -193,48 +198,48 @@ onMounted(() => {
               <NIcon size="18">
                 <EyeOutline />
               </NIcon>
-              详情
+              {{ $t('custom.devicePage.details') }}
             </NButton>
             <NButton text class="ml-8" @click="showModal = true">
               <NIcon size="18">
                 <Edit />
               </NIcon>
-              维护
+              {{ $t('custom.devicePage.maintenance') }}
             </NButton>
           </div>
         </div>
       </div>
-      <n-empty v-if="alarmHistory.length === 0" description="暂无数据"></n-empty>
+      <n-empty v-if="alarmHistory.length === 0" :description="$t('common.nodata')"></n-empty>
       <n-modal v-model:show="showDialog" :title="$t('generate.alarm-info')" class="max-w-[800px]">
         <NCard>
           <div>
             <NH3>{{ $t('generate.alarm-info') }}</NH3>
           </div>
-          <n-form-item label-placement="left" :show-feedback="false" label="告警配置名称:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('generate.alarmConfugName')}:`">
             {{ infoData.name }}
           </n-form-item>
-          <n-form-item label-placement="left" :show-feedback="false" label="关联场景联动名称:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('generate.sceneLinkageName')}:`">
             {{ infoData['alarm_config_name'] }}
           </n-form-item>
-          <n-form-item label-placement="left" :show-feedback="false" label="告警时间:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('common.alarm_time')}:`">
             {{ moment(infoData['create_at']).format('YYYY-MM-DD HH:mm:ss') }}
           </n-form-item>
-          <n-form-item label-placement="left" :show-feedback="false" label="告警状态:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('generate.alarmStatus')}:`">
             {{ alarmStatusOptions.find(data => data.value === infoData['alarm_status'])?.label || '' }}
           </n-form-item>
-          <n-form-item label-placement="left" :show-feedback="false" label="告警原因:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('generate.alarmReason')}:`">
             {{ infoData.content }}
           </n-form-item>
-          <n-form-item label-placement="left" :show-feedback="false" label="告警描述:">
+          <n-form-item label-placement="left" :show-feedback="false" :label="`${$t('generate.alarm-description')}:`">
             {{ infoData.description }}
           </n-form-item>
-          <n-form-item label-placement="top" :show-feedback="false" label="告警设备列表:">
+          <n-form-item label-placement="top" :show-feedback="false" :label="`${$t('generate.alarmDevices')}:`">
             <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
               <thead>
                 <tr>
-                  <th>序号</th>
-                  <th class="min-w-180px">设备编码</th>
-                  <th>设备名称</th>
+                  <th>{{ $t('generate.order-number') }}</th>
+                  <th class="min-w-180px">{{ $t('generate.device-code') }}</th>
+                  <th>{{ $t('generate.device-name') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -247,13 +252,13 @@ onMounted(() => {
             </NTable>
           </n-form-item>
           <NFlex justify="flex-end">
-            <NButton @click="closeModal">关闭</NButton>
+            <NButton @click="closeModal">{{ $t('custom.devicePage.close') }}</NButton>
           </NFlex>
         </NCard>
       </n-modal>
       <n-modal v-model:show="showModal" class="max-w-[600px]">
         <NCard>
-          <n-form-item :show-feedback="false" label="告警描述">
+          <n-form-item :show-feedback="false" :label="$t('generate.alarm-description')">
             <NInput v-model:value="description" type="textarea" />
           </n-form-item>
           <NFlex justify="flex-end" class="mt-4">
@@ -267,12 +272,12 @@ onMounted(() => {
   <div v-if="tabValue === 2" class="alarm-list">
     <NCard class="w-full">
       <NFlex justify="flex-end" class="mb-4">
-        <NButton type="primary" @click="alarmAdd()">新增告警</NButton>
+        <NButton type="primary" @click="alarmAdd()">{{ $t('generate.addAlarm') }}</NButton>
       </NFlex>
       <n-empty
         v-if="alarmList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
@@ -345,6 +350,7 @@ onMounted(() => {
       display: flex;
       flex-flow: row;
       align-items: center;
+
       .alarm-icon {
         width: 20px;
         height: 20px;
@@ -354,11 +360,14 @@ onMounted(() => {
         margin-right: 20px;
         z-index: 1;
       }
+
       .line-style {
         position: relative;
-        height: 20px; /* 线的高度 */
+        height: 20px;
+        /* 线的高度 */
         width: 1px;
       }
+
       .line-style::after {
         content: '';
         position: absolute;
@@ -370,11 +379,13 @@ onMounted(() => {
         height: 150px;
       }
     }
+
     .alarm-item-content {
       //border-left: solid 2px #fdfaf6;
       //background: #fdfaf6;
       margin: 10px 40px;
       padding: 15px 10px;
+
       .alarm-type {
         //color: #dca550;
         margin-bottom: 30px;
@@ -382,23 +393,30 @@ onMounted(() => {
     }
   }
 }
+
 .alarm-list {
 }
+
 .color-ye {
   color: #dca550;
 }
+
 .color-ye-bg {
   background: #dca550;
 }
+
 .color-ye-bg-low {
   background: #fdfaf6;
 }
+
 .color-gre {
   color: #7ec050;
 }
+
 .color-gre-bg {
   background: #7ec050;
 }
+
 .color-gre-bg-low {
   background: #f8fcf6;
 }

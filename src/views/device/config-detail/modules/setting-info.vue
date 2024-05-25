@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
 import { deviceConfigDel, deviceConfigEdit } from '@/service/api/device';
@@ -62,6 +62,10 @@ const onSubmit = async () => {
     !error && emit('change');
   }
 };
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -83,6 +87,7 @@ const onSubmit = async () => {
     <n-modal
       v-model:show="showModal"
       preset="dialog"
+      :class="getPlatform ? '90%' : 'w-400px'"
       :title="modalIndex === 1 ? $t('generate.configure-auto-create-device') : $t('generate.onlineDeviceConfig')"
       :show-icon="false"
     >

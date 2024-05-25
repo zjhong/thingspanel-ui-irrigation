@@ -56,7 +56,7 @@ const handleEdit = async (id: string) => {
 const handleRemove = async (id: string) => {
   const { error } = await deleteDeviceTemplate(id);
   if (!error) {
-    window.$message?.info('已删除当前模板');
+    window.$message?.info($t('common.templateDeleted'));
     await getData();
   }
 };
@@ -82,7 +82,7 @@ const handleRemove = async (id: string) => {
 
       <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
         <NGridItem v-for="item in deviceTemplateList" :key="item.id" @click="handleEdit(item.id)">
-          <NCard hoverable>
+          <NCard hoverable style="height: 190px">
             <div class="flex-col justify-between">
               <div class="title text-16px font-600">
                 {{ item.name }}

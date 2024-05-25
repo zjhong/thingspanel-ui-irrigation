@@ -75,7 +75,7 @@ defineOptions({ name: 'TableActionModal' });
     v-model:show="modalVisible"
     preset="card"
     :title="title"
-    class="w-60%"
+    class="w-80%"
     @after-leave="
       () => {
         deviceTemplateId = props.templateId;

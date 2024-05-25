@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
@@ -161,7 +161,10 @@ const rowProps = (row: any) => {
     }
   };
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(async () => {
   await getDeviceList();
 });
@@ -191,7 +194,7 @@ onMounted(async () => {
       v-model:show="visible"
       :mask-closable="false"
       :title="$t('generate.add-device')"
-      class="w-600px"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
       preset="card"
       @after-leave="modalClose"
     >

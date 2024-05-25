@@ -201,7 +201,7 @@ onMounted(fetchBoards);
     <NModal
       v-model:show="showModal"
       :title="isEditMode ? $t('common.editScreen') : $t('common.addScreen')"
-      :class="getPlatform ? 'w-90%' : 'w-600px'"
+      :class="getPlatform ? 'w-90%' : 'w-500px'"
     >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">

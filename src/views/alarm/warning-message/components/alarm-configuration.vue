@@ -7,59 +7,18 @@
  * @LastEditTime: 2024-03-24 16:04:26
 -->
 <script setup lang="tsx">
-import { computed, getCurrentInstance, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, useMessage } from 'naive-ui';
-import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-ui';
+import { NButton, NCard, NFlex, NInput } from 'naive-ui';
+import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import dayjs from 'dayjs';
-import { batchProcessing, infoList, processingOperation } from '@/service/api/alarm';
+import moment from 'moment';
+import { alarmHistory } from '@/service/api/alarm';
 import { $t } from '@/locales';
+import { deviceAlarmHistoryPut } from '@/service/api';
 
 const loading = ref(false);
-const checkedRowKeysRef = ref<DataTableRowKey[]>([]);
 const rowKey = (row: DeviceManagement.DeviceData) => row.id;
-const message = useMessage();
-const options = ref([
-  {
-    label: $t('common.high'),
-    value: 'H'
-  },
-  {
-    label: $t('common.middle'),
-    value: 'M'
-  },
-  {
-    label: $t('common.low'),
-    value: 'L'
-  }
-]);
-const dispose = ref([
-  {
-    label: $t('common.untreated'),
-    value: 'UND'
-  },
-  {
-    label: $t('common.handled'),
-    value: 'DOP'
-  }
-]);
-
-const pagination: PaginationProps = reactive({
-  page: 1,
-  pageSize: 10,
-  itemCount: 0,
-  showSizePicker: true,
-  pageSizes: [10, 15, 20, 25, 30],
-  onChange: (page: number) => {
-    pagination.page = page;
-    list();
-  },
-  onUpdatePageSize: (pageSize: number) => {
-    pagination.pageSize = pageSize;
-    pagination.page = 1;
-    list();
-  }
-});
 
 interface ColumnsData {
   id: string;
@@ -74,17 +33,17 @@ interface ColumnsData {
 }
 
 const columns: Ref<DataTableColumns<ColumnsData>> = ref([
-  {
-    type: 'selection',
-    disabled(row: any) {
-      return row.name === 'Edward King 3';
-    }
-  },
+  // {
+  //   type: 'selection',
+  //   disabled(row: any) {
+  //     return row.name === 'Edward King 3';
+  //   }
+  // },
   {
     key: 'alarm_time',
-    title: $t('common.alarm_level'),
+    title: $t('common.alarm_time'),
     align: 'center',
-    minWidth: '140px',
+    width: '170px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
       return dayjs(row.alarm_time).format('YYYY-MM-DD HH:mm:ss');
     }
@@ -100,223 +59,186 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   },
   {
     key: 'alarm_level',
-    title: $t('common.alarm_level'),
+    title: $t('generate.alarm-status'),
     align: 'center',
-    width: '90px',
-    render(row) {
-      if (row.alarm_level === 'H') {
-        return $t('common.high');
-      } else if (row.alarm_level === 'M') {
-        return $t('common.middle');
-      }
-      return $t('common.low');
+    width: '120px',
+    render(row: any) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      return alarmStatusOptions.value.find(data => data.value === row.alarm_status)?.label || '';
+    }
+  },
+  {
+    key: 'content',
+    title: $t('generate.alarm-content'),
+    align: 'center',
+    minWidth: '100px',
+    ellipsis: {
+      tooltip: true
     }
   },
   {
     key: 'description',
     title: $t('generate.alarm-description'),
     align: 'center',
-    minWidth: '180px',
+    minWidth: '80px',
     ellipsis: {
       tooltip: true
     }
   },
   {
-    key: 'processing_result',
-    title: $t('generate.final-result'),
-    align: 'center',
-    width: '90px',
-    render(row) {
-      if (row.alarm_level === 'DOP') {
-        return $t('common.handled');
-      } else if (row.alarm_level === 'UND') {
-        return $t('common.untreated');
-      }
-      return $t('common.Ignored');
-    }
-  },
-  {
-    key: 'processor_name',
-    title: $t('common.processor_name'),
-    width: '90px',
-    align: 'center'
-  },
-
-  {
     key: 'actions',
     title: $t('common.action'),
-    minWidth: '200px',
+    width: '200px',
     align: 'center',
     render: row => {
       return (
         <div class="flex gap-20px">
-          <NButton type="primary" size={'small'} onClick={() => handleEditPwd(row)}>
+          <NButton type="primary" size={'small'} onClick={() => getInfo(row)}>
             {$t('custom.devicePage.details')}
           </NButton>
-          <NButton type="warning" size={'small'} onClick={() => handleEditTable(row.id, 'UND')}>
-            {$t('custom.devicePage.handle')}
-          </NButton>
-          <NButton size={'small'} onClick={() => handOpenLogModal(row.id, 'IGN')}>
-            {$t('common.Ignored')}
+          {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
+          <NButton type="warning" size={'small'} onClick={() => (showModal.value = true)}>
+            {$t('common.maintenance')}
           </NButton>
         </div>
       );
     }
   }
 ]) as Ref<DataTableColumns<ColumnsData>>;
-const paramsData = ref({
-  id: '',
-  processing_result: ''
-});
 
-/** 处理 */
-async function disposeData() {
-  loading.value = true;
-  const { data } = await processingOperation(paramsData.value);
-  if (data) {
-    loading.value = false;
-    message.success($t('custom.grouping_details.operationSuccess'));
-  } else {
-    message.error($t('custom.grouping_details.operationFail'));
-    loading.value = false;
-  }
-}
+const range = ref<[number, number]>([moment().subtract(1, 'months').valueOf(), moment().valueOf()]);
 
-function handleEditTable(rowId: string, type: string) {
-  console.log(1111);
-  paramsData.value.id = rowId;
-  paramsData.value.processing_result = type;
-  disposeData();
-}
-
-function handOpenLogModal(rowId: string, type: string) {
-  paramsData.value.id = rowId;
-  paramsData.value.processing_result = type;
-  disposeData();
-  console.log(1111);
-}
-
-/** @description: 批量处理 */
-const batchData = ref({
-  id: ref<DataTableRowKey[]>([]),
-  processing_result: '',
-  processing_instructions: $t('common.test')
-});
-
-function handleCheck(rowKeys: DataTableRowKey[]) {
-  checkedRowKeysRef.value = rowKeys;
-  console.log('piliang', checkedRowKeysRef.value);
-  batchData.value.id = checkedRowKeysRef.value;
-}
-
-async function batchProcessings() {
-  const { data } = await batchProcessing(batchData.value);
-  console.log(data);
-  if (!data) {
-    loading.value = false;
-    message.success($t('custom.grouping_details.operationSuccess'));
-  } else {
-    message.error($t('custom.grouping_details.operationFail'));
-    loading.value = false;
-  }
-}
-
-function handleBatch() {
-  batchData.value.processing_result = 'UND';
-  batchProcessings();
-}
-
-/** @description: 批量忽略 */
-function handleIgnore() {
-  batchData.value.processing_result = 'IGN';
-  batchProcessings();
-}
-
-const listData = ref({
-  alarmLevel: '',
-  processingResult: '',
-  StartTime: '',
-  EndTime: '',
+const queryData = ref({
+  alarm_status: null,
+  start_time: '',
+  end_time: '',
   page: 1,
   page_size: 10
 });
-
-const range = ref<[number, number]>([1183135260000, Date.now()]);
 const tableData = ref<ColumnsData[]>([]);
-
-/** 告警信息列表 */
-async function list() {
-  loading.value = true;
-  const { data } = await infoList(listData.value);
-  console.log('列表', data);
+const pagination: PaginationProps = reactive({
+  page: 1,
+  pageSize: 10,
+  itemCount: 0,
+  showSizePicker: true,
+  pageSizes: [10, 15, 20, 25, 30],
+  onChange: (page: number) => {
+    pagination.page = page;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getAlarmHistory();
+  },
+  onUpdatePageSize: (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getAlarmHistory();
+  }
+});
+const getAlarmHistory = async () => {
+  queryData.value.page = pagination.page as number;
+  queryData.value.page_size = pagination.pageSize as number;
+  const { data } = await alarmHistory(queryData.value);
   if (data) {
+    // eslint-disable-next-line require-atomic-updates
     pagination.itemCount = data.total;
     tableData.value = data.list;
     loading.value = false;
   }
-}
-
+};
+const resetQuery = () => {
+  pagination.page = 1;
+  getAlarmHistory();
+};
 function pickerChange() {
-  listData.value.StartTime = dayjs(range.value[0]).format('YYYY-MM-DD HH:mm:ss');
-
-  listData.value.EndTime = dayjs(range.value[1]).format('YYYY-MM-DD HH:mm:ss');
-  console.log('时间', listData.value.StartTime, listData.value.EndTime);
-  list();
+  if (range.value && range.value.length > 0) {
+    queryData.value.start_time = moment(range.value[0]).format('YYYY-MM-DDTHH:mm:ssZ');
+    queryData.value.end_time = moment(range.value[1]).format('YYYY-MM-DDTHH:mm:ssZ');
+  } else {
+    queryData.value.start_time = '';
+    queryData.value.end_time = '';
+  }
+  resetQuery();
 }
 
-function alarmLevelChang(e) {
-  listData.value.alarmLevel = e;
-  list();
+function alarmLevelChang() {
+  resetQuery();
 }
+onMounted(() => {
+  getAlarmHistory();
+});
 
-function processingResultBlur() {
-  console.log(96666, listData.value);
-  list();
-}
-
-list();
-const particulars = ref(false);
-const particularsText = ref('');
-
-function handleEditPwd(row) {
-  particularsText.value = row.content;
-  particulars.value = true;
-}
 const getPlatform = computed(() => {
   const { proxy }: any = getCurrentInstance();
   return proxy.getPlatform();
 });
+
+const alarmStatusOptions = ref([
+  {
+    label: '高级报警',
+    value: 'H'
+  },
+  {
+    label: '中级报警',
+    value: 'M'
+  },
+  {
+    label: '低级报警',
+    value: 'L'
+  },
+  {
+    label: '正常',
+    value: 'N'
+  }
+]);
+const showDialog = ref(false);
+const infoData = ref({} as any);
+function getInfo(data: any) {
+  infoData.value = data;
+  showDialog.value = true;
+}
+const closeModal = () => {
+  showDialog.value = false;
+};
+const showModal = ref(false);
+const description = ref('');
+const cancelCallback = () => {
+  description.value = '';
+  showModal.value = false;
+};
+const submitCallback = async () => {
+  if (description.value === '') {
+    window.$message?.error('请输入告警描述');
+    return;
+  }
+  const putData = {
+    id: infoData.value.id,
+    description: description.value
+  };
+  await deviceAlarmHistoryPut(putData);
+
+  cancelCallback();
+};
 </script>
 
 <template>
   <div class="h-full flex-col">
-    <NForm ref="queryFormRef" :inline="!getPlatform" label-placement="left" :model="listData">
+    <NForm ref="queryFormRef" :inline="!getPlatform" label-placement="left" :model="queryData">
       <NFormItem path="status">
         <n-date-picker
           v-model:value="range"
-          type="monthrange"
-          value-format="yyyy-MM-dd"
-          format="yyyy-MM-dd "
-          clearable
+          type="datetimerange"
+          :clearable="false"
+          separator="-"
           @update:value="pickerChange"
         />
       </NFormItem>
       <NFormItem :label="$t('generate.alarm-level')" path="status">
         <NSelect
-          v-model:value="listData.alarmLevel"
+          v-model:value="queryData.alarm_status"
           clearable
           class="w-200px"
-          :options="options"
+          :options="alarmStatusOptions"
           @update:value="alarmLevelChang"
-        />
-      </NFormItem>
-      <NFormItem :label="$t('generate.final-result')" path="status">
-        <NSelect
-          v-model:value="listData.processingResult"
-          clearable
-          class="w-200px"
-          :options="dispose"
-          @update:value="processingResultBlur"
         />
       </NFormItem>
     </NForm>
@@ -328,25 +250,68 @@ const getPlatform = computed(() => {
       :pagination="pagination"
       :row-key="rowKey"
       class="w-100% flex-1-hidden"
-      @update:checked-row-keys="handleCheck"
     />
-    <div class="flex gap-20px">
-      <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>
-      <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>
-    </div>
-    <NModal
-      v-model:show="particulars"
-      preset="card"
-      :title="$t('page.irrigation.time.log.detail')"
-      :class="getPlatform ? 'w-90%' : 'w-800px'"
-    >
-      <div class="pop-up">
-        <div>{{ $t('generate.alarm-content') }}</div>
-        <div class="pop-up-content">
-          {{ particularsText }}
+    <!--    <div class="flex gap-20px">-->
+    <!--      <NButton @click="handleBatch">{{ $t('generate.batch-process') }}</NButton>-->
+    <!--      <NButton @click="handleIgnore">{{ $t('generate.batch-ignore') }}</NButton>-->
+    <!--    </div>-->
+    <n-modal v-model:show="showDialog" :title="$t('generate.alarm-info')" class="max-w-[800px]">
+      <NCard>
+        <div>
+          <NH3>{{ $t('generate.alarm-info') }}</NH3>
         </div>
-      </div>
-    </NModal>
+        <n-form-item label-placement="left" :show-feedback="false" label="告警配置名称:">
+          {{ infoData.name }}
+        </n-form-item>
+        <n-form-item label-placement="left" :show-feedback="false" label="关联场景联动名称:">
+          {{ infoData['alarm_config_name'] }}
+        </n-form-item>
+        <n-form-item label-placement="left" :show-feedback="false" label="告警时间:">
+          {{ moment(infoData['create_at']).format('YYYY-MM-DD HH:mm:ss') }}
+        </n-form-item>
+        <n-form-item label-placement="left" :show-feedback="false" label="告警状态:">
+          {{ alarmStatusOptions.find(data => data.value === infoData['alarm_status'])?.label || '' }}
+        </n-form-item>
+        <n-form-item label-placement="left" :show-feedback="false" label="告警原因:">
+          {{ infoData.content }}
+        </n-form-item>
+        <n-form-item label-placement="left" :show-feedback="false" label="告警描述:">
+          {{ infoData.description }}
+        </n-form-item>
+        <n-form-item label-placement="top" :show-feedback="false" label="告警设备列表:">
+          <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th class="min-w-180px">设备编码</th>
+                <th>设备名称</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(device, index) in infoData.alarm_device_list" :key="index">
+                <td class="min-w-100px">{{ index + 1 }}</td>
+                <td>{{ device.id }}</td>
+                <td>{{ device['name'] }}</td>
+              </tr>
+            </tbody>
+          </NTable>
+        </n-form-item>
+        <NFlex justify="flex-end">
+          <NButton @click="closeModal">关闭</NButton>
+        </NFlex>
+      </NCard>
+    </n-modal>
+    <n-modal v-model:show="showModal" class="max-w-[600px]">
+      <NCard>
+        <n-form-item :show-feedback="false" label="告警描述">
+          <NInput v-model:value="description" type="textarea" />
+        </n-form-item>
+        <NFlex justify="flex-end" class="mt-4">
+          <NButton @click="cancelCallback">{{ $t('generate.cancel') }}</NButton>
+          <NButton @click="submitCallback">{{ $t('common.save') }}</NButton>
+        </NFlex>
+      </NCard>
+    </n-modal>
   </div>
 </template>
 
@@ -356,8 +321,6 @@ const getPlatform = computed(() => {
 }
 
 .pop-up-content {
-  margin-left: 15px;
-  width: 90%;
   height: 200px;
   padding: 10px;
   border: 1px solid rgb(215, 213, 213);

@@ -128,7 +128,7 @@ const openLog = (item: any) => {
 const deleteLink = async (item: any) => {
   dialog.warning({
     title: $t('common.deletePrompt'),
-    content: '请确认是否删除该场景联动信息？',
+    content: $t('common.sceneLinkageInfo'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -181,7 +181,7 @@ onMounted(() => {
       <n-empty
         v-if="sceneLinkageList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
@@ -270,7 +270,12 @@ onMounted(() => {
         ></n-select>
         <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
       </NFlex>
-      <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
+      <n-empty
+        v-if="logDataTotal === 0"
+        size="huge"
+        :description="$t('common.nodata')"
+        class="min-h-60 justify-center"
+      ></n-empty>
       <template v-else>
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>

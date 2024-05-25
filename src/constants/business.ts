@@ -186,7 +186,7 @@ export const irrigationPlanStatusOption = transformObjectToOption(irrigationPlan
 
 /** 灌溉计划-控制类型 */
 export const irrigationControlType: Record<DataService.FlagKey, string> = {
-  A: '时长',
+  A: $t('page.irrigation.duration'),
   B: '容量 '
 };
 export const irrigationControlTypeOption = transformObjectToOption(irrigationControlType);

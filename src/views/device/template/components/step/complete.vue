@@ -32,10 +32,10 @@ const copyText = (): void => {
     navigator.clipboard
       .writeText(typeof text === 'string' ? text : '')
       .then(() => {
-        window.NMessage.info('文本已复制到剪贴板');
+        window.NMessage.info($t('common.copiedClipboard'));
       })
       .catch(err => {
-        window.NMessage.error('复制文本失败:', err);
+        window.NMessage.error(`${$t('common.copyingFailed')}:`, err);
       });
   }
 };

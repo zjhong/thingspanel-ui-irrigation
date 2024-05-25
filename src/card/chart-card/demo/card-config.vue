@@ -2,29 +2,20 @@
 import { inject } from 'vue';
 import type { IConfigCtx } from '@/components/panel/card';
 import { $t } from '@/locales';
-import icons from './icon';
+import IconSelector from './icon-selector.vue';
 
 const ctx = inject<IConfigCtx>('config-ctx')!;
+
+const setIcon = icon => {
+  ctx.config.iconName = icon; // 更新配置
+};
 </script>
 
 <template>
   <NForm :model="ctx.config">
-    <NFormItem label="选择图标">
-      <div class="flex space-x-3">
-        <div
-          v-for="item in icons"
-          :key="item.name"
-          :class="`text-lg cursor-pointer p-1 rounded border ${
-            item.name === ctx.config.icon ? 'border-blue-500' : 'border-transparent'
-          }`"
-          @click="ctx.config.icon = item.name"
-        >
-          <component :is="item.value" />
-        </div>
-      </div>
-    </NFormItem>
     <NFormItem :label="$t('generate.color')">
       <NColorPicker v-model:value="ctx.config.color" :show-alpha="false" />
     </NFormItem>
+    <IconSelector @icon-selected="setIcon" />
   </NForm>
 </template>

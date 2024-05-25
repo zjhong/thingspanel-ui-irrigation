@@ -78,10 +78,18 @@ const state = reactive({
 const editView = ref<ICardView | null>();
 const formRef = ref<ICardFormIns>();
 
+const toEditMode = () => {
+  isEditing.value = true;
+};
+const quitEditMode = () => {
+  isEditing.value = false;
+};
+
 const insertCard = (card: ICardData) => {
   cr.value?.addCard(card);
   editView.value = null;
   state.cardData = null;
+  toEditMode();
 };
 
 const updateCard = (card: ICardData) => {
@@ -111,12 +119,6 @@ const edit = (view: ICardView) => {
 };
 const showCardList = () => {
   showingCardList.value = true;
-};
-const toEditMode = () => {
-  isEditing.value = true;
-};
-const quitEditMode = () => {
-  isEditing.value = false;
 };
 
 const savePanel = async () => {

@@ -3,8 +3,8 @@ import { onMounted, ref } from 'vue';
 import { NButton, NCard, NFlex, NGrid, NGridItem, NPagination } from 'naive-ui';
 import { deviceAlarmList } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 const { routerPushByKey } = useRouterPush();
-
 const props = defineProps<{
   // eslint-disable-next-line vue/prop-name-casing
   config_id: string;
@@ -36,12 +36,12 @@ onMounted(() => {
   <div class="alarm-list">
     <NCard class="w-full">
       <NFlex justify="flex-end" class="mb-4">
-        <NButton type="primary" @click="alarmAdd()">新增告警</NButton>
+        <NButton type="primary" @click="alarmAdd()">{{ $t('generate.addAlarm') }}</NButton>
       </NFlex>
       <n-empty
         v-if="alarmList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">

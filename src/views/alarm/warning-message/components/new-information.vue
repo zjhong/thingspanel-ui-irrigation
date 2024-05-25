@@ -7,7 +7,7 @@
  * @LastEditTime: 2024-03-20 19:48:13
 -->
 <script setup lang="tsx">
-import { computed, getCurrentInstance, h, reactive, ref } from 'vue';
+import { h, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { NButton, NPopconfirm, useMessage } from 'naive-ui';
@@ -265,11 +265,6 @@ async function deleteInfo() {
   }
   list();
 }
-
-const getPlatform = computed(() => {
-  const { proxy }: any = getCurrentInstance();
-  return proxy.getPlatform();
-});
 </script>
 
 <template>
@@ -291,13 +286,7 @@ const getPlatform = computed(() => {
     />
   </div>
 
-  <popUp
-    v-model:visible="visible"
-    :class="getPlatform ? 'w-90%' : 'w-600px'"
-    :type="modalType"
-    :edit-data="editData"
-    @new-edit="newEdit"
-  />
+  <popUp v-model:visible="visible" :type="modalType" :edit-data="editData" @new-edit="newEdit" />
 </template>
 
 <style scoped>

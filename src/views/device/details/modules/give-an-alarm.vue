@@ -107,6 +107,7 @@ const submitCallback = async () => {
     description: description.value
   };
   await deviceAlarmHistoryPut(putData);
+  getAlarmHistory();
   cancelCallback();
 };
 const queryData = ref({

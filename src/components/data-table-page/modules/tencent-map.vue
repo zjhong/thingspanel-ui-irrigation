@@ -40,7 +40,11 @@ const telemetryData: (id: string) => void = async id => {
   // }
   const data: any = await telemetryLatestApi(id);
   telemetryValue.value = data.data;
-  console.log(telemetryValue.value, '最新的遥测数据');
+  telemetryValue.value.filter(item => item.label);
+  console.log(
+    telemetryValue.value.filter(item => item.label),
+    '最新的遥测数据'
+  );
 };
 
 async function renderMap() {
@@ -129,15 +133,13 @@ async function renderMap() {
           <NCard
             header-style="padding:10px"
             title={`${$t('custom.devicePage.deviceName')}：${evt.geometry.data.name}`}
-            class="h-130px min-w-200px"
+            class="min-h-130px min-w-200px"
           >
             <div>
               {$t('custom.devicePage.lastPushTime')}：
               {evt.geometry.data.ts ? dayjs(evt.geometry.data.ts).format('YYYY-MM-DD HH:mm:ss') : '-'}
             </div>
-            <div>
-              {'当前设备的温度和湿度'}：{evt?.geometry?.humidity ?? 0}%~{evt?.geometry?.temperature ?? 0}%
-            </div>
+            {evt.geometry.dom}
             <div>
               {$t('generate.status')}：{statusText[evt.geometry.data.is_online]}
             </div>
@@ -146,8 +148,13 @@ async function renderMap() {
       }
     });
     setTimeout(() => {
-      evt.geometry.humidity = telemetryValue.value[0]?.value ?? 0;
-      evt.geometry.temperature = telemetryValue.value[1]?.value ?? 0;
+      let dom = ``;
+      telemetryValue.value.filter(item => {
+        if (item.label) {
+          dom = `${dom}<div>{'${item.label}'}：{'${item.value}'}{'${item.unit}'}</div>`;
+        }
+      });
+      evt.geometry.dom = dom;
 
       // 挂载这个实例，并获取它的 HTML
       const html = app.mount(document.createElement('div')).$el.outerHTML;

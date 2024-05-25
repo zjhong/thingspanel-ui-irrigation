@@ -267,7 +267,7 @@ onMounted(() => {
   <div v-if="tabValue === 2" class="alarm-list">
     <NCard class="w-full">
       <NFlex justify="flex-end" class="mb-4">
-        <NButton type="primary" @click="alarmAdd()">新增告警</NButton>
+        <NButton type="primary" @click="alarmAdd()">{{ $t('generate.addAlarm') }}</NButton>
       </NFlex>
       <n-empty
         v-if="alarmList.length === 0"

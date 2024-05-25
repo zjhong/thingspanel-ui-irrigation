@@ -101,7 +101,7 @@ export default {
         console.log('空间保存', data);
         editSpaces(data).then(e => {
           if (e) {
-            message.success('编辑成功');
+            message.success($t('common.editSuccess'));
             state.spaceForm.name = '';
             state.spaceForm.location = '';
             state.spaceForm.dimensionality = '';
@@ -114,7 +114,7 @@ export default {
             methods.mapInit();
             context.emit('saveSpace', false);
           } else {
-            message.error('编辑失败');
+            message.error($t('common.editFail'));
           }
         });
       },

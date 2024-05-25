@@ -252,6 +252,28 @@ declare namespace App {
         title: string;
       };
       common: {
+        editFail: string;
+        editSuccess: string;
+        times1: string;
+        times2: string;
+        times3: string;
+        times4: string;
+        times5: string;
+        times6: string;
+        times7: string;
+        times8: string;
+        times9: string;
+        times10: string;
+        minutes3: string;
+        minutes4: string;
+        minutes6: string;
+        minutes7: string;
+        minutes8: string;
+        minutes9: string;
+        enterTriggeringDuration: string;
+        enterNumberTriggering: string;
+        enterAlarmLevel: string;
+        enterAlarmName: string;
         nodata: string;
         halfYear: string;
         lastYears1: string;
@@ -1207,6 +1229,7 @@ declare namespace App {
         };
       };
       generate: {
+        editAlarm: string;
         selectRuleStatus: string;
         by: string;
         clickDelete: string;

@@ -114,7 +114,7 @@ const submit: () => void = async () => {
       emit('update:objItem', {});
       emit('update:addAndEditModalVisible', false);
       emit('determine');
-      window.$message?.success('编辑成功');
+      window.$message?.success($t('common.editSuccess'));
     }
     console.log(response, '提交');
   } else {

@@ -1,76 +1,108 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { NButton } from 'naive-ui';
-import { CopyOutline as copyIcon, PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
-import { $t } from '@/locales';
+import { NButton, NCard, NFlex, NGrid, NGridItem, NPagination } from 'naive-ui';
+import { deviceAlarmList } from '@/service/api';
+import { useRouterPush } from '@/hooks/common/router';
+const { routerPushByKey } = useRouterPush();
 
-const alarmList = ref([
-  {
-    name: '人来自动开灯',
-    description: '晚上7点后自动开灯',
-    status: true
-  },
-  {
-    name: '打开空调降温',
-    description: '气温28度后打开空调降温',
-    status: true
-  },
-  {
-    name: '燃气泄露检测',
-    description: '检测到燃气超标自动告警通知',
-    status: false
-  },
-  {
-    name: '关闭窗帘',
-    description: '执行晚安指令时自动关闭窗帘',
-    status: false
-  },
-  {
-    name: '油烟机启动',
-    description: '检测到燃气灶点火时自动开启油烟机',
-    status: true
-  }
-]);
+const props = defineProps<{
+  // eslint-disable-next-line vue/prop-name-casing
+  config_id: string;
+}>();
+const queryData = ref({
+  page: 1,
+  page_size: 10,
+  device_config_id: ''
+});
+const alarmTotal = ref(0);
+const alarmList = ref([]);
+const getAlarmList = async () => {
+  queryData.value.device_config_id = props.config_id;
+  const res = await deviceAlarmList(queryData.value);
+  alarmList.value = res.data.list || [];
+  alarmTotal.value = res.data.total;
+};
+const alarmAdd = () => {
+  routerPushByKey('automation_linkage-edit', {
+    query: { device_config_id: props.config_id }
+  });
+};
 onMounted(() => {
-  alarmList.value = [];
+  getAlarmList();
 });
 </script>
 
 <template>
-  <n-empty v-if="alarmList.length === 0" size="huge" :description="$t('common.nodata')"></n-empty>
-  <div v-else class="alarm-box">
-    <div v-for="(item, index) in alarmList" :key="index" class="alarm-item">
-      <div class="item-name">
-        <div>
-          {{ item }}
-        </div>
-        <n-switch />
-      </div>
-      <div class="item-desc">{{ $t('generate.temperature-alert-above-28') }}</div>
-      <NFlex justify="end">
-        <NButton circle tertiary type="info">
-          <template #icon>
-            <n-icon>
-              <editIcon />
-            </n-icon>
-          </template>
-        </NButton>
-        <NButton circle tertiary type="info">
-          <template #icon>
-            <n-icon>
-              <copyIcon />
-            </n-icon>
-          </template>
-        </NButton>
-        <NButton circle tertiary type="error">
-          <template #icon>
-            <n-icon>
-              <trashIcon />
-            </n-icon>
-          </template>
-        </NButton>
+  <div class="alarm-list">
+    <NCard class="w-full">
+      <NFlex justify="flex-end" class="mb-4">
+        <NButton type="primary" @click="alarmAdd()">新增告警</NButton>
       </NFlex>
-    </div>
+      <n-empty
+        v-if="alarmList.length === 0"
+        size="huge"
+        description="暂无数据"
+        class="min-h-60 justify-center"
+      ></n-empty>
+      <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem v-for="(item, index) in alarmList" :key="index">
+          <NCard hoverable style="height: 160px">
+            <NFlex justify="space-between" align="center" class="mb-4">
+              <div class="text-16px font-600">
+                {{ item['name'] }}
+              </div>
+            </NFlex>
+            <div>{{ item['description'] }}</div>
+            <!--            <NFlex justify="flex-end" class="mt-4">-->
+            <!--              <NTooltip trigger="hover">-->
+            <!--                <template #trigger>-->
+            <!--                  <NButton tertiary circle type="warning" @click="linkEdit(item)">-->
+            <!--                    <template #icon>-->
+            <!--                      <n-icon>-->
+            <!--                        <editIcon />-->
+            <!--                      </n-icon>-->
+            <!--                    </template>-->
+            <!--                  </NButton>-->
+            <!--                </template>-->
+            <!--                {{ $t('common.edit') }}-->
+            <!--              </NTooltip>-->
+            <!--              <NTooltip trigger="hover">-->
+            <!--                <template #trigger>-->
+            <!--                  <NButton circle tertiary type="info" @click="openLog(item)">-->
+            <!--                    <template #icon>-->
+            <!--                      <n-icon>-->
+            <!--                        <copyIcon />-->
+            <!--                      </n-icon>-->
+            <!--                    </template>-->
+            <!--                  </NButton>-->
+            <!--                </template>-->
+            <!--                {{ $t('page.irrigation.time.log.name') }}-->
+            <!--              </NTooltip>-->
+            <!--              <NTooltip trigger="hover">-->
+            <!--                <template #trigger>-->
+            <!--                  <NButton circle tertiary type="error" @click="deleteLink(item)">-->
+            <!--                    <template #icon>-->
+            <!--                      <n-icon>-->
+            <!--                        <trashIcon />-->
+            <!--                      </n-icon>-->
+            <!--                    </template>-->
+            <!--                  </NButton>-->
+            <!--                </template>-->
+            <!--                {{ $t('common.delete') }}-->
+            <!--              </NTooltip>-->
+            <!--            </NFlex>-->
+          </NCard>
+        </NGridItem>
+      </NGrid>
+      <NFlex justify="flex-end" class="mt-4">
+        <NPagination
+          v-model:page="queryData.page"
+          :page-size="queryData.page_size"
+          :item-count="alarmTotal"
+          @update:page="getAlarmList"
+        />
+      </NFlex>
+    </NCard>
   </div>
 </template>
 

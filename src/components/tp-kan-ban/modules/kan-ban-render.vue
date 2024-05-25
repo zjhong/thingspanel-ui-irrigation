@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { GridItem, GridLayout } from 'grid-layout-plus';
+import { GridItem, GridLayout } from '@/components/drg-grid-layout';
 import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
 import { KANBANCOLNUM, KANBANROWHEIGHT } from '@/constants/common';
 import { $t } from '@/locales';

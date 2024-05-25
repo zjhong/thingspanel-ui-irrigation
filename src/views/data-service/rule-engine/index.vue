@@ -63,7 +63,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'signMode',
-    title: '签名方式',
+    title: $t('generate.signature-method'),
     align: 'left',
     render: row => {
       if (row.signMode) {
@@ -74,12 +74,12 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'ip',
-    title: 'IP白名单',
+    title: $t('generate.ip2'),
     align: 'left'
   },
   {
     key: 'flag',
-    title: '接口支持标志',
+    title: $t('generate.api-support-flag'),
     align: 'left',
     render: row => {
       if (row.flag) {
@@ -125,7 +125,7 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleViewKey(row.id)}>
-            查看密钥
+            {$t('generate.view-key')}
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
             {$t('common.edit')}

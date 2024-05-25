@@ -73,8 +73,8 @@ const modalVisible = computed({
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '创建通知组',
-    edit: '修改通知组'
+    add: $t('common.createNotificationGroup'),
+    edit: $t('common.editNotificationGroup')
   };
   return titles[props.type];
 });
@@ -85,8 +85,8 @@ type FormModel = Pick<DataService.Data, any>;
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('generate.ruleName')),
-  description: createRequiredFormRule('请输入通知组描述'),
-  notification_type: createRequiredFormRule('请选择通知方式')
+  description: createRequiredFormRule($t('common.notificationGroupDesc')),
+  notification_type: createRequiredFormRule($t('common.chooseNotificationMethod'))
 };
 
 function handleUpdateFormModel(model: Partial<FormModel>) {

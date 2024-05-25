@@ -1,6 +1,7 @@
 <script lang="tsx" setup>
 import type { Ref } from 'vue';
 import { inject, onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { $t } from '@/locales';
 import { usePanelStore } from '@/store/modules/panel';
 import type { ICardData, ICardDefine } from '@/components/panel/card';
 import { deviceModelSourceForPanel } from '@/service/api';
@@ -83,7 +84,7 @@ const changeIndicate = value => {
   // eslint-disable-next-line no-param-reassign
   value = value.filter(item => item !== undefined);
   if (value.length > state.data.dataSource.sourceNum) {
-    window.NMessage.error(`最多选择${state.data.dataSource.sourceNum}个数据源`);
+    window.NMessage.error($t('common.maxSelect') + state.data.dataSource.sourceNum + $t('common.dataSources'));
   }
   if (state.data.dataSource.sourceNum === 1) {
     indicateValue.value = [value[value.length - 1]];
@@ -152,6 +153,7 @@ onMounted(() => {
 
 <style scoped>
 .custom-select-container .v-binder-follower-container {
-  width: 300px !important; /* 只会影响该组件内的 NSelect 下拉宽度 */
+  width: 300px !important;
+  /* 只会影响该组件内的 NSelect 下拉宽度 */
 }
 </style>

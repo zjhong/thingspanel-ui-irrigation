@@ -56,7 +56,7 @@ const handleEdit = async (id: string) => {
 const handleRemove = async (id: string) => {
   const { error } = await deleteDeviceTemplate(id);
   if (!error) {
-    window.$message?.info('已删除当前模板');
+    window.$message?.info($t('common.templateDeleted'));
     await getData();
   }
 };

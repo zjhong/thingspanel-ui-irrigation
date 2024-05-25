@@ -44,11 +44,11 @@ const configForm = ref({
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入场景名称'
+    message: $t('generate.enter-scene-name')
   },
   description: {
     required: true,
-    message: '请输入场景描述'
+    message: $t('generate.enterSceneDesc')
   },
   actionType: {
     required: true,
@@ -544,8 +544,8 @@ onMounted(() => {
                           label-field="name"
                           value-field="id"
                           :placeholder="$t('common.select')"
-                          filterable
                           remote
+                          filterable
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />

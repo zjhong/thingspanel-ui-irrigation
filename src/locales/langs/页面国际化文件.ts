@@ -26,6 +26,7 @@ export const pzh_cn: any = {
     additionSuccess: '新增成功'
   },
   devicePage: {
+    maintenance: '维护',
     handle: '处理',
     attributeDistribution: '属性下发预处理',
     attributeReporting: '属性上报预处理',
@@ -196,6 +197,7 @@ export const pen: any = {
     additionSuccess: 'Addition Success'
   },
   devicePage: {
+    maintenance: 'maintenance',
     handle: 'handle',
     transmissionPreprocessing: 'Telemetry transmission preprocessing',
     attributeDistribution: 'Pre processing of attribute distribution',

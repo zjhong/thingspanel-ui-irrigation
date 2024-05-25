@@ -58,7 +58,7 @@ const fromRules: Rules = {
   read_write_flag: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入读写标志'
+    message: $t('generate.enter-read-write')
   }
 };
 

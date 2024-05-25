@@ -56,7 +56,7 @@ async function getTableData() {
 const runDistribute = (rowId: string, status: number) => {
   dialog.warning({
     title: $t('common.tip'),
-    content: status === 4 ? '确定将计划下发给设备吗' : '确定取消计划吗',
+    content: status === 4 ? $t('common.planTheDevice') : $t('common.cancelThePlan'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -73,7 +73,7 @@ const runDistribute = (rowId: string, status: number) => {
 const runDel = (rowId: string) => {
   dialog.warning({
     title: $t('common.tip'),
-    content: '确定删除计划吗',
+    content: $t('common.deleteThePlan'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {

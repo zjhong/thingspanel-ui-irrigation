@@ -128,7 +128,7 @@ const openLog = (item: any) => {
 const deleteLink = async (item: any) => {
   dialog.warning({
     title: $t('common.deletePrompt'),
-    content: '请确认是否删除该场景联动信息？',
+    content: $t('common.sceneLinkageInfo'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {

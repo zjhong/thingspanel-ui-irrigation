@@ -252,6 +252,35 @@ declare namespace App {
         title: string;
       };
       common: {
+        deleteThePlan: string;
+        cancelThePlan: string;
+        planTheDevice: string;
+        checkDevice: string;
+        editSpace: string;
+        locationInfoAdded: string;
+        section: string;
+        leastOneChart: string;
+        accompaniedIndicators: string;
+        copyingFailed: string;
+        copiedClipboard: string;
+        dataSources: string;
+        maxSelect: string;
+        chart: string;
+        selectCardFirst: string;
+        componentsAddedYet: string;
+        templateDeleted: string;
+        normal: string;
+        lowAlarm: string;
+        intermediateAlarm: string;
+        highAlarm: string;
+        enterAlarmDesc: string;
+        alarmRules: string;
+        alarmHistory: string;
+        sceneLinkageInfo: string;
+        chooseNotificationMethod: string;
+        notificationGroupDesc: string;
+        createNotificationGroup: string;
+        editNotificationGroup: string;
         editFail: string;
         editSuccess: string;
         times1: string;
@@ -1092,6 +1121,7 @@ declare namespace App {
           additionSuccess: string;
         };
         devicePage: {
+          maintenance: string;
           attributeDistribution: string;
           attributeReporting: string;
           transmissionPreprocessing: string;
@@ -1229,6 +1259,12 @@ declare namespace App {
         };
       };
       generate: {
+        sceneLinkageName: string;
+        alarmConfugName: string;
+        alarmDevices: string;
+        alarmReason: string;
+        alarmStatus: string;
+        enterSceneDesc: string;
         editAlarm: string;
         selectRuleStatus: string;
         by: string;

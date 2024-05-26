@@ -151,14 +151,15 @@ onMounted(() => {
           {{ $t('page.login.common.back') }}
         </NButton>
 -->
-        <NButton @mouseover="showCardList">
-          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
-          {{ $t('generate.add-component') }}
-        </NButton>
+        <NSpace align="center">
+          <span class="text-14px font-medium line-height-normal">看板：{{ panelDate?.name }}</span>
+          <NButton @mouseover="showCardList">
+            <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
+            {{ $t('generate.add-component') }}
+          </NButton>
+        </NSpace>
       </div>
       <NSpace align="center">
-        <span class="text-lg font-medium">看板：{{ panelDate?.name }}</span>
-
         <!--        <NButton>-->
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->

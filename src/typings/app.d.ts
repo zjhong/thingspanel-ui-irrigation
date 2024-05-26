@@ -273,6 +273,7 @@ declare namespace App {
         lowAlarm: string;
         intermediateAlarm: string;
         highAlarm: string;
+        allStatus: string;
         enterAlarmDesc: string;
         alarmRules: string;
         alarmHistory: string;
@@ -1654,6 +1655,7 @@ declare namespace App {
         fieldValue: string;
         fieldKey: string;
         addAlarm: string;
+        addAlarmRule: string;
         heartbeatFunctionInfo: string;
         manualOnlineStatusEdit: string;
         deviceCode: string;

@@ -173,13 +173,13 @@ onUnmounted(() => {
   position: absolute;
   top: 15%;
   left: 15%;
-  font-size: 1.5em;
+  font-size: 1.2em;
 }
 
 .value {
   position: absolute;
   bottom: 12%;
   left: 60%;
-  font-size: 4em;
+  font-size: 2.5em;
 }
 </style>

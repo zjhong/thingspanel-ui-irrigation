@@ -197,11 +197,15 @@ const deleteData = async (item: any) => {
 };
 const doQuiz = async () => {
   await configFormRef?.value?.validate();
-  const { data, error } = await dataScriptQuiz(configForm.value);
-  if (!error) {
-    console.log(data);
-    // configForm.value.resolt_analog_input = data.message || '';
-  }
+
+  dataScriptQuiz(configForm.value).then(({ data }: any) => {
+    configForm.value.resolt_analog_input = data.message || '';
+  });
+  // const { data, error } = await dataScriptQuiz(configForm.value);
+  // if (!error) {
+  //   console.log(data);
+  //   // configForm.value.resolt_analog_input = data.message || '';
+  // }
 };
 
 const cmRef = ref();

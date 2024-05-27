@@ -160,7 +160,6 @@ const handleChange = async (item: object) => {
 };
 const handleClose = () => {
   configFormRef.value?.restoreValidation();
-  configForm.value = defaultConfigForm();
   showModal.value = false;
 };
 // 提交表单

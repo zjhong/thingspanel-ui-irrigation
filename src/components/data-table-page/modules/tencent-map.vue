@@ -149,7 +149,7 @@ async function renderMap() {
       let dom = ``;
       telemetryValue.value.filter(item => {
         if (item.label) {
-          dom = `${dom}<div>${item.label}：${item.value} ${item.unit}</div>`;
+          dom = `${dom}<div>${item.label}：<span class='card_val'>${item.value}</span> ${item.unit}</div>`;
         }
       });
       evt.geometry.dom = dom;
@@ -188,4 +188,26 @@ watchEffect(() => {
   <div ref="domRef" class="h-full w-full"></div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+:deep(.n-card) {
+  display: flex;
+  align-items: flex-start;
+  border: 0;
+  padding: 0 15px;
+}
+
+:deep(.n-card__content) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 10px;
+}
+
+.card_map {
+  padding: 10px !important;
+}
+
+:deep(.card_val) {
+  color: rgb(var(--nprogress-color)) !important;
+}
+</style>

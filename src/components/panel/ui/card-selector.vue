@@ -185,7 +185,7 @@ onMounted(() => {
                       @click="selectCard(item.data)"
                     >
                       <div class="text-center font-medium leading-8 dark:bg-zinc-900">
-                        {{ $t(item.data.title) }}
+                        {{ item.data.dataSource?.deviceSource?.[0]?.metricsName || $t(item.data.title) }}
                       </div>
                       <div class="h-148px w-full">
                         <!--

@@ -1232,6 +1232,7 @@ declare namespace App {
           sendContent: string;
           triggerOperation: string;
           whole: string;
+          command: string;
           sendResults: string;
           automaticTriggering: string;
           manualOperation: string;

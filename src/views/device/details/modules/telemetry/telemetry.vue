@@ -107,7 +107,7 @@ const { status, send, close } = useWebSocket(wsUrl, {
 });
 
 const columns = [
-  { title: $t('custom.device_details.alarm'), minWidth: '140px', key: 'data' },
+  { title: $t('custom.device_details.command'), minWidth: '140px', key: 'data' },
   {
     title: $t('custom.device_details.operationType'),
     key: 'operation_type',

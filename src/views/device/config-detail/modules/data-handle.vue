@@ -132,7 +132,7 @@ interface DataScriptItem {
   enable_flag: string;
   script_type: string;
 }
-
+const resolt_analog_input = ref('');
 const dataScriptList = ref<Array<DataScriptItem>>([]);
 const dataScriptTotal = ref(0);
 const queryDataScriptList = async () => {
@@ -168,19 +168,26 @@ const handleSubmit = async () => {
   await configFormRef?.value?.validate();
   configForm.value.device_config_id = props.configInfo.id;
   if (!configForm.value.id) {
-    const res = await dataScriptAdd(configForm.value);
+    const res = await dataScriptAdd({
+      ...configForm.value,
+      resolt_analog_input: resolt_analog_input.value
+    });
     if (!res.error) {
       // message.success('新增成功');
+      handleClose();
       searchDataScript();
     }
   } else {
-    const res = await dataScriptEdit(configForm.value);
+    const res = await dataScriptEdit({
+      ...configForm.value,
+      resolt_analog_input: resolt_analog_input.value
+    });
     if (!res.error) {
+      handleClose();
       // message.success('修改成功');
       searchDataScript();
     }
   }
-  handleClose();
 };
 const deleteData = async (item: any) => {
   dialog.warning({
@@ -205,7 +212,7 @@ const doQuiz = async () => {
   await configFormRef?.value?.validate();
   const result = await dataScriptQuiz(postData);
   if (result?.data?.code === 200) {
-    configForm.value.resolt_analog_input = result?.data?.message || '';
+    resolt_analog_input.value = result?.data?.message || '';
   }
 };
 

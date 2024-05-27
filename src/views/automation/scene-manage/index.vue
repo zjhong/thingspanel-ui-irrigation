@@ -257,7 +257,12 @@ onMounted(() => {
         ></n-select>
         <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
       </NFlex>
-      <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
+      <n-empty
+        v-if="logDataTotal === 0"
+        size="huge"
+        :description="$t('common.nodata')"
+        class="min-h-60 justify-center"
+      ></n-empty>
       <template v-else>
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>

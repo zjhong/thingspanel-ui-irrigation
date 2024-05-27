@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-
   (e: 'success'): void;
 }
 

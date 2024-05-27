@@ -7,6 +7,7 @@
  * @LastEditTime: 2024-04-10 05:50:15
 -->
 <script setup lang="tsx">
+import { $t } from '@/locales';
 import editSpace from './components/edit-space.vue';
 import editArea from './components/edit-area.vue';
 
@@ -49,7 +50,7 @@ function saveEditArea(data) {
 <template>
   <NCard>
     <n-tabs type="line" animated :value="type">
-      <n-tab-pane name="space" tab="编辑空间">
+      <n-tab-pane name="space" :tab="$t('common.editSpace')">
         <editSpace
           :data-id="props.typeData.id"
           :button-disabled="props.typeData.buttonDisabled"
@@ -57,7 +58,7 @@ function saveEditArea(data) {
           @save-space="saveSpace"
         />
       </n-tab-pane>
-      <n-tab-pane name="area" tab="编辑区域">
+      <n-tab-pane name="area" tab="custom.edit-area">
         <editArea :data-id="props.typeData.id" @cancel-edit-area="cancelEditArea" @save-edit-area="saveEditArea" />
       </n-tab-pane>
     </n-tabs>

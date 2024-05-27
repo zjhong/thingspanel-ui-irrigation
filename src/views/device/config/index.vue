@@ -74,7 +74,7 @@ onMounted(() => {
       <n-empty
         v-if="deviceConfigList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <template v-else>

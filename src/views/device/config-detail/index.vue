@@ -61,28 +61,28 @@ onMounted(async () => {
         <template v-if="configForm.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
       </div>
       <n-tabs animated type="line">
-        <n-tab-pane name="关联设备" tab="关联设备">
+        <n-tab-pane :name="$t('common.associatedDevices')" :tab="$t('common.associatedDevices')">
           <AssociatedDevices :device-config-id="configId" />
         </n-tab-pane>
-        <n-tab-pane name="属性与功能" tab="属性与功能">
+        <n-tab-pane :name="$t('common.propertiesAndFunctions')" :tab="$t('common.propertiesAndFunctions')">
           <AttributeInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="协议配置" tab="协议配置">
+        <n-tab-pane :name="$t('common.protocolConfig')" :tab="$t('common.protocolConfig')">
           <ConnectionInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="数据处理" tab="数据处理">
+        <n-tab-pane :name="$t('common.dataProces')" :tab="$t('common.dataProces')">
           <DataHandle :config-info="configForm" />
         </n-tab-pane>
-        <n-tab-pane name="自动化" tab="自动化">
+        <n-tab-pane :name="$t('custom.device_details.automate')" :tab="$t('custom.device_details.automate')">
           <Automate :config_id="configId" />
         </n-tab-pane>
-        <n-tab-pane name="告警" tab="告警">
-          <AlarmInfo />
+        <n-tab-pane :name="$t('route.alarm')" :tab="$t('route.alarm')">
+          <AlarmInfo :config_id="configId" />
         </n-tab-pane>
-        <n-tab-pane name="扩展信息" tab="扩展信息">
+        <n-tab-pane :name="$t('generate.extension-info')" :tab="$t('generate.extension-info')">
           <ExtendInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="设备设置" tab="设备设置">
+        <n-tab-pane :name="$t('common.devicesSetting')" :tab="$t('common.devicesSetting')">
           <SettingInfo :config-info="configForm" @change="getConfig" />
         </n-tab-pane>
       </n-tabs>

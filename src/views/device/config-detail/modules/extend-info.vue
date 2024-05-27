@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import type { Ref } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace, NSwitch, useMessage } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
@@ -40,12 +40,12 @@ function defaultExtendForm() {
 const extendFormRules = ref({
   name: {
     required: true,
-    message: '请输入名称',
+    message: $t('common.enterName'),
     trigger: 'blur'
   },
   type: {
     required: true,
-    message: '请选择类型',
+    message: $t('generate.select-type'),
     trigger: 'change'
   }
 });
@@ -126,7 +126,7 @@ const handleDeleteTable = async row => {
     extendInfoList.value.splice(index, 1);
     handleSave();
   }
-  window.$message?.info('已删除当前扩展信息');
+  window.$message?.info($t('common.extensionInfoDeleted'));
 };
 const handleEditTable = async row => {
   editIndex.value = (extendInfoList.value || []).findIndex(item => {
@@ -146,25 +146,25 @@ const handleEditTable = async row => {
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '名称',
+    title: $t('page.manage.menu.form.name'),
     minWidth: '140px',
     align: 'center'
   },
   {
     key: 'type',
     minWidth: '140px',
-    title: '类型',
+    title: $t('page.manage.menu.form.type'),
     align: 'center'
   },
   {
     key: 'default_value',
-    title: '默认值',
+    title: $t('generate.default-value'),
     minWidth: '140px',
     align: 'center'
   },
   {
     key: 'desc',
-    title: '描述',
+    title: $t('custom.groupPage.description'),
     minWidth: '140px',
     align: 'center'
   },
@@ -203,7 +203,10 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(() => {
   if (!props.configInfo.additional_info || props.configInfo.additional_info === '{}') {
     extendInfoList.value = [];
@@ -225,8 +228,8 @@ onMounted(() => {
     <NModal
       v-model:show="visible"
       :mask-closable="false"
-      :title="isEdit ? '编辑扩展信息' : '添加扩展信息'"
-      class="w-400px"
+      :title="isEdit ? $t('common.editExtendedInfo') : $t('common.addExtendedInfo')"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
       preset="card"
       @after-leave="modalClose"
     >

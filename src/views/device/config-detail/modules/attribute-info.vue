@@ -70,7 +70,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .attribute-box {
-  padding: 50px;
+  padding: 50px 10px;
 
   .to-create {
     color: #999999;

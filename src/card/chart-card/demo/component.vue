@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useWebSocket } from '@vueuse/core';
-import { ClipboardCode20Regular } from '@vicons/fluent';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
 import { deviceDetail } from '../curve/modules/api';
-// import icons from "./icon";
+import { icons as iconOptions } from './icons';
 import { createServiceConfig } from '~/env.config';
 
-// const iconMap = new Map(icons.map((c) => [c.name, c.value]));
 // 正式环境可根据api获取
 const value = ref(1);
 const detail: any = ref(null);
 const intervalNum = ref();
 const props = defineProps<{
   card: ICardData;
-  // mode: IConfigCtx['view'];
 }>();
+const fontSize = ref('14px');
+
+const myCard = ref<any | null>(null); // 创建一个ref来引用NCard
+let resizeObserver: ResizeObserver | null = null;
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
@@ -67,6 +68,15 @@ const setSeries: (dataSource) => void = async dataSource => {
   }
 };
 
+const handleResize = entries => {
+  for (const entry of entries) {
+    // 根据卡片宽度动态调整字体大小，这里仅为示例逻辑，实际应用中需按需调整
+    const dFontSize = `${entry.contentRect.width / 20}px`; // 假设字体大小与宽度成反比，20为比例系数
+    console.log('font size:', dFontSize);
+    fontSize.value = dFontSize;
+  }
+};
+
 watch(
   () => props.card?.dataSource?.deviceSource,
   () => {
@@ -80,6 +90,19 @@ onMounted(() => {
   intervalNum.value = setInterval(() => {
     setSeries(props?.card?.dataSource);
   }, 500);
+  // 确保DOM已经挂载后再初始化ResizeObserver
+  if (myCard.value) {
+    resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(myCard.value.$el);
+  }
+});
+
+onBeforeUnmount(() => {
+  // 组件卸载前清除观察器
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+    resizeObserver = null;
+  }
 });
 
 onUnmounted(() => {
@@ -91,32 +114,16 @@ onUnmounted(() => {
 
 <template>
   <div class="h-full">
-    <!--
- <component
-      :is="iconMap.get(card.config?.icon || 'm1')"
-      class="text-lg"
-      :style="{ color: card.config?.color }"
-    /> 
--->
     <div class="h-full flex-col items-center">
-      <!--
- <NCard
-        v-if="card.dataSource?.origin === 'system'"
-        :bordered="false"
-        class="box"
-      >
--->
-      <NCard :bordered="false" class="box">
-        <div class="top-data">
+      <NCard ref="myCard" :bordered="false" class="box">
+        <div class="bt-data" :style="'font-size:' + fontSize">
           <span class="name">
             {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
           </span>
-        </div>
-        <div class="bt-data">
-          <NIcon size="58"><ClipboardCode20Regular /></NIcon>
-          <div>
-            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
-          </div>
+          <NIcon class="iconclass" :color="props?.card?.config?.color || 'black'">
+            <component :is="iconOptions[props?.card?.config?.iconName || 'ClipboardCode20Regular']" />
+          </NIcon>
+          <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
           <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
         </div>
       </NCard>
@@ -133,37 +140,46 @@ onUnmounted(() => {
 }
 .box {
   display: flex;
+  position: relative;
   flex-direction: column;
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
 }
-.top-data,
-.bt-data {
-  display: flex;
+.iconclass.n-icon svg {
   width: 100%;
-  justify-content: space-between;
-  align-items: center;
+  height: 100%;
+}
+.bt-data {
+  width: 100%;
+  height: 100%;
 }
 
-.bt-data {
-  margin-top: 20%;
-  padding: 0 10%;
-  position: relative;
+.iconclass {
+  position: absolute;
+  bottom: 20%;
+  left: 15%;
+  width: 25%;
+  height: 25%;
 }
 
 .unit {
   position: absolute;
-  top: 0;
-  right: 30px;
+  top: 30%;
+  left: 75%;
+  font-size: 1em;
 }
 
 .name {
-  margin-top: 10px;
-  font-size: 18px;
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  font-size: 1.2em;
 }
 
 .value {
-  font-size: calc(100vw * 68 / 1920);
-  margin-right: 40px;
+  position: absolute;
+  bottom: 12%;
+  left: 60%;
+  font-size: 2.5em;
 }
 </style>

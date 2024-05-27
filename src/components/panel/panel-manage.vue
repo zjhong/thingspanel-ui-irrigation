@@ -1,5 +1,6 @@
 <script lang="tsx" setup>
 import { nextTick, onMounted, reactive, ref } from 'vue';
+import { useDialog } from 'naive-ui';
 import { useFullscreen } from '@vueuse/core';
 // eslint-disable-next-line vue/prefer-import-from-vue
 import type { UnwrapRefSimple } from '@vue/reactivity';
@@ -7,6 +8,8 @@ import type { ICardData, ICardFormIns, ICardRender, ICardView } from '@/componen
 import { PutBoard, deviceTemplateSelect, getBoard } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { $t } from '@/locales';
+
+const dialog = useDialog();
 
 const props = defineProps<{ panelId: string }>();
 const panelDate = ref<Panel.Board>();
@@ -29,6 +32,7 @@ const getDeviceOptions = async () => {
 const { isFullscreen, toggle } = useFullscreen(fullui);
 const appStore = useAppStore();
 const layout = ref<ICardView[]>([]);
+const preLayout = ref<ICardView[]>([]); // 用来保存用户修改前的内容
 const fetchBroad = async () => {
   const { data } = await getBoard(props.panelId);
   if (data) {
@@ -37,6 +41,7 @@ const fetchBroad = async () => {
       const configJson = JSON.parse(data.config);
       updateConfigData(configJson);
       layout.value = [...configJson, ...layout.value];
+      preLayout.value = layout.value;
     }
   }
 };
@@ -78,10 +83,31 @@ const state = reactive({
 const editView = ref<ICardView | null>();
 const formRef = ref<ICardFormIns>();
 
+const toEditMode = () => {
+  isEditing.value = true;
+};
+
+const quitEditMode = () => {
+  if (JSON.stringify(layout.value) !== JSON.stringify(preLayout.value)) {
+    dialog.warning({
+      title: '您尚未保存，确定退出编辑？',
+      positiveText: $t('device_template.confirm'),
+      negativeText: $t('common.cancel'),
+      onPositiveClick: () => {
+        isEditing.value = false;
+        layout.value = preLayout.value;
+      }
+    });
+  } else {
+    isEditing.value = false;
+  }
+};
+
 const insertCard = (card: ICardData) => {
   cr.value?.addCard(card);
   editView.value = null;
   state.cardData = null;
+  toEditMode();
 };
 
 const updateCard = (card: ICardData) => {
@@ -112,12 +138,6 @@ const edit = (view: ICardView) => {
 const showCardList = () => {
   showingCardList.value = true;
 };
-const toEditMode = () => {
-  isEditing.value = true;
-};
-const quitEditMode = () => {
-  isEditing.value = false;
-};
 
 const savePanel = async () => {
   const layoutJson = JSON.stringify(layout.value);
@@ -128,6 +148,8 @@ const savePanel = async () => {
     name: panelDate.value?.name,
     home_flag: panelDate.value?.home_flag
   });
+
+  preLayout.value = layout.value;
 };
 
 onMounted(() => {
@@ -147,16 +169,17 @@ onMounted(() => {
         <<NButton @click="router.go(-1)">
           <SvgIcon icon="ep:back" class="mr-0.5 text-lg" />
           {{ $t('page.login.common.back') }}
-        </NButton> 
--->
-        <NButton @mouseover="showCardList">
-          <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
-          {{ $t('generate.add-component') }}
         </NButton>
+-->
+        <NSpace align="center">
+          <span class="text-14px font-medium line-height-normal">看板：{{ panelDate?.name }}</span>
+          <NButton v-show="isEditing" @mouseover="showCardList">
+            <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
+            {{ $t('generate.add-component') }}
+          </NButton>
+        </NSpace>
       </div>
       <NSpace align="center">
-        <span class="text-lg font-medium">看板：{{ panelDate?.name }}</span>
-
         <!--        <NButton>-->
         <!--          <SvgIcon icon="material-symbols:settings-outline" class="mr-0.5 text-lg" />-->
         <!--        </NButton>-->
@@ -166,7 +189,7 @@ onMounted(() => {
           {{ $t('generate.edit') }}
         </NButton>
         <NButton v-if="isEditing" @click="quitEditMode">退出编辑</NButton>
-        <NButton @click="savePanel">{{ $t('common.save') }}</NButton>
+        <NButton v-show="isEditing" @click="savePanel">{{ $t('common.save') }}</NButton>
         <FullScreen
           :full="isFullscreen"
           @click="
@@ -192,7 +215,7 @@ onMounted(() => {
 
       <div class="h-full flex-1 overflow-auto">
         <div v-if="!layout.length" class="text-center text-gray-500 dark:text-gray-400">
-          <NEmpty description="暂未添加组件"></NEmpty>
+          <NEmpty :description="$t('common.componentsAddedYet')"></NEmpty>
         </div>
         <CardRender
           ref="cr"

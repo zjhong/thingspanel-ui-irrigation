@@ -62,7 +62,7 @@ async function getTableData() {
 const runDistribute = (rowId: string, status: 2 | 3) => {
   dialog.warning({
     title: $t('common.tip'),
-    content: status === 3 ? '确定将计划下发给设备吗' : '确定取消计划吗',
+    content: status === 3 ? $t('common.planTheDevice') : $t('common.cancelThePlan'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -79,7 +79,7 @@ const runDistribute = (rowId: string, status: 2 | 3) => {
 const runDel = (rowId: string) => {
   dialog.warning({
     title: $t('common.tip'),
-    content: '确定删除计划吗',
+    content: $t('common.deleteThePlan'),
     positiveText: $t('device_template.confirm'),
     negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
@@ -116,7 +116,7 @@ const columns: Ref<any> = ref([
     title: () => $t('page.irrigation.controlType'),
     align: 'center',
     render: row => {
-      return row.control_type === 'A' ? '时长' : '容量';
+      return row.control_type === 'A' ? $t('page.irrigation.duration') : $t('page.irrigation.capacity');
     }
   },
   {
@@ -128,11 +128,19 @@ const columns: Ref<any> = ref([
       tooltip: true
     },
     render: row => {
-      const p = ['一', '二', '三', '四', '五', '六', '日'];
+      const p = [
+        $t('page.irrigation.time.week.monday'),
+        $t('page.irrigation.time.week.tuesday'),
+        $t('page.irrigation.time.week.wednesday'),
+        $t('page.irrigation.time.week.thursday'),
+        $t('page.irrigation.time.week.friday'),
+        $t('page.irrigation.time.week.saturday'),
+        $t('page.irrigation.time.week.sunday')
+      ];
       const t = row.schedule.split(',');
       const list: any = [];
       t.forEach(i => {
-        list.push(`周${p[Number(i - 1)]}`);
+        list.push(p[Number(i - 1)]);
       });
       return list.join(',');
     }

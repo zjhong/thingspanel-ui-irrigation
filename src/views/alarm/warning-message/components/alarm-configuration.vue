@@ -45,7 +45,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
     align: 'center',
     width: '170px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
-      return dayjs(row.alarm_time).format('YYYY-MM-DD HH:mm:ss');
+      return dayjs(row.create_at).format('YYYY-MM-DD HH:mm:ss');
     }
   },
   {

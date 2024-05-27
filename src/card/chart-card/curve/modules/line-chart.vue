@@ -98,7 +98,10 @@ const option = ref<EChartsOption>({
   },
   xAxis: {
     boundaryGap: false,
-    type: 'time' as 'category'
+    type: 'time' as 'category',
+    axisLabel: {
+      interval: 'auto'
+    }
   },
   yAxis: {
     type: 'value'
@@ -385,8 +388,10 @@ const checkDateRange = value => {
 const reFresh = () => {
   timeOptionsValue.value = '';
   isAggregate.value = false;
-  params.start_time = d_start_time;
-  params.end_time = d_end_time;
+  const endtime = new Date().getTime();
+  const starttime = endtime - 3600000;
+  params.start_time = starttime;
+  params.end_time = endtime;
   params.aggregate_window = 'no_aggregate';
   params.aggregate_function = 'avg';
   params.time_range = 'custom';
@@ -482,11 +487,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="m--6 h-full flex flex-col">
-    <div class="mb-4 mt-4 flex justify-between">
-      <div class="name-unit">
-        {{ name }}
-      </div>
+  <div class="h-full flex flex-col">
+    <div class="flex justify-between pb-4 pt-1">
+      <div class="name-unit"></div>
       <div class="flex justify-end">
         <n-popselect
           v-model:value="timeOptionsValue"
@@ -544,9 +547,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.chart {
-  min-height: 300px;
-}
 .name-unit {
   font-size: 18px;
 }

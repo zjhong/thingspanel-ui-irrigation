@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
-import { NCard } from 'naive-ui';
 import type { ICardData } from '@/components/panel/card';
 import LineChart from '@/card/chart-card/curve/modules/line-chart.vue';
 import { colorGroups } from './theme';
@@ -18,16 +17,10 @@ watch(
 </script>
 
 <template>
-  <NCard :bordered="false" class="card-wrapper">
-    <LineChart :card="props.card" :color-group="props?.card?.config?.colorGroups?.colorGroup || colorGroups" />
-  </NCard>
+  <LineChart :card="props.card" :color-group="props?.card?.config?.colorGroups?.colorGroup || colorGroups" />
 </template>
 
 <style scoped>
-.card-wrapper {
-  width: 100%;
-}
-
 :deep(.n-card__content) {
   width: 100%;
 }

@@ -123,8 +123,12 @@ onUnmounted(() => {
           <NIcon class="iconclass" :color="props?.card?.config?.color || 'black'">
             <component :is="iconOptions[props?.card?.config?.iconName || 'ClipboardCode20Regular']" />
           </NIcon>
-          <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
-          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
+          <div class="value-wrap">
+            <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
+            <span class="unit">
+              {{ props?.card?.config?.unit || (detail?.data && detail.data[0] ? detail.data[0]?.unit : '') }}
+            </span>
+          </div>
         </div>
       </NCard>
     </div>
@@ -162,11 +166,20 @@ onUnmounted(() => {
   height: 25%;
 }
 
+.value-wrap {
+  position: absolute; /* 新增: 使得 .unit 可以相对于此元素定位 */
+  display: inline-block; /* 确保包裹元素不影响外部布局 */
+  bottom: 16%;
+  left: 60%;
+  width: 40%;
+}
+
 .unit {
   position: absolute;
-  top: 30%;
-  left: 75%;
+  top: -10%; /* 调整数值以适应你的具体需求 */
+  right: 10%; /* 调整数值以适应你的具体需求 */
   font-size: 1em;
+  transform: translateY(-50%); /* 可选: 微调垂直对齐 */
 }
 
 .name {
@@ -177,9 +190,6 @@ onUnmounted(() => {
 }
 
 .value {
-  position: absolute;
-  bottom: 12%;
-  left: 60%;
   font-size: 2.5em;
 }
 </style>

@@ -81,51 +81,56 @@ function transformElegantRouteToVueRoute(
 
   const vueRoute = { name, path, ...rest } as RouteRecordRaw;
 
-  if (component) {
-    if (isSingleLevelRoute(route)) {
-      const { layout, view } = getSingleLevelRouteComponent(component);
+  try {
+    if (component) {
+      if (isSingleLevelRoute(route)) {
+        const { layout, view } = getSingleLevelRouteComponent(component);
 
-      const singleLevelRoute: RouteRecordRaw = {
-        path,
-        component: layouts[layout],
-        children: [
-          {
-            name,
-            path: '',
-            component: views[view],
-            ...rest
-          } as RouteRecordRaw
-        ]
-      };
+        const singleLevelRoute: RouteRecordRaw = {
+          path,
+          component: layouts[layout],
+          children: [
+            {
+              name,
+              path: '',
+              component: views[view],
+              ...rest
+            } as RouteRecordRaw
+          ]
+        };
 
-      return [singleLevelRoute];
+        return [singleLevelRoute];
+      }
+
+      if (isLayout(component)) {
+        const layoutName = getLayoutName(component);
+
+        vueRoute.component = layouts[layoutName];
+      }
+
+      if (isView(component)) {
+        const viewName = getViewName(component);
+
+        vueRoute.component = views[viewName];
+      }
+
     }
-
-    if (isLayout(component)) {
-      const layoutName = getLayoutName(component);
-
-      vueRoute.component = layouts[layoutName];
-    }
-
-    if (isView(component)) {
-      const viewName = getViewName(component);
-
-      vueRoute.component = views[viewName];
-    }
-
+  } catch (error: any) {
+    console.error(`Error transforming route "${route.name}": ${error.toString()}`);
+    return [];
   }
-  
+
   // add redirect to child
   if (children?.length && !vueRoute.redirect) {
     vueRoute.redirect = {
       name: children[0].name
     };
   }
-  
+
   if (children?.length) {
     const childRoutes = children.flatMap(child => transformElegantRouteToVueRoute(child, layouts, views));
 
-    if(isFirstLevelRoute(route)) {
+    if (isFirstLevelRoute(route)) {
       vueRoute.children = childRoutes;
     } else {
       vueRoutes.push(...childRoutes);

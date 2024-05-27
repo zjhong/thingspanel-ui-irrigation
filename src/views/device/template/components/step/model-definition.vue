@@ -63,22 +63,22 @@ const SwitchCom = computed<any>(() => {
 const queryParams: any = reactive([
   {
     page: 1,
-    page_size: 1,
+    page_size: 5,
     device_template_id: props.deviceTemplateId
   },
   {
     page: 1,
-    page_size: 10,
+    page_size: 5,
     device_template_id: props.deviceTemplateId
   },
   {
     page: 1,
-    page_size: 10,
+    page_size: 5,
     device_template_id: props.deviceTemplateId
   },
   {
     page: 1,
-    page_size: 10,
+    page_size: 5,
     device_template_id: props.deviceTemplateId
   }
 ]);
@@ -313,34 +313,34 @@ const getTableData: (value?: string) => void = async value => {
     if (value === 'telemetry') {
       const { data: data0 }: any = await telemetryApi(queryParams[0]);
       columnsList[0].data = data0?.list ?? [];
-      columnsList[0].total = data0?.total;
+      columnsList[0].total = Math.ceil(data0?.total / 5);
     } else if (value === 'attributes') {
       const { data: data1 }: any = await attributesApi(queryParams[1]);
       columnsList[1].data = data1?.list ?? [];
-      columnsList[1].total = data1?.total;
+      columnsList[1].total = Math.ceil(data1?.total / 5);
     } else if (value === 'events') {
       const { data: data2 }: any = await eventsApi(queryParams[2]);
       columnsList[2].data = data2?.list ?? [];
-      columnsList[2].total = data2?.total;
+      columnsList[2].total = Math.ceil(data2?.total / 5);
     } else {
       const { data: data3 }: any = await commandsApi(queryParams[3]);
       columnsList[3].data = data3?.list ?? [];
-      columnsList[3].total = data3?.total;
+      columnsList[3].total = Math.ceil(data3?.total / 5);
     }
     endLoading();
   } else {
     const { data: data0 }: any = await telemetryApi(queryParams[0]);
     columnsList[0].data = data0?.list ?? [];
-    columnsList[0].total = data0?.total;
+    columnsList[0].total = Math.ceil(data0?.total / 5);
     const { data: data1 }: any = await attributesApi(queryParams[1]);
     columnsList[1].data = data1?.list ?? [];
-    columnsList[1].total = data1?.total;
+    columnsList[1].total = Math.ceil(data1?.total / 5);
     const { data: data2 }: any = await eventsApi(queryParams[2]);
     columnsList[2].data = data2?.list ?? [];
-    columnsList[2].total = data2?.total;
+    columnsList[2].total = Math.ceil(data2?.total / 5);
     const { data: data3 }: any = await commandsApi(queryParams[3]);
     columnsList[3].data = data3?.list ?? [];
-    columnsList[3].total = data3?.total;
+    columnsList[3].total = Math.ceil(data3?.total / 5);
     console.log(data0, data1, data2, data3, '请求到了遥远的数据');
     endLoading();
   }
@@ -363,7 +363,7 @@ getTableData();
         <div class="mt-4 w-full flex justify-end">
           <n-pagination
             :page-count="item.total"
-            :page-size="10"
+            :page-size="5"
             @update:page="
               page => {
                 queryParams[index].page = page;

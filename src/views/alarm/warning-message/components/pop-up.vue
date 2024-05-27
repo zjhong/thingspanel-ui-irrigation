@@ -7,7 +7,7 @@
  * @LastEditTime: 2024-03-20 19:43:18
 -->
 <script setup lang="ts">
-import { computed, getCurrentInstance, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui';
 import { addWarningMessage, editInfo } from '@/service/api/alarm';
 import { useNaiveForm } from '@/hooks/common/form';
@@ -262,10 +262,7 @@ function handleReset(e) {
     }
   });
 }
-const getPlatform = computed(() => {
-  const { proxy }: any = getCurrentInstance();
-  return proxy.getPlatform();
-});
+
 watch(props, newValue => {
   console.log('newValue', newValue);
   if (props.type === 'edit') {
@@ -288,7 +285,7 @@ watch(props, newValue => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" :class="getPlatform ? 'w-90%' : 'w-600px'">
+  <NModal v-model:show="modalVisible" preset="card" :title="title">
     <NForm ref="formRef" :rules="rules" :model="formData">
       <n-form-item :label="$t('generate.alarm-name')" path="name">
         <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />

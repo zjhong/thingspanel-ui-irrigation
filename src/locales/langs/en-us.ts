@@ -29,6 +29,7 @@ const local: App.I18n.Schema = {
     lowAlarm: 'low alarm',
     intermediateAlarm: 'Intermediate alarm',
     highAlarm: 'high alarm',
+    allStatus: 'all status',
     enterAlarmDesc: 'Please enter the alarm description',
     alarmRules: 'Alarm rules',
     alarmHistory: 'alarm history',
@@ -1340,6 +1341,7 @@ const local: App.I18n.Schema = {
     fieldValue: 'Value',
     fieldKey: 'Key',
     addAlarm: 'Add Alarm',
+    addAlarmRule: 'Add Alarm Rule',
     heartbeatFunctionInfo:
       'When the heartbeat check function is enabled in the configuration template, manual modifications are ineffective; the current template enables timeout period.',
     manualOnlineStatusEdit: 'Manually edit online status',

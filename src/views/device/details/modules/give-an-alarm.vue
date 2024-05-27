@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { NButton, NCard, NFlex, NGrid, NGridItem, NInput, NPagination } from 'naive-ui';
+import { NButton, NCard, NFlex, NInput } from 'naive-ui';
 import { EyeOutline, Refresh } from '@vicons/ionicons5';
 import moment from 'moment/moment';
 import { Heart, HeartBroken } from '@vicons/fa';
 import { Edit } from '@vicons/carbon';
 import { $t } from '@/locales';
-import { deviceAlarmHistory, deviceAlarmHistoryPut, deviceAlarmList } from '@/service/api';
+import { deviceAlarmHistory, deviceAlarmHistoryPut } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import alarmDataList from '@/views/automation/scene-linkage/modules/dataList.vue';
+
 const { routerPushByKey } = useRouterPush();
 
 const props = defineProps<{
@@ -19,15 +21,11 @@ const choseTab = data => {
   if (data === 1) {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     refresh();
-  } else if (data === 2) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    getAlarmList();
   }
 };
-
 const queryParams = ref({
   selected_time: ref<[number, number]>([moment().subtract(7, 'days').valueOf(), moment().valueOf()]),
-  alarm_status: null,
+  alarm_status: '',
   page: 1,
   page_size: 10,
   start_time: '',
@@ -35,6 +33,10 @@ const queryParams = ref({
   device_id: ''
 });
 const alarmStatusOptions = ref([
+  {
+    label: $t('common.allStatus'),
+    value: ''
+  },
   {
     label: $t('common.highAlarm'),
     value: 'H'
@@ -55,7 +57,7 @@ const alarmStatusOptions = ref([
 const refresh = () => {
   queryParams.value = {
     selected_time: [moment().subtract(7, 'days').valueOf(), moment().valueOf()],
-    alarm_status: null,
+    alarm_status: '',
     page: 1,
     page_size: 10,
     start_time: '',
@@ -63,9 +65,15 @@ const refresh = () => {
     device_id: ''
   };
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  alarmHistory.value = [];
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  noMore.value = false;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   getAlarmHistory();
 };
 const alarmHistory = ref([] as any);
+const alarmHistoryTotal = ref(0);
+
 const getAlarmHistory = async () => {
   queryParams.value.device_id = props.id;
   if (queryParams.value.selected_time && queryParams.value.selected_time.length > 0) {
@@ -76,10 +84,21 @@ const getAlarmHistory = async () => {
     queryParams.value.end_time = '';
   }
   const res = await deviceAlarmHistory(queryParams.value);
-  alarmHistory.value = res.data.list;
+  alarmHistory.value.push(...(res.data.list || []));
+  alarmHistoryTotal.value = res.data.total;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  loading.value = false;
+  if (alarmHistory.value.length === alarmHistoryTotal.value) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    noMore.value = true;
+  }
 };
 const resetQuery = () => {
   queryParams.value.page = 1;
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  alarmHistory.value = [];
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  noMore.value = false;
   getAlarmHistory();
 };
 const showDialog = ref(false);
@@ -107,27 +126,23 @@ const submitCallback = async () => {
     description: description.value
   };
   await deviceAlarmHistoryPut(putData);
-  getAlarmHistory();
   cancelCallback();
-};
-const queryData = ref({
-  page: 1,
-  page_size: 10,
-  device_id: ''
-});
-const alarmTotal = ref(0);
-const alarmList = ref([]);
-const getAlarmList = async () => {
-  queryData.value.device_id = props.id;
-  const res = await deviceAlarmList(queryData.value);
-  alarmList.value = res.data.list;
-  alarmTotal.value = res.data.total;
+  await getAlarmHistory();
 };
 const alarmAdd = () => {
   routerPushByKey('automation_linkage-edit', {
     query: { device_id: props.id }
   });
 };
+const loading = ref(false);
+const noMore = ref(false);
+const handleLoad = () => {
+  if (loading.value || noMore.value) return;
+  loading.value = true;
+  queryParams.value.page += 1;
+  getAlarmHistory();
+};
+
 onMounted(() => {
   getAlarmHistory();
 });
@@ -148,17 +163,17 @@ onMounted(() => {
         <NDatePicker
           v-model:value="queryParams.selected_time"
           type="datetimerange"
-          clearable
+          :clearable="false"
           separator="-"
           class="w-400px"
-          @on-update:value="resetQuery()"
+          @update:value="resetQuery"
         />
         <n-select
           v-model:value="queryParams.alarm_status"
           :options="alarmStatusOptions"
           class="w-150px"
-          clearable
-          @on-update:value="resetQuery"
+          :clearable="false"
+          @update:value="resetQuery"
         />
         <NButton :bordered="false" class="justify-end" @click="refresh">
           <NIcon size="18">
@@ -167,49 +182,64 @@ onMounted(() => {
           {{ $t('generate.refresh') }}
         </NButton>
       </NFlex>
+      <NFlex v-if="tabValue === 2" justify="flex-end">
+        <NButton type="primary" @click="alarmAdd()">{{ $t('generate.addAlarmRule') }}</NButton>
+      </NFlex>
     </NFlex>
     <div v-if="tabValue === 1" class="history-list">
-      <div v-for="(item, index) in alarmHistory" :key="index" class="alarm-item">
-        <div class="alarm-time">
-          <div class="line-style"></div>
-          <span class="alarm-icon" :class="[item.alarm_status !== 'N' ? 'color-ye-bg' : 'color-gre-bg']"></span>
-          <span>{{ moment(item['create_at']).format('YYYY-MM-DD HH:mm:ss') }}</span>
-        </div>
-        <div class="alarm-item-content" :class="[item.alarm_status !== 'N' ? 'color-ye-bg-low' : 'color-gre-bg-low']">
-          <NFlex class="mb-30px" justify="space-between">
-            <NFlex class="alarm-type" :class="[item.alarm_status !== 'N' ? 'color-ye' : 'color-gre']">
-              <NIcon v-if="item.alarm_status !== 'N'" size="22" class="ml-1">
-                <HeartBroken />
-              </NIcon>
-              <NIcon v-if="item.alarm_status === 'N'" size="22" class="ml-1">
-                <Heart />
-              </NIcon>
-              <span>
-                {{ alarmStatusOptions.find(data => data.value === item['alarm_status'])?.label || '' }}
-              </span>
+      <n-infinite-scroll v-if="alarmHistory.length > 0" style="height: 100%" :distance="10" @load="handleLoad">
+        <div v-for="(item, index) in alarmHistory" :key="index" class="alarm-item">
+          <div class="alarm-time">
+            <div class="line-style"></div>
+            <span class="alarm-icon" :class="[item['alarm_status'] !== 'N' ? 'color-ye-bg' : 'color-gre-bg']"></span>
+            <span>{{ moment(item['create_at']).format('YYYY-MM-DD HH:mm:ss') }}</span>
+          </div>
+          <div
+            class="alarm-item-content"
+            :class="[item['alarm_status'] !== 'N' ? 'color-ye-bg-low' : 'color-gre-bg-low']"
+          >
+            <NFlex class="mb-30px" justify="space-between">
+              <NFlex class="alarm-type" :class="[item['alarm_status'] !== 'N' ? 'color-ye' : 'color-gre']">
+                <NIcon v-if="item['alarm_status'] !== 'N'" size="22" class="ml-1">
+                  <HeartBroken />
+                </NIcon>
+                <NIcon v-if="item['alarm_status'] === 'N'" size="22" class="ml-1">
+                  <Heart />
+                </NIcon>
+                <span>
+                  {{ alarmStatusOptions.find(data => data.value === item['alarm_status'])?.label || '' }}
+                </span>
+              </NFlex>
+              <NFlex>
+                <div>{{ item['name'] }}</div>
+                <!--              <div style="color: #646cff">设备名称</div>-->
+              </NFlex>
             </NFlex>
-            <NFlex>
-              <div>{{ item.name }}</div>
-              <!--              <div style="color: #646cff">设备名称</div>-->
-            </NFlex>
-          </NFlex>
-          <div>
-            <NButton text @click="getInfo(item)">
-              <NIcon size="18">
-                <EyeOutline />
-              </NIcon>
-              {{ $t('custom.devicePage.details') }}
-            </NButton>
-            <NButton text class="ml-8" @click="showModal = true">
-              <NIcon size="18">
-                <Edit />
-              </NIcon>
-              {{ $t('custom.devicePage.maintenance') }}
-            </NButton>
+            <div>
+              <NButton text @click="getInfo(item)">
+                <NIcon size="18">
+                  <EyeOutline />
+                </NIcon>
+                {{ $t('custom.devicePage.details') }}
+              </NButton>
+              <NButton text class="ml-8" @click="showModal = true">
+                <NIcon size="18">
+                  <Edit />
+                </NIcon>
+                {{ $t('custom.devicePage.maintenance') }}
+              </NButton>
+            </div>
           </div>
         </div>
-      </div>
-      <n-empty v-if="alarmHistory.length === 0" :description="$t('common.nodata')"></n-empty>
+        <div v-if="loading" class="text">加载中...</div>
+        <div v-if="noMore" class="text">没有更多了</div>
+      </n-infinite-scroll>
+      <n-empty
+        v-if="alarmHistory.length === 0"
+        size="huge"
+        :description="$t('common.nodata')"
+        class="min-h-60 justify-center"
+      ></n-empty>
       <n-modal v-model:show="showDialog" :title="$t('generate.alarm-info')" class="max-w-[800px]">
         <NCard>
           <div>
@@ -270,80 +300,15 @@ onMounted(() => {
     </div>
   </div>
   <div v-if="tabValue === 2" class="alarm-list">
-    <NCard class="w-full">
-      <NFlex justify="flex-end" class="mb-4">
-        <NButton type="primary" @click="alarmAdd()">{{ $t('generate.addAlarm') }}</NButton>
-      </NFlex>
-      <n-empty
-        v-if="alarmList.length === 0"
-        size="huge"
-        :description="$t('common.nodata')"
-        class="min-h-60 justify-center"
-      ></n-empty>
-      <NGrid v-else x-gap="20px" y-gap="20px" cols="1 s:2 m:3 l:4" responsive="screen">
-        <NGridItem v-for="(item, index) in alarmList" :key="index">
-          <NCard hoverable style="height: 160px">
-            <NFlex justify="space-between" align="center" class="mb-4">
-              <div class="text-16px font-600">
-                {{ item['name'] }}
-              </div>
-            </NFlex>
-            <div>{{ item['description'] }}</div>
-            <!--            <NFlex justify="flex-end" class="mt-4">-->
-            <!--              <NTooltip trigger="hover">-->
-            <!--                <template #trigger>-->
-            <!--                  <NButton tertiary circle type="warning" @click="linkEdit(item)">-->
-            <!--                    <template #icon>-->
-            <!--                      <n-icon>-->
-            <!--                        <editIcon />-->
-            <!--                      </n-icon>-->
-            <!--                    </template>-->
-            <!--                  </NButton>-->
-            <!--                </template>-->
-            <!--                {{ $t('common.edit') }}-->
-            <!--              </NTooltip>-->
-            <!--              <NTooltip trigger="hover">-->
-            <!--                <template #trigger>-->
-            <!--                  <NButton circle tertiary type="info" @click="openLog(item)">-->
-            <!--                    <template #icon>-->
-            <!--                      <n-icon>-->
-            <!--                        <copyIcon />-->
-            <!--                      </n-icon>-->
-            <!--                    </template>-->
-            <!--                  </NButton>-->
-            <!--                </template>-->
-            <!--                {{ $t('page.irrigation.time.log.name') }}-->
-            <!--              </NTooltip>-->
-            <!--              <NTooltip trigger="hover">-->
-            <!--                <template #trigger>-->
-            <!--                  <NButton circle tertiary type="error" @click="deleteLink(item)">-->
-            <!--                    <template #icon>-->
-            <!--                      <n-icon>-->
-            <!--                        <trashIcon />-->
-            <!--                      </n-icon>-->
-            <!--                    </template>-->
-            <!--                  </NButton>-->
-            <!--                </template>-->
-            <!--                {{ $t('common.delete') }}-->
-            <!--              </NTooltip>-->
-            <!--            </NFlex>-->
-          </NCard>
-        </NGridItem>
-      </NGrid>
-      <NFlex justify="flex-end" class="mt-4">
-        <NPagination
-          v-model:page="queryData.page"
-          :page-size="queryData.page_size"
-          :item-count="alarmTotal"
-          @update:page="getAlarmList"
-        />
-      </NFlex>
-    </NCard>
+    <alarmDataList :is-alarm="true" :device_id="props.id"></alarmDataList>
   </div>
 </template>
 
 <style scoped lang="scss">
 .history-list {
+  max-height: 700px;
+  overflow: auto;
+  height: 100%;
   .alarm-item {
     //padding: 20px;
     .alarm-time {
@@ -419,5 +384,8 @@ onMounted(() => {
 
 .color-gre-bg-low {
   background: #f8fcf6;
+}
+.text {
+  text-align: center;
 }
 </style>

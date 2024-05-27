@@ -97,7 +97,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
             {$t('custom.devicePage.details')}
           </NButton>
           {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-          <NButton type="warning" size={'small'} onClick={() => (showModal.value = true)}>
+          <NButton type="warning" size={'small'} onClick={() => maintenance(row)}>
             {$t('common.maintenance')}
           </NButton>
         </div>
@@ -109,7 +109,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
 const range = ref<[number, number]>([moment().subtract(1, 'months').valueOf(), moment().valueOf()]);
 
 const queryData = ref({
-  alarm_status: null,
+  alarm_status: '',
   start_time: '',
   end_time: '',
   page: 1,
@@ -160,9 +160,6 @@ function pickerChange() {
   resetQuery();
 }
 
-function alarmLevelChang() {
-  resetQuery();
-}
 onMounted(() => {
   getAlarmHistory();
 });
@@ -173,6 +170,10 @@ const getPlatform = computed(() => {
 });
 
 const alarmStatusOptions = ref([
+  {
+    label: $t('common.allStatus'),
+    value: ''
+  },
   {
     label: $t('common.highAlarm'),
     value: 'H'
@@ -201,6 +202,11 @@ const closeModal = () => {
 };
 const showModal = ref(false);
 const description = ref('');
+const maintenance = row => {
+  infoData.value = row;
+  description.value = row.description;
+  showModal.value = true;
+};
 const cancelCallback = () => {
   description.value = '';
   showModal.value = false;
@@ -215,8 +221,8 @@ const submitCallback = async () => {
     description: description.value
   };
   await deviceAlarmHistoryPut(putData);
-
   cancelCallback();
+  await getAlarmHistory();
 };
 </script>
 
@@ -235,10 +241,10 @@ const submitCallback = async () => {
       <NFormItem :label="$t('generate.alarm-level')" path="status">
         <NSelect
           v-model:value="queryData.alarm_status"
-          clearable
+          :clearable="false"
           class="w-200px"
           :options="alarmStatusOptions"
-          @update:value="alarmLevelChang"
+          @update:value="resetQuery"
         />
       </NFormItem>
     </NForm>

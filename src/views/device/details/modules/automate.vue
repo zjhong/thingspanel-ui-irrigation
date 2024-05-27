@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import sceneLinkage from '@/views/automation/scene-linkage/index.vue';
+import sceneLinkage from '@/views/automation/scene-linkage/modules/dataList.vue';
 
 defineProps<{
   id: string;

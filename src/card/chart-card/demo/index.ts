@@ -22,8 +22,8 @@ export default {
     iCardViewDefault: {
       w: 5,
       h: 3,
-      minH: 2,
-      minW: 3
+      minH: 1,
+      minW: 2
     }
   }
 } as ICardDefine;

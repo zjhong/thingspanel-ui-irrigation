@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
 
-const plugList = ref([{ name: '不绑定', id: '' }]);
+const plugList = ref([{ name: $t('generate.unbind'), id: '' }]);
 
 const selectValue = ref();
 
@@ -70,7 +70,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .attribute-box {
-  padding: 50px;
+  padding: 50px 10px;
 
   .to-create {
     color: #999999;

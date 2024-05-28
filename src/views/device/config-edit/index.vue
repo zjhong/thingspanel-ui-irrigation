@@ -10,7 +10,7 @@ import { $t } from '@/locales';
 const route = useRoute();
 // const message = useMessage();
 const configId = ref(route.query.id || null);
-const modalTitle = ref('添加');
+const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 const isEdit = ref(false);
 
@@ -33,17 +33,17 @@ function defaultConfigForm() {
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入设备配置名称',
+    message: $t('common.deviceConfigName'),
     trigger: 'blur'
   },
   device_type: {
     required: true,
-    message: '请选择设备接入类型',
+    message: $t('common.deviceAccessType'),
     trigger: 'change'
   },
   device_conn_type: {
     required: true,
-    message: '请选择设备连接方式',
+    message: $t('common.deviceConnectionMethod'),
     trigger: 'change'
   }
 });
@@ -52,7 +52,7 @@ const queryTemplate = ref({
   page_size: 20,
   total: 0
 });
-const deviceTemplateOptions = ref([{ name: '不绑定', id: '' }]);
+const deviceTemplateOptions = ref([{ name: $t('generate.unbind'), id: '' }]);
 const getDeviceTemplate = () => {
   deviceTemplate(queryTemplate.value).then(res => {
     deviceTemplateOptions.value = deviceTemplateOptions.value.concat(res.data.list);
@@ -101,7 +101,7 @@ watch(
   () => configId.value,
   async newId => {
     if (newId) {
-      modalTitle.value = '编辑';
+      modalTitle.value = $t('common.edit');
     }
   }
 );
@@ -109,12 +109,12 @@ watch(
 onMounted(async () => {
   // configId.value=<string>route.query.id || ''
   if (configId.value) {
-    modalTitle.value = '编辑';
+    modalTitle.value = $t('common.edit');
     isEdit.value = true;
     await getConfig();
   } else {
     isEdit.value = false;
-    modalTitle.value = '添加';
+    modalTitle.value = $t('generate.add');
   }
   getDeviceTemplate();
 });
@@ -127,7 +127,7 @@ const getPlatform = computed(() => {
 
 <template>
   <div class="overflow-y-auto">
-    <NCard :title="`${modalTitle}设备配置`">
+    <NCard :title="`${modalTitle}${$t('custom.devicePage.deviceConfig')}`">
       <NForm
         ref="configFormRef"
         :model="configForm"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import { NButton, useDialog } from 'naive-ui';
 import { router } from '@/router';
 import { deviceConfigDel, deviceConfigEdit } from '@/service/api/device';
@@ -16,13 +16,13 @@ const dialog = useDialog();
 // const message = useMessage();
 const deleteConfig = () => {
   dialog.warning({
-    title: '提示',
-    content: '请确认是否删除该设备配置？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: $t('common.deleteDeviceConfig'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await deviceConfigDel({ id: props.configInfo.id });
-      // message.success('操作成功');
+      // message.success($t('custom.grouping_details.operationSuccess'));
       router.back();
     }
   });
@@ -62,6 +62,10 @@ const onSubmit = async () => {
     !error && emit('change');
   }
 };
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -83,7 +87,8 @@ const onSubmit = async () => {
     <n-modal
       v-model:show="showModal"
       preset="dialog"
-      :title="modalIndex === 1 ? '配置自动创建设备' : '设备在线配置'"
+      :class="getPlatform ? '90%' : 'w-400px'"
+      :title="modalIndex === 1 ? $t('generate.configure-auto-create-device') : $t('generate.onlineDeviceConfig')"
       :show-icon="false"
     >
       <template v-if="modalIndex === 1">

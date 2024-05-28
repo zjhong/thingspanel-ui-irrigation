@@ -63,7 +63,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'created_at',
-    title: '创建日期',
+    title: $t('page.product.update-ota.createTime'),
     minWidth: '180px',
     align: 'center',
     render: row => {
@@ -72,7 +72,7 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'updated_at',
-    title: '修改日期',
+    title: $t('page.product.update-ota.updateDate'),
     minWidth: '180px',
     align: 'center',
     render: row => {
@@ -81,21 +81,21 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -154,7 +154,7 @@ function handleEditPermission(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await delrles(rowId);
   if (!data.error) {
-    window.$message?.success('删除成功');
+    window.$message?.success($t('common.deleteSuccess'));
     getTableData();
   }
 }
@@ -223,19 +223,19 @@ init();
         />
         <TableActionModal
           v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
           :type="modalType"
           :edit-data="editData"
           @success="getTableData"
         />
         <EditPermissionModal
           v-model:visible="editPermissionVisible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :edit-data="editData"
         />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

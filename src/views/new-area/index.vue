@@ -7,6 +7,7 @@
  * @LastEditTime: 2024-04-03 13:41:38
 -->
 <script setup lang="tsx">
+import { $t } from '@/locales';
 import addSpace from './components/add-space.vue';
 import addArea from './components/add-area.vue';
 
@@ -43,10 +44,10 @@ function saveAddAres(data) {
 <template>
   <NCard>
     <n-tabs type="line" animated>
-      <n-tab-pane name="oasis" tab="添加空间">
+      <n-tab-pane name="oasis" :tab="$t('common.addSpace')">
         <addSpace @cancel-add="cancelAdd" @save-add-space="saveAddSpace" />
       </n-tab-pane>
-      <n-tab-pane name="the beatles" tab="添加区域">
+      <n-tab-pane name="the beatles" :tab="$t('common.addArea')">
         <addArea @cancel-add-apace="cancelAddApace" @save-add-ares="saveAddAres" />
       </n-tab-pane>
     </n-tabs>

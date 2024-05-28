@@ -51,7 +51,7 @@ const fetchBoards = async () => {
 // 提交表单
 const submitForm = async () => {
   if (!formData.name) {
-    message.error('大屏名称不能为空');
+    message.error($t('common.screenNameNull'));
     return;
   }
 
@@ -61,7 +61,7 @@ const submitForm = async () => {
     await PostBoard(formData); // 新建大屏
   }
 
-  message.success(isEditMode.value ? '大屏更新成功' : '大屏创建成功');
+  message.success(isEditMode.value ? $t('common.modifySuccess') : $t('common.addSuccess'));
   showModal.value = false;
   clearFormData();
   await fetchBoards();
@@ -76,7 +76,7 @@ const editBoard = board => {
 // 删除大屏
 const deleteBoard = async (id: string) => {
   await DelBoard(id); // 假设DelBoard接收大屏的id
-  message.success('大屏删除成功');
+  message.success($t('common.deleteSuccess'));
   await fetchBoards(); // 刷新大屏列表
 };
 
@@ -163,7 +163,7 @@ onMounted(fetchBoards);
                       </template>
                     </NButton>
                   </template>
-                  可视化编辑
+                  {{ $t('common.visualEditing') }}
                 </n-tooltip>
 
                 <n-tooltip trigger="hover" placement="top">
@@ -174,7 +174,7 @@ onMounted(fetchBoards);
                       </template>
                     </NButton>
                   </template>
-                  编辑名称和描述
+                  {{ $t('common.editNameAndDesc') }}
                 </n-tooltip>
 
                 <n-tooltip trigger="hover" placement="top">
@@ -185,7 +185,7 @@ onMounted(fetchBoards);
                       </template>
                     </NButton>
                   </template>
-                  删除
+                  {{ $t('common.delete') }}
                 </n-tooltip>
               </div>
             </NCard>
@@ -200,8 +200,8 @@ onMounted(fetchBoards);
     <!-- 新建和编辑大屏的模态框 -->
     <NModal
       v-model:show="showModal"
-      :title="isEditMode ? '编辑大屏' : '新建大屏'"
-      :class="getPlatform ? 'w-90%' : 'w-600px'"
+      :title="isEditMode ? $t('common.editScreen') : $t('common.addScreen')"
+      :class="getPlatform ? 'w-90%' : 'w-500px'"
     >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">

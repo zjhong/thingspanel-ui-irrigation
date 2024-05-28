@@ -176,20 +176,24 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<productPackageRecord>> = ref([
   {
     type: 'selection',
+    minWidth: '140px',
     checked: (row: productPackageRecord) => {
       return props.selectedKeys.includes(row.id);
     }
   },
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-ota.deviceName')
   },
   {
     key: 'current_version',
+    minWidth: '140px',
     title: $t('page.product.update-package.versionText')
   },
   {
     key: 'device_number',
+    minWidth: '140px',
     title: $t('page.product.list.deviceNumber')
   }
 ]) as Ref<DataTableColumns<productPackageRecord>>;
@@ -216,7 +220,7 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
+  <NModal v-model:show="modalVisible" preset="card" :title="title">
     <div class="h-700px overflow-hidden">
       <NCard :bordered="false" class="h-full rounded-8px shadow-sm">
         <div class="h-full flex-col">

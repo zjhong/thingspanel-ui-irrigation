@@ -34,6 +34,11 @@ export const telemetryApi = async (params: any) => {
   const data = await request.get<Api.BaseApi.Data | null>('/device/model/telemetry', { params });
   return data;
 };
+/** 获取遥测数据 */
+export const telemetryLatestApi = async (id: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(`/telemetry/datas/current/${id}`);
+  return data;
+};
 
 /** 获取属性数据 */
 export const attributesApi = async (params: any) => {

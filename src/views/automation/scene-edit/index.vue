@@ -44,35 +44,35 @@ const configForm = ref({
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入场景名称'
+    message: $t('generate.enter-scene-name')
   },
   description: {
     required: true,
-    message: '请输入场景描述'
+    message: $t('generate.enterSceneDesc')
   },
   actionType: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_target: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_param: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_value: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'change'
   }
 });
@@ -82,20 +82,20 @@ const loadingSelect = ref(false);
 // 动作选项
 const actionOptions = ref([
   {
-    label: '操作设备',
+    label: $t('common.operateDevice'),
     value: '1',
     disabled: false
   },
   // {
-  //   label: '激活场景',
+  //   label: $t('common.activateScene'),
   //   value: '20'
   // },
   {
-    label: '触发告警',
+    label: $t('common.triggerAlarm'),
     value: '30'
   },
   {
-    label: '触发服务',
+    label: $t('common.triggerService'),
     value: '40'
   }
 ]);
@@ -123,11 +123,11 @@ const actionChange = (actionGroupItem: any, actionGroupIndex: any, data: any) =>
 // 设备类型选项
 const actionTypeOptions = ref([
   {
-    label: '单个设备',
+    label: $t('common.singleDevice'),
     value: '10'
   },
   {
-    label: '单类设备',
+    label: $t('common.singleClassDevice'),
     value: '11'
   }
 ]);
@@ -352,10 +352,10 @@ const submitData = async () => {
   });
   configForm.value.actions = actionsData;
   dialog.warning({
-    title: '提示',
-    content: '请确认是否保存该场景信息？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: $t('common.saveSceneInfo'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       if (configId.value) {
         const res = await sceneEdit(configForm.value);
@@ -421,7 +421,7 @@ onMounted(() => {
 
 <template>
   <div class="scene-edit">
-    <NCard :bordered="false" :title="`${configId ? '编辑' : '新增'}场景`">
+    <NCard :bordered="false" :title="`${configId ? $t('common.edit') : $t('common.add')}场景`">
       <NForm
         ref="configFormRef"
         :model="configForm"
@@ -544,8 +544,8 @@ onMounted(() => {
                           label-field="name"
                           value-field="id"
                           :placeholder="$t('common.select')"
-                          filterable
                           remote
+                          filterable
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />
@@ -580,7 +580,7 @@ onMounted(() => {
                       >
                         <NInput
                           v-model:value="instructItem.action_value"
-                          :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                          :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                         />
                       </NFormItem>
                     </template>

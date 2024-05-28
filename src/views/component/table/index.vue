@@ -51,7 +51,7 @@ const columns: DataTableColumn<DataSource>[] = [
             }}
           >
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => <NButton size={'small'}>删除</NButton>
             }}
           </NPopconfirm>

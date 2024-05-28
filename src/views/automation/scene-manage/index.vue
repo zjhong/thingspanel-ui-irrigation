@@ -29,16 +29,16 @@ const sceneEdit = (item: any) => {
 // 激活场景
 const sceneActivation = (item: any) => {
   dialog.warning({
-    title: '激活提示',
-    content: '请确认是否激活该场景信息？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.activationPrompt'),
+    content: $t('common.activateSceneInfo'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       const res = await sceneActive(item.id);
       if (!res.error) {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         await getData();
-        message.success('操作成功');
+        message.success($t('custom.grouping_details.operationSuccess'));
       }
     }
   });
@@ -87,15 +87,15 @@ const openLog = (item: any) => {
 // 删除场景
 const deleteScene = async (item: any) => {
   dialog.warning({
-    title: '删除提示',
-    content: '请确认是否删除该场景信息2？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.deletePrompt'),
+    content: $t('common.deleteSceneInfo'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       const res = await sceneDel(item.id);
       if (!res.error) {
         await getData();
-        message.success('操作成功');
+        message.success($t('custom.grouping_details.operationSuccess'));
       }
     }
   });
@@ -107,19 +107,19 @@ const bodyStyle = ref({
 const columns: Ref<any> = ref([
   {
     key: 'name',
-    title: '场景名称',
+    title: $t('generate.scene-name'),
     minWidth: '100px',
     align: 'left'
   },
   {
     key: 'description',
-    title: '场景描述',
+    title: $t('generate.scene-description'),
     minWidth: '100px',
     align: 'left'
   },
   {
     key: 'created_at',
-    title: '创建时间',
+    title: $t('common.creationTime'),
     align: 'left',
     minWidth: '100px',
     render: (row: any) => {
@@ -128,7 +128,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'updated_at',
-    title: '修改时间',
+    title: $t('generate.modification-time'),
     align: 'left',
     minWidth: '100px',
     render: (row: any) => {
@@ -137,7 +137,7 @@ const columns: Ref<any> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'left',
     minWidth: '140px',
     render: row => {
@@ -170,15 +170,15 @@ const columns: Ref<any> = ref([
 
 const execution_result_options = ref([
   {
-    label: '全部',
+    label: $t('custom.device_details.whole'),
     value: ''
   },
   {
-    label: '执行成功',
+    label: $t('generate.execution-successful'),
     value: 'S'
   },
   {
-    label: '执行失败',
+    label: $t('generate.execution-failed'),
     value: 'F'
   }
 ]);
@@ -257,7 +257,12 @@ onMounted(() => {
         ></n-select>
         <NButton type="primary" @click="queryLog()">{{ $t('common.search') }}</NButton>
       </NFlex>
-      <n-empty v-if="logDataTotal === 0" size="huge" description="暂无数据" class="min-h-60 justify-center"></n-empty>
+      <n-empty
+        v-if="logDataTotal === 0"
+        size="huge"
+        :description="$t('common.nodata')"
+        class="min-h-60 justify-center"
+      ></n-empty>
       <template v-else>
         <NTable size="small" :bordered="false" :single-line="false" class="mb-6">
           <thead>

@@ -58,7 +58,7 @@ const fromRules: Rules = {
   read_write_flag: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入读写标志'
+    message: $t('generate.enter-read-write')
   }
 };
 
@@ -114,7 +114,7 @@ const submit: () => void = async () => {
       emit('update:objItem', {});
       emit('update:addAndEditModalVisible', false);
       emit('determine');
-      window.$message?.success('编辑成功');
+      window.$message?.success($t('common.editSuccess'));
     }
     console.log(response, '提交');
   } else {
@@ -134,7 +134,7 @@ const submit: () => void = async () => {
 const clear: () => void = () => {
   emit('update:objItem', {});
   emit('update:addAndEditModalVisible', false);
-  console.log(props.objItem, '取消');
+  console.log(props.objItem, $t('common.cancel'));
 };
 </script>
 

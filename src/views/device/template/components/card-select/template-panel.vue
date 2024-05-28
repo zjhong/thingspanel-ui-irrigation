@@ -93,7 +93,7 @@ onMounted(fetchBroad);
     </NSpace>
     <div class="mb-2 mt-2 h-2px bg-[#f6f9f8]" />
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
-      <NEmpty description="暂未添加组件"></NEmpty>
+      <NEmpty :description="$t('common.componentsAddedYet')"></NEmpty>
     </div>
     <CardTemplateRender
       ref="cr"

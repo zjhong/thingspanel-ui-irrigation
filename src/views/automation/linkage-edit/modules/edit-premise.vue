@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { NButton, NFlex } from 'naive-ui';
 import type { FormInst } from 'naive-ui';
-import { IosRefresh } from '@vicons/ionicons4';
+import { IosAlert, IosRefresh } from '@vicons/ionicons4';
 import { repeat } from 'seemly';
 import { deviceGroupTree } from '@/service/api';
 import {
@@ -30,92 +30,92 @@ const premiseForm = ref({
 const premiseFormRules = ref({
   ifType: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_conditions_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_source: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_param: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_operator: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   trigger_value: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   minValue: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   maxValue: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   },
   onceTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   expiration_time: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   task_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   hourTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   dayTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weekChoseValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weekTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   monthChoseValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   monthTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   startTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   endTimeValue: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   weatherValue: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   }
 });
@@ -124,11 +124,11 @@ const premiseFormRules = ref({
 // 选项一条件类型的下拉
 const ifTypeOptions = ref([
   {
-    label: '设备条件',
+    label: $t('common.deviceConditions'),
     value: '1'
   },
   {
-    label: '时间条件',
+    label: $t('common.timeConditions'),
     value: '2'
   }
   // {
@@ -146,12 +146,12 @@ const ifTypeChange = (ifItem: any, data: any) => {
 // 设备条件类型下选项2使用的下拉
 const deviceConditionOptions = ref([
   {
-    label: '单个设备',
+    label: $t('common.singleDevice'),
     value: '10',
     disabled: false
   },
   {
-    label: '单类设备',
+    label: $t('common.singleClassDevice'),
     value: '11',
     disabled: false
   }
@@ -231,10 +231,12 @@ const triggerSourceChange = (ifItem: any) => {
 //     queryDeviceName.value[0].focus();
 //   }, 100);
 // };
-const triggerSourceShow = () => {
-  queryDevice.value.device_name = '';
-  queryDevice.value.group_id = '';
-  getDevice(null, null);
+const triggerSourceShow = data => {
+  if (data) {
+    queryDevice.value.device_name = '';
+    queryDevice.value.group_id = '';
+    getDevice(null, null);
+  }
 };
 const queryDeviceName = ref([] as any);
 const handleFocus = (ifIndex: any) => {
@@ -304,22 +306,22 @@ const actionParamShow = async (ifItem: any, data: any) => {
 // 时间条件类型下选项2使用的下拉
 const timeConditionOptions = ref([
   {
-    label: '单次',
+    label: $t('common.single'),
     value: '20'
   },
   {
-    label: '重复',
+    label: $t('common.repeat'),
     value: '21'
   },
   {
-    label: '时间范围',
+    label: $t('common.timeFrame'),
     value: '22'
   }
 ]);
 // 服务条件类型下选项2使用的下拉
 const serviceConditionOptions = ref([
   {
-    label: '天气',
+    label: $t('common.weather'),
     value: 'weather'
   }
 ]);
@@ -329,19 +331,19 @@ const serviceConditionOptions = ref([
 // 时间条件下，重复时，使用的周期选项
 const cycleOptions = ref([
   {
-    label: '每小时',
+    label: $t('common.everyHour'),
     value: 'HOUR'
   },
   {
-    label: '每天',
+    label: $t('common.everyDay'),
     value: 'DAY'
   },
   {
-    label: '每周',
+    label: $t('common.weekly'),
     value: 'WEEK'
   },
   {
-    label: '每月',
+    label: $t('common.monthly'),
     value: 'MONTH'
   }
 ]);
@@ -349,42 +351,42 @@ const cycleOptions = ref([
 // 时间条件下，范围时，使用的周期选项
 const weekOptions = ref([
   {
-    label: '周一',
+    label: $t('page.irrigation.time.week.monday'),
     value: '1'
   },
   {
-    label: '周二',
+    label: $t('page.irrigation.time.week.tuesday'),
     value: '2'
   },
   {
-    label: '周三',
+    label: $t('page.irrigation.time.week.wednesday'),
     value: '3'
   },
   {
-    label: '周四',
+    label: $t('page.irrigation.time.week.thursday'),
     value: '4'
   },
   {
-    label: '周五',
+    label: $t('page.irrigation.time.week.friday'),
     value: '5'
   },
   {
-    label: '周六',
+    label: $t('page.irrigation.time.week.saturday'),
     value: '6'
   },
   {
-    label: '周天',
+    label: $t('page.irrigation.time.week.sunday'),
     value: '7'
   }
 ]);
 // 天气条件选项
 const weatherOptions = ref([
   {
-    label: '日出',
+    label: $t('common.sunrise'),
     value: 'sunrise'
   },
   {
-    label: '日落',
+    label: $t('common.sunset'),
     value: 'sunset'
   }
 ]);
@@ -392,58 +394,58 @@ const weatherOptions = ref([
 // 操作符选项
 const determineOptions = ref([
   {
-    label: '等于',
+    label: $t('common.equal'),
     value: '='
   },
   {
-    label: '不等于',
+    label: $t('common.unequal'),
     value: '!='
   },
   {
-    label: '大于',
+    label: $t('common.pass'),
     value: '>'
   },
   {
-    label: '小于',
+    label: $t('common.under'),
     value: '<'
   },
   {
-    label: '大于等于',
+    label: $t('common.greaterOrEqual'),
     value: '>='
   },
   {
-    label: '小于等于',
+    label: $t('common.lessOrEqual'),
     value: '<='
   },
   {
-    label: '介于',
+    label: $t('common.between'),
     value: 'between'
   },
   {
-    label: '包含在列表内',
+    label: $t('common.includeList'),
     value: 'in'
   }
 ]);
 // 过期时间选项
 const expirationTimeOptions = ref([
   {
-    label: '5分钟',
+    label: $t('common.minutes5'),
     value: 5
   },
   {
-    label: '10分钟',
+    label: $t('common.minutes10'),
     value: 10
   },
   {
-    label: '30分钟',
+    label: $t('common.minutes30'),
     value: 30
   },
   {
-    label: '1小时',
+    label: $t('common.hours1'),
     value: 60
   },
   {
-    label: '1天',
+    label: $t('common.days1'),
     value: 1140
   }
 ]);
@@ -637,7 +639,7 @@ onMounted(() => {
                 :show-label="false"
                 :path="`ifGroups[${ifGroupIndex}][${ifIndex}].ifType`"
                 :rule="premiseFormRules.ifType"
-                class="ml-15 max-w-30 w-full"
+                class="ml-10 max-w-25 w-full"
               >
                 <NSelect
                   v-model:value="ifItem.ifType"
@@ -652,7 +654,7 @@ onMounted(() => {
                   :show-label="false"
                   :path="`ifGroups[${ifGroupIndex}][${ifIndex}].trigger_conditions_type`"
                   :rule="premiseFormRules.trigger_conditions_type"
-                  class="max-w-30 w-full"
+                  class="max-w-25 w-full"
                 >
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
@@ -677,7 +679,7 @@ onMounted(() => {
                       :consistent-menu-width="false"
                       :loading="loadingSelect"
                       @update:value="() => triggerSourceChange(ifItem)"
-                      @update:show="() => triggerSourceShow()"
+                      @update:show="data => triggerSourceShow(data)"
                     >
                       <template #header>
                         <NFlex align="center" class="w-500px">
@@ -725,8 +727,8 @@ onMounted(() => {
                       label-field="name"
                       value-field="id"
                       :placeholder="$t('common.select')"
-                      filterable
                       remote
+                      filterable
                       @search="getDeviceConfig"
                       @update:value="() => triggerSourceChange(ifItem)"
                     />
@@ -816,7 +818,7 @@ onMounted(() => {
                     >
                       <NInput
                         v-model:value="ifItem.trigger_value"
-                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                        :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                       />
                     </NFormItem>
                   </template>
@@ -830,7 +832,7 @@ onMounted(() => {
                     >
                       <NInput
                         v-model:value="ifItem.trigger_value"
-                        :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                        :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                       />
                     </NFormItem>
                   </template>
@@ -845,7 +847,7 @@ onMounted(() => {
                   :show-label="false"
                   :path="`ifGroups[${ifGroupIndex}][${ifIndex}].trigger_conditions_type`"
                   :rule="premiseFormRules.trigger_conditions_type"
-                  class="max-w-30 w-full"
+                  class="max-w-25 w-full"
                 >
                   <NSelect
                     v-model:value="ifItem.trigger_conditions_type"
@@ -869,13 +871,15 @@ onMounted(() => {
                       :placeholder="$t('generate.please-select-day-hour-minute')"
                     />
                   </NFormItem>
-                  <span class="ml-4">{{ $t('generate.not-executed') }}</span>
-                  <NButton text class="refresh-class">
-                    <n-icon>
-                      <IosRefresh />
-                    </n-icon>
-                  </NButton>
-                  <span class="ml-4"></span>
+                  <NFlex align="center">
+                    {{ $t('generate.not-executed') }}
+                    <NButton text class="refresh-class">
+                      <n-icon>
+                        <IosRefresh />
+                      </n-icon>
+                    </NButton>
+                  </NFlex>
+                  <!--                  <span class="ml-4"></span>-->
                   <NFormItem
                     :label="$t('generate.expiration-time')"
                     label-width="80px"
@@ -885,9 +889,17 @@ onMounted(() => {
                     <NSelect
                       v-model:value="ifItem.expiration_time"
                       :options="expirationTimeOptions"
-                      :placeholder="$t('generate.please-select-expiration-time')"
-                      class="w-30"
+                      :placeholder="$t('generate.please-select')"
+                      class="w-25"
                     />
+                    <n-tooltip placement="top-start" trigger="hover">
+                      <template #trigger>
+                        <n-icon size="24" class="ml-2">
+                          <IosAlert />
+                        </n-icon>
+                      </template>
+                      超过执行时间{{ expirationTimeOptions.find(data => ifItem['expiration_time'])?.label || '' }}后失效
+                    </n-tooltip>
                   </NFormItem>
                 </template>
                 <template v-if="ifItem.trigger_conditions_type === '21'">
@@ -896,12 +908,12 @@ onMounted(() => {
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].task_type`"
                     :rule="premiseFormRules.task_type"
-                    class="max-w-30 w-full"
+                    class="max-w-25 w-full"
                   >
                     <NSelect
                       v-model:value="ifItem.task_type"
                       :options="cycleOptions"
-                      :placeholder="$t('generate.please-select-period')"
+                      :placeholder="$t('generate.please-select')"
                     />
                   </NFormItem>
                   <template v-if="ifItem.task_type === 'HOUR'">
@@ -910,7 +922,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].hourTimeValue`"
                       :rule="premiseFormRules.hourTimeValue"
-                      class="max-w-40 w-full"
+                      class="max-w-25 w-full"
                     >
                       <NTimePicker
                         v-model:value="ifItem.hourTimeValue"
@@ -927,9 +939,19 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        :placeholder="$t('generate.please-select-expiration-time')"
-                        class="w-30"
+                        :placeholder="$t('generate.please-select')"
+                        class="w-25"
                       />
+                      <n-tooltip placement="top-start" trigger="hover">
+                        <template #trigger>
+                          <n-icon size="24" class="ml-2">
+                            <IosAlert />
+                          </n-icon>
+                        </template>
+                        超过执行时间{{
+                          expirationTimeOptions.find(data => ifItem['expiration_time'])?.label || ''
+                        }}后失效
+                      </n-tooltip>
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.task_type === 'DAY'">
@@ -938,7 +960,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].dayTimeValue`"
                       :rule="premiseFormRules.dayTimeValue"
-                      class="max-w-40 w-full"
+                      class="max-w-25 w-full"
                     >
                       <NTimePicker
                         v-model:value="ifItem.dayTimeValue"
@@ -956,9 +978,19 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        :placeholder="$t('generate.please-select-expiration-time')"
-                        class="w-30"
+                        :placeholder="$t('generate.please-select')"
+                        class="w-25"
                       />
+                      <n-tooltip placement="top-start" trigger="hover">
+                        <template #trigger>
+                          <n-icon size="24" class="ml-2">
+                            <IosAlert />
+                          </n-icon>
+                        </template>
+                        超过执行时间{{
+                          expirationTimeOptions.find(data => ifItem['expiration_time'])?.label || ''
+                        }}后失效
+                      </n-tooltip>
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.task_type === 'WEEK'">
@@ -987,7 +1019,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekTimeValue`"
                       :rule="premiseFormRules.weekTimeValue"
-                      class="max-w-30 w-full"
+                      class="max-w-25 w-full"
                     >
                       <NTimePicker
                         v-model:value="ifItem.weekTimeValue"
@@ -1005,9 +1037,19 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        :placeholder="$t('generate.please-select-expiration-time')"
-                        class="w-35"
+                        :placeholder="$t('generate.please-select')"
+                        class="w-25"
                       />
+                      <n-tooltip placement="top-start" trigger="hover">
+                        <template #trigger>
+                          <n-icon size="24" class="ml-2">
+                            <IosAlert />
+                          </n-icon>
+                        </template>
+                        超过执行时间{{
+                          expirationTimeOptions.find(data => ifItem['expiration_time'])?.label || ''
+                        }}后失效
+                      </n-tooltip>
                     </NFormItem>
                   </template>
                   <template v-if="ifItem.task_type === 'MONTH'">
@@ -1016,7 +1058,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].monthChoseValue`"
                       :rule="premiseFormRules.monthChoseValue"
-                      class="max-w-40 w-full"
+                      class="max-w-25 w-full"
                     >
                       <NSelect
                         v-model:value="ifItem.monthChoseValue"
@@ -1028,7 +1070,7 @@ onMounted(() => {
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].monthTimeValue`"
                       :rule="premiseFormRules.monthTimeValue"
-                      class="max-w-40 w-full"
+                      class="max-w-25 w-full"
                     >
                       <NTimePicker
                         v-model:value="ifItem.monthTimeValue"
@@ -1046,15 +1088,25 @@ onMounted(() => {
                       <NSelect
                         v-model:value="ifItem.expiration_time"
                         :options="expirationTimeOptions"
-                        :placeholder="$t('generate.please-select-expiration-time')"
-                        class="w-30"
+                        :placeholder="$t('generate.please-select')"
+                        class="w-25"
                       />
+                      <n-tooltip placement="top-start" trigger="hover">
+                        <template #trigger>
+                          <n-icon size="24" class="ml-2">
+                            <IosAlert />
+                          </n-icon>
+                        </template>
+                        超过执行时间{{
+                          expirationTimeOptions.find(data => ifItem['expiration_time'])?.label || ''
+                        }}后失效
+                      </n-tooltip>
                     </NFormItem>
                   </template>
                 </template>
                 <template v-if="ifItem.trigger_conditions_type === '22'">
                   <!--  时间条件下->范围->选择星期和时间周期-->
-                  <div class="weekChoseValue-box w-130">
+                  <div class="weekChoseValue-box w-120">
                     <NFormItem
                       :show-label="false"
                       :path="`ifGroups[${ifGroupIndex}][${ifIndex}].weekChoseValue`"
@@ -1078,7 +1130,7 @@ onMounted(() => {
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].startTimeValue`"
                     :rule="premiseFormRules.startTimeValue"
-                    class="max-w-40 w-full"
+                    class="max-w-25 w-full"
                   >
                     <NTimePicker
                       v-model:value="ifItem.startTimeValue"
@@ -1092,7 +1144,7 @@ onMounted(() => {
                     :show-label="false"
                     :path="`ifGroups[${ifGroupIndex}][${ifIndex}].endTimeValue`"
                     :rule="premiseFormRules.endTimeValue"
-                    class="max-w-40 w-full"
+                    class="max-w-25 w-full"
                   >
                     <NTimePicker
                       v-model:value="ifItem.endTimeValue"
@@ -1167,7 +1219,6 @@ onMounted(() => {
 }
 
 .refresh-class {
-  height: 30px;
   font-size: 24px;
 }
 

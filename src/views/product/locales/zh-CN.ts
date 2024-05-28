@@ -16,6 +16,8 @@ export const productLocaleZhCn: ProductLocal = {
     productNamePlaceholder: '请输入产品名称',
     productTypePlaceholder: '请选择产品类型',
     productNumberPlaceholder: '请输入产品型号',
+    query: '查询',
+    Reset: '重置',
     productDescPlaceholder: '请输入产品描述',
     deviceConfigPlaceholder: '请输入设备配置',
     productKey: 'ProductKey',
@@ -69,6 +71,7 @@ export const productLocaleZhCn: ProductLocal = {
     packagePlaceholder: '请选择升级包'
   },
   'update-ota': {
+    updateDate: '修改日期',
     lookTask: '查看任务',
     otaTitle: 'OTA升级列表',
     taskName: '任务名称',

@@ -34,7 +34,7 @@ type FormModel = Pick<DataService.Data, 'name'>;
 const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('key验证错误，服务不可用')
+  name: createRequiredFormRule($t('custom.devicePage.deviceKey'))
 };
 
 function createDefaultFormModel(): FormModel {

@@ -25,6 +25,7 @@ const bgColor = computed(() => {
 @@ -34,14 +81,10 @@ const bgColor = computed(() => {
 -->
     <NImage
+      v-if="bgColor != ''"
       object-fit="cover"
       style="min-width: 100%; min-height: 100%"
       preview-disabled
@@ -35,6 +36,7 @@ const bgColor = computed(() => {
         }
       }"
     />
+    <SvgIcon v-else local-icon="Wave" class="size-full" />
   </div>
 </template>
 

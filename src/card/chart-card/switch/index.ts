@@ -17,8 +17,9 @@ export default {
       deviceSource: [{}]
     },
     iCardViewDefault: {
-      w: 5,
-      h: 2
+      w: 3,
+      h: 2,
+      minH: 1
     }
   }
 } as ICardDefine;

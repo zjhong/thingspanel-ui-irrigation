@@ -109,12 +109,13 @@ declare namespace Api {
       element_code: string;
       /** 组件路径 */
       param1: string;
-      /** 组件类型 */
-      param3: 'basic' | 'blank' | 'multi' | 'self' | 'base';
+      /** 是否隐藏 0 1 */
+      param3: string;
       /** 排序 */
       orders: number;
       /** 类型 */
-      element_type: 1 | 2 | 3 | 4 | 5;
+      // element_type: 1 | 2 | 3 | 4 | 5;
+      element_type: 1 | 3;
       /** 访问标识 */
       authority: any;
       /** 描述 */

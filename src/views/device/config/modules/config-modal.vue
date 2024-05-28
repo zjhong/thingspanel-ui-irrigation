@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   modalVisible: false,
   modalType: 'add'
 });
-const modalTitle = ref('添加');
+const modalTitle = ref($t('generate.add'));
 const configForm = ref(defaultConfigForm());
 
 function defaultConfigForm() {
@@ -37,17 +37,17 @@ function defaultConfigForm() {
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入设备配置名称',
+    message: $t('common.deviceConfigName'),
     trigger: 'blur'
   },
   device_type: {
     required: true,
-    message: '请选择设备接入类型',
+    message: $t('common.deviceAccessType'),
     trigger: 'change'
   },
   device_conn_type: {
     required: true,
-    message: '请选择设备连接方式',
+    message: $t('common.deviceConnectionMethod'),
     trigger: 'change'
   }
 });
@@ -75,9 +75,9 @@ watch(
   newValue => {
     visible.value = newValue;
     if (props.modalType === 'add') {
-      modalTitle.value = '添加';
+      modalTitle.value = $t('generate.add');
     } else {
-      modalTitle.value = '编辑';
+      modalTitle.value = $t('common.edit');
     }
     getDeviceTemplate();
   }
@@ -117,7 +117,7 @@ const handleSubmit = async () => {
 
 <template>
   <div class="overflow-hidden">
-    <NCard :title="`${modalTitle}设备配置`">
+    <NCard :title="`${modalTitle}${$t('custom.devicePage.deviceConfig')}`">
       <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
         <NFormItem :label="$t('generate.device-configuration-name')" path="name">
           <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-device-name')" />

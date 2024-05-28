@@ -31,7 +31,7 @@ type Option = {
   children?: Option[];
 };
 const options = ref<Option[]>();
-const sOptions = ref<any[]>([{ label: '不绑定', value: '' }]);
+const sOptions = ref<any[]>([{ label: $t('generate.unbind'), value: '' }]);
 const { query } = useRoute();
 const deviceConfigList = async name => {
   const { data, error } = await getDeviceConfigList({ page: 1, page_size: 99, name });

@@ -52,10 +52,10 @@ export const routeComponentTypeOptions = transformObjectToOption(routeComponentT
 /** 路由管理 - 路由类型 */
 export const routerTypeLabels: Record<CustomRoute.routerTypeKey, string> = {
   1: '菜单',
-  2: '目录',
-  3: '路由',
-  4: '按钮',
-  5: '隐藏'
+  // 2: '目录',
+  3: '路由'
+  // 4: '按钮',
+  // 5: '隐藏'
 };
 export const routeTypeOptions = transformObjectToOption(routerTypeLabels);
 /** 路由管理 - 访问标识 */
@@ -68,8 +68,8 @@ export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 
 /** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
 export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
-  1: '直连设备',
-  2: '网关设备'
+  1: $t('generate.direct-connected-device'),
+  2: $t('generate.direct-connected-device')
 };
 
 export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);
@@ -118,8 +118,8 @@ export const userStatusOptions = transformObjectToOption(userStatusLabels);
 
 /** 系统管理 - 常规设置 - 数据清理 清理类型 */
 export const dataClearSettingEnabledTypeLabels: Record<GeneralSetting.EnabledTypeKey, string> = {
-  1: '启用',
-  2: '停用'
+  1: $t('page.manage.common.status.enable'),
+  2: $t('page.manage.common.status.disable')
 };
 export const dataClearSettingEnabledTypeOptions = transformObjectToOption(dataClearSettingEnabledTypeLabels);
 
@@ -186,7 +186,7 @@ export const irrigationPlanStatusOption = transformObjectToOption(irrigationPlan
 
 /** 灌溉计划-控制类型 */
 export const irrigationControlType: Record<DataService.FlagKey, string> = {
-  A: '时长',
+  A: $t('page.irrigation.duration'),
   B: '容量 '
 };
 export const irrigationControlTypeOption = transformObjectToOption(irrigationControlType);

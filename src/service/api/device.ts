@@ -60,6 +60,12 @@ export const deviceList = async (params: any) => {
     params
   });
 };
+/** 获取设备列表 */
+export const deviceListByGroup = async (params: any) => {
+  return await request.get<DeviceManagement.DeviceDatas | any>(`/device/group/relation/list`, {
+    params
+  });
+};
 
 /** 获取设备详情 */
 export const deviceDetail = async (id: any) => {
@@ -74,6 +80,26 @@ export const deviceGroupRelation = async (params: any) => {
 
 export const getDeviceGroupRelation = async (params: any) => {
   return await request.get<any>(`/device/group/relation`, { params });
+};
+
+/** 获取设备告警状态 */
+export const deviceAlarmStatus = async (params: any) => {
+  return await request.get<any>(`/alarm/info/history/device`, { params });
+};
+
+/** 获取设备告警历史 */
+export const deviceAlarmHistory = async (params: any) => {
+  return await request.get<any>(`/alarm/info/history`, { params });
+};
+
+/** 获取设备告警配置列表 */
+export const deviceAlarmList = async (params: any) => {
+  return await request.get<any>(`/scene_automations/alarm`, { params });
+};
+
+/** 修改设备告警描述 */
+export const deviceAlarmHistoryPut = async (params: any) => {
+  return await request.put<any>(`/alarm/info/history`, params);
 };
 
 /** 获取设备功能模板列表 */

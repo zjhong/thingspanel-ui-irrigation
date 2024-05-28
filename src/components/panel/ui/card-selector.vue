@@ -6,6 +6,9 @@ import type { ICardData, ICardDefine } from '@/components/panel/card';
 import { PanelCards } from '@/components/panel';
 import { deviceTemplateSelect } from '@/service/api';
 import { $t } from '@/locales';
+import curvePoster from '@/card/chart-card/curve/poster.png';
+import demoPoster from '@/card/chart-card/demo/poster.png';
+import switchPoster from '@/card/chart-card/switch/poster.png';
 
 const props = defineProps<{
   class?: string | undefined;
@@ -46,10 +49,15 @@ const getImagePath = item => {
   const cardType = item.data.cardId.match(/curve|demo|switch/);
 
   if (!cardType) {
-    return '/src/card/chart-card/default/poster.png';
+    return demoPoster;
   }
 
-  return `/src/card/chart-card/${cardType[0]}/poster.png`;
+  if (cardType[0] === 'curve') {
+    return curvePoster;
+  } else if (cardType[0] === 'switch') {
+    return switchPoster;
+  }
+  return demoPoster;
 };
 const selectFinalCard = (item: ICardDefine) => {
   state.curCardData = {
@@ -177,7 +185,7 @@ onMounted(() => {
                       @click="selectCard(item.data)"
                     >
                       <div class="text-center font-medium leading-8 dark:bg-zinc-900">
-                        {{ $t(item.data.title) }}
+                        {{ item.data.dataSource?.deviceSource?.[0]?.metricsName || $t(item.data.title) }}
                       </div>
                       <div class="h-148px w-full">
                         <!--

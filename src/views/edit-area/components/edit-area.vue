@@ -43,17 +43,17 @@ export default {
         spaces_id: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请选择所属空间'
+          message: $t('common.belongingSpace')
         },
         name: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请输入空间名称'
+          message: $t('common.addSuccess')
         },
         location: {
           required: true,
           trigger: ['blur', 'change'],
-          message: '请设置空间位置'
+          message: $t('generate.spaceLocation')
         }
       },
       locationData: false, // 设置位置判断
@@ -163,7 +163,7 @@ export default {
             }
           } else {
             state.buttonData = 'error';
-            message.error('请设置空间位置');
+            message.error($t('generate.spaceLocation'));
           }
         });
       },
@@ -261,7 +261,7 @@ export default {
               if (state.locationData) {
                 state.positionCoordinates.push(e.lnglat);
                 if (state.positionCoordinates.length > 1) {
-                  message.error('只能添加一个位置信息');
+                  message.error($t('common.locationInfoAdded'));
                 } else {
                   state.areaForm.location = String(e.lnglat.lng);
                   state.areaForm.dimensionality = String(e.lnglat.lat);

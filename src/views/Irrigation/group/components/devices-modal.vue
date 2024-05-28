@@ -180,7 +180,7 @@ async function handleSpaceLoad(option_f: CascaderOption) {
 
 const onSave = () => {
   if (checkedRowKeys.value.length === 0) {
-    window.$message?.error('请勾选设备');
+    window.$message?.error($t('common.checkDevice'));
   } else {
     const items = tableData.value.filter(i => checkedRowKeys.value.includes(i.id));
     emit('success', items);

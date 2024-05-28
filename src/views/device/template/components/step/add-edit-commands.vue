@@ -125,7 +125,7 @@ const col: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   }
 ]);
 
-console.log(props.objItem, '测试');
+console.log(props.objItem, $t('common.test'));
 
 // 提交表单
 const formRef: any = ref(null);

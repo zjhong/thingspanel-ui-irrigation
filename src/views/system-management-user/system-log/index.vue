@@ -66,7 +66,7 @@ const getTableData = async () => {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'created_at',
-    title: '时间',
+    title: $t('common.time'),
     minWidth: '140px',
     align: 'left',
     render: (row: any) => {
@@ -81,25 +81,25 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'path',
-    title: '请求路径',
+    title: $t('common.requestPath'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'name',
     minWidth: '140px',
-    title: '请求方法',
+    title: $t('common.requestMethod'),
     align: 'left'
   },
   {
     key: 'latency',
-    title: '请求耗时',
+    title: $t('common.requestTime'),
     minWidth: '140px',
     align: 'left'
   },
   {
     key: 'username',
-    title: '用户名',
+    title: $t('generate.username'),
     minWidth: '140px',
     align: 'left'
   }

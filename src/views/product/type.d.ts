@@ -20,6 +20,8 @@ type ProductLocal = {
     productNumberPlaceholder: string;
     productDescPlaceholder: string;
     deviceConfigPlaceholder: string;
+    query: string;
+    Reset: string;
     productKey: string;
     productImage: string;
     preRegister: string;
@@ -71,6 +73,7 @@ type ProductLocal = {
     customInfo: string;
   };
   'update-ota': {
+    updateDate: string;
     lookTask: string;
     otaTitle: string;
     taskName: string;

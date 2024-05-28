@@ -55,10 +55,10 @@ async function getTableData() {
 // 下发
 const runDistribute = (rowId: string, status: number) => {
   dialog.warning({
-    title: '提示',
-    content: status === 4 ? '确定将计划下发给设备吗' : '确定取消计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: status === 4 ? $t('common.planTheDevice') : $t('common.cancelThePlan'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       if (status === 4) {
         await irrigationRotationExecute({ id: rowId, status });
@@ -72,10 +72,10 @@ const runDistribute = (rowId: string, status: number) => {
 // 删除
 const runDel = (rowId: string) => {
   dialog.warning({
-    title: '提示',
-    content: '确定删除计划吗',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: $t('common.deleteThePlan'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await irrigationRotationDel(rowId);
       init();

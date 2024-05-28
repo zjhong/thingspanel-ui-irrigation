@@ -95,26 +95,26 @@ defineExpose({
 const configFormRules = ref({
   actionType: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_type: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   action_target: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   actionParamOptions: {
     required: true,
-    message: '请选择'
+    message: $t('common.select')
   },
   action_value: {
     required: true,
-    message: '请输入',
+    message: $t('common.input'),
     trigger: 'blur'
   }
 });
@@ -124,20 +124,20 @@ const loadingSelect = ref(false);
 // 动作选项
 const actionOptions = ref([
   {
-    label: '操作设备',
+    label: $t('common.operateDevice'),
     value: '1',
     disabled: false
   },
   {
-    label: '激活场景',
+    label: $t('common.activateScene'),
     value: '20'
   },
   {
-    label: '触发告警',
+    label: $t('common.triggerAlarm'),
     value: '30'
   },
   {
-    label: '触发服务',
+    label: $t('common.triggerService'),
     value: '40'
   }
 ]);
@@ -165,11 +165,11 @@ const actionChange = (actionGroupItem: any, actionGroupIndex: any, data: any) =>
 // 设备类型选项
 const actionTypeOptions = ref([
   {
-    label: '单个设备',
+    label: $t('common.singleDevice'),
     value: '10'
   },
   {
-    label: '单类设备',
+    label: $t('common.singleClassDevice'),
     value: '11'
   }
 ]);
@@ -504,8 +504,8 @@ onMounted(() => {
                           value-field="id"
                           class="max-w-40"
                           :placeholder="$t('common.select')"
-                          filterable
                           remote
+                          filterable
                           @search="getDeviceConfig"
                           @update:value="() => actionTargetChange(instructItem)"
                         />
@@ -538,7 +538,7 @@ onMounted(() => {
                       >
                         <NInput
                           v-model:value="instructItem.action_value"
-                          :placeholder="'参数' + '，' + '如' + '：{param1:1}'"
+                          :placeholder="$t('common.param') + '，' + $t('common.as') + '：{param1:1}'"
                           class="max-w-40"
                         />
                       </NFormItem>

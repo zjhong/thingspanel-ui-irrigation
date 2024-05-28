@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import type { Ref } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
 import { NButton, NPopconfirm, NSpace, NSwitch, useMessage } from 'naive-ui';
 import { deviceConfigEdit } from '@/service/api/device';
@@ -40,12 +40,12 @@ function defaultExtendForm() {
 const extendFormRules = ref({
   name: {
     required: true,
-    message: '请输入名称',
+    message: $t('common.enterName'),
     trigger: 'blur'
   },
   type: {
     required: true,
-    message: '请选择类型',
+    message: $t('generate.select-type'),
     trigger: 'change'
   }
 });
@@ -81,7 +81,7 @@ const handleSave = async () => {
   postData.additional_info = JSON.stringify(extendInfoList.value);
   const res = await deviceConfigEdit(postData);
   if (!res.error) {
-    message.success('修改成功');
+    message.success($t('common.modifySuccess'));
     emit('upDateConfig');
   }
   handleClose();
@@ -126,7 +126,7 @@ const handleDeleteTable = async row => {
     extendInfoList.value.splice(index, 1);
     handleSave();
   }
-  window.$message?.info('已删除当前扩展信息');
+  window.$message?.info($t('common.extensionInfoDeleted'));
 };
 const handleEditTable = async row => {
   editIndex.value = (extendInfoList.value || []).findIndex(item => {
@@ -146,32 +146,32 @@ const handleEditTable = async row => {
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '名称',
+    title: $t('page.manage.menu.form.name'),
     minWidth: '140px',
     align: 'center'
   },
   {
     key: 'type',
     minWidth: '140px',
-    title: '类型',
+    title: $t('page.manage.menu.form.type'),
     align: 'center'
   },
   {
     key: 'default_value',
-    title: '默认值',
+    title: $t('generate.default-value'),
     minWidth: '140px',
     align: 'center'
   },
   {
     key: 'desc',
-    title: '描述',
+    title: $t('custom.groupPage.description'),
     minWidth: '140px',
     align: 'center'
   },
   {
     key: 'enable',
     minWidth: '140px',
-    title: '启用',
+    title: $t('page.manage.common.status.enable'),
     align: 'center',
     render: (row: any) => {
       return <NSwitch value={Boolean(row.enable)} onChange={() => handleSwitchChange(row)} />;
@@ -180,20 +180,20 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'operate',
     minWidth: '140px',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -203,7 +203,10 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(() => {
   if (!props.configInfo.additional_info || props.configInfo.additional_info === '{}') {
     extendInfoList.value = [];
@@ -225,8 +228,8 @@ onMounted(() => {
     <NModal
       v-model:show="visible"
       :mask-closable="false"
-      :title="isEdit ? '编辑扩展信息' : '添加扩展信息'"
-      class="w-400px"
+      :title="isEdit ? $t('common.editExtendedInfo') : $t('common.addExtendedInfo')"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
       preset="card"
       @after-leave="modalClose"
     >

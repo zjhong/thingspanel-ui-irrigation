@@ -103,12 +103,12 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
     title: () => $t('page.manage.menu.routeName'),
     align: 'left'
   },
-  {
-    key: 'param3',
-    minWidth: '140px',
-    title: () => $t('page.manage.menu.componentType'),
-    align: 'left'
-  },
+  // {
+  //   key: 'param3',
+  //   minWidth: '140px',
+  //   title: () => $t('page.manage.menu.componentType'),
+  //   align: 'left'
+  // },
   {
     key: 'element_type',
     minWidth: '140px',
@@ -118,10 +118,10 @@ const columns: Ref<DataTableColumns<CustomRoute.Route>> = ref([
       if (row.element_type) {
         const tagTypes: Record<CustomRoute.routerTypeKey, NaiveUI.ThemeColor> = {
           '1': 'success',
-          '2': 'error',
-          '3': 'warning',
-          '4': 'default',
-          '5': 'info'
+          // "2": "error",
+          '3': 'warning'
+          // "4": "default",
+          // "5": "info",
         };
         return <NTag type={tagTypes[row.element_type]}>{routerTypeLabels[row.element_type]}</NTag>;
       }
@@ -224,33 +224,35 @@ init();
 </script>
 
 <template>
-  <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
-    <template #header-extra>
-      <NButton type="primary" @click="handleAddTable">
-        <IconIcRoundPlus class="mr-4px text-20px" />
-        {{ $t('common.add') }}
-      </NButton>
-    </template>
-    <div class="h-full flex-col">
-      <NDataTable
-        size="small"
-        :row-key="rowKey"
-        :remote="true"
-        :columns="columns"
-        :data="tableData"
-        :loading="loading"
-        :pagination="pagination"
-        class="flex-1-hidden"
-      />
-      <TableActionModal
-        v-model:visible="visible"
-        :type="modalType"
-        :edit-data="editData"
-        :table-list="tableData"
-        @success="getTableData"
-      />
-    </div>
-  </NCard>
+  <div>
+    <NCard :title="$t('page.manage.menu.title')" :bordered="false" class="h-full rounded-8px shadow-sm">
+      <template #header-extra>
+        <NButton type="primary" @click="handleAddTable">
+          <IconIcRoundPlus class="mr-4px text-20px" />
+          {{ $t('common.add') }}
+        </NButton>
+      </template>
+      <div class="h-full flex-col">
+        <NDataTable
+          size="small"
+          :row-key="rowKey"
+          :remote="true"
+          :columns="columns"
+          :data="tableData"
+          :loading="loading"
+          :pagination="pagination"
+          class="flex-1-hidden"
+        />
+        <TableActionModal
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          :table-list="tableData"
+          @success="getTableData"
+        />
+      </div>
+    </NCard>
+  </div>
 </template>
 
 <style scoped></style>

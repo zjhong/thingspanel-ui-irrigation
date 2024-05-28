@@ -1,44 +1,53 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue';
 import type { CardItem } from '@/cards2.0/card';
-import type { CardData, CardView } from '@/components/tp-kan-ban/kan-ban';
+import type { CardView } from '@/components/tp-kan-ban/kan-ban';
 import { useKanBanStore } from '@/cards2.0/store/kan-ban-store';
 
 const { cardMap } = useKanBanStore();
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
-const defData: CardData = {
-  cardItem: {
-    type: 'plugins',
-    id: '',
-    cardName: '',
+const defData: CardView = {
+  x: 0,
+  y: 0,
+  w: 0,
+  h: 0,
+  i: '00',
+  data: {
+    cardItem: {
+      type: 'plugins',
+      id: '',
+      cardName: '',
+      renderID: '',
+      sourceNumber: 9
+    },
+    sourceNumber: 9,
+    cardId: '',
     renderID: '',
-    sourceNumber: 9
-  },
-  sourceNumber: 9,
-  cardId: '',
-  renderID: '',
-  config: {
-    title: '',
-    showTitle: '',
-    basis: { title: '', showTitle: false },
-    source: {},
-    cardUI: {}
+    config: {
+      title: '',
+      showTitle: '',
+      basis: { title: '', showTitle: false },
+      source: {},
+      cardUI: {}
+    }
   }
 };
 
 const state = reactive({
   selectCard: null as null | CardItem,
-  data: copy(defData)
+  cardView: copy(defData)
+  // data: copy(defData)
 });
 
 const emit = defineEmits<{
-  (e: 'update', data: CardData): void;
+  (e: 'update', data: CardView): void;
 }>();
 
 watch(
-  () => state.data.config,
-  () => {
-    emit('update', state.data as any);
+  () => state.cardView.data.config,
+  value => {
+    console.log(value, '4324343');
+    emit('update', state.cardView as any);
   },
   { deep: true }
 );
@@ -46,9 +55,9 @@ watch(
 defineExpose({
   setCard: (data?: CardView) => {
     state.selectCard = null;
-    state.data = copy(data?.data || defData);
+    state.cardView = copy(data || defData);
     setTimeout(() => {
-      state.selectCard = cardMap.get(state.data.cardId) || null;
+      state.selectCard = cardMap.get(state.cardView.data.cardId) || null;
     });
   }
 });
@@ -56,8 +65,8 @@ defineExpose({
 
 <template>
   <div>
-    <KanBanCardConfigCtx v-model:config="state.data.config" mode="insert">
-      <component :is="state.selectCard?.configForm" :data="state.data" />
+    <KanBanCardConfigCtx v-model:config="state.cardView.data.config" mode="insert">
+      <component :is="state.selectCard?.configForm" :data="state.cardView.data" />
     </KanBanCardConfigCtx>
   </div>
 </template>

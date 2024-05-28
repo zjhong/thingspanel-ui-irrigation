@@ -31,8 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '新增告警',
-    edit: '编辑告警'
+    add: $t('generate.addAlarm'),
+    edit: $t('generate.editAlarm')
   };
   return titles[props.type];
 });
@@ -60,100 +60,100 @@ const modalVisible = computed({
 const generalOptions = ref([]);
 const alarmRepeatTime = ref([
   {
-    label: '1次',
+    label: $t('common.times1'),
     value: '1'
   },
   {
-    label: '2次',
+    label: $t('common.times2'),
     value: '2'
   },
   {
-    label: '3次',
+    label: $t('common.times3'),
     value: '3'
   },
   {
-    label: '4次',
+    label: $t('common.times4'),
     value: '4'
   },
   {
-    label: '5次',
+    label: $t('common.times5'),
     value: '5'
   },
   {
-    label: '6次',
+    label: $t('common.times6'),
     value: '6'
   },
   {
-    label: '7次',
+    label: $t('common.times7'),
     value: '7'
   },
   {
-    label: '8次',
+    label: $t('common.times8'),
     value: '8'
   },
   {
-    label: '9次',
+    label: $t('common.times9'),
     value: '9'
   },
   {
-    label: '10次',
+    label: $t('common.times10'),
     value: '10'
   }
 ]);
 const alarmLevel = ref([
   {
-    label: '高',
+    label: $t('common.high'),
     value: 'H'
   },
   {
-    label: '中',
+    label: $t('common.middle'),
     value: 'M'
   },
   {
-    label: '低',
+    label: $t('common.low'),
     value: 'L'
   }
 ]);
 /** 触发时间下拉 */
 const alarmKeepTime = ref([
   {
-    label: '1分钟',
+    label: $t('common.minute1'),
     value: '1'
   },
   {
-    label: '2分钟',
+    label: $t('common.minute2'),
     value: '2'
   },
   {
-    label: '3分钟',
+    label: $t('common.minutes3'),
     value: '3'
   },
   {
-    label: '4分钟',
+    label: $t('common.minutes4'),
     value: '4'
   },
   {
-    label: '5分钟',
+    label: $t('common.minutes5'),
     value: '5'
   },
   {
-    label: '6分钟',
+    label: $t('common.minutes6'),
     value: '6'
   },
   {
-    label: '7分钟',
+    label: $t('common.minutes7'),
     value: '7'
   },
   {
-    label: '8分钟',
+    label: $t('common.minutes8'),
     value: '8'
   },
   {
-    label: '9分钟',
+    label: $t('common.minutes9'),
     value: '9'
   },
   {
-    label: '10分钟',
+    label: $t('common.minutes10'),
     value: '10'
   }
 ]);
@@ -177,22 +177,22 @@ const rules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入告警名称'
+    message: $t('common.enterAlarmName')
   },
   alarm_level: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入告警级别'
+    message: $t('common.enterAlarmLevel')
   },
   alarm_repeat_time: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入触发重复次数'
+    message: $t('common.enterNumberTriggering')
   },
   alarm_keep_time: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入触发持续时间'
+    message: $t('common.enterTriggeringDuration')
   }
 };
 /** 新增 */
@@ -208,11 +208,11 @@ const add = async () => {
   };
   const res = await addWarningMessage(data);
   if (res) {
-    message.success('添加成功');
+    message.success($t('common.addSuccess'));
     modalVisible.value = false;
     emit('newEdit');
   } else {
-    message.error('添加失败');
+    message.error($t('common.addFail'));
   }
 };
 
@@ -230,11 +230,11 @@ async function editInfoText() {
   };
   const { data } = await editInfo(datas);
   if (data) {
-    message.success('编辑成功');
+    message.success($t('common.editSuccess'));
     modalVisible.value = false;
     emit('newEdit');
   } else {
-    message.success('编辑失败');
+    message.success($t('common.editFail'));
   }
 }
 
@@ -286,7 +286,7 @@ watch(props, newValue => {
 
 <template>
   <NModal v-model:show="modalVisible" preset="card" :title="title">
-    <NForm ref="formRef" label-placement="top" :rules="rules" :model="formData">
+    <NForm ref="formRef" :rules="rules" :model="formData">
       <n-form-item :label="$t('generate.alarm-name')" path="name">
         <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
       </n-form-item>

@@ -83,7 +83,7 @@ function saveAddSpace(data) {
 
 function editClick() {
   if (sumId.value.id.length === 0) {
-    message.warning('请选择一个空间或者区域');
+    message.warning($t('generate.spaceOrArea'));
   } else {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     editShow.value = true;

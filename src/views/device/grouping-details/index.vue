@@ -6,7 +6,7 @@ import {
   deleteDeviceGroup,
   deleteDeviceGroupRelation,
   deviceGroupDetail,
-  deviceList,
+  deviceListByGroup,
   getDeviceGroup
 } from '@/service/api/device';
 import { AddOrEditDevices } from '@/views/device/grouping/components';
@@ -137,7 +137,7 @@ const queryParams2 = reactive<{ group_id: string; page: number; page_size: numbe
   page_size: 5
 });
 const getDeviceList = async (id: string) => {
-  const res = await deviceList({ ...queryParams2, group_id: id });
+  const res = await deviceListByGroup({ ...queryParams2, group_id: id });
   if (res.data?.list) {
     device_data.value = res.data?.list;
   } else {
@@ -241,7 +241,7 @@ watch(
           </NSpace>
         </template>
         <NTabs type="line" animated>
-          <NTabPane name="详情" :tab="$t('custom.grouping_details.detail')">
+          <NTabPane :name="$t('custom.devicePage.details')" :tab="$t('custom.grouping_details.detail')">
             <NDescriptions label-class="min-w-100px" label-placement="top" bordered :column="6">
               <NDescriptionsItem :label="$t('custom.grouping_details.groupLevel')">
                 {{ details_data.tier.group_path }}
@@ -302,7 +302,7 @@ watch(
             />
           </NTabPane>
 
-          <NTabPane name="编辑" :tab="$t('custom.grouping_details.setting')">
+          <NTabPane name="$t('common.edit')" :tab="$t('custom.grouping_details.setting')">
             <NButton type="primary" @click="showGroupModal">{{ $t('custom.grouping_details.detail') }}</NButton>
 
             <AddOrEditDevices

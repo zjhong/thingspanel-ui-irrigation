@@ -61,7 +61,7 @@ const handleSwitchChange = async (row, value) => {
 };
 const handleDeleteTable = async (rowId: string) => {
   await deleteNotificationGroup({ id: rowId });
-  window.$message?.info('已删除当前通知组');
+  window.$message?.info($t('generate.notificationGroup'));
 };
 const editData = ref<Api.Alarm.NotificationGroupList | null>(null);
 const handleEditTable = async (rowId: string) => {
@@ -100,21 +100,21 @@ const columns = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
     minWidth: '140px',
     render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -156,7 +156,7 @@ getTableData();
         </div>
         <TableActionModal
           v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :type="modalType"
           :edit-data="editData"
           @get-table-data="getTableData"

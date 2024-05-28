@@ -163,7 +163,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .connection-box {
-  padding: 50px;
+  padding: 50px 10px;
 
   .connection-title {
     font-size: 15px;

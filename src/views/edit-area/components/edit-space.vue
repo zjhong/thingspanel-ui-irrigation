@@ -36,7 +36,7 @@ export default {
         name: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请输入空间名称'
+          message: $t('common.addSuccess')
         }
       },
       locationData: false, // 设置位置判断
@@ -101,7 +101,7 @@ export default {
         console.log('空间保存', data);
         editSpaces(data).then(e => {
           if (e) {
-            message.success('编辑成功');
+            message.success($t('common.editSuccess'));
             state.spaceForm.name = '';
             state.spaceForm.location = '';
             state.spaceForm.dimensionality = '';
@@ -114,7 +114,7 @@ export default {
             methods.mapInit();
             context.emit('saveSpace', false);
           } else {
-            message.error('编辑失败');
+            message.error($t('common.editFail'));
           }
         });
       },
@@ -133,7 +133,7 @@ export default {
             }
           } else {
             state.buttonData = 'error';
-            message.error('请设置空间位置');
+            message.error($t('generate.spaceLocation'));
           }
         });
       },

@@ -24,7 +24,7 @@ const timelines: TimelineData[] = [
   { type: 'default', title: '啊', content: '', time: '2021-10-10 20:46' },
   {
     type: 'success',
-    title: '成功',
+    title: $t('custom.devicePage.success'),
     content: '哪里成功',
     time: '2021-10-10 20:46'
   },

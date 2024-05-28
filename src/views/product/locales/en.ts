@@ -18,6 +18,8 @@ export const productLocaleEn: ProductLocal = {
     productNumberPlaceholder: 'Please enter the product code',
     productDescPlaceholder: 'Please enter the product description',
     deviceConfigPlaceholder: 'Please enter the device configuration',
+    query: 'query',
+    Reset: 'query',
     productKey: 'ProductKey',
     productImage: 'Image',
     preRegister: 'Pre-registration Management',
@@ -69,6 +71,7 @@ export const productLocaleEn: ProductLocal = {
     packagePlaceholder: 'Please select the upgrade package'
   },
   'update-ota': {
+    updateDate: 'modification date',
     lookTask: 'View Task',
     otaTitle: 'OTA Upgrade List',
     taskName: 'Task Name',

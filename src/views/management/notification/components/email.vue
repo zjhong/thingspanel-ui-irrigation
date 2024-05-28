@@ -87,7 +87,7 @@ const message = useMessage();
 const debugFormRef = ref<HTMLElement & FormInst>();
 async function handleSend() {
   await debugFormRef.value?.validate();
-  let messageReactive: MessageReactive | null = message.loading('发送中...', {
+  let messageReactive: MessageReactive | null = message.loading($t('common.modifySuccess'), {
     duration: 100000
   });
   const data: any = await sendTestEmail(debugData);

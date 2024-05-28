@@ -4,6 +4,8 @@ import { $t } from '@/locales';
 
 defineOptions({ name: 'KanBanHeader' });
 const active = defineModel<boolean>('active', { required: true, default: false });
+const responsive = defineModel<boolean>('responsive', { required: true, default: false });
+
 defineProps<{ saveKanBan: () => Promise<void>; isFullscreen: boolean; toggle: () => Promise<void>; tittle: string }>();
 </script>
 
@@ -24,7 +26,8 @@ defineProps<{ saveKanBan: () => Promise<void>; isFullscreen: boolean; toggle: ()
       </n-space>
     </div>
     <div class="flex items-center justify-end">
-      <n-space>
+      <n-space align="center">
+        <n-checkbox v-model:checked="responsive">响应式</n-checkbox>
         <NButton @click="saveKanBan">{{ $t('common.save') }}</NButton>
         <FullScreen
           :full="isFullscreen"

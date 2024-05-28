@@ -16,6 +16,9 @@ interface productRecord extends productAdd {
   id: string;
 }
 type QueryFormModel = Pick<productRecord, 'name'> & {
+  name?: string;
+  product_model?: string;
+  product_type?: string;
   page: number;
   page_size: number;
 };

@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-
   (e: 'success'): void;
 }
 
@@ -55,8 +54,8 @@ const title = computed(() => {
 const formRef = ref<HTMLElement & FormInst>();
 
 const deviceOptions = ref<any[]>([
-  { label: '直连设备', value: 1 },
-  { label: '网关设备', value: 2 }
+  { label: $t('generate.direct-connected-device'), value: 1 },
+  { label: $t('generate.direct-connected-device'), value: 2 }
 ]);
 
 type FormModel = Pick<

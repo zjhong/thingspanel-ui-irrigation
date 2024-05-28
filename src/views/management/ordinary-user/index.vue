@@ -321,14 +321,14 @@ init();
         />
         <TableActionModal
           v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :type="modalType"
           :edit-data="editData"
           @success="getTableData"
         />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-700px'"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

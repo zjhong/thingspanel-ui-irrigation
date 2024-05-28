@@ -26,9 +26,9 @@ function createDefaultFormModel(): FormModel {
 }
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入规则名称'),
-  signMode: createRequiredFormRule('请选择签名方式'),
-  ip: createRequiredFormRule('请输入IP白名单')
+  name: createRequiredFormRule($t('generate.ruleName')),
+  signMode: createRequiredFormRule($t('generate.signatureMethod')),
+  ip: createRequiredFormRule($t('generate.IPwhitelist'))
 };
 
 const props = withDefaults(

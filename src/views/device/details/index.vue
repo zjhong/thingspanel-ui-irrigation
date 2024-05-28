@@ -16,7 +16,7 @@ import User from '@/views/device/details/modules/user.vue';
 import Settings from '@/views/device/details/modules/settings.vue';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
-import { deviceDetail, deviceUpdate } from '@/service/api/device';
+import { deviceAlarmStatus, deviceDetail, deviceUpdate } from '@/service/api/device';
 import { localStg } from '@/utils/storage';
 import { useRouterPush } from '@/hooks/common/router';
 import { createServiceConfig } from '~/env.config';
@@ -116,6 +116,9 @@ const getDeviceDetail = async () => {
       if (device_type.value !== '2' || !data?.device_config_name) {
         components = components.filter(item => item.key !== 'device-analysis');
       }
+      if (device_type.value === '3') {
+        components = components.filter(item => item.key !== 'join');
+      }
     } else if (!data?.device_config_name) {
       components = components.filter(item => item.key !== 'device-analysis');
     }
@@ -135,21 +138,27 @@ const clickConfig: () => void = () => {
     }
   });
 };
+const alarmStatus = ref(false);
+const getAlarmStatus = async () => {
+  const res = await deviceAlarmStatus({ device_id: d_id });
+  alarmStatus.value = res.data.alarm;
+};
 onBeforeMount(() => {
   getDeviceDetail();
+  getAlarmStatus();
 });
 
 const save = async () => {
   if (!deviceData.value?.name) {
-    window.NMessage.error('请输入设备名称');
+    window.NMessage.error($t('custom.devicePage.enterDeviceName'));
     return;
   }
   if (!deviceData.value?.device_number) {
-    window.NMessage.error('请输入设备编号');
+    window.NMessage.error($t('custom.devicePage.enterDeviceNumber'));
     return;
   }
   if (deviceData.value?.device_number.length > 36) {
-    window.NMessage.error('设备编号不能超过36位');
+    window.NMessage.error($t('custom.devicePage.deviceNumberMax'));
     return;
   }
   device_number.value = deviceData.value.device_number;
@@ -238,7 +247,7 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <!-- <span class="mr-2">{{ $t('custom.device_details.status') }}:</span> -->
+            <!-- <span class="mr-2">{{ $t('generate.status') }}:</span> -->
             <SvgIcon
               local-icon="CellTowerRound"
               style="color: #ccc; margin-right: 5px"
@@ -250,17 +259,24 @@ const getPlatform = computed(() => {
             </span>
           </div>
           <div class="mr-4" style="display: flex">
-            <SvgIcon
-              local-icon="AlertFilled"
-              style="color: #ccc; margin-right: 5px"
-              class="text-20px text-primary"
-              :stroke="icon_type"
-            />
-            <!-- <span style="color: #ccc" class="mr-2">{{ $t('custom.device_details.alarm') }}:</span> -->
-
-            <span style="color: #ccc">
-              {{ $t('custom.device_details.noAlarm') }}
-            </span>
+            <template v-if="alarmStatus === true">
+              <SvgIcon
+                local-icon="AlertFilled"
+                style="color: #ee0808; margin-right: 5px"
+                class="text-20px text-primary"
+                :stroke="icon_type"
+              />
+              <span style="color: #ee0808">{{ $t('custom.device_details.alarm') }}</span>
+            </template>
+            <template v-if="alarmStatus === false">
+              <SvgIcon
+                local-icon="AlertFilled"
+                style="color: #ccc; margin-right: 5px"
+                class="text-20px text-primary"
+                :stroke="icon_type"
+              />
+              <span style="color: #ccc">{{ $t('custom.device_details.noAlarm') }}</span>
+            </template>
           </div>
         </NFlex>
       </div>

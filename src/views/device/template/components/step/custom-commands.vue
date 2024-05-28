@@ -26,12 +26,7 @@ const configFormRules = ref({
 
 const commandjson: any = reactive({
   configForm: false,
-  listData: [
-    {
-      buttom_name: '34345',
-      description: '55'
-    }
-  ],
+  listData: [],
   total: 0,
   queryjson: {
     page: 1,

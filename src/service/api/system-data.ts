@@ -132,7 +132,7 @@ export const putCommands = async (params: any): Promise<any> => {
 
 /** 编辑命令数据 */
 export const deviceCustomCommandsList = async (params: any): Promise<any> => {
-  const data = await request.put('/device/model/custom/commands', { params });
+  const data = await request.get('/device/model/custom/commands', { params });
   return data;
 };
 

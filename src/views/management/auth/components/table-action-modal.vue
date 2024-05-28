@@ -198,13 +198,10 @@ watch(
           <NInput v-model:value="formModel.param1" />
         </NFormItemGridItem>
         <!--
- <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
           <NInput v-model:value="formModel.route_path" />
         </NFormItemGridItem>
--->
-        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.routePath')" path="routePath">
-          <NInput v-model:value="formModel.route_path" :placeholder="$t('page.manage.menu.form.routePath')" />
-        </NFormItemGridItem>
+        -->
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.icon')" path="param2">
           <IconSelect v-model:value="formModel.param2" :icons="icons" />
         </NFormItemGridItem>

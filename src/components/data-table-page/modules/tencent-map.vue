@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { createApp, onMounted, ref, watchEffect } from 'vue';
+import { createApp, onMounted, ref, watch, watchEffect } from 'vue';
 import { NCard } from 'naive-ui';
 import { useScriptTag } from '@vueuse/core';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import { telemetryLatestApi } from '@/service/api/system-data';
 defineOptions({ name: 'TencentMap' });
 
 const props = defineProps<{ devices: any[] }>();
+console.log(props, 'props');
 
 const { load } = useScriptTag(TENCENT_MAP_SDK_URL);
 
@@ -40,11 +41,8 @@ const telemetryData: (id: string) => void = async id => {
   // }
   const data: any = await telemetryLatestApi(id);
   telemetryValue.value = data.data;
-  telemetryValue.value.filter(item => item.label);
-  console.log(
-    telemetryValue.value.filter(item => item.label),
-    '最新的遥测数据'
-  );
+  telemetryValue.value = data.data.filter(item => item.label);
+  console.log(telemetryValue.value, '最新的遥测数据');
 };
 
 async function renderMap() {
@@ -139,7 +137,7 @@ async function renderMap() {
               {$t('custom.devicePage.lastPushTime')}：
               {evt.geometry.data.ts ? dayjs(evt.geometry.data.ts).format('YYYY-MM-DD HH:mm:ss') : '-'}
             </div>
-            {evt.geometry.dom}
+            <div v-html={evt.geometry.dom}></div>
             <div>
               {$t('generate.status')}：{statusText[evt.geometry.data.is_online]}
             </div>
@@ -151,7 +149,7 @@ async function renderMap() {
       let dom = ``;
       telemetryValue.value.filter(item => {
         if (item.label) {
-          dom = `${dom}<div>{'${item.label}'}：{'${item.value}'}{'${item.unit}'}</div>`;
+          dom = `${dom}<div>${item.label}：<span class='card_val'>${item.value}</span> ${item.unit}</div>`;
         }
       });
       evt.geometry.dom = dom;
@@ -164,13 +162,22 @@ async function renderMap() {
       infoWindow.setContent(html); // 设置信息窗内容
       evt.originalEvent.stopPropagation();
       console.log(evt, telemetryValue.value, '点击了弹窗');
-    }, 10);
+    }, 100);
   });
 }
 
 onMounted(() => {
   renderMap();
 });
+
+watch(
+  () => props.devices,
+  newValue => {
+    console.log(newValue, '我改变了');
+    renderMap();
+  },
+  { deep: true }
+);
 
 watchEffect(() => {
   renderMap();
@@ -181,4 +188,26 @@ watchEffect(() => {
   <div ref="domRef" class="h-full w-full"></div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+:deep(.n-card) {
+  display: flex;
+  align-items: flex-start;
+  border: 0;
+  padding: 0 15px;
+}
+
+:deep(.n-card__content) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 10px;
+}
+
+.card_map {
+  padding: 10px !important;
+}
+
+:deep(.card_val) {
+  color: rgb(var(--nprogress-color)) !important;
+}
+</style>

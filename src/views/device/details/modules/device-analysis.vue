@@ -137,18 +137,21 @@ const setDeviceAddress = async () => {
 const addChildDeviceSure = () => {
   if (selectChild.value.length === 0) {
     window.$message?.error($t('generate.selectSubDevices'));
-    return;
+  } else {
+    addChildDevice({
+      id: props.id,
+      son_id: selectChild.value.join(',')
+    }).then(res => {
+      console.log(res.error);
+      if (!res.error) {
+        showAddDialog.value = false;
+        selectChild.value = [];
+        sOptions.value = [];
+        tableData.value = [];
+        getData();
+      }
+    });
   }
-  const res = addChildDevice({
-    id: props.id,
-    son_id: selectChild.value.join(',')
-  });
-  showAddDialog.value = false;
-  selectChild.value = [];
-  sOptions.value = [];
-  tableData.value = [];
-  getData();
-  console.log(res);
 };
 
 const getDeviceList = async () => {

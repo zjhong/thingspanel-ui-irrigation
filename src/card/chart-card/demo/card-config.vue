@@ -13,6 +13,9 @@ const setIcon = icon => {
 
 <template>
   <NForm :model="ctx.config">
+    <NFormItem :label="$t('device_template.table_header.unit')">
+      <NInput v-model:value="ctx.config.unit" :placeholder="$t('device_template.table_header.pleaseEnterTheUnit')" />
+    </NFormItem>
     <NFormItem :label="$t('generate.color')">
       <NColorPicker v-model:value="ctx.config.color" :show-alpha="false" />
     </NFormItem>

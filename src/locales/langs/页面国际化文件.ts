@@ -45,7 +45,7 @@ export const pzh_cn: any = {
     offline: '离线',
     alarmed: '告警',
     notAlarmed: '未告警',
-    lastPushTime: '上次推送时间',
+    lastPushTime: '上报时间',
     serviceProtocol: '通过服务/协议',
     details: '详情',
     delete: '删除',

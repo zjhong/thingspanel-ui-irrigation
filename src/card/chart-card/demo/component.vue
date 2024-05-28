@@ -71,7 +71,10 @@ const setSeries: (dataSource) => void = async dataSource => {
 const handleResize = entries => {
   for (const entry of entries) {
     // 根据卡片宽度动态调整字体大小，这里仅为示例逻辑，实际应用中需按需调整
-    const dFontSize = `${entry.contentRect.width / 20}px`; // 假设字体大小与宽度成反比，20为比例系数
+    let dFontSize = `${entry.contentRect.width / 20}px`; // 假设字体大小与宽度成反比，20为比例系数
+    if (entry.contentRect.width / entry.contentRect.height > 3) {
+      dFontSize = `${(entry.contentRect.width + (entry.contentRect.height * entry.contentRect.width) / entry.contentRect.height / 2) / 20 / (1 + entry.contentRect.width / entry.contentRect.height / 2)}px`;
+    }
     console.log('font size:', dFontSize);
     fontSize.value = dFontSize;
   }
@@ -117,14 +120,23 @@ onUnmounted(() => {
     <div class="h-full flex-col items-center">
       <NCard ref="myCard" :bordered="false" class="box">
         <div class="bt-data" :style="'font-size:' + fontSize">
-          <span class="name">
+          <span class="name" :title="card?.dataSource?.deviceSource?.[0]?.metricsName || ''">
             {{ card?.dataSource?.deviceSource?.[0]?.metricsName }}
           </span>
           <NIcon class="iconclass" :color="props?.card?.config?.color || 'black'">
             <component :is="iconOptions[props?.card?.config?.iconName || 'ClipboardCode20Regular']" />
           </NIcon>
-          <span class="value">{{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}</span>
-          <span class="unit">{{ detail?.data && detail.data[0] ? detail.data[0]?.unit : '' }}</span>
+          <div class="value-wrap">
+            <span class="value" :title="detail?.data && detail.data[0] ? detail.data[0]?.value : ''">
+              {{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}
+            </span>
+            <span
+              class="unit"
+              :title="props?.card?.config?.unit || (detail?.data && detail.data[0] ? detail.data[0]?.unit : '')"
+            >
+              {{ props?.card?.config?.unit || (detail?.data && detail.data[0] ? detail.data[0]?.unit : '') }}
+            </span>
+          </div>
         </div>
       </NCard>
     </div>
@@ -162,24 +174,44 @@ onUnmounted(() => {
   height: 25%;
 }
 
+.value-wrap {
+  position: absolute; /* 新增: 使得 .unit 可以相对于此元素定位 */
+  display: inline-block; /* 确保包裹元素不影响外部布局 */
+  bottom: 16%;
+  left: 60%;
+  width: 40%;
+}
+
 .unit {
   position: absolute;
-  top: 30%;
-  left: 75%;
+  top: -8%;
+  right: 10%;
+  width: 50%;
   font-size: 1em;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transform: translateY(-50%); /* 可选: 微调垂直对齐 */
 }
 
 .name {
   position: absolute;
   top: 15%;
   left: 15%;
+  width: 45%;
   font-size: 1.2em;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .value {
-  position: absolute;
-  bottom: 12%;
-  left: 60%;
   font-size: 2.5em;
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 </style>

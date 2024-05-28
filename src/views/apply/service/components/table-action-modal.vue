@@ -55,7 +55,7 @@ const formRef = ref<HTMLElement & FormInst>();
 
 const deviceOptions = ref<any[]>([
   { label: $t('generate.direct-connected-device'), value: 1 },
-  { label: $t('generate.direct-connected-device'), value: 2 }
+  { label: $t('generate.gatewayDevice'), value: 2 }
 ]);
 
 type FormModel = Pick<

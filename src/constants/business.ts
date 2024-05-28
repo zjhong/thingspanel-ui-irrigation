@@ -69,7 +69,7 @@ export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 /** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
 export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
   1: $t('generate.direct-connected-device'),
-  2: $t('generate.direct-connected-device')
+  2: $t('generate.gatewayDevice')
 };
 
 export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);

@@ -129,3 +129,27 @@ export const putCommands = async (params: any): Promise<any> => {
   const data = await request.put('/device/model/commands', params);
   return data;
 };
+
+/** 编辑命令数据 */
+export const deviceCustomCommandsList = async (params: any): Promise<any> => {
+  const data = await request.put('/device/model/custom/commands', { params });
+  return data;
+};
+
+/** 删除自定义命令 */
+export const deviceCustomCommandsDel = async (paramsId: any): Promise<any> => {
+  const data = await request.delete(`/device/model/custom/commands/${paramsId}`);
+  return data;
+};
+
+/** 新建自定义命令 */
+export const deviceCustomCommandsAdd = async (params: any): Promise<any> => {
+  const data = await request.post('/device/model/custom/commands', params);
+  return data;
+};
+
+/** 编辑自定义命令 */
+export const deviceCustomCommandsPut = async (params: any): Promise<any> => {
+  const data = await request.put('/device/model/custom/commands', params);
+  return data;
+};

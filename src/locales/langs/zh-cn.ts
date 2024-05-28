@@ -948,6 +948,9 @@ const local: App.I18n.Schema = {
     }
   },
   generate: {
+    customCommand: '自定义命令',
+    addCustomCommand: '新增自定义命令',
+    btnname: '按钮名称',
     sceneLinkageName: '关联场景联动名称',
     alarmConfugName: '告警配置名称',
     alarmDevices: '告警设备列表',

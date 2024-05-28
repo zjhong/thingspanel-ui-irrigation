@@ -1263,6 +1263,9 @@ declare namespace App {
         };
       };
       generate: {
+        customCommand: string;
+        addCustomCommand: string;
+        btnname: string;
         sceneLinkageName: string;
         alarmConfugName: string;
         alarmDevices: string;

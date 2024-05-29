@@ -119,7 +119,7 @@ const getPlatform = computed(() => {
     <NGrid v-if="isCommand" x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
       <NGridItem v-for="item in commandList" :key="item.id">
         <NCard hoverable>
-          <div class="title cursor-pointer text-16px font-600" @click="onCommandChange(item)">
+          <div class="title cursor-pointer ellipsis-text text-16px font-600" @click="onCommandChange(item)">
             {{ item.buttom_name }}
           </div>
         </NCard>

@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, defineProps, getCurrentInstance, onMounted, reactive, ref } from 'vue';
+import { computed, defineProps, getCurrentInstance, nextTick, onMounted, reactive, ref } from 'vue';
 import { NButton, NDataTable, NForm, NFormItem, NInput, NModal, NPagination, NPopconfirm, NTag } from 'naive-ui';
+import Codemirror from 'codemirror-editor-vue3';
 import { $t } from '@/locales';
 import {
   deviceCustomCommandsAdd,
@@ -8,6 +9,7 @@ import {
   deviceCustomCommandsList,
   deviceCustomCommandsPut
 } from '@/service/api/system-data';
+
 const props = defineProps<{
   id: string;
 }>();
@@ -45,6 +47,27 @@ const getCommandList = (page: number = 1) => {
   deviceCustomCommandsList(queryjson).then(({ data }) => {
     commandjson.listData = data.list || [];
     commandjson.total = data.total;
+  });
+};
+const cmRef = ref();
+const cmOptions = {
+  mode: 'text/javascript',
+  lineNumbers: false
+};
+
+const onReady = cm => {
+  const lastLine = cm.lineCount() - 1;
+  const lastCh = cm.getLine(lastLine).length;
+  cm.focus();
+  cm.setCursor({ line: lastLine, ch: lastCh });
+  console.log(cm);
+};
+const setupEditor = () => {
+  nextTick(() => {
+    if (cmRef.value) {
+      console.log(cmRef.value);
+      cmRef.value.refresh(); // ensure the editor is correctly refreshed
+    }
   });
 };
 const openCommandDialog = () => {
@@ -168,6 +191,7 @@ onMounted(() => {
       v-model:show="commandjson.configForm"
       :title="$t('generate.customCommand')"
       :class="getPlatform ? 'w-90%' : 'w-500px'"
+      @after-enter="setupEditor"
     >
       <n-card>
         <NForm
@@ -188,7 +212,16 @@ onMounted(() => {
             <NInput v-model:value="commandjson.formjson.data_identifier" :placeholder="$t('generate.or-enter-here')" />
           </NFormItem>
           <NFormItem :label="$t('generate.commandConetnt')" path="instruct">
-            <NInput v-model:value="commandjson.formjson.instruct" :placeholder="$t('generate.or-enter-here')" />
+            <Codemirror
+              ref="cmRef"
+              v-model:value="commandjson.formjson.instruct"
+              :options="cmOptions"
+              height="100"
+              keepcursorinend
+              border
+              @ready="onReady"
+            ></Codemirror>
+            <!-- <NInput v-model:value="commandjson.formjson.instruct" :placeholder="$t('generate.or-enter-here')" /> -->
           </NFormItem>
           <NFormItem :label="$t('device_template.table_header.commandDescription')" path="description">
             <NInput v-model:value="commandjson.formjson.description" type="textarea" />

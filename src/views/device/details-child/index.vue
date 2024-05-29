@@ -163,7 +163,7 @@ watch(
                 <n-input v-model:value="deviceDataStore.deviceData.name" aria-required="true" />
               </n-form-item>
               <n-form-item :label="$t('generate.device-number')" path="device_number">
-                <n-input v-model:value="deviceDataStore.deviceData.device_number" />
+                <n-input v-model:value="d_id as string" />
               </n-form-item>
               <n-form-item :label="$t('custom.devicePage.label')" path="label">
                 <n-dynamic-tags v-model:value="labels" />

@@ -23,7 +23,7 @@ const { otherBaseURL } = createServiceConfig(import.meta.env);
 let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
 wsUrl += `/telemetry/datas/current/keys/ws`;
 // eslint-disable-next-line no-constant-binary-expression
-const keys = ['externalVol' || props?.card?.dataSource?.deviceSource?.[0]?.metricsId];
+const keys = [props?.card?.dataSource?.deviceSource?.[0]?.metricsId || 'externalVol'];
 const { data, status, send, close } = useWebSocket(wsUrl, {
   heartbeat: {
     message: 'ping',
@@ -36,7 +36,7 @@ if (props?.card?.dataSource?.deviceSource && props?.card?.dataSource?.deviceSour
   const token = localStg.get('token');
   const dataw = {
     // eslint-disable-next-line no-constant-binary-expression
-    device_id: '84fd5c8f-9c6c-ea57-a7b7-d32dce6b65af' || props?.card?.dataSource?.deviceSource?.[0]?.deviceId,
+    device_id: props?.card?.dataSource?.deviceSource?.[0]?.deviceId || '84fd5c8f-9c6c-ea57-a7b7-d32dce6b65af',
     keys,
     token
   };
@@ -58,8 +58,8 @@ watch(
 const setSeries: (dataSource) => void = async dataSource => {
   const arr: any = dataSource;
   const querDetail = {
-    device_id: dataSource.deviceSource[0]?.deviceId ?? '',
-    keys: arr.deviceSource[0].metricsId
+    device_id: dataSource?.deviceSource ? dataSource?.deviceSource[0]?.deviceId ?? '' : '',
+    keys: arr.deviceSource ? arr.deviceSource[0]?.metricsId : ''
   };
   if (querDetail.device_id && querDetail.keys) {
     detail.value = await deviceDetail(querDetail);

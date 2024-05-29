@@ -92,9 +92,11 @@ onUpdated(() => {
     :layout="layout"
     :col-num="colNum"
     :row-height="rowHeight"
+    :responsive="true"
     :auto-size="true"
     :margin="[10, 10]"
     class="w-full"
+    :breakpoints="{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }"
     @update:layout="data => emit('update:layout', data)"
   >
     <template #default="{ gridItemProps }">

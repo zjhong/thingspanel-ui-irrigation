@@ -247,18 +247,18 @@ onMounted(() => {
 </script>
 
 <template>
-  <NFlex class="mb-6">
+  <div class="m-b-20px flex items-center gap-20px">
     <n-select v-model:value="queryData.script_type" :options="scripTypeOpt" class="max-w-40" />
     <NButton type="primary" @click="openModal($t('common.add'), null)">
       {{ $t('generate.add-data-processing') }}
     </NButton>
-  </NFlex>
+  </div>
   <n-empty v-if="dataScriptList.length === 0" size="huge" :description="$t('common.nodata')"></n-empty>
   <NGrid v-else x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
     <NGridItem v-for="item in dataScriptList" :key="item.id">
-      <NCard hoverable style="height: 190px">
-        <div class="item-name">
-          <div>
+      <NCard hoverable style="height: 180px">
+        <div class="item-name item-center flex">
+          <div class="flex-1">
             {{ item.name }}
           </div>
           <NSwitch
@@ -268,8 +268,10 @@ onMounted(() => {
             @update-value="handleChange(item)"
           />
         </div>
-        <div class="item-desc description">{{ item.description }}</div>
-        <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
+        <div class="h-80px flex-1">
+          <div class="item-desc description">{{ item.description }}</div>
+          <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
+        </div>
         <NFlex justify="end">
           <NButton tertiary circle type="info" @click="openModal($t('common.edit'), item)">
             <template #icon>

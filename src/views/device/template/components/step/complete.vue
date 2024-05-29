@@ -51,7 +51,7 @@ onMounted(getTemplate);
       <template #footer>
         <div class="flex justify-between border-t pt-3">
           <div>
-            <n-button class="mr-4" @click="copyText">{{ $t('generate.copy-json') }}</n-button>
+            <n-button type="primary" class="mr-4" @click="copyText">{{ $t('generate.copy-json') }}</n-button>
           </div>
           <div>
             <n-button class="mr-4" @click="back">{{ $t('generate.previous-step') }}</n-button>

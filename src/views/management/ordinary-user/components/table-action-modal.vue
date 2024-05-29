@@ -62,7 +62,6 @@ const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('common.pleaseCheckValue')),
-
   phone_number: formRules.phone,
   email: formRules.email,
   password: formRules.pwd,

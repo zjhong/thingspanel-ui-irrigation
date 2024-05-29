@@ -265,31 +265,30 @@ init();
 </script>
 
 <template>
-  <div class="overflow-auto">
+  <div>
     <NCard :title="$t('route.management_ordinary-user')">
-      <div class="h-full flex-col">
-        <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
-            <NInput v-model:value="queryParams.email" />
-          </NFormItem>
-          <NFormItem :label="$t('page.manage.user.userName')" path="name">
-            <NInput v-model:value="queryParams.name" />
-          </NFormItem>
-          <NFormItem :label="$t('page.manage.user.userStatus2')" path="status">
-            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="customUserStatusOptions" />
-          </NFormItem>
-          <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
-            <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
-          </NFormItem>
-        </NForm>
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <IconIcRoundPlus class="mr-4px text-20px" />
-              {{ $t('common.add') }}
-            </NButton>
-            <!--
+      <NForm :inline="!getPlatform" label-placement="left" :model="queryParams">
+        <NFormItem :label="$t('page.manage.user.userEmail')" path="email">
+          <NInput v-model:value="queryParams.email" />
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.userName')" path="name">
+          <NInput v-model:value="queryParams.name" />
+        </NFormItem>
+        <NFormItem :label="$t('page.manage.user.userStatus2')" path="status">
+          <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="customUserStatusOptions" />
+        </NFormItem>
+        <NFormItem>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+          <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
+        </NFormItem>
+      </NForm>
+      <NSpace class="pb-12px" justify="space-between">
+        <NSpace>
+          <NButton type="primary" @click="handleAddTable">
+            <IconIcRoundPlus class="mr-4px text-20px" />
+            {{ $t('common.add') }}
+          </NButton>
+          <!--
  <n-button type="error">
               <icon-ic-round-delete class="mr-4px text-20px" />
               删除
@@ -299,8 +298,8 @@ init();
               导出Excel
             </n-button>
 -->
-          </NSpace>
-          <!--
+        </NSpace>
+        <!--
  <n-space align="center" :size="18">
             <n-button size="small" type="primary" @click="getTableData">
               <icon-mdi-refresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
@@ -309,30 +308,29 @@ init();
             <column-setting v-model:columns="columns" />
           </n-space>
 -->
-        </NSpace>
-        <NDataTable
-          :row-key="row => row.id"
-          :remote="true"
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :class="getPlatform ? 'w-90%' : 'w-600px'"
-          :type="modalType"
-          :edit-data="editData"
-          @success="getTableData"
-        />
-        <EditPasswordModal
-          v-model:visible="editPwdVisible"
-          :class="getPlatform ? 'w-90%' : 'w-600px'"
-          :edit-data="editData"
-          @success="getTableData"
-        ></EditPasswordModal>
-      </div>
+      </NSpace>
+      <NDataTable
+        :row-key="row => row.id"
+        :remote="true"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal
+        v-model:visible="visible"
+        :class="getPlatform ? 'w-90%' : 'w-600px'"
+        :type="modalType"
+        :edit-data="editData"
+        @success="getTableData"
+      />
+      <EditPasswordModal
+        v-model:visible="editPwdVisible"
+        :class="getPlatform ? 'w-90%' : 'w-600px'"
+        :edit-data="editData"
+        @success="getTableData"
+      ></EditPasswordModal>
     </NCard>
   </div>
 </template>

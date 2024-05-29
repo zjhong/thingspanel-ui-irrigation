@@ -333,3 +333,8 @@ export const getSimulation = async (params: any) => {
 export const sendSimulation = async (params: any) => {
   return await request.post<any>(`/telemetry/datas/simulation`, params);
 };
+
+// 根据设备id查自定义命令列表
+export const deviceCustomCommandsIdList = async (paramsId: any) => {
+  return await request.get<any>(`/device/model/custom/commands/${paramsId}`);
+};

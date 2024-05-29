@@ -4,9 +4,8 @@ import { NButton, NDataTable, NForm, NFormItem, NInput, NModal, NPagination } fr
 import { useLoading } from '@sa/hooks';
 import { Refresh } from '@vicons/ionicons5';
 import type { FlatResponseFailData, FlatResponseSuccessData } from '@sa/axios';
-import { commandDataById } from '@/service/api';
+import { commandDataById, commandDataPub, deviceCustomCommandsIdList } from '@/service/api';
 import { $t } from '@/locales';
-
 const props = defineProps<{
   id: string;
   noRefresh?: boolean;
@@ -65,6 +64,12 @@ const submit = async () => {
   await fetchDataFunction();
   closeDialog();
 };
+
+const onCommandChange = async (row: any) => {
+  const parms = { device_id: props.id, value: row.instruct, identify: row.data_identifier };
+  await commandDataPub(parms);
+};
+
 const updatePage = (page: number) => {
   the_page.value = page;
   fetchDataFunction();
@@ -81,8 +86,16 @@ const getOptions = async show => {
     options.value = res.data;
   }
 };
-onMounted(fetchDataFunction);
+const commandList = ref();
 
+const getListData = async () => {
+  const { data } = await deviceCustomCommandsIdList(props.id);
+  commandList.value = data;
+};
+onMounted(() => {
+  props.isCommand && getListData();
+  fetchDataFunction();
+});
 const getPlatform = computed(() => {
   const { proxy }: any = getCurrentInstance();
   return proxy.getPlatform();
@@ -90,16 +103,38 @@ const getPlatform = computed(() => {
 </script>
 
 <template>
-  <div>
-    <NFlex :justify="buttonName ? 'space-between' : 'end'">
+  <div class="">
+    <div class="m-b-20px flex items-center">
       <NButton v-if="buttonName" type="primary" @click="openDialog">{{ buttonName }}</NButton>
-      <NButton v-if="!noRefresh" :bordered="false" class="justify-end" @click="refresh">
-        <NIcon size="18">
-          <Refresh />
-        </NIcon>
-        {{ $t('generate.refresh') }}
-      </NButton>
-    </NFlex>
+      <div class="flex flex-1 flex-justify-end">
+        <NButton v-if="!noRefresh" :bordered="false" class="justify-end" @click="refresh">
+          <NIcon size="18">
+            <Refresh />
+          </NIcon>
+          {{ $t('generate.refresh') }}
+        </NButton>
+      </div>
+    </div>
+
+    <NGrid v-if="isCommand" x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+      <NGridItem v-for="item in commandList" :key="item.id">
+        <NCard hoverable>
+          <div class="title cursor-pointer ellipsis-text text-16px font-600" @click="onCommandChange(item)">
+            {{ item.buttom_name }}
+          </div>
+        </NCard>
+      </NGridItem>
+    </NGrid>
+    <NDataTable class="mb-4 mt-4" :loading="loading" :columns="tableColumns" :data="tableData" />
+    <div class="flex flex-justify-end">
+      <NPagination
+        v-if="!noRefresh"
+        :page-count="page_coune"
+        :page="the_page"
+        :page-size="4"
+        @update:page="updatePage"
+      />
+    </div>
     <NModal
       v-if="submitApi"
       v-model:show="showDialog"
@@ -129,15 +164,5 @@ const getPlatform = computed(() => {
         </NForm>
       </n-card>
     </NModal>
-    <NDataTable class="mb-4 mt-4" :loading="loading" :columns="tableColumns" :data="tableData" />
-    <div class="flex flex-justify-end">
-      <NPagination
-        v-if="!noRefresh"
-        :page-count="page_coune"
-        :page="the_page"
-        :page-size="4"
-        @update:page="updatePage"
-      />
-    </div>
   </div>
 </template>

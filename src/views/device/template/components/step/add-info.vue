@@ -229,7 +229,7 @@ watchEffect(async () => {
     </n-upload>
   </div>
   <div class="box1 m-t2">
-    <n-button @click="next">{{ $t('device_template.nextStep') }}</n-button>
+    <n-button type="primary" @click="next">{{ $t('device_template.nextStep') }}</n-button>
     <n-button class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</n-button>
   </div>
 </template>

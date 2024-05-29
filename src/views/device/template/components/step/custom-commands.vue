@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, defineProps, getCurrentInstance, onMounted, reactive, ref } from 'vue';
+import { computed, defineProps, getCurrentInstance, nextTick, onMounted, reactive, ref } from 'vue';
 import { NButton, NDataTable, NForm, NFormItem, NInput, NModal, NPagination, NPopconfirm, NTag } from 'naive-ui';
+import Codemirror from 'codemirror-editor-vue3';
 import { $t } from '@/locales';
 import {
   deviceCustomCommandsAdd,
@@ -8,6 +9,7 @@ import {
   deviceCustomCommandsList,
   deviceCustomCommandsPut
 } from '@/service/api/system-data';
+
 const props = defineProps<{
   id: string;
 }>();
@@ -30,15 +32,14 @@ const commandjson: any = reactive({
   total: 0,
   queryjson: {
     page: 1,
-    page_size: 10
+    page_size: 4
   },
   formjson: {
     buttom_name: '',
     data_identifier: '',
     description: '',
     instruct: '',
-    enable_status: '',
-    remark: ''
+    enable_status: 'disable'
   }
 });
 const getCommandList = (page: number = 1) => {
@@ -46,6 +47,27 @@ const getCommandList = (page: number = 1) => {
   deviceCustomCommandsList(queryjson).then(({ data }) => {
     commandjson.listData = data.list || [];
     commandjson.total = data.total;
+  });
+};
+const cmRef = ref();
+const cmOptions = {
+  mode: 'text/javascript',
+  lineNumbers: false
+};
+
+const onReady = cm => {
+  const lastLine = cm.lineCount() - 1;
+  const lastCh = cm.getLine(lastLine).length;
+  cm.focus();
+  cm.setCursor({ line: lastLine, ch: lastCh });
+  console.log(cm);
+};
+const setupEditor = () => {
+  nextTick(() => {
+    if (cmRef.value) {
+      console.log(cmRef.value);
+      cmRef.value.refresh(); // ensure the editor is correctly refreshed
+    }
   });
 };
 const openCommandDialog = () => {
@@ -127,17 +149,21 @@ const columns: any = [
     }
   }
 ];
-
-const onCommandSubmit = async () => {
+const configFormRef = ref();
+const onCommandSubmit = async e => {
   const params = { ...commandjson.formjson, device_template_id: props.id };
-
-  const { error } = commandjson.formjson?.id
-    ? await deviceCustomCommandsPut(params)
-    : await deviceCustomCommandsAdd(params);
-  if (!error) {
-    openCommandDialog();
-    getCommandList();
-  }
+  e.preventDefault();
+  configFormRef.value?.validate(async errors => {
+    if (!errors) {
+      const { error } = commandjson.formjson?.id
+        ? await deviceCustomCommandsPut(params)
+        : await deviceCustomCommandsAdd(params);
+      if (!error) {
+        openCommandDialog();
+        getCommandList();
+      }
+    }
+  });
 };
 
 onMounted(() => {
@@ -156,7 +182,7 @@ onMounted(() => {
 
     <div class="w-full flex justify-end">
       <NPagination
-        :page-count="commandjson.total"
+        :item-count="commandjson.total"
         :page-size="commandjson.queryjson.page_size"
         @update:page="getCommandList"
       />
@@ -165,6 +191,7 @@ onMounted(() => {
       v-model:show="commandjson.configForm"
       :title="$t('generate.customCommand')"
       :class="getPlatform ? 'w-90%' : 'w-500px'"
+      @after-enter="setupEditor"
     >
       <n-card>
         <NForm
@@ -185,7 +212,16 @@ onMounted(() => {
             <NInput v-model:value="commandjson.formjson.data_identifier" :placeholder="$t('generate.or-enter-here')" />
           </NFormItem>
           <NFormItem :label="$t('generate.commandConetnt')" path="instruct">
-            <NInput v-model:value="commandjson.formjson.instruct" :placeholder="$t('generate.or-enter-here')" />
+            <Codemirror
+              ref="cmRef"
+              v-model:value="commandjson.formjson.instruct"
+              :options="cmOptions"
+              height="100"
+              keepcursorinend
+              border
+              @ready="onReady"
+            ></Codemirror>
+            <!-- <NInput v-model:value="commandjson.formjson.instruct" :placeholder="$t('generate.or-enter-here')" /> -->
           </NFormItem>
           <NFormItem :label="$t('device_template.table_header.commandDescription')" path="description">
             <NInput v-model:value="commandjson.formjson.description" type="textarea" />

@@ -64,8 +64,8 @@ const next = async () => {
   <div>
     <templatePanel :template-id="props.deviceTemplateId" :is-app="true" />
     <div class="box1 m-t2">
-      <NButton @click="next">{{ $t('device_template.nextStep') }}</NButton>
-      <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>
+      <NButton type="primary" @click="next">{{ $t('device_template.nextStep') }}</NButton>
+      <NButton class="m-r3" type="primary" ghost @click="back">{{ $t('device_template.back') }}</NButton>
       <NButton class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</NButton>
     </div>
   </div>

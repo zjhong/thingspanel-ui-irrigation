@@ -27,21 +27,28 @@ const sceneEdit = (item: any) => {
 };
 
 // 激活场景
-const sceneActivation = (item: any) => {
-  dialog.warning({
-    title: $t('common.activationPrompt'),
-    content: $t('common.activateSceneInfo'),
-    positiveText: $t('device_template.confirm'),
-    negativeText: $t('common.cancel'),
-    onPositiveClick: async () => {
-      const res = await sceneActive(item.id);
-      if (!res.error) {
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        await getData();
-        message.success($t('custom.grouping_details.operationSuccess'));
-      }
-    }
-  });
+const sceneActivation = async (item: any) => {
+  // dialog.warning({
+  //   title: $t('common.activationPrompt'),
+  //   content: $t('common.activateSceneInfo'),
+  //   positiveText: $t('device_template.confirm'),
+  //   negativeText: $t('common.cancel'),
+  //   onPositiveClick: async () => {
+  //     const res = await sceneActive(item.id);
+  //     if (!res.error) {
+  //       // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  //       await getData();
+  //       // message.success($t('custom.grouping_details.operationSuccess'));
+  //      return false;
+  //     }
+  //     return false;
+  //   }
+  // });
+  const res = await sceneActive(item.id);
+  if (!res.error) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    await getData();
+  }
 };
 const tableData = ref([]);
 const queryData = ref({

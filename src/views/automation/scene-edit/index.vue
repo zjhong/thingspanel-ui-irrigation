@@ -47,7 +47,7 @@ const configFormRules = ref({
     message: $t('generate.enter-scene-name')
   },
   description: {
-    required: true,
+    required: false,
     message: $t('generate.enterSceneDesc')
   },
   actionType: {

@@ -184,8 +184,8 @@ const getPlatform = computed(() => {
         </NFormItem>
         <!-- Form action buttons -->
         <div style="display: flex; justify-content: flex-end; gap: 8px">
-          <NButton @click="handleSubmit">{{ $t('custom.groupPage.confirm') }}</NButton>
           <NButton @click="handleClose">{{ $t('custom.groupPage.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('custom.groupPage.confirm') }}</NButton>
         </div>
       </NForm>
     </NCard>

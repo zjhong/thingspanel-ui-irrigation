@@ -70,7 +70,7 @@ onMounted(getConfigInfo);
         <NInput v-model:value="longitude" :placeholder="$t('generate.longitude')" class="w-140px" />
         <NInput v-model:value="latitude" :placeholder="$t('generate.latitude')" class="w-140px" />
 
-        <NButton @click="openMapAndGetPosition">{{ $t('generate.location') }}</NButton>
+        <NButton type="primary" @click="openMapAndGetPosition">{{ $t('generate.location') }}</NButton>
       </n-space>
     </NCard>
 
@@ -85,7 +85,7 @@ onMounted(getConfigInfo);
       </template>
     </NCard>
 
-    <NButton @click="handleSave">{{ $t('common.save') }}</NButton>
+    <NButton type="primary" @click="handleSave">{{ $t('common.save') }}</NButton>
     <NModal v-model:show="isShow" class="flex-center" :class="getPlatform ? 'max-w-90%' : 'max-w-640px'">
       <NCard class="flex flex-1">
         <TencentMap

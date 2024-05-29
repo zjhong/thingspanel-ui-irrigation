@@ -30,15 +30,14 @@ const commandjson: any = reactive({
   total: 0,
   queryjson: {
     page: 1,
-    page_size: 10
+    page_size: 4
   },
   formjson: {
     buttom_name: '',
     data_identifier: '',
     description: '',
     instruct: '',
-    enable_status: '',
-    remark: ''
+    enable_status: 'disable'
   }
 });
 const getCommandList = (page: number = 1) => {
@@ -127,17 +126,21 @@ const columns: any = [
     }
   }
 ];
-
-const onCommandSubmit = async () => {
+const configFormRef = ref();
+const onCommandSubmit = async e => {
   const params = { ...commandjson.formjson, device_template_id: props.id };
-
-  const { error } = commandjson.formjson?.id
-    ? await deviceCustomCommandsPut(params)
-    : await deviceCustomCommandsAdd(params);
-  if (!error) {
-    openCommandDialog();
-    getCommandList();
-  }
+  e.preventDefault();
+  configFormRef.value?.validate(async errors => {
+    if (!errors) {
+      const { error } = commandjson.formjson?.id
+        ? await deviceCustomCommandsPut(params)
+        : await deviceCustomCommandsAdd(params);
+      if (!error) {
+        openCommandDialog();
+        getCommandList();
+      }
+    }
+  });
 };
 
 onMounted(() => {
@@ -156,7 +159,7 @@ onMounted(() => {
 
     <div class="w-full flex justify-end">
       <NPagination
-        :page-count="commandjson.total"
+        :item-count="commandjson.total"
         :page-size="commandjson.queryjson.page_size"
         @update:page="getCommandList"
       />

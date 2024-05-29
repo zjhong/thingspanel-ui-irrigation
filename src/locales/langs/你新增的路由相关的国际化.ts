@@ -61,7 +61,7 @@ export const czh_cn = {
   alarm: '告警',
   'alarm_notification-group': '通知组',
   'alarm_notification-record': '通知记录',
-  'alarm_warning-message': '警告信息',
+  'alarm_warning-message': '告警信息',
   management_notification: '通知服务配置',
   irrigation: '灌溉计划',
   irrigation_time: '定时灌溉',

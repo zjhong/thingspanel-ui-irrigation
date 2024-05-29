@@ -308,7 +308,7 @@ const getPlatform = computed(() => {
           </n-form-item>
           <n-space align="end">
             <n-button @click="showDialog = false">{{ $t('generate.cancel') }}</n-button>
-            <n-button @click="sends">{{ $t('generate.send') }}</n-button>
+            <n-button type="primary" @click="sends">{{ $t('generate.send') }}</n-button>
           </n-space>
         </n-form>
       </n-card>
@@ -323,7 +323,7 @@ const getPlatform = computed(() => {
           <div class="flex items-center gap-15px">
             <n-input v-model:value="device_order" type="textarea" class="flex-1" @click="copy" />
 
-            <n-button @click="sendSimulationList">
+            <n-button type="primary" @click="sendSimulationList">
               {{ $t('generate.send') }}
             </n-button>
           </div>

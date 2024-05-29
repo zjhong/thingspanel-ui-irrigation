@@ -158,6 +158,7 @@ watch(
                 v-model:value="deviceCount"
                 :disabled="props?.deviceWebChartConfig?.length !== 0"
                 :min="1"
+                :hidden="true"
                 :max="state.data.dataSource.sourceNum || 9"
                 class="m-b-2 w-360px"
                 @update:value="deviceCountUpdate"

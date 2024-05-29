@@ -128,7 +128,7 @@ onUnmounted(() => {
           </NIcon>
           <div class="value-wrap">
             <span class="value" :title="detail?.data && detail.data[0] ? detail.data[0]?.value : ''">
-              {{ detail?.data && detail.data[0] ? detail.data[0]?.value : '' }}
+              {{ detail?.data && detail.data[0] ? detail.data[0]?.value : '8' }}
             </span>
             <span
               class="unit"

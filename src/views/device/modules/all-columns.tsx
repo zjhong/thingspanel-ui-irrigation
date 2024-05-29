@@ -57,10 +57,10 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
               }}
             >
               {{
-                default: () => $t('custom.groupPage.confirmDelete'),
+                default: () => $t('common.confirmDelete'),
                 trigger: () => (
                   <NButton quaternary type="primary" size={'small'}>
-                    {$t('custom.groupPage.delete')}
+                    {$t('common.delete')}
                   </NButton>
                 )
               }}

@@ -949,6 +949,9 @@ const local: App.I18n.Schema = {
   },
   custom: pen,
   generate: {
+    customCommand: 'custom command',
+    addCustomCommand: 'Add custom commands',
+    btnname: 'Button Name',
     sceneLinkageName: 'Associated scene linkage name',
     alarmConfugName: 'Alarm configuration name',
     alarmDevices: 'List of alarm devices',

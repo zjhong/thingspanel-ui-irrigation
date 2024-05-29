@@ -19,7 +19,7 @@ import AddEditTest from './add-edit-test.vue';
 import AddEditAttributes from './add-edit-attributes.vue';
 import AddEditEvents from './add-edit-events.vue';
 import AddEditCommands from './add-edit-commands.vue';
-
+import CustomCommands from './custom-commands.vue';
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible']);
 const { loading, startLoading, endLoading } = useLoading(false);
 
@@ -372,6 +372,7 @@ getTableData();
             "
           />
         </div>
+        <CustomCommands v-if="item.name === 'command'" :id="deviceTemplateId"></CustomCommands>
       </n-tab-pane>
     </n-tabs>
   </div>
@@ -384,7 +385,7 @@ getTableData();
     v-model:show="addAndEditModalVisible"
     preset="card"
     :title="addAndEditTitle"
-    :class="[tabsCurrent === 'events' || tabsCurrent === 'command' ? 'w-50%' : 'w-30%']"
+    :class="[tabsCurrent === 'events' || 'w-50%']"
     @after-leave="cloneaddAndEditVisible"
   >
     <component

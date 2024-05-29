@@ -1241,7 +1241,7 @@ const local: App.I18n.Schema = {
     'remember-last-path': '记住上次路径',
     table: '表格',
     'old-password': ' 原 密 码 ',
-    'notification-type': '通知类型:',
+    'notification-type': '通知类型',
     'search-by-name': '按名称搜索',
     'confirm-password': '确认密码',
     username: '用户名',

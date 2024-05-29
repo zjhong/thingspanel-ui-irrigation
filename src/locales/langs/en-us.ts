@@ -1243,7 +1243,7 @@ const local: App.I18n.Schema = {
     'remember-last-path': 'remember last path',
     table: 'table',
     'old-password': 'old password',
-    'notification-type': 'notification type:',
+    'notification-type': 'notification type',
     'search-by-name': 'search by name',
     'confirm-password': 'confirm password',
     username: 'username',

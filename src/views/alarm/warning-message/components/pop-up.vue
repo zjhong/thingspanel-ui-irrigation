@@ -58,48 +58,48 @@ const modalVisible = computed({
 });
 
 const generalOptions = ref([]);
-const alarmRepeatTime = ref([
-  {
-    label: $t('common.times1'),
-    value: '1'
-  },
-  {
-    label: $t('common.times2'),
-    value: '2'
-  },
-  {
-    label: $t('common.times3'),
-    value: '3'
-  },
-  {
-    label: $t('common.times4'),
-    value: '4'
-  },
-  {
-    label: $t('common.times5'),
-    value: '5'
-  },
-  {
-    label: $t('common.times6'),
-    value: '6'
-  },
-  {
-    label: $t('common.times7'),
-    value: '7'
-  },
-  {
-    label: $t('common.times8'),
-    value: '8'
-  },
-  {
-    label: $t('common.times9'),
-    value: '9'
-  },
-  {
-    label: $t('common.times10'),
-    value: '10'
-  }
-]);
+// const alarmRepeatTime = ref([
+//   {
+//     label: $t('common.times1'),
+//     value: '1'
+//   },
+//   {
+//     label: $t('common.times2'),
+//     value: '2'
+//   },
+//   {
+//     label: $t('common.times3'),
+//     value: '3'
+//   },
+//   {
+//     label: $t('common.times4'),
+//     value: '4'
+//   },
+//   {
+//     label: $t('common.times5'),
+//     value: '5'
+//   },
+//   {
+//     label: $t('common.times6'),
+//     value: '6'
+//   },
+//   {
+//     label: $t('common.times7'),
+//     value: '7'
+//   },
+//   {
+//     label: $t('common.times8'),
+//     value: '8'
+//   },
+//   {
+//     label: $t('common.times9'),
+//     value: '9'
+//   },
+//   {
+//     label: $t('common.times10'),
+//     value: '10'
+//   }
+// ]);
 const alarmLevel = ref([
   {
     label: $t('common.high'),
@@ -115,48 +115,48 @@ const alarmLevel = ref([
   }
 ]);
 /** 触发时间下拉 */
-const alarmKeepTime = ref([
-  {
-    label: $t('common.minute1'),
-    value: '1'
-  },
-  {
-    label: $t('common.minute2'),
-    value: '2'
-  },
-  {
-    label: $t('common.minutes3'),
-    value: '3'
-  },
-  {
-    label: $t('common.minutes4'),
-    value: '4'
-  },
-  {
-    label: $t('common.minutes5'),
-    value: '5'
-  },
-  {
-    label: $t('common.minutes6'),
-    value: '6'
-  },
-  {
-    label: $t('common.minutes7'),
-    value: '7'
-  },
-  {
-    label: $t('common.minutes8'),
-    value: '8'
-  },
-  {
-    label: $t('common.minutes9'),
-    value: '9'
-  },
-  {
-    label: $t('common.minutes10'),
-    value: '10'
-  }
-]);
+// const alarmKeepTime = ref([
+//   {
+//     label: $t('common.minute1'),
+//     value: '1'
+//   },
+//   {
+//     label: $t('common.minute2'),
+//     value: '2'
+//   },
+//   {
+//     label: $t('common.minutes3'),
+//     value: '3'
+//   },
+//   {
+//     label: $t('common.minutes4'),
+//     value: '4'
+//   },
+//   {
+//     label: $t('common.minutes5'),
+//     value: '5'
+//   },
+//   {
+//     label: $t('common.minutes6'),
+//     value: '6'
+//   },
+//   {
+//     label: $t('common.minutes7'),
+//     value: '7'
+//   },
+//   {
+//     label: $t('common.minutes8'),
+//     value: '8'
+//   },
+//   {
+//     label: $t('common.minutes9'),
+//     value: '9'
+//   },
+//   {
+//     label: $t('common.minutes10'),
+//     value: '10'
+//   }
+// ]);
 /** 关闭弹框 */
 const closeModal = () => {
   modalVisible.value = false;
@@ -303,7 +303,8 @@ watch(props, newValue => {
         />
       </n-form-item>
 
-      <n-form-item :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
+      <!--
+ <n-form-item :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
         <n-select
           v-model:value="formData.alarm_repeat_time"
           :placeholder="$t('generate.trigger-repeat-count')"
@@ -317,7 +318,8 @@ watch(props, newValue => {
           :placeholder="$t('generate.trigger-duration')"
           :options="alarmKeepTime"
         />
-      </n-form-item>
+      </n-form-item> 
+-->
 
       <n-form-item :label="$t('generate.notification-group')" path="selectValue">
         <n-select

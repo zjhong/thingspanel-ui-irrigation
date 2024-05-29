@@ -90,10 +90,10 @@ const actionOptions = ref([
   //   label: $t('common.activateScene'),
   //   value: '20'
   // },
-  {
-    label: $t('common.triggerAlarm'),
-    value: '30'
-  },
+  // {
+  //   label: $t('common.triggerAlarm'),
+  //   value: '30'
+  // },
   {
     label: $t('common.triggerService'),
     value: '40'

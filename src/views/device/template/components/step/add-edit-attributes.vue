@@ -2,6 +2,8 @@
 import { reactive, ref, watch } from 'vue';
 import { addAttributes, putAttributes } from '@/service/api/system-data';
 import { $t } from '@/locales';
+import { getAdditionalInfo } from '../../utils';
+import EnumInfo from './enum-info.vue';
 
 const emit = defineEmits(['update:addAndEditModalVisible', 'update:objItem', 'determine']);
 
@@ -72,7 +74,8 @@ watch(
     if (objItem.id) {
       addFrom = reactive({
         device_template_id: deviceTemplateId,
-        ...newVal
+        ...newVal,
+        additional_info: getAdditionalInfo(newVal.additional_info)
       });
     } else {
       addFrom = reactive({
@@ -81,7 +84,8 @@ watch(
         data_identifier: '',
 
         unit: '',
-        description: ''
+        description: '',
+        additional_info: []
       });
     }
   },
@@ -89,7 +93,7 @@ watch(
 );
 
 const generalOptions: any = reactive(
-  ['String', 'Number', 'Boolean'].map(v => ({
+  ['String', 'Number', 'Boolean', 'Enum'].map(v => ({
     label: v,
     value: v
   }))
@@ -105,8 +109,14 @@ const readAndWriteOptions: any = reactive(
 // 确定按钮
 const submit: () => void = async () => {
   await formRef.value?.validate();
+  const updateForm = { ...addFrom };
+  if (updateForm.data_type === 'Enum') {
+    updateForm.additional_info = JSON.stringify(updateForm.additional_info);
+  } else {
+    updateForm.additional_info = '[]';
+  }
   if (props.objItem.id) {
-    const response: any = await putAttributes(addFrom);
+    const response: any = await putAttributes(updateForm);
     if (response.data) {
       emit('update:objItem', {});
       emit('update:addAndEditModalVisible', false);
@@ -118,7 +128,7 @@ const submit: () => void = async () => {
     }
     console.log(response, '提交');
   } else {
-    const response: any = await addAttributes(addFrom);
+    const response: any = await addAttributes(updateForm);
     if (response.data) {
       emit('update:addAndEditModalVisible', false);
       emit('determine');
@@ -135,6 +145,10 @@ const clear: () => void = () => {
   emit('update:objItem', {});
   emit('update:addAndEditModalVisible', false);
   console.log(props.objItem, $t('common.cancel'));
+};
+
+const updateAdditionalInfo: (newVal) => void = newVal => {
+  addFrom.additional_info = newVal;
 };
 </script>
 
@@ -167,6 +181,9 @@ const clear: () => void = () => {
         :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeType')"
       />
     </n-form-item>
+    <template v-if="addFrom.data_type === 'Enum'">
+      <EnumInfo :additional-info="addFrom.additional_info" @update-additional-info="updateAdditionalInfo" />
+    </template>
     <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
       <n-select
         v-model:value="addFrom.read_write_flag"

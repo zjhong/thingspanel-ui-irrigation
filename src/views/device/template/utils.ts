@@ -42,3 +42,19 @@ export const telemetryModelDataTypeOptions = [
     value: 'Number'
   }
 ];
+
+export const getAdditionalInfo = additionalInfoStr => {
+  let additionalInfo = [];
+  if (typeof additionalInfoStr === 'string') {
+    try {
+      additionalInfo = JSON.parse(additionalInfoStr);
+      if (!Array.isArray(additionalInfo)) {
+        additionalInfo = [];
+      }
+    } catch {
+      additionalInfo = [];
+    }
+  }
+
+  return additionalInfo;
+};

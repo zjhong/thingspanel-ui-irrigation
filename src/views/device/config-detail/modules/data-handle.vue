@@ -50,17 +50,17 @@ function defaultConfigForm() {
   return {
     id: null,
     content: `function encodeInp(msg,topic)
-// 说明：该函数为编码函数，将输入的消息编码为平台可识别的消息格式或者设备可识别的消息格式，请根据实际需求编写编码逻辑
-// 入参：输入的msg，可以是任意数据类型的字符串。
-// 出参：返回值为编码后的消息,需要是json字符串形式
-// 注意：string与jsonObj互转需导入json库：local json = require("json")
-// 例，string转jsonObj：local jsonData = json.decode(msgString)
-// 例，jsonObj转string：local jsonStr = json.encode(jsonTable)
+-- 说明：该函数为编码函数，将输入的消息编码为平台可识别的消息格式或者设备可识别的消息格式，请根据实际需求编写编码逻辑
+-- 入参：输入的msg，可以是任意数据类型的字符串。
+-- 出参：返回值为编码后的消息,需要是json字符串形式
+-- 注意：string与jsonObj互转需导入json库：local json = require("json")
+-- 例，string转jsonObj：local jsonData = json.decode(msgString)
+-- 例，jsonObj转string：local jsonStr = json.encode(jsonTable)
 local json = require("json")
-local jsonData = json.decode(jsonString)
-// 例：if jsonData.gas_type == "CO2" then
-// 例：jsonData.gas_value = 200
-// 例：end
+local jsonData = json.decode(msg)
+-- 例 if jsonData.temp then
+-- 例 jsonData.temp = jsonData.temp * 10
+-- 例 end
 local newJsonString = json.encode(jsonData)
 return newJsonString
 end`,

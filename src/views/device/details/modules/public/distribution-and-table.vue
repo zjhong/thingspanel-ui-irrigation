@@ -68,6 +68,7 @@ const submit = async () => {
 const onCommandChange = async (row: any) => {
   const parms = { device_id: props.id, value: row.instruct, identify: row.data_identifier };
   await commandDataPub(parms);
+  fetchDataFunction();
 };
 
 const updatePage = (page: number) => {

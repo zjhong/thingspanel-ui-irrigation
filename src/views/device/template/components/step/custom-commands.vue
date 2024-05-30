@@ -71,7 +71,13 @@ const setupEditor = () => {
   });
 };
 const openCommandDialog = () => {
-  commandjson.formjson = {};
+  commandjson.formjson = {
+    buttom_name: '',
+    data_identifier: '',
+    description: '',
+    instruct: '',
+    enable_status: 'disable'
+  };
   commandjson.configForm = !commandjson.configForm;
 };
 const handleDeleteTable = async id => {

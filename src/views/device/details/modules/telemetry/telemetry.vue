@@ -270,7 +270,7 @@ const sends = async () => {
   }
 };
 const onTapTableTools = (i: any) => {
-  if (Number(i.value)) {
+  if (typeof i.value === 'number') {
     modelType.value = $t('custom.device_details.sequential');
     telemetryKey.value = i.key;
     telemetryId.value = i.device_id;
@@ -279,7 +279,7 @@ const onTapTableTools = (i: any) => {
 };
 
 const isColor = (i: any) => {
-  if (Number.isNaN(i.value)) {
+  if (typeof i.value === 'string') {
     return '#cccccc';
   }
   return '';

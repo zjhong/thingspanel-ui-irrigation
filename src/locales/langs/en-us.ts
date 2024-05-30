@@ -320,6 +320,8 @@ const local: App.I18n.Schema = {
     403: 'No Permission',
     404: 'Page Not Found',
     500: 'Server Error',
+    visualization_kanban: 'visualization_kanban',
+    'visualization_kanban-details': 'kanban details',
     home: 'Home',
     'user-center': 'User Center',
     about: 'About',

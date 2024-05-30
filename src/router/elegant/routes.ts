@@ -982,21 +982,21 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'visualization_panel',
-        path: '/visualization/panel',
-        component: 'view.visualization_panel',
+        name: 'visualization_kanban',
+        path: '/visualization/kanban',
+        component: 'view.visualization_kanban',
         meta: {
-          title: 'visualization_panel',
-          i18nKey: 'route.visualization_panel'
+          title: 'visualization_kanban',
+          i18nKey: 'route.visualization_kanban'
         }
       },
       {
-        name: 'visualization_panel-details',
-        path: '/visualization/panel-details',
-        component: 'view.visualization_panel-details',
+        name: 'visualization_kanban-details',
+        path: '/visualization/kanban-details',
+        component: 'view.visualization_kanban-details',
         meta: {
-          title: 'visualization_panel-details',
-          i18nKey: 'route.visualization_panel-details'
+          title: 'visualization_kanban-details',
+          i18nKey: 'route.visualization_kanban-details'
         }
       },
       {

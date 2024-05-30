@@ -321,6 +321,8 @@ const local: App.I18n.Schema = {
     403: '无权限',
     404: '页面不存在',
     500: '服务器错误',
+    visualization_kanban: '看板',
+    'visualization_kanban-details': '看板详情',
     home: '首页',
     'user-center': '个人中心',
     about: '关于',

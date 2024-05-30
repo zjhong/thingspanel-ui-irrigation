@@ -149,7 +149,7 @@ const generatedColumns = computed(() => {
                           {typeof action.label === 'function' ? action.label() : action.label || ''}
                         </NButton>
                       ),
-                      default: () => $t('custom.groupPage.confirmDelete')
+                      default: () => $t('common.confirmDelete')
                     }}
                   </NPopconfirm>
                 );

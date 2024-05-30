@@ -133,7 +133,7 @@ export const createNoSelectDeviceColumns = (
               }}
             >
               {{
-                default: () => $t('custom.groupPage.confirmDelete'),
+                default: () => $t('common.confirmDelete'),
                 trigger: () => (
                   <NButton quaternary type="primary" size={'small'}>
                     {$t('custom.groupPage.removeFromGroup')}

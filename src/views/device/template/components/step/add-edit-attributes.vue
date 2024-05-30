@@ -187,7 +187,7 @@ const clear: () => void = () => {
   </n-form>
   <div class="box1">
     <n-button class="m-r3" @click="clear">{{ $t('device_template.cancellation') }}</n-button>
-    <n-button @click="submit">{{ $t('device_template.confirm') }}</n-button>
+    <n-button type="primary" @click="submit">{{ $t('device_template.confirm') }}</n-button>
   </div>
 </template>
 

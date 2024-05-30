@@ -352,7 +352,7 @@ getTableData();
   <div>
     <n-tabs type="line" animated @update:value="checkedTabs">
       <n-tab-pane v-for="(item, index) in columnsList" :key="item.name" :name="item.name" :tab="item.text">
-        <NButton class="addBtn" @click="item.addBtn">
+        <NButton type="primary" class="addBtn" @click="item.addBtn">
           <template #icon>
             <SvgIcon local-icon="add" class="more" />
           </template>
@@ -385,7 +385,7 @@ getTableData();
     v-model:show="addAndEditModalVisible"
     preset="card"
     :title="addAndEditTitle"
-    :class="[tabsCurrent === 'events' || 'w-50%']"
+    class="w-50%"
     @after-leave="cloneaddAndEditVisible"
   >
     <component

@@ -54,6 +54,50 @@ const deviceList = ref<any[]>([
   [720, 832, 801, 834, 1190, 1230, 1220],
   [920, 1032, 1001, 1034, 1390, 1430, 1420]
 ]);
+const sampleData = [
+  [1716986172333, 8],
+  [1716986177338, 21],
+  [1716986182345, 10],
+  [1716986187352, 13],
+  [1716986192360, 20],
+  [1716986197366, 17],
+  [1716986202373, 19],
+  [1716986207380, 17],
+  [1716986212387, 16],
+  [1716986217394, 19],
+  [1716986222401, 10],
+  [1716986227414, 13],
+  [1716986232415, 18],
+  [1716986237422, 19],
+  [1716986242428, 19],
+  [1716986247435, 23],
+  [1716986252442, 25],
+  [1716986257451, 21],
+  [1716986262457, 21],
+  [1716986267465, 22],
+  [1716986272471, 29],
+  [1716986277478, 22],
+  [1716986282485, 20],
+  [1716986287494, 19],
+  [1716986292499, 15],
+  [1716986297505, 12],
+  [1716986302513, 21],
+  [1716986307522, 28],
+  [1716986307964, 21],
+  [1716986312528, 22],
+  [1716986312870, 22],
+  [1716986317533, 21],
+  [1716986317876, 14],
+  [1716986322540, 18],
+  [1716986322866, 21],
+  [1716986327547, 23],
+  [1716986327882, 21],
+  [1716986332553, 21],
+  [1716986332897, 21],
+  [1716986337557, 23],
+  [1716986337893, 25],
+  [1716986342565, 20]
+];
 const legendData = ref<any[]>([]);
 const name = ref('');
 
@@ -186,54 +230,7 @@ const getTelemetryList = async (device_id, key, index) => {
         });
       } else {
         // eslint-disable-next-line require-atomic-updates
-        option.value.series[index].data = [
-          {
-            x: '2024-03-20T16:31:10.508174Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:10.095501Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:09.924351Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:09.770282Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:09.580654Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:09.42025Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:09.166655Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:08.991563Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:03.970267Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:03.723987Z',
-            y: Math.floor(Math.random() * 201)
-          },
-          {
-            x: '2024-03-20T16:31:03.468516Z',
-            y: Math.floor(Math.random() * 201)
-          }
-        ].map(item => {
-          return [item.x, item.y];
-        });
+        option.value.series[index].data = sampleData;
       }
     } else {
       // eslint-disable-next-line require-atomic-updates
@@ -423,7 +420,7 @@ const setSeries: (dataSource) => void = async dataSource => {
       dataSource.deviceSource?.slice(0, dataSource.deviceCount || 1).map((i, index) => {
         let str: any = '';
         // str = `${i?.metricsId || '-'}_${i?.metricsName || '-'}`;
-        str = `${i?.metricsName || '-'}`;
+        str = `${i?.metricsName || ''}`;
         name.value = str;
         legendData.value.push(str as string);
         getTelemetryList(i.deviceId, i.metricsId, index);
@@ -452,11 +449,11 @@ const setSeries: (dataSource) => void = async dataSource => {
           emphasis: {
             focus: 'series'
           },
-          data: deviceList.value[index],
+          data: sampleData,
           // Mouse moves into add unit
           tooltip: {
             valueFormatter(value) {
-              return value + detail?.value?.data[0]?.unit;
+              return value + (detail?.value?.data[0]?.unit || '');
             }
           }
         };

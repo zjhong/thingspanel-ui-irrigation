@@ -62,6 +62,7 @@ const formModel = reactive<FormModel>(createDefaultFormModel());
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('common.pleaseCheckValue')),
+
   phone_number: formRules.phone,
   email: formRules.email,
   password: formRules.pwd,
@@ -153,15 +154,17 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title">
     <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
       <NFormItem :span="12" :label="$t('page.manage.user.userEmail')" path="email">
-        <NInput v-model:value="formModel.email" autocomplete="off" :disabled="props.type == 'edit'" />
+        <input hidden placeholder="8888" autocomplete="off" type="text" />
+        <NInput v-model:value="formModel.email" :disabled="props.type == 'edit'" />
       </NFormItem>
 
       <template v-if="type === 'add'">
         <NFormItem :span="12" :label="$t('page.manage.user.password')" path="password">
+          <input hidden placeholder="8888" autocomplete="new-password" type="password" />
           <NInput v-model:value="formModel.password" type="password" autocomplete="new-password" />
         </NFormItem>
         <NFormItem :span="12" :label="$t('page.manage.user.confirmPwd')" path="confirmPwd">
-          <NInput v-model:value="formModel.confirmPwd" type="password" />
+          <NInput v-model:value="formModel.confirmPwd" autocomplete="new-password" type="password" />
         </NFormItem>
       </template>
 

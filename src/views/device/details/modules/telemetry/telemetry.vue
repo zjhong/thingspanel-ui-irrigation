@@ -269,6 +269,21 @@ const sends = async () => {
     fetchTelemetry();
   }
 };
+const onTapTableTools = (i: any) => {
+  if (Number(i.value)) {
+    modelType.value = $t('custom.device_details.sequential');
+    telemetryKey.value = i.key;
+    telemetryId.value = i.device_id;
+    showHistory.value = true;
+  }
+};
+
+const isColor = (i: any) => {
+  if (Number.isNaN(i.value)) {
+    return '#cccccc';
+  }
+  return '';
+};
 onMounted(() => {
   fetchData();
   fetchTelemetry();
@@ -296,80 +311,6 @@ const getPlatform = computed(() => {
       </n-button>
     </NFlex>
 
-    <n-modal
-      v-model:show="showDialog"
-      :title="$t('generate.issue-attribute')"
-      :class="getPlatform ? 'w-90%' : 'w-400px'"
-    >
-      <n-card>
-        <n-form>
-          <n-form-item :label="$t('generate.attribute')">
-            <n-input v-model:value="formValue" type="textarea" />
-          </n-form-item>
-          <n-space align="end">
-            <n-button @click="showDialog = false">{{ $t('generate.cancel') }}</n-button>
-            <n-button type="primary" @click="sends">{{ $t('generate.send') }}</n-button>
-          </n-space>
-        </n-form>
-      </n-card>
-    </n-modal>
-    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" :class="getPlatform ? 'w-90%' : 'w-40%'">
-      <n-card>
-        <n-form>
-          <div class="m-b-20px" :class="getPlatform ? ' flex-col ' : ' flex'">
-            <span class="flex-1">{{ $t('generate.mqtt') }}</span>
-            <span class="flex-1">{{ $t('generate.copy-commands-to-local') }}</span>
-          </div>
-          <div class="flex items-center gap-15px">
-            <n-input v-model:value="device_order" type="textarea" class="flex-1" @click="copy" />
-
-            <n-button type="primary" @click="sendSimulationList">
-              {{ $t('generate.send') }}
-            </n-button>
-          </div>
-          <div v-if="showError" class="w-100% flex" style="border: 2px solid #eee; border-radius: 5px">
-            <SvgIcon
-              local-icon="AlertFilled"
-              style="margin-left: 5px; color: red; margin-right: 5px; margin-top: 5px; margin-bottom: 5px"
-              class="text-20px text-primary"
-            />
-            <span
-              style="
-                display: inline-block;
-                margin-top: 5px;
-                margin-bottom: 5px;
-                width: 300px;
-                wite-space: nowrap;
-                overflow: hidden;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              "
-            >
-              {{ erroMessage }}99999
-            </span>
-          </div>
-        </n-form>
-      </n-card>
-    </n-modal>
-
-    <n-modal
-      v-model:show="showHistory"
-      :title="$t('generate.telemetry-history-data')"
-      :class="getPlatform ? 'w-90%' : 'w-650px'"
-    >
-      <NCard>
-        <HistoryData
-          v-if="modelType === $t('custom.device_details.history')"
-          :device-id="telemetryId"
-          :the-key="telemetryKey"
-        />
-        <TimeSeriesData
-          v-if="modelType === $t('custom.device_details.sequential')"
-          :device-id="telemetryId"
-          :the-key="telemetryKey"
-        />
-      </NCard>
-    </n-modal>
     <!-- 第二行 -->
     <n-card class="mb-4">
       <n-grid :x-gap="cardMargin" :y-gap="cardMargin" cols="1 600:2 900:3 1200:4">
@@ -419,19 +360,9 @@ const getPlatform = computed(() => {
                 >
                   <DocumentOnePage24Regular />
                 </NIcon>
-
+                <template v-if="i.value"></template>
                 <NDivider vertical />
-                <NIcon
-                  size="24"
-                  @click="
-                    () => {
-                      modelType = $t('custom.device_details.sequential');
-                      telemetryKey = i.key;
-                      telemetryId = i.device_id;
-                      showHistory = true;
-                    }
-                  "
-                >
+                <NIcon size="24" :color="isColor(i)" @click="onTapTableTools(i)">
                   <Activity />
                 </NIcon>
                 <NDivider vertical />
@@ -482,6 +413,79 @@ const getPlatform = computed(() => {
         "
       />
     </div>
+    <n-modal v-model:show="showLogDialog" :title="$t('generate.report-data')" :class="getPlatform ? 'w-90%' : 'w-40%'">
+      <n-card>
+        <n-form>
+          <div class="m-b-20px" :class="getPlatform ? ' flex-col ' : ' flex'">
+            <span class="flex-1">{{ $t('generate.mqtt') }}</span>
+            <span class="flex-1">{{ $t('generate.copy-commands-to-local') }}</span>
+          </div>
+          <div class="flex items-center gap-15px">
+            <n-input v-model:value="device_order" type="textarea" class="flex-1" @click="copy" />
+
+            <n-button type="primary" @click="sendSimulationList">
+              {{ $t('generate.send') }}
+            </n-button>
+          </div>
+          <div v-if="showError" class="w-100% flex" style="border: 2px solid #eee; border-radius: 5px">
+            <SvgIcon
+              local-icon="AlertFilled"
+              style="margin-left: 5px; color: red; margin-right: 5px; margin-top: 5px; margin-bottom: 5px"
+              class="text-20px text-primary"
+            />
+            <span
+              style="
+                display: inline-block;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                width: 300px;
+                wite-space: nowrap;
+                overflow: hidden;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ erroMessage }}99999
+            </span>
+          </div>
+        </n-form>
+      </n-card>
+    </n-modal>
+    <n-modal
+      v-model:show="showDialog"
+      :title="$t('generate.issue-attribute')"
+      :class="getPlatform ? 'w-90%' : 'w-400px'"
+    >
+      <n-card>
+        <n-form>
+          <n-form-item :label="$t('generate.attribute')">
+            <n-input v-model:value="formValue" type="textarea" />
+          </n-form-item>
+          <n-space align="end">
+            <n-button @click="showDialog = false">{{ $t('generate.cancel') }}</n-button>
+            <n-button type="primary" @click="sends">{{ $t('generate.send') }}</n-button>
+          </n-space>
+        </n-form>
+      </n-card>
+    </n-modal>
+    <n-modal
+      v-model:show="showHistory"
+      :title="$t('generate.telemetry-history-data')"
+      :class="getPlatform ? 'w-90%' : 'w-650px'"
+    >
+      <NCard>
+        <HistoryData
+          v-if="modelType === $t('custom.device_details.history')"
+          :device-id="telemetryId"
+          :the-key="telemetryKey"
+        />
+        <TimeSeriesData
+          v-if="modelType === $t('custom.device_details.sequential')"
+          :device-id="telemetryId"
+          :the-key="telemetryKey"
+        />
+      </NCard>
+    </n-modal>
   </n-card>
 </template>
 

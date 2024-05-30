@@ -30,13 +30,9 @@ interface HistoryData {
 }
 
 const { loading, startLoading, endLoading } = useLoading();
-const currentDate = new Date();
-const startTime = new Date(currentDate);
 
-// 获取上一天的时间戳（毫秒）
-currentDate.setDate(currentDate.getDate() - 1); // 设置日期为上一天
 // 获取当前具体时间的毫秒数
-const end_time = dayjs().valueOf();
+const end_time = dayjs(new Date()).valueOf();
 
 // 获取上一天当前时刻的毫秒数
 const start_time = dayjs().subtract(1, 'day').valueOf();
@@ -58,7 +54,7 @@ const pagination = reactive({
   }
 });
 
-const dateRange = ref<[number, number] | null>(null);
+const dateRange = ref<[number, number] | null>([params.start_time, params.end_time]);
 const tableData = ref<HistoryData[]>([]);
 const columns = [
   { title: $t('common.time'), key: 'time', render: row => dayjs(row.ts).format('YYYY-MM-DD HH:mm:ss') },
@@ -90,6 +86,7 @@ const getTelemetryHistoryData = async () => {
 };
 const checkDateRange = value => {
   const [start, end] = value;
+
   if (start && end && addMonths(start, 1) < end) {
     dateRange.value = null;
     message.error($t('common.withinOneMonth'));
@@ -102,10 +99,7 @@ const checkDateRange = value => {
 };
 
 const refresh = () => {
-  params.end_time = currentDate.getTime();
-  params.start_time = startTime.getTime();
   params.export_excel = false;
-  dateRange.value = null;
   pagination.page = 1;
   getTelemetryHistoryData();
 };
@@ -120,7 +114,7 @@ onMounted(getTelemetryHistoryData);
           v-model:value="dateRange"
           class="w-400px"
           type="datetimerange"
-          format="yyyy-MM-dd hh:mm:ss"
+          format="yyyy-MM-dd HH:mm:ss"
           @update:value="checkDateRange"
         />
         <n-button class="ml-2" @click="refresh">{{ $t('generate.refresh') }}</n-button>

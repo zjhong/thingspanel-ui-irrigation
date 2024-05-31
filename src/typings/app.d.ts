@@ -1092,6 +1092,11 @@ declare namespace App {
           singleControlTaskl: string;
           PleaseEventName: string;
           PleaseEeventIdentifier: string;
+          setEnum: string;
+          addEnum: string;
+          enumDataType: string;
+          enumDataValue: string;
+          enumDescription: string;
         };
       };
       custom: {

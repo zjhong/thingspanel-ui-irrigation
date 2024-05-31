@@ -321,6 +321,7 @@ const local: App.I18n.Schema = {
     403: '无权限',
     404: '页面不存在',
     500: '服务器错误',
+    visualization_kanban: '看板',
     home: '首页',
     'user-center': '个人中心',
     about: '关于',
@@ -944,7 +945,12 @@ const local: App.I18n.Schema = {
       PleaseEventDescription: '请输入事件描述',
       singleControlTaskl: '单次控制任务',
       PleaseEventName: '请输入事件名称',
-      PleaseEeventIdentifier: '请输入事件标识符'
+      PleaseEeventIdentifier: '请输入事件标识符',
+      setEnum: '设置枚举项',
+      addEnum: '添加枚举项',
+      enumDataType: '枚举数据类型',
+      enumDataValue: '枚举值',
+      enumDescription: '枚举描述'
     }
   },
   generate: {

@@ -197,3 +197,11 @@ export const irrigationScheduleType: Record<DataService.FlagKey, string> = {
   B: '循环控制 '
 };
 export const irrigationScheduleTypeOption = transformObjectToOption(irrigationScheduleType);
+
+export const enumDataType: Record<'Number' | 'String' | 'Boolean', string> = {
+  Number: 'Number',
+  String: 'String',
+  Boolean: 'Boolean'
+};
+
+export const enumDataTypeOption = transformObjectToOption(enumDataType);

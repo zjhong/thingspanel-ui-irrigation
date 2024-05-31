@@ -246,8 +246,8 @@ const routeMap: RouteMap = {
   "user-center": "/user-center",
   "visualization": "/visualization",
   "visualization_big-screen": "/visualization/big-screen",
-  "visualization_panel": "/visualization/panel",
-  "visualization_panel-details": "/visualization/panel-details",
+  "visualization_kanban": "/visualization/kanban",
+  "visualization_kanban-details": "/visualization/kanban-details",
   "visualization_panel-preview": "/visualization/panel-preview"
 };
 

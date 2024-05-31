@@ -143,7 +143,7 @@ onMounted(fetchBoards);
           <NGridItem
             v-for="board in boards"
             :key="board.id"
-            @click="goRouter('visualization_panel-details', board.id as string)"
+            @click="goRouter('visualization_kanban-details', board.id as string)"
           >
             <NCard hoverable style="height: 160px" @click.stop="viewWithVEditor(board)">
               <div class="mb-8px text-16px font-600">{{ board.name }}</div>

@@ -320,6 +320,7 @@ const local: App.I18n.Schema = {
     403: 'No Permission',
     404: 'Page Not Found',
     500: 'Server Error',
+    visualization_kanban: 'visualization_kanban',
     home: 'Home',
     'user-center': 'User Center',
     about: 'About',
@@ -944,7 +945,12 @@ const local: App.I18n.Schema = {
       PleaseEventDescription: 'PleaseEventDescription',
       singleControlTaskl: 'SingleControlTaskl',
       PleaseEventName: 'PleaseEventName',
-      PleaseEeventIdentifier: 'PleaseEeventIdentifier'
+      PleaseEeventIdentifier: 'PleaseEeventIdentifier',
+      setEnum: 'Set Enum',
+      addEnum: 'Add Enum',
+      enumDataType: 'Enum Data Type',
+      enumDataValue: 'Enum Value',
+      enumDescription: 'Enum Description'
     }
   },
   custom: pen,

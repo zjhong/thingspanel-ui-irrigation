@@ -945,7 +945,12 @@ const local: App.I18n.Schema = {
       PleaseEventDescription: 'PleaseEventDescription',
       singleControlTaskl: 'SingleControlTaskl',
       PleaseEventName: 'PleaseEventName',
-      PleaseEeventIdentifier: 'PleaseEeventIdentifier'
+      PleaseEeventIdentifier: 'PleaseEeventIdentifier',
+      setEnum: 'Set Enum',
+      addEnum: 'Add Enum',
+      enumDataType: 'Enum Data Type',
+      enumDataValue: 'Enum Value',
+      enumDescription: 'Enum Description'
     }
   },
   custom: pen,

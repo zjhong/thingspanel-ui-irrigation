@@ -945,7 +945,12 @@ const local: App.I18n.Schema = {
       PleaseEventDescription: '请输入事件描述',
       singleControlTaskl: '单次控制任务',
       PleaseEventName: '请输入事件名称',
-      PleaseEeventIdentifier: '请输入事件标识符'
+      PleaseEeventIdentifier: '请输入事件标识符',
+      setEnum: '设置枚举项',
+      addEnum: '添加枚举项',
+      enumDataType: '枚举数据类型',
+      enumDataValue: '枚举值',
+      enumDescription: '枚举描述'
     }
   },
   generate: {

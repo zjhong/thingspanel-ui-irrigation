@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import type { PropType } from 'vue';
+import { reactive } from 'vue';
 import { NButton, NSelect, NSpace } from 'naive-ui';
 import { $t } from '@/locales';
 import { enumDataTypeOption } from '@/constants/business';
@@ -12,6 +13,17 @@ const props = defineProps({
     required: true
   }
 });
+
+const booleanOptions: any = reactive([
+  {
+    label: 'True',
+    value: true
+  },
+  {
+    label: 'False',
+    value: false
+  }
+]);
 
 const onAdd = () => {
   const additionalInfo = [...props.additionalInfo];
@@ -57,8 +69,14 @@ const columns: any = [
     title: $t('device_template.table_header.enumDataValue'),
     align: 'center',
     className: 'enum-header',
-    width: 100,
+    width: 120,
     render: (rowData, rowIndex) => {
+      if (rowData.value_type === 'Number') {
+        return <n-input-number v-model:value={rowData.value} show-button={false} />;
+      } else if (rowData.value_type === 'Boolean') {
+        return <NSelect v-model:value={rowData.value} options={booleanOptions} />;
+      }
+
       return <n-input value={rowData.value} onInput={newVal => onChange(newVal, rowIndex, 'value')} />;
     }
   },

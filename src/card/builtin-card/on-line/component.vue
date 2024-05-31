@@ -9,11 +9,11 @@ defineOptions({ name: 'NumCard' });
 const authStore = useAuthStore();
 
 const cardData = ref<any>({
-  id: 'visit',
-  title: '设备总数',
+  id: 'amount',
+  title: '在线设备数',
   value: 0,
   unit: '',
-  colors: ['#ec4786', '#b955a4'],
+  colors: ['#865ec0', '#5144b4'],
   icon: 'ant-design:bar-chart-outlined'
 });
 
@@ -23,7 +23,7 @@ const getData: () => void = async () => {
     const response: { data: any } =
       authStore?.$state.userInfo.authority === 'TENANT_ADMIN' ? await sumData() : await totalNumber();
     if (response.data) {
-      cardData.value.value = response.data.device_total;
+      cardData.value.value = response.data.device_on;
     } else {
       console.error('Data does not contain the required properties or they are not numbers.');
     }

@@ -9,12 +9,12 @@ defineOptions({ name: 'NumCard' });
 const authStore = useAuthStore();
 
 const cardData = ref<any>({
-  id: 'visit',
-  title: '设备总数',
+  id: 'trade',
+  title: '消息总数',
   value: 0,
   unit: '',
-  colors: ['#ec4786', '#b955a4'],
-  icon: 'ant-design:bar-chart-outlined'
+  colors: ['#fcbc25', '#f68057'],
+  icon: 'ant-design:trademark-circle-outlined'
 });
 
 // 获取数据

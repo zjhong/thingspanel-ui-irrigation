@@ -1,12 +1,12 @@
 import { defineAsyncComponent } from 'vue';
 import type { ICardDefine } from '@/components/panel/card';
-import poster from './access.png';
+import poster from './on-line.png';
 export default {
-  id: 'access-num',
+  id: 'on-num',
   type: 'builtin',
   component: defineAsyncComponent(() => import('./component.vue')),
   poster,
-  title: '访问量',
+  title: '在线设备数',
   preset: {
     iCardViewDefault: {
       w: 3,

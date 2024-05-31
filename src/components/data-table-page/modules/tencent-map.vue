@@ -34,14 +34,9 @@ let ignoreMapClick = false;
 const telemetryValue = ref<any>([]);
 // 获取最新一条设备遥测数据
 const telemetryData: (id: string) => void = async id => {
-  // const params = {
-  //   page: 1,
-  //   page_size: 10,
-  //   device_template_id: id
-  // }
   const data: any = await telemetryLatestApi(id);
   telemetryValue.value = data.data;
-  telemetryValue.value = data.data.filter(item => item.label);
+  telemetryValue.value = data.data.filter(item => item.label || item.key);
   console.log(telemetryValue.value, '最新的遥测数据');
 };
 
@@ -149,7 +144,9 @@ async function renderMap() {
       let dom = ``;
       telemetryValue.value.filter(item => {
         if (item.label) {
-          dom = `${dom}<div>${item.label}：<span class='card_val'>${item.value}</span> ${item.unit}</div>`;
+          dom = `${dom}<div class='item_label'>${item?.label ?? ''}(${item?.key ?? ''})：<span class='card_val'>${item?.value ?? ''} </span> ${item?.unit ?? ''}</div>`;
+        } else if (item.key) {
+          dom = `${dom}<div class='item_label'>${item?.key ?? ''}：<span class='card_val'>${item?.value ?? ''} </span> ${item?.unit ?? ''}</div>`;
         }
       });
       evt.geometry.dom = dom;
@@ -175,6 +172,7 @@ watch(
   newValue => {
     console.log(newValue, '我改变了');
     renderMap();
+    infoWindow.close();
   },
   { deep: true }
 );
@@ -209,5 +207,9 @@ watchEffect(() => {
 
 :deep(.card_val) {
   color: rgb(var(--nprogress-color)) !important;
+}
+
+:deep(.item_label) {
+  display: flex;
 }
 </style>

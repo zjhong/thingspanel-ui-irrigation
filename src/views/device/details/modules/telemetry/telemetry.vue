@@ -44,7 +44,6 @@ const tableData = ref([]);
 const telemetryData = ref<DeviceManagement.telemetryData[]>([]);
 const initTelemetryData = ref<any>();
 const numberAnimationInstRef = ref<NumberAnimationInst[] | []>([]);
-const telemetry = ref<any>({});
 const nowTime = ref<any>();
 const { loading, startLoading, endLoading } = useLoading();
 const total = ref(0);
@@ -317,17 +316,18 @@ const getPlatform = computed(() => {
         <n-gi v-for="(i, index) in telemetryData" :key="i.tenant_id">
           <n-card header-class="border-b h-36px" hoverable :style="{ height: cardHeight + 'px' }">
             <div class="card-body">
-              <span>
-                <MovingNumbers
-                  :ref="setItemRef"
-                  :data-index="index"
-                  class="c1"
-                  :m-num="telemetry[i.key] || i.value"
-                  :quantile-show="true"
-                ></MovingNumbers>
+              <span v-if="isColor(i)" style="font-size: 24px">
+                {{ i.value }}
               </span>
-
-              <span>{{ i.unit }}</span>
+              <MovingNumbers
+                v-else
+                :ref="setItemRef"
+                :data-index="index"
+                class="c1"
+                :m-num="i.value"
+                :quantile-show="true"
+              ></MovingNumbers>
+              <span v-if="i.unit">{{ i.unit }}</span>
             </div>
             <template #header>
               <div class="line1" :title="i.key">
@@ -360,7 +360,6 @@ const getPlatform = computed(() => {
                 >
                   <DocumentOnePage24Regular />
                 </NIcon>
-                <template v-if="i.value"></template>
                 <NDivider vertical />
                 <NIcon size="24" :color="isColor(i)" @click="onTapTableTools(i)">
                   <Activity />

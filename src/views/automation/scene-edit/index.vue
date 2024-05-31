@@ -47,7 +47,7 @@ const configFormRules = ref({
     message: $t('generate.enter-scene-name')
   },
   description: {
-    required: true,
+    required: false,
     message: $t('generate.enterSceneDesc')
   },
   actionType: {
@@ -90,10 +90,10 @@ const actionOptions = ref([
   //   label: $t('common.activateScene'),
   //   value: '20'
   // },
-  {
-    label: $t('common.triggerAlarm'),
-    value: '30'
-  },
+  // {
+  //   label: $t('common.triggerAlarm'),
+  //   value: '30'
+  // },
   {
     label: $t('common.triggerService'),
     value: '40'

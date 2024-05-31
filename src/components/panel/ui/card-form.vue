@@ -153,7 +153,7 @@ watch(
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
         <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
-            <div v-if="state.data.dataSource?.origin === 'device'">
+            <div v-if="state.data.dataSource?.origin === 'device' || state.data.dataSource?.origin === 'system'">
               <n-input-number
                 v-model:value="deviceCount"
                 :disabled="props?.deviceWebChartConfig?.length !== 0"

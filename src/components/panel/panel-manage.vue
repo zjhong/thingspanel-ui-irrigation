@@ -20,7 +20,6 @@ const showingCardList = ref(false);
 const isEditing = ref(false);
 const editingCard = ref(false);
 const deviceOptions = ref<UnwrapRefSimple<any>[]>();
-const webChartConfig = ref<any>([]);
 
 const getDeviceOptions = async () => {
   const { data, error } = await deviceTemplateSelect();
@@ -122,15 +121,6 @@ const edit = (view: ICardView) => {
   editView.value = view;
   state.cardData = view.data || null;
 
-  if (state.cardData?.dataSource?.deviceSource && state.cardData?.dataSource?.deviceSource?.length > 0) {
-    const deviceSelectId = state.cardData?.dataSource?.deviceSource[0]?.deviceId || '';
-    const deviceOption = deviceOptions.value?.find(item => item.device_id === deviceSelectId);
-    if (deviceOption && deviceOption.web_chart_config) {
-      webChartConfig.value = JSON.parse(deviceOption?.web_chart_config);
-    } else {
-      webChartConfig.value = [];
-    }
-  }
   nextTick(() => {
     formRef.value?.setCard(state.cardData as any);
   });
@@ -239,7 +229,7 @@ onMounted(() => {
           <CardForm
             ref="formRef"
             class="h-full w-full overflow-auto"
-            :device-web-chart-config="webChartConfig"
+            :device-web-chart-config="[]"
             @update="(data: any) => updateCard(data)"
           />
         </n-drawer-content>

@@ -96,7 +96,7 @@ const metricsOptionRender = (info, item) => {
       {info?.option?.options?.map(it => {
         return (
           <div
-            class="m-b-2px w-200px"
+            class="m-b-2px"
             v-if="it.label"
             onClick={() => {
               item.metricsId = it.key;
@@ -106,11 +106,17 @@ const metricsOptionRender = (info, item) => {
           >
             {it.label ? (
               <div class="flex items-center gap-5px">
-                <span>{it.label}</span>
-                <span class="color-#cccc">({it.key})</span>
+                <div class="flex flex-1 items-center gap-5px">
+                  <span>{it.label}</span>
+                  <span class="color-#cccc">({it.key})</span>
+                </div>
+                <span class="text-#999">{it.data_type}</span>
               </div>
             ) : (
-              <div>{it.key}</div>
+              <div class="flex items-center gap-5px">
+                <span class="flex-1">{it.key}</span>
+                <span class="text-#999">{it.data_type}</span>
+              </div>
             )}
           </div>
         );

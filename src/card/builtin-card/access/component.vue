@@ -40,7 +40,7 @@ getData();
 <template>
   <GradientBg class="access" :start-color="cardData.colors[0]" :end-color="cardData.colors[1]">
     <h3 class="text-16px">{{ cardData.title }}</h3>
-    <div class="flex justify-between pt-12px">
+    <div class="icon-items flex justify-between pt-30px">
       <SvgIcon :icon="cardData.icon" class="text-32px" />
       <CountTo
         :prefix="cardData.unit"
@@ -58,5 +58,8 @@ getData();
   height: 100%;
   min-width: max-content;
   min-height: max-content;
+}
+.icon-items {
+  align-items: center;
 }
 </style>

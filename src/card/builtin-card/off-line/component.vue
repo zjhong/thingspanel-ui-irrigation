@@ -12,9 +12,9 @@ const cardData = ref<any>({
   id: 'download',
   title: '离线设备数',
   value: 0,
-  unit: '',
+  unit: '个',
   colors: ['#56cdf3', '#719de3'],
-  icon: 'ant-design:bar-chart-outlined'
+  icon: 'fa-ban'
 });
 
 // 获取数据

@@ -12,9 +12,9 @@ const cardData = ref<any>({
   id: 'trade',
   title: '消息总数',
   value: 0,
-  unit: '',
+  unit: '条',
   colors: ['#fcbc25', '#f68057'],
-  icon: 'ant-design:trademark-circle-outlined'
+  icon: 'fa-envelope'
 });
 
 // 获取数据

@@ -12,7 +12,7 @@ const cardData = ref<any>({
   id: 'visit',
   title: '设备总数',
   value: 0,
-  unit: '',
+  unit: '个',
   colors: ['#ec4786', '#b955a4'],
   icon: 'ant-design:bar-chart-outlined'
 });

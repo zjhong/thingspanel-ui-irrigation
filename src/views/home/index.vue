@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import { router } from '@/router';
 import type { ICardView } from '@/components/panel/card';
 import { fetchHomeData } from '@/service/api';
@@ -89,11 +89,18 @@ function updateConfigData(configJson: ICardView[]) {
   <CardRender
     v-else
     ref="cr"
-    v-model:layout="layout"
+    :layout="layout"
     :is-preview="true"
     :col-num="12"
     :default-card-col="4"
     :row-height="85"
+    @update:layout="
+      data => {
+        nextTick(() => {
+          layout = data;
+        });
+      }
+    "
   />
 </template>
 

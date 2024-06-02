@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUpdated, reactive } from 'vue';
-import { GridItem, GridLayout } from 'vue3-drr-grid-layout';
+import { GridItem, GridLayout } from 'vue3-grid-layout';
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
 import { $t } from '@/locales';
@@ -86,6 +86,10 @@ const removeLayout = (i: number) => {
     props.layout.filter(item => item.i !== i)
   );
 };
+const breakpointChanged = (newBreakpoint: any, newLayout: any) => {
+  console.log(newBreakpoint, 'breakpoint');
+  emit('update:layout', newLayout);
+};
 onMounted(() => {});
 onUpdated(() => {
   console.log(props.layout, 'props.layout');
@@ -103,8 +107,10 @@ onUpdated(() => {
     class="w-full"
     :breakpoints="{ lg: 780, md: 500, sm: 0 }"
     :cols="{ lg: 12, md: 6, sm: 1 }"
+    @breakpoint-changed="breakpointChanged"
     @layout-updated="
       data => {
+        console.log(data, 'layout updated');
         emit('update:layout', data);
       }
     "

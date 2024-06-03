@@ -107,6 +107,14 @@ const getDeviceDetail = async () => {
   const { error, data } = await deviceDetail(d_id);
   device_loop.value = true;
   deviceData.value = data;
+  labels.value.length = 0;
+  if (data.label !== '') {
+    if (data.label.includes(',')) {
+      labels.value = data.label.split(',');
+    } else {
+      labels.value.push(data.label);
+    }
+  }
   if (!error) {
     device_number.value = data.device_number;
     device_is_online.value = data.is_online;

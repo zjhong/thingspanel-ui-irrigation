@@ -127,7 +127,7 @@ async function getRoleOptions() {
 async function handleSubmit() {
   await formRef.value?.validate();
   const params: any = { ...formModel };
-  delete params.password;
+  // delete params.password;
   let data: any;
   if (props.type === 'add') {
     data = await addUser(params);

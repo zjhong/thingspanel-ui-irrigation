@@ -147,13 +147,11 @@ const ifTypeChange = (ifItem: any, data: any) => {
 const deviceConditionOptions = ref([
   {
     label: $t('common.singleDevice'),
-    value: '10',
-    disabled: false
+    value: '10'
   },
   {
     label: $t('common.singleClassDevice'),
-    value: '11',
-    disabled: false
+    value: '11'
   }
 ]);
 const deviceConfigDisabled = ref(false);
@@ -166,22 +164,8 @@ const triggerConditionsTypeChange = (ifItem: any, data: any) => {
   ifItem.minValue = null;
   ifItem.maxValue = null;
   deviceConfigDisabled.value = false;
-  if (!data) {
-    // eslint-disable-next-line array-callback-return
-    deviceConditionOptions.value.map(item => {
-      item.disabled = false;
-    });
-  }
-  if (data === '10') {
-    // eslint-disable-next-line array-callback-return
-    deviceConditionOptions.value.map(item => {
-      item.disabled = item.value !== data;
-    });
-  } else if (data === '11') {
-    // eslint-disable-next-line array-callback-return
-    deviceConditionOptions.value.map(item => {
-      item.disabled = true;
-    });
+
+  if (data === '11') {
     deviceConfigDisabled.value = true;
   }
   emit('conditionChose', data);
@@ -599,17 +583,10 @@ onMounted(() => {
       judgeItemData.trigger_conditions_type = '10';
       judgeItemData.trigger_source = props.device_id;
       // eslint-disable-next-line array-callback-return
-      deviceConditionOptions.value.map(item => {
-        item.disabled = item.value !== judgeItemData.trigger_conditions_type;
-      });
     } else if (props.device_config_id) {
       judgeItemData.ifType = '1';
       judgeItemData.trigger_conditions_type = '11';
       judgeItemData.trigger_source = props.device_config_id;
-      // eslint-disable-next-line array-callback-return
-      deviceConditionOptions.value.map(item => {
-        item.disabled = true;
-      });
       deviceConfigDisabled.value = true;
     }
     emit('conditionChose', judgeItemData.trigger_conditions_type);

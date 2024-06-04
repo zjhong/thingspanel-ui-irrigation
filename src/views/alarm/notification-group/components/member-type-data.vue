@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import type { FormItemRule } from 'naive-ui';
 import { MemberNotificationOptions } from '@/constants/business';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { $t } from '@/locales';
 import {
   getCurrentName,
   handleDeleteMember,
@@ -25,9 +26,9 @@ function createDefaultFormModel(): FormModel {
 }
 
 const rules: Record<keyof FormModel, FormItemRule | FormItemRule[]> = {
-  name: createRequiredFormRule('请输入规则名称'),
-  signMode: createRequiredFormRule('请选择签名方式'),
-  ip: createRequiredFormRule('请输入IP白名单')
+  name: createRequiredFormRule($t('generate.ruleName')),
+  signMode: createRequiredFormRule($t('generate.signatureMethod')),
+  ip: createRequiredFormRule($t('generate.IPwhitelist'))
 };
 
 const props = withDefaults(
@@ -61,11 +62,11 @@ const handleChange = () => {
     <NFormItem path="name">
       <NSelect
         v-model:value="selectedMember"
-        filterable
-        placeholder="选择用户"
+        :placeholder="$t('generate.select-user')"
         :options="notificationTypeOptions"
         clearable
         remote
+        filterable
         :loading="loading"
         style="width: 160px; margin-right: 16px"
         @search="handleSearch"
@@ -84,7 +85,9 @@ const handleChange = () => {
           </NCheckbox>
         </NSpace>
       </NCheckboxGroup>
-      <NButton type="error" size="small" style="margin-left: 12px" @click="() => handleDelete(index)">删除</NButton>
+      <NButton type="error" size="small" style="margin-left: 12px" @click="() => handleDelete(index)">
+        {{ $t('common.delete') }}
+      </NButton>
     </NFormItem>
   </NForm>
 </template>

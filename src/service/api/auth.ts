@@ -54,6 +54,12 @@ export const delUser = async (id: string) => {
   return data;
 };
 
+/** 切换用户 */
+export const transformUser = async (params: any) => {
+  const data = await request.post<Api.Auth.LoginToken>(`/user/transform`, params);
+  return data;
+};
+
 export const fetchHomeData = async (params: any) => {
   const data = await request.get<{ config: string } | null>('/board/home', {
     params

@@ -4,10 +4,13 @@ import { useLoading } from '@sa/hooks';
 import { SetupStoreId } from '@/enum';
 import { useRouterPush } from '@/hooks/common/router';
 import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { transformUser } from '@/service/api/auth';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
 import { useRouteStore } from '../route';
+import { useTabStore } from '../tab';
 import { clearAuthStorage, getToken, getUserInfo } from './shared';
+
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const routeStore = useRouteStore();
   const { route, toLogin, redirectFromLogin } = useRouterPush(false);
@@ -54,6 +57,43 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
         await redirectFromLogin();
 
+        // if (routeStore.isInitAuthRoute) {
+        //   window.$notification?.success({
+        //     title: $t('page.login.common.loginSuccess'),
+        //     content: $t('page.login.common.welcomeBack', { userName: userInfo.name }),
+        //     duration: 4500
+        //   });
+        // }
+      }
+    } else {
+      await resetStore();
+    }
+
+    endLoading();
+  }
+
+  /**
+   * enter
+   *
+   * @param userId userId
+   */
+  async function enter(userId: string) {
+    startLoading();
+    const { clearTabs } = useTabStore();
+    const { data: loginToken, error } = await transformUser({
+      become_user_id: userId
+    });
+
+    if (!error) {
+      const pass = await loginByToken(loginToken);
+
+      clearTabs();
+
+      if (pass) {
+        await routeStore.initAuthRoute();
+
+        await redirectFromLogin();
+
         if (routeStore.isInitAuthRoute) {
           window.$notification?.success({
             title: $t('page.login.common.loginSuccess'),
@@ -73,6 +113,8 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     // 1. stored in the localStorage, the later requests need it in headers
     localStg.set('token', loginToken.token);
     localStg.set('refreshToken', loginToken.refreshToken);
+    const expires_in = Date.now() + loginToken.expires_in * 1000;
+    localStg.set('token_expires_in', expires_in.toString());
 
     const { data: info, error } = await fetchGetUserInfo();
 
@@ -96,6 +138,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     isLogin,
     loginLoading,
     resetStore,
-    login
+    login,
+    enter
   };
 });

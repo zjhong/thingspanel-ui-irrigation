@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { getDeviceList } from '@/service/product/update-ota';
+import { getDeviceConfigList } from '@/service/api/device';
 import UploadCard from './upload-card.vue';
 import { addOtaPackage, editOtaPackage } from '~/src/service/product/update-package';
 import { $t } from '~/src/locales';
 import { packageOptions, signModeOptions } from '~/src/constants/business';
 const productOptions = ref();
-const getOptions = () => {
-  getDeviceList({ page: 1, page_size: 99 }).then(({ data }) => {
-    if (data && data.list && data.list.length) {
-      productOptions.value = data.list.map((item: productRecord) => {
-        return {
-          label: item.name,
-          value: item.id
-        };
-      });
-    }
+const getOptions = async (name?: string) => {
+  const { data, error } = await getDeviceConfigList({
+    page: 1,
+    page_size: 99,
+    name
   });
+  if (!error && data) {
+    productOptions.value = data?.list?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+  }
 };
 export interface Props {
   /** 弹窗可见性 */
@@ -74,7 +74,7 @@ type formModelRuleName =
   | 'version'
   | 'target_version'
   | 'package_type'
-  | 'device_configs_id'
+  | 'device_config_id'
   | 'signature_type'
   | 'package_url';
 const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
@@ -82,7 +82,7 @@ const rules: Record<formModelRuleName, FormItemRule | FormItemRule[]> = {
   version: createRequiredFormRule($t('page.product.update-package.versionPlaceholder')),
   target_version: createRequiredFormRule($t('page.product.update-package.versionCodePlaceholder')),
   package_type: createRequiredFormRule($t('page.product.update-package.typePlaceholder')),
-  device_configs_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
+  device_config_id: createRequiredFormRule($t('page.product.update-package.productPlaceholder')),
   signature_type: createRequiredFormRule($t('page.product.update-package.signModePlaceholder')),
   package_url: createRequiredFormRule($t('page.product.update-package.packagePlaceholder'))
 };
@@ -96,11 +96,12 @@ function createDefaultFormModel(): productPackageRecord {
     name: '',
     package_type: undefined as unknown as number,
     package_url: '',
-    device_configs_id: '',
+    device_config_id: '',
     remark: '',
     signature_type: '',
     target_version: '',
-    version: ''
+    version: '',
+    created_at: ''
   };
   return defaultFormModel;
 }
@@ -134,7 +135,6 @@ async function handleSubmit() {
     data = await editOtaPackage(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -148,50 +148,97 @@ watch(
     }
   }
 );
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" :on-after-enter="getOptions" preset="card" :title="title" class="w-800px">
-    <NForm ref="formRef" label-placement="left" label-width="auto" :model="formModel" :rules="rules">
-      <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.type')" path="package_type">
-          <NSelect v-model:value="formModel.package_type" :options="packageOptions" />
-        </NFormItemGridItem>
-        <NFormItemGridItem
-          v-if="formModel.package_type === 1"
-          :span="12"
-          :label="$t('page.product.update-package.version')"
-          path="target_version"
-        >
-          <NInput v-model:value="formModel.target_version" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.versionCode')" path="version">
-          <NInput v-model:value="formModel.version" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.packageName')" path="name">
-          <NInput v-model:value="formModel.name" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.deviceConfig')" path="device_configs_id">
-          <NSelect v-model:value="formModel.device_configs_id" :options="productOptions" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.moduleName')" path="module">
-          <NInput v-model:value="formModel.module" />
-        </NFormItemGridItem>
-        <!-- signModeOptions -->
-        <NFormItemGridItem :span="12" :label="$t('page.product.update-package.signMode')" path="signature_type">
-          <NSelect v-model:value="formModel.signature_type" :options="signModeOptions" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.product.update-package.package')" path="package_url">
-          <UploadCard v-model:value="formModel.package_url" source-type="upgradePackage" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.product.update-package.desc')" path="description">
-          <NInput v-model:value="formModel.description" type="textarea" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.product.update-package.customInfo')" path="additional_info">
-          <NInput v-model:value="formModel.additional_info" type="textarea" />
-        </NFormItemGridItem>
-      </NGrid>
-      <NSpace class="w-full pt-16px" :size="24" justify="end">
+  <NModal v-model:show="modalVisible" :on-after-enter="() => getOptions()" preset="card" :title="title">
+    <NForm
+      ref="formRef"
+      class="flex-wrap"
+      :class="getPlatform ? 'flex-col' : 'flex'"
+      label-placement="left"
+      label-width="auto"
+      :model="formModel"
+      :rules="rules"
+    >
+      <NFormItem
+        class=""
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.type')"
+        path="package_type"
+      >
+        <NSelect
+          v-model:value="formModel.package_type"
+          :class="getPlatform ? '100%' : 'w-50%'"
+          :options="packageOptions"
+        />
+      </NFormItem>
+      <NFormItem
+        v-if="formModel.package_type === 1"
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :span="12"
+        :label="$t('page.product.update-package.version')"
+        path="target_version"
+      >
+        <NInput v-model:value="formModel.target_version" class="w-100%" />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.versionCode')"
+        path="version"
+      >
+        <NInput v-model:value="formModel.version" class="w-100%" />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.packageName')"
+        path="name"
+      >
+        <NInput v-model:value="formModel.name" class="w-100%" />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.deviceConfig')"
+        path="device_config_id"
+      >
+        <NSelect
+          v-model:value="formModel.device_config_id"
+          class="w-100%"
+          filterable
+          :options="productOptions"
+          @search="getOptions"
+        />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.moduleName')"
+        path="module"
+      >
+        <NInput v-model:value="formModel.module" class="w-100%" />
+      </NFormItem>
+      <!-- signModeOptions -->
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.update-package.signMode')"
+        path="signature_type"
+      >
+        <NSelect v-model:value="formModel.signature_type" :options="signModeOptions" />
+      </NFormItem>
+      <NFormItem class="w-100%" :label="$t('page.product.update-package.package')" path="package_url">
+        <UploadCard v-model:value="formModel.package_url" source-type="upgradePackage" />
+      </NFormItem>
+      <NFormItem class="w-100%" :label="$t('page.product.update-package.desc')" path="description">
+        <NInput v-model:value="formModel.description" class="w-100%" type="textarea" />
+      </NFormItem>
+      <NFormItem class="w-100%" :label="$t('page.product.update-package.customInfo')" path="additional_info">
+        <NInput v-model:value="formModel.additional_info" type="textarea" />
+      </NFormItem>
+      <NSpace class="w-full pt-16px" justify="end">
         <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
       </NSpace>

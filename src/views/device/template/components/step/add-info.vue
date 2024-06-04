@@ -4,7 +4,7 @@ import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { addTemplat, getTemplat, putTemplat } from '@/service/api/system-data';
 import { $t } from '@/locales';
-import { createServiceConfig } from '~/env.config';
+import { getDemoServerUrl } from '@/utils/common/tool';
 
 const emit = defineEmits(['update:stepCurrent', 'update:modalVisible', 'update:deviceTemplateId']);
 
@@ -32,7 +32,7 @@ interface AddFrom {
   author: string;
   description: string;
   path: string;
-  lable: string;
+  label: string;
   id?: string;
 }
 
@@ -43,7 +43,7 @@ const addFrom: AddFrom = reactive({
   author: '',
   description: '',
   path: '',
-  lable: ''
+  label: ''
 });
 
 type Rule = {
@@ -82,8 +82,8 @@ const tagsClose: (index: number) => void = index => {
 };
 
 // upload
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-const url: any = ref(otherBaseURL.demo);
+const demoUrl = getDemoServerUrl();
+const url: any = ref(demoUrl);
 const pngPath: any = ref('');
 
 const customRequest = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
@@ -100,16 +100,16 @@ const customRequest = ({ file, event }: { file: UploadFileInfo; event?: Progress
   console.log(pngPath.value, file);
 };
 
-// 新增设备模板
+// 新增设备功能模板
 const next: () => void = async () => {
   await formRef.value?.validate();
   if (addFrom.id) {
-    addFrom.lable = addFrom.templateTage.join(',');
+    addFrom.label = addFrom.templateTage.join(',');
     const response: any = await putTemplat(addFrom);
     emit('update:stepCurrent', 2);
     emit('update:deviceTemplateId', response.data.id);
   } else {
-    addFrom.lable = addFrom.templateTage.join(',');
+    addFrom.label = addFrom.templateTage.join(',');
     const response: any = await addTemplat(addFrom);
     emit('update:stepCurrent', 2);
     emit('update:deviceTemplateId', response.data.id);
@@ -133,7 +133,7 @@ watchEffect(async () => {
         addFrom.description = data.description;
         addFrom.version = data.version;
         addFrom.author = data.author;
-        addFrom.templateTage = data.lable && data.lable.length > 0 ? data.lable?.split(',') : [];
+        addFrom.templateTage = data.label && data.label.length > 0 ? data.label?.split(',') : [];
         pngPath.value = data.path === '' ? '' : `${url.value.replace('api/v1', '') + data.path}`;
       }
     }
@@ -185,7 +185,7 @@ watchEffect(async () => {
           v-else
           v-model:value.trim="addTageText"
           class="tag-ipt"
-          placeholder="请输入标签名称"
+          :placeholder="$t('generate.enter-tag-name')"
           autofocus
           @blur="tagBlur"
         />
@@ -229,7 +229,7 @@ watchEffect(async () => {
     </n-upload>
   </div>
   <div class="box1 m-t2">
-    <n-button @click="next">{{ $t('device_template.nextStep') }}</n-button>
+    <n-button type="primary" @click="next">{{ $t('device_template.nextStep') }}</n-button>
     <n-button class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</n-button>
   </div>
 </template>

@@ -11,7 +11,7 @@ import { computed, ref, watch } from 'vue';
 import { useMessage } from 'naive-ui';
 import { addWarningMessage, editInfo } from '@/service/api/alarm';
 import { useNaiveForm } from '@/hooks/common/form';
-
+import { $t } from '@/locales';
 // interface ColumnsData {
 //   [key: string]: any;
 // }
@@ -31,8 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '新增告警',
-    edit: '编辑告警'
+    add: $t('generate.addAlarm'),
+    edit: $t('generate.editAlarm')
   };
   return titles[props.type];
 });
@@ -44,6 +44,7 @@ interface Emits {
 
   (e: 'newEdit'): void;
 }
+
 const message = useMessage();
 const emit = defineEmits<Emits>();
 const { formRef } = useNaiveForm();
@@ -57,105 +58,105 @@ const modalVisible = computed({
 });
 
 const generalOptions = ref([]);
-const alarmRepeatTime = ref([
-  {
-    label: '1次',
-    value: '1'
-  },
-  {
-    label: '2次',
-    value: '2'
-  },
-  {
-    label: '3次',
-    value: '3'
-  },
-  {
-    label: '4次',
-    value: '4'
-  },
-  {
-    label: '5次',
-    value: '5'
-  },
-  {
-    label: '6次',
-    value: '6'
-  },
-  {
-    label: '7次',
-    value: '7'
-  },
-  {
-    label: '8次',
-    value: '8'
-  },
-  {
-    label: '9次',
-    value: '9'
-  },
-  {
-    label: '10次',
-    value: '10'
-  }
-]);
+// const alarmRepeatTime = ref([
+//   {
+//     label: $t('common.times1'),
+//     value: '1'
+//   },
+//   {
+//     label: $t('common.times2'),
+//     value: '2'
+//   },
+//   {
+//     label: $t('common.times3'),
+//     value: '3'
+//   },
+//   {
+//     label: $t('common.times4'),
+//     value: '4'
+//   },
+//   {
+//     label: $t('common.times5'),
+//     value: '5'
+//   },
+//   {
+//     label: $t('common.times6'),
+//     value: '6'
+//   },
+//   {
+//     label: $t('common.times7'),
+//     value: '7'
+//   },
+//   {
+//     label: $t('common.times8'),
+//     value: '8'
+//   },
+//   {
+//     label: $t('common.times9'),
+//     value: '9'
+//   },
+//   {
+//     label: $t('common.times10'),
+//     value: '10'
+//   }
+// ]);
 const alarmLevel = ref([
   {
-    label: '高',
+    label: $t('common.high'),
     value: 'H'
   },
   {
-    label: '中',
+    label: $t('common.middle'),
     value: 'M'
   },
   {
-    label: '低',
+    label: $t('common.low'),
     value: 'L'
   }
 ]);
 /** 触发时间下拉 */
-const alarmKeepTime = ref([
-  {
-    label: '1分钟',
-    value: '1'
-  },
-  {
-    label: '2分钟',
-    value: '2'
-  },
-  {
-    label: '3分钟',
-    value: '3'
-  },
-  {
-    label: '4分钟',
-    value: '4'
-  },
-  {
-    label: '5分钟',
-    value: '5'
-  },
-  {
-    label: '6分钟',
-    value: '6'
-  },
-  {
-    label: '7分钟',
-    value: '7'
-  },
-  {
-    label: '8分钟',
-    value: '8'
-  },
-  {
-    label: '9分钟',
-    value: '9'
-  },
-  {
-    label: '10分钟',
-    value: '10'
-  }
-]);
+// const alarmKeepTime = ref([
+//   {
+//     label: $t('common.minute1'),
+//     value: '1'
+//   },
+//   {
+//     label: $t('common.minute2'),
+//     value: '2'
+//   },
+//   {
+//     label: $t('common.minutes3'),
+//     value: '3'
+//   },
+//   {
+//     label: $t('common.minutes4'),
+//     value: '4'
+//   },
+//   {
+//     label: $t('common.minutes5'),
+//     value: '5'
+//   },
+//   {
+//     label: $t('common.minutes6'),
+//     value: '6'
+//   },
+//   {
+//     label: $t('common.minutes7'),
+//     value: '7'
+//   },
+//   {
+//     label: $t('common.minutes8'),
+//     value: '8'
+//   },
+//   {
+//     label: $t('common.minutes9'),
+//     value: '9'
+//   },
+//   {
+//     label: $t('common.minutes10'),
+//     value: '10'
+//   }
+// ]);
 /** 关闭弹框 */
 const closeModal = () => {
   modalVisible.value = false;
@@ -176,22 +177,22 @@ const rules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入告警名称'
+    message: $t('common.enterAlarmName')
   },
   alarm_level: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入告警级别'
+    message: $t('common.enterAlarmLevel')
   },
   alarm_repeat_time: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入触发重复次数'
+    message: $t('common.enterNumberTriggering')
   },
   alarm_keep_time: {
     required: true,
     trigger: ['blur', 'change'],
-    message: '请输入触发持续时间'
+    message: $t('common.enterTriggeringDuration')
   }
 };
 /** 新增 */
@@ -207,13 +208,14 @@ const add = async () => {
   };
   const res = await addWarningMessage(data);
   if (res) {
-    message.success('添加成功');
+    message.success($t('common.addSuccess'));
     modalVisible.value = false;
     emit('newEdit');
   } else {
-    message.error('添加失败');
+    message.error($t('common.addFail'));
   }
 };
+
 /** @param e 编辑 */
 async function editInfoText() {
   const datas = {
@@ -228,11 +230,11 @@ async function editInfoText() {
   };
   const { data } = await editInfo(datas);
   if (data) {
-    message.success('编辑成功');
+    message.success($t('common.editSuccess'));
     modalVisible.value = false;
     emit('newEdit');
   } else {
-    message.success('编辑失败');
+    message.success($t('common.editFail'));
   }
 }
 
@@ -260,6 +262,7 @@ function handleReset(e) {
     }
   });
 }
+
 watch(props, newValue => {
   console.log('newValue', newValue);
   if (props.type === 'edit') {
@@ -282,41 +285,53 @@ watch(props, newValue => {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-800px">
-    <NForm ref="formRef" label-placement="top" :rules="rules" :model="formData">
-      <n-grid :cols="24" :x-gap="24">
-        <n-form-item-gi :span="24" label="告警名称" path="name">
-          <n-input v-model:value="formData.name" placeholder="告警名称" />
-        </n-form-item-gi>
+  <NModal v-model:show="modalVisible" preset="card" :title="title">
+    <NForm ref="formRef" :rules="rules" :model="formData">
+      <n-form-item :label="$t('generate.alarm-name')" path="name">
+        <n-input v-model:value="formData.name" :placeholder="$t('generate.alarm-name')" />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" label="告警描述">
-          <n-input v-model:value="formData.description" placeholder="告警描述" />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.alarm-description')">
+        <n-input v-model:value="formData.description" :placeholder="$t('generate.alarm-description')" />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" label="告警级别" path="alarm_level">
-          <n-select v-model:value="formData.alarm_level" placeholder="告警级别" :options="alarmLevel" />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.alarm-level')" path="alarm_level">
+        <n-select
+          v-model:value="formData.alarm_level"
+          :placeholder="$t('generate.alarm-level')"
+          :options="alarmLevel"
+        />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" label="触发重复次数" path="alarm_repeat_time">
-          <n-select v-model:value="formData.alarm_repeat_time" placeholder="触发重复次数" :options="alarmRepeatTime" />
-        </n-form-item-gi>
+      <!--
+ <n-form-item :label="$t('generate.trigger-repeat-count')" path="alarm_repeat_time">
+        <n-select
+          v-model:value="formData.alarm_repeat_time"
+          :placeholder="$t('generate.trigger-repeat-count')"
+          :options="alarmRepeatTime"
+        />
+      </n-form-item>
 
-        <n-form-item-gi :span="24" label="触发持续时间" path="alarm_keep_time">
-          <n-select v-model:value="formData.alarm_keep_time" placeholder="触发持续时间" :options="alarmKeepTime" />
-        </n-form-item-gi>
+      <n-form-item :label="$t('generate.trigger-duration')" path="alarm_keep_time">
+        <n-select
+          v-model:value="formData.alarm_keep_time"
+          :placeholder="$t('generate.trigger-duration')"
+          :options="alarmKeepTime"
+        />
+      </n-form-item> 
+-->
 
-        <n-form-item-gi :span="24" label="通知组" path="selectValue">
-          <n-select
-            v-model:value="formData.notification_group_id"
-            placeholder="请选择通知组"
-            :options="generalOptions"
-          />
-        </n-form-item-gi>
-      </n-grid>
+      <n-form-item :label="$t('generate.notification-group')" path="selectValue">
+        <n-select
+          v-model:value="formData.notification_group_id"
+          :placeholder="$t('generate.select-notification-group')"
+          :options="generalOptions"
+        />
+      </n-form-item>
 
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="handleReset">保存</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="handleReset">{{ $t('common.save') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

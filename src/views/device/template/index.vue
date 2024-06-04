@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
-import { CalendarEdit20Regular, Delete20Regular } from '@vicons/fluent';
+import { Delete20Regular } from '@vicons/fluent';
 import { deleteDeviceTemplate, deviceTemplate } from '@/service/api/device-template-model';
+import { $t } from '@/locales';
 import TemplateModal from './components/template-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks/src';
 
-const { loading, startLoading, endLoading } = useLoading(false);
+const { startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -55,82 +56,72 @@ const handleEdit = async (id: string) => {
 const handleRemove = async (id: string) => {
   const { error } = await deleteDeviceTemplate(id);
   if (!error) {
-    window.$message?.info('已删除当前模板');
+    window.$message?.info($t('common.templateDeleted'));
     await getData();
   }
 };
 </script>
 
 <template>
-  <div class="h-full w-full">
-    <NCard>
-      <NFlex class="h-full p-4" justify="justify-between">
-        <div class="flex-1-hidden">
-          <div class="mb-4 flex items-center justify-between">
-            <!-- 新建按钮 -->
-            <div>
-              <NButton @click="handleAddTemplate">添加设备模板</NButton>
-            </div>
-            <!-- 搜索部分 -->
-            <div class="flex items-center gap-2">
-              <NInput v-model:value="queryParams.name" clearable placeholder="请输入模板名称" />
-              <NButton type="primary" @click="handleQuery">搜索</NButton>
-            </div>
-          </div>
-
-          <n-spin size="small" :show="loading">
-            <NGrid x-gap="24" y-gap="16" :cols="24">
-              <NGridItem v-for="item in deviceTemplateList" :key="item.id" :span="6">
-                <NCard hoverable>
-                  <div class="flex justify-between">
-                    <div class="text-16px font-600">
-                      {{ item.name }}
-                    </div>
-                  </div>
-                  <template v-for="tag in (item.label || '').split(',')" :key="tag">
-                    <div style="display: inline-block; margin: 0px 8px 8px 0px">
-                      <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
-                    </div>
-                  </template>
-
-                  <div class="mt-4 flex justify-end gap-2">
-                    <NButton strong circle secondary @click.stop="handleEdit(item.id)">
-                      <template #icon>
-                        <CalendarEdit20Regular class="text-24px text-primary" />
-                      </template>
-                    </NButton>
-                    <NButton strong secondary circle @click.stop="handleRemove(item.id)">
-                      <template #icon>
-                        <Delete20Regular class="text-24px text-primary" />
-                      </template>
-                    </NButton>
-                  </div>
-                </NCard>
-              </NGridItem>
-            </NGrid>
-          </n-spin>
-          <div class="pagination-box">
-            <NPagination
-              v-model:page="pagination.page"
-              :page-count="pagination.pageCount"
-              @update:page="
-                page => {
-                  pagination.page = page;
-                  getData();
-                }
-              "
-            />
-          </div>
+  <div>
+    <n-card>
+      <div class="m-b-20px flex flex-wrap items-center gap-15px">
+        <!-- 新建按钮 -->
+        <div class="flex-1">
+          <NButton type="primary" @click="handleAddTemplate">
+            +{{ $t('generate.add-device-function-template') }}
+          </NButton>
         </div>
+        <!-- 搜索部分 -->
 
-        <TemplateModal
-          v-model:visible="visible"
-          :type="modalType"
-          :template-id="templateId"
-          :get-table-data="getData"
+        <div class="flex items-center gap-2">
+          <NInput v-model:value="queryParams.name" clearable :placeholder="$t('generate.enter-template-name')" />
+          <NButton type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+        </div>
+      </div>
+
+      <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+        <NGridItem v-for="item in deviceTemplateList" :key="item.id" @click="handleEdit(item.id)">
+          <NCard hoverable style="height: 190px">
+            <div class="flex-col justify-between">
+              <div class="title text-16px font-600">
+                {{ item.name }}
+              </div>
+              <div class="description mt-2 text-14px">
+                {{ item.description || '--' }}
+              </div>
+            </div>
+            <template v-for="tag in (item.label || '').split(',')" :key="tag">
+              <div style="display: inline-block; margin: 0px 8px 8px 0px">
+                <NTag v-if="tag" class="gap-16px" size="small">{{ tag }}</NTag>
+              </div>
+            </template>
+
+            <div class="mt-4 flex justify-end gap-2">
+              <NButton circle strong secondary @click.stop="handleRemove(item.id)">
+                <template #icon>
+                  <Delete20Regular class="text-24px text-primary" />
+                </template>
+              </NButton>
+            </div>
+          </NCard>
+        </NGridItem>
+      </NGrid>
+      <div class="pagination-box">
+        <NPagination
+          v-model:page="pagination.page"
+          :page-count="pagination.pageCount"
+          @update:page="
+            page => {
+              pagination.page = page;
+              getData();
+            }
+          "
         />
-      </NFlex>
-    </NCard>
+      </div>
+
+      <TemplateModal v-model:visible="visible" :type="modalType" :template-id="templateId" :get-table-data="getData" />
+    </n-card>
   </div>
 </template>
 
@@ -139,5 +130,22 @@ const handleRemove = async (id: string) => {
   margin-top: 12px;
   display: flex;
   justify-content: flex-end;
+}
+
+.description {
+  height: 40px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.title {
+  height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

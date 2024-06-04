@@ -1,30 +1,26 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import type { DataTableColumns, FormInst, PaginationProps } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { NButton, NSpace } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { addUser, editUser, fetchUserList } from '@/service/api/auth';
+import { irrigationGroupHistorys } from '@/service/api/irrigation';
+import { $t } from '@/locales';
 import LogRunModal from './log-rundetail-modal.vue';
-import { $t } from '~/src/locales';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
-  /** 弹窗类型 add: 新增 edit: 编辑 */
-  type?: 'add' | 'edit';
   /** 编辑的表格行数据 */
-  editData?: UserManagement.User | null;
+  editData?: any;
 }
 
 const { bool: devicesVisible, setTrue: openDevicesModal } = useBoolean();
-const { loading } = useLoading(false);
-export type ModalType = NonNullable<Props['type']>;
+const { loading, startLoading, endLoading } = useLoading(false);
 
 defineOptions({ name: 'TableActionModal' });
 
 const props = withDefaults(defineProps<Props>(), {
-  type: 'add',
   editData: null
 });
 
@@ -36,14 +32,15 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>();
-type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
+
+interface QueryFormModel {
+  group_irrigation_id: string;
   page: number;
   page_size: number;
-};
+}
+
 const queryParams = reactive<QueryFormModel>({
-  email: null,
-  name: null,
-  status: null,
+  group_irrigation_id: '',
   page: 1,
   page_size: 10
 });
@@ -56,102 +53,50 @@ const modalVisible = computed({
     emit('update:visible', visible);
   }
 });
-const closeModal = () => {
-  modalVisible.value = false;
-};
 
-const formRef = ref<HTMLElement & FormInst>();
+// eslint-disable-next-line vue/no-dupe-keys
+const editData = ref<any>(null);
+const tableData = ref<any>([]);
 
-type FormModel = Pick<UserManagement.User, 'email' | 'name' | 'phone_number' | 'gender' | 'remark'> & {
-  password: string;
-  confirmPwd: string;
-};
-
-const formModel = reactive<FormModel>(createDefaultFormModel());
-
-function createDefaultFormModel(): FormModel {
-  return {
-    name: '',
-    gender: null,
-    phone_number: '',
-    email: '',
-    password: '',
-    confirmPwd: '',
-    remark: ''
-  };
-}
-
-function handleUpdateFormModel(model: Partial<FormModel>) {
-  Object.assign(formModel, model);
-}
-
-function handleUpdateFormModelByModalType() {
-  const handlers: Record<ModalType, () => void> = {
-    add: () => {
-      const defaultFormModel = createDefaultFormModel();
-      handleUpdateFormModel(defaultFormModel);
-    },
-    edit: () => {
-      if (props.editData) {
-        handleUpdateFormModel(props.editData);
-      }
-    }
-  };
-
-  handlers[props.type]();
-}
-
-async function handleSubmit() {
-  await formRef.value?.validate();
-  let data: any;
-  if (props.type === 'add') {
-    data = await addUser(formModel);
-  } else if (props.type === 'edit') {
-    data = await editUser(formModel);
-  }
-  if (!data.error) {
-    window.$message?.success(data.msg);
-    emit('success');
-  }
-  closeModal();
-}
-
-const tableData = ref<UserManagement.User[]>([]);
-
-function setTableData(data: UserManagement.User[]) {
+function setTableData(data: any) {
   tableData.value = data;
 }
 
 async function getTableData() {
-  const { data } = await fetchUserList(queryParams);
+  startLoading();
+  queryParams.group_irrigation_id = props.editData?.id || '';
+  const { data } = await irrigationGroupHistorys(queryParams);
+  endLoading();
   if (data) {
-    const list: UserManagement.User[] = data.list;
+    const list: any = data.list;
     setTableData(list);
   }
 }
 
-function openDevicesModalFn() {
+function openDevicesModalFn(rowId: string) {
+  const findItem = tableData.value.find(item => item.id === rowId);
+  editData.value = findItem;
   openDevicesModal();
 }
 
-const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
+const columns: Ref<any> = ref([
   {
-    key: 'email',
+    key: 'execute_datetime',
     title: () => $t('page.irrigation.group.log.runTime'),
     align: 'center'
   },
   {
-    key: 'name',
-    title: () => $t('page.irrigation.group.log.operationType'),
+    key: 'operation_type',
+    title: () => $t('custom.device_details.operationType'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'execute_result',
     title: () => $t('page.irrigation.group.log.runResult'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'execute_detail',
     title: () => $t('page.irrigation.group.log.detail'),
     align: 'center'
   },
@@ -160,17 +105,17 @@ const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
     title: () => $t('common.action'),
     align: 'center',
     width: 120,
-    render: () => {
+    render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton type="info" quaternary size={'small'} onClick={() => openDevicesModalFn()}>
+          <NButton type="info" quaternary size={'small'} onClick={() => openDevicesModalFn(row.id)}>
             {$t('page.irrigation.group.runDetail')}
           </NButton>
         </NSpace>
       );
     }
   }
-]) as Ref<DataTableColumns<UserManagement.User>>;
+]) as Ref<any>;
 
 const pagination: PaginationProps = reactive({
   page: 1,
@@ -191,21 +136,13 @@ const pagination: PaginationProps = reactive({
   }
 });
 
-watch(
-  () => props.visible,
-  newValue => {
-    if (newValue) {
-      handleUpdateFormModelByModalType();
-    }
-  }
-);
-
 function init() {
   getTableData();
 }
 
-// 初始化
-init();
+onMounted(async () => {
+  init();
+});
 </script>
 
 <template>
@@ -225,7 +162,7 @@ init();
         class="flex-1-hidden"
       />
     </div>
-    <LogRunModal v-model:visible="devicesVisible" :edit-data="editData" @success="handleSubmit" />
+    <LogRunModal v-if="devicesVisible" v-model:visible="devicesVisible" :edit-data="editData" @success="getTableData" />
   </NModal>
 </template>
 

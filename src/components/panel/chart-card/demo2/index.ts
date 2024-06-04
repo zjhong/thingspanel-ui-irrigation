@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import poster from '@/components/panel/chart-card/demo2/poster.jpg';
+import poster from '@/components/panel/chart-card/demo1/poster.png';
 import type { ICardDefine } from '@/components/panel/card';
 
 export default {

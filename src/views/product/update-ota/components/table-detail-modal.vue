@@ -6,6 +6,9 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { editOtaTaskDetail, getOtaTaskDetail } from '@/service/product/update-ota';
+import { formatDateTime } from '@/utils/common/datetime';
+import ColumnSetting from './column-setting.vue';
+
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
@@ -99,6 +102,9 @@ function setTableData(data: UpgradeTaskDetail[]) {
   tableData.value = data;
 }
 function handleQuery() {
+  Object.assign(queryParams, {
+    page: 1
+  });
   init();
 }
 function handleReset() {
@@ -128,6 +134,7 @@ const pagination: PaginationProps = reactive({
   }
 });
 const stateData = ref({});
+const statisticsList: Ref<any[]> = ref([]);
 async function getTableData() {
   startLoading();
   queryParams.ota_upgrade_task_id = props.editData?.id;
@@ -139,6 +146,7 @@ async function getTableData() {
     statistics.forEach((item: any) => {
       stateData.value[item.status] = item.count;
     });
+    statisticsList.value = statistics;
     setTableData(list);
     pagination.pageCount = Math.ceil(data.total / queryParams.page_size);
     endLoading();
@@ -147,39 +155,53 @@ async function getTableData() {
 const toUpdate = async ({ id }, action: number) => {
   const data = await editOtaTaskDetail({ id, action });
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
+    getTableData();
   }
 };
 
 const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   {
+    key: 'device_number',
+    minWidth: '140px',
+    title: $t('page.product.list.deviceNumber')
+  },
+  {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-ota.deviceName')
   },
   {
     key: 'current_version',
+    minWidth: '140px',
     title: $t('page.product.update-ota.currentVersion')
     // title: '当前版本号'
   },
   {
     key: 'version',
+    minWidth: '140px',
     title: $t('page.product.update-ota.targetVersion')
     // title: '目标版本号'
   },
   {
     key: 'steps',
+    minWidth: '140px',
     title: $t('page.product.update-ota.progress')
     // title: '升级进度'
   },
   {
     key: 'updated_at',
-    title: $t('page.product.update-ota.updateTime')
+    minWidth: '140px',
+    title: $t('page.product.update-ota.updateTime'),
+    render: row => {
+      return formatDateTime(row.updated_at);
+    }
     // title: '状态更新时间'
   },
   {
     key: 'status',
+    minWidth: '140px',
     title: $t('page.product.update-ota.statusTask'),
-    // title: '状态',
+    // title: $t('generate.status'),
     render: (row: UpgradeTaskDetail) => {
       const text = {
         1: $t('page.product.update-ota.pendingTask'), // 待推送,
@@ -194,11 +216,13 @@ const columns: Ref<DataTableColumns<UpgradeTaskDetail>> = ref([
   },
   {
     key: 'status_description',
+    minWidth: '140px',
     title: $t('page.product.update-ota.statusDetail')
     // title: '状态详情'
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('common.action'),
     align: 'center',
     render: row => {
@@ -245,42 +269,59 @@ function init() {
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" :on-after-enter="init" preset="card" :title="title" class="w-1200px">
+  <NModal v-model:show="modalVisible" :on-after-enter="init" preset="card" :title="title">
     <div class="h-800px overflow-hidden">
       <div class="h-full flex-col">
         <NGrid :cols="24" x-gap="12px">
-          <NGridItem span="3">
-            <NCard :title="/*所有状态*/ $t('page.product.update-ota.allStatus')" size="small">
+          <NGridItem v-for="(item, index) in statisticsList" :key="index" span="3">
+            <NCard v-if="item?.status == 0" :title="/*所有状态*/ $t('page.product.update-ota.allStatus')" size="small">
               {{ stateData[0] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*待推送*/ $t('page.product.update-ota.pendingTask')" size="small">
+            <NCard
+              v-else-if="item?.status == 1"
+              :title="/*待推送*/ $t('page.product.update-ota.pendingTask')"
+              size="small"
+            >
               {{ stateData[1] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*已推送*/ $t('page.product.update-ota.pushTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 2"
+              :title="/*已推送*/ $t('page.product.update-ota.pushTask')"
+              size="small"
+            >
               {{ stateData[2] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级中*/ $t('page.product.update-ota.upgradingTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 3"
+              :title="/*升级中*/ $t('page.product.update-ota.upgradingTask')"
+              size="small"
+            >
               {{ stateData[3] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级成功*/ $t('page.product.update-ota.completeTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 4"
+              :title="/*升级成功*/ $t('page.product.update-ota.completeTask')"
+              size="small"
+            >
               {{ stateData[4] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*升级失败*/ $t('page.product.update-ota.failTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 5"
+              :title="/*升级失败*/ $t('page.product.update-ota.failTask')"
+              size="small"
+            >
               {{ stateData[5] || '-' }}
             </NCard>
-          </NGridItem>
-          <NGridItem span="3">
-            <NCard :title="/*已取消*/ $t('page.product.update-ota.cancelTask')" size="small">
+
+            <NCard
+              v-else-if="item?.status == 6"
+              :title="/*已取消*/ $t('page.product.update-ota.cancelTask')"
+              size="small"
+            >
               {{ stateData[6] || '-' }}
             </NCard>
           </NGridItem>
@@ -294,6 +335,16 @@ function init() {
             <NButton class="ml-20px w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
+        <NSpace class="pb-12px" justify="space-between">
+          <NSpace></NSpace>
+          <NSpace align="center" :size="18">
+            <NButton size="small" type="primary" @click="getTableData">
+              <IconMdiRefresh class="mr-4px text-16px" :class="{ 'animate-spin': loading }" />
+              {{ $t('common.refreshTable') }}
+            </NButton>
+            <ColumnSetting v-model:columns="columns" />
+          </NSpace>
+        </NSpace>
         <NDataTable
           size="small"
           remote

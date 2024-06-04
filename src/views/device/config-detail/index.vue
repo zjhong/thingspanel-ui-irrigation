@@ -6,11 +6,13 @@ import { deviceConfigInfo } from '@/service/api/device';
 import SettingInfo from '@/views/device/config-detail/modules/setting-info.vue';
 import DataHandle from '@/views/device/config-detail/modules/data-handle.vue';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 import AssociatedDevices from './modules/associated-devices.vue';
 import ExtendInfo from './modules/extend-info.vue';
 import AttributeInfo from './modules/attribute-info.vue';
 import ConnectionInfo from './modules/connection-info.vue';
 import AlarmInfo from './modules/alarm-info.vue';
+import Automate from './modules/automate.vue';
 
 const { routerPushByKey } = useRouterPush();
 const route = useRoute();
@@ -48,38 +50,40 @@ onMounted(async () => {
 
 <template>
   <div class="h-full overflow-hidden">
-    <NCard :title="configForm.name">
+    <NCard :title="configForm?.name || '--'">
       <template #header-extra>
-        <NButton type="primary" @click="editConfig">编辑</NButton>
+        <NButton type="primary" @click="editConfig">{{ $t('common.edit') }}</NButton>
       </template>
       <div class="mb-4">
-        设备接入类型：
-        <template v-if="configForm.device_type === '1'">直连设备</template>
-        <template v-if="configForm.device_type === '2'">网关</template>
-        <template v-if="configForm.device_type === '3'">网关子设备</template>
+        {{ $t('generate.deviceAccessType') }}
+        <template v-if="configForm.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
+        <template v-if="configForm.device_type === '2'">{{ $t('generate.gateway') }}</template>
+        <template v-if="configForm.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
       </div>
       <n-tabs animated type="line">
-        <n-tab-pane name="关联设备" tab="关联设备">
+        <n-tab-pane :name="$t('common.associatedDevices')" :tab="$t('common.associatedDevices')">
           <AssociatedDevices :device-config-id="configId" />
         </n-tab-pane>
-        <n-tab-pane name="属性与功能" tab="属性与功能">
+        <n-tab-pane :name="$t('common.propertiesAndFunctions')" :tab="$t('common.propertiesAndFunctions')">
           <AttributeInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="连接与认证" tab="连接与认证">
+        <n-tab-pane :name="$t('common.protocolConfig')" :tab="$t('common.protocolConfig')">
           <ConnectionInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="数据处理" tab="数据处理">
+        <n-tab-pane :name="$t('common.dataProces')" :tab="$t('common.dataProces')">
           <DataHandle :config-info="configForm" />
         </n-tab-pane>
-        <n-tab-pane name="自动化" tab="自动化" :disabled="true"></n-tab-pane>
-        <n-tab-pane name="告警" tab="告警">
-          <AlarmInfo />
+        <n-tab-pane :name="$t('custom.device_details.automate')" :tab="$t('custom.device_details.automate')">
+          <Automate :config_id="configId" />
         </n-tab-pane>
-        <n-tab-pane name="扩展信息" tab="扩展信息">
+        <n-tab-pane :name="$t('route.alarm')" :tab="$t('route.alarm')">
+          <AlarmInfo :config_id="configId" />
+        </n-tab-pane>
+        <n-tab-pane :name="$t('generate.extension-info')" :tab="$t('generate.extension-info')">
           <ExtendInfo :config-info="configForm" @up-date-config="getConfig" />
         </n-tab-pane>
-        <n-tab-pane name="设备设置" tab="设备设置">
-          <SettingInfo :config-info="configForm" />
+        <n-tab-pane :name="$t('common.devicesSetting')" :tab="$t('common.devicesSetting')">
+          <SettingInfo :config-info="configForm" @change="getConfig" />
         </n-tab-pane>
       </n-tabs>
     </NCard>

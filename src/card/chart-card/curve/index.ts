@@ -12,7 +12,7 @@ export default {
   preset: {
     dataSource: {
       origin: 'device',
-      sourceNum: 9,
+      sourceNum: 1,
       systemSource: [{}],
       deviceSource: [{}]
     },
@@ -21,7 +21,9 @@ export default {
     },
     iCardViewDefault: {
       w: 6,
-      h: 8
+      h: 5,
+      minW: 3,
+      minH: 3
     }
   }
 } as ICardDefine;

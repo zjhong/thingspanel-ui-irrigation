@@ -5,14 +5,14 @@ import { ref } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { localStg } from '@/utils/storage';
 import { STATIC_BASE_URL } from '@/constants/common';
-import { createServiceConfig } from '~/env.config';
+import { getDemoServerUrl } from '@/utils/common/tool';
 import { $t } from '~/src/locales';
 // eslint-disable-next-line import/order
 
 defineOptions({ name: 'UploadFile' });
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-const url = ref(new URL(otherBaseURL.demo));
+const url = ref(new URL(getDemoServerUrl()));
+
 enum SourceType {
   image = 'image',
   upgradePackage = 'upgradePackage',
@@ -20,6 +20,7 @@ enum SourceType {
   plugin = 'plugin',
   other = 'other'
 }
+
 export interface Props {
   /** 选取文件的类型 */
   accept: string;
@@ -40,6 +41,7 @@ const dataList: Ref<UploadFileInfo[]> = ref(
 
 interface Emits {
   (e: 'update:value', val: string): void;
+
   (e: 'success', file: UploadFileInfo): void;
 }
 
@@ -61,7 +63,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
     isImg = true;
   }
   if (!isImg) {
-    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}格式文件!`);
+    window.$message?.error(`${$t('common.pleaseUploadit')}${props.fileType.join('/')}${$t('common.formatFile')}`);
     return false;
   }
   return true;
@@ -69,7 +71,7 @@ async function beforeUpload(data: { file: UploadFileInfo; fileList: UploadFileIn
 
 function handleFinish({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) {
   const response = JSON.parse((event?.target as XMLHttpRequest).response);
-  window.$message?.success(response.message);
+  // window.$message?.success(response.message);
   emit('update:value', response.data.path);
   emit('success', file);
 }

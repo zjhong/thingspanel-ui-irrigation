@@ -1,109 +1,171 @@
 <script setup lang="tsx">
 import { reactive, ref } from 'vue';
 import type { Ref } from 'vue';
-import { NButton, NSpace } from 'naive-ui';
-import type { DataTableColumns, PaginationProps } from 'naive-ui';
+import { NButton, NSpace, useDialog } from 'naive-ui';
+import type { PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { userStatusOptions } from '@/constants/business';
-import { fetchUserList } from '@/service/api/auth';
+import {
+  irrigationRotationCancel,
+  irrigationRotationDel,
+  irrigationRotationExecute,
+  irrigationRotationList
+} from '@/service/api';
+import { irrigationPlanStatus, irrigationPlanStatusOption } from '@/constants/business';
+import { $t } from '@/locales';
 import TableActionModal from './components/table-action-modal.vue';
 import TableLogModal from './components/table-log-modal.vue';
 import type { ModalType } from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 // import ColumnSetting from './components/column-setting.vue'
 
+const dialog = useDialog();
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: logVisible, setTrue: openLogModal } = useBoolean();
 
-type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
+interface QueryFormModel {
+  name: string | null;
+  status: string | null;
   page: number;
   page_size: number;
-};
+}
 
 const queryParams = reactive<QueryFormModel>({
-  email: null,
   name: null,
   status: null,
   page: 1,
   page_size: 10
 });
 
-const tableData = ref<UserManagement.User[]>([]);
+const tableData = ref<any>([]);
 
-function setTableData(data: UserManagement.User[]) {
-  tableData.value = data;
+function setTableData(data: any[]) {
+  tableData.value = data || [];
 }
 
 async function getTableData() {
   startLoading();
-  const { data } = await fetchUserList(queryParams);
+  const { data } = await irrigationRotationList(queryParams);
   if (data) {
-    const list: UserManagement.User[] = data.list;
+    const list: any = data.list;
     setTableData(list);
     endLoading();
   }
 }
 
-const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
+// 下发
+const runDistribute = (rowId: string, status: number) => {
+  dialog.warning({
+    title: $t('common.tip'),
+    content: status === 4 ? $t('common.planTheDevice') : $t('common.cancelThePlan'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
+    onPositiveClick: async () => {
+      if (status === 4) {
+        await irrigationRotationExecute({ id: rowId, status });
+      } else {
+        await irrigationRotationCancel({ id: rowId, status });
+      }
+      init();
+    }
+  });
+};
+// 删除
+const runDel = (rowId: string) => {
+  dialog.warning({
+    title: $t('common.tip'),
+    content: $t('common.deleteThePlan'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
+    onPositiveClick: async () => {
+      await irrigationRotationDel(rowId);
+      init();
+    }
+  });
+};
+
+const columns: Ref<any> = ref([
   {
     key: 'name',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.planName'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'name',
+    key: 'start_irrigation_datetime',
+    minWidth: '140px',
     title: () => $t('page.irrigation.group.startTime'),
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'id',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.orderCode'),
+    ellipsis: {
+      tooltip: true
+    },
     align: 'center'
   },
   {
-    key: 'phone_number',
+    key: 'water_pump_valve_opening',
+    minWidth: '140px',
     title: () => $t('page.irrigation.time.doorOpeing'),
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return `${row.water_pump_valve_opening}%`;
+    }
   },
   {
-    key: 'phone_number',
+    key: 'status',
+    minWidth: '140px',
     title: () => $t('page.irrigation.planStatus'),
-    align: 'center'
-  },
-  {
-    key: 'phone_number',
-    title: () => $t('page.irrigation.controlType'),
-    align: 'center'
+    align: 'center',
+    render: row => {
+      return irrigationPlanStatus[row.status];
+    }
   },
   {
     key: 'actions',
-    width: 350,
+    minWidth: '140px',
     title: () => $t('common.action'),
     align: 'center',
     render: row => {
       return (
         <NSpace justify={'center'}>
-          <NButton quaternary type="info" size={'small'} onClick={() => handleEditPwd(row.id)}>
+          <NButton
+            v-show={row.status === 'PND' || row.status === 'CNL'}
+            quaternary
+            type="info"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 4)}
+          >
             {$t('page.irrigation.distribute')}
           </NButton>
           <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
             {$t('common.edit')}
           </NButton>
-          <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
+          <NButton quaternary type="primary" size={'small'} onClick={() => runDel(row.id)}>
             {$t('common.delete')}
           </NButton>
-          <NButton quaternary type="primary" size={'small'} onClick={() => handOpenLogModal()}>
+          <NButton quaternary type="primary" size={'small'} onClick={() => handOpenLogModal(row.id)}>
             {$t('page.irrigation.log')}
           </NButton>
-          <NButton quaternary type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
+          <NButton
+            v-show={row.status === 'ISS'}
+            quaternary
+            type="primary"
+            size={'small'}
+            onClick={() => runDistribute(row.id, 0)}
+          >
             {$t('common.cancel')}
           </NButton>
         </NSpace>
       );
     }
   }
-]) as Ref<DataTableColumns<UserManagement.User>>;
+]) as Ref<any>;
 
 const modalType = ref<ModalType>('add');
 
@@ -111,23 +173,23 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<UserManagement.User | null>(null);
+const editData = ref<any>(null);
 
-function setEditData(data: UserManagement.User | null) {
+function setEditData(data: any) {
   editData.value = data;
 }
 
 function handleAddTable() {
-  openModal();
   setModalType('add');
+  openModal();
 }
 
-function handleEditPwd(rowId: string) {
-  const findItem = tableData.value.find(item => item.id === rowId);
-  if (findItem) {
-    setEditData(findItem);
-  }
-}
+// function handleEditPwd(rowId: string) {
+//   const findItem = tableData.value.find(item => item.id === rowId);
+//   if (findItem) {
+//     setEditData(findItem);
+//   }
+// }
 
 function handleEditTable(rowId: string) {
   const findItem = tableData.value.find(item => item.id === rowId);
@@ -138,7 +200,11 @@ function handleEditTable(rowId: string) {
   openModal();
 }
 
-function handOpenLogModal() {
+function handOpenLogModal(rowId: string) {
+  const findItem = tableData.value.find(item => item.id === rowId);
+  if (findItem) {
+    setEditData(findItem);
+  }
   openLogModal();
 }
 
@@ -176,9 +242,8 @@ function handleQuery() {
 
 function handleReset() {
   Object.assign(queryParams, {
-    email: undefined,
-    name: undefined,
-    status: undefined,
+    name: null,
+    status: null,
     page: 1
   });
   handleQuery();
@@ -197,11 +262,16 @@ init();
     <NCard :title="$t('page.irrigation.rotation.name')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <div class="h-full flex-col">
         <NForm ref="queryFormRef" inline label-placement="left" :model="queryParams">
-          <NFormItem :label="$t('page.irrigation.group.planName')" path="status">
-            <NInput v-model:value="queryParams.email" />
+          <NFormItem :label="$t('page.irrigation.group.planName')" path="name">
+            <NInput v-model:value="queryParams.name" clearable />
           </NFormItem>
           <NFormItem :label="$t('page.irrigation.planStatus')" path="status">
-            <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="userStatusOptions" />
+            <NSelect
+              v-model:value="queryParams.status"
+              clearable
+              class="w-200px"
+              :options="irrigationPlanStatusOption"
+            />
           </NFormItem>
           <NFormItem>
             <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
@@ -221,11 +291,16 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          :flex-height="true"
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
-        <TableLogModal v-model:visible="logVisible" :edit-data="editData"></TableLogModal>
+        <TableActionModal
+          v-if="visible"
+          v-model:visible="visible"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
+        <TableLogModal v-if="logVisible" v-model:visible="logVisible" :edit-data="editData"></TableLogModal>
       </div>
     </NCard>
   </div>

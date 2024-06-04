@@ -1,12 +1,15 @@
 <script lang="tsx" setup>
 import type { VueElement } from 'vue';
-import { computed, defineProps, ref, watchEffect } from 'vue';
+import { computed, defineProps, getCurrentInstance, ref, watchEffect } from 'vue';
 import { NButton, NDataTable, NDatePicker, NInput, NPopconfirm, NSelect, NSpace } from 'naive-ui';
 import type { TreeSelectOption } from 'naive-ui';
 import { throttle } from 'lodash-es';
 import { useLoading } from '@sa/hooks';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import TencentMap from './modules/tencent-map.vue';
 // 定义搜索配置项的类型，支持多种输入类型：纯文本、日期选择器、日期范围选择器、下拉选择和树形选择器
+export type theLabel = string | (() => string) | undefined;
 export type SearchConfig =
   | {
       key: string;
@@ -17,8 +20,11 @@ export type SearchConfig =
       key: string;
       label: string;
       type: 'select';
-      options: { label: string; value: any }[];
-      loadOptions?: (pattern) => Promise<{ label: string; value: any }[]>;
+      renderLabel?: any;
+      renderTag?: any;
+      extendParams?: object;
+      options: { label: theLabel; value: any }[];
+      loadOptions?: (pattern) => Promise<{ label: theLabel; value: any }[]>;
     }
   | {
       key: string;
@@ -30,19 +36,21 @@ export type SearchConfig =
     };
 
 // 通过props从父组件接收参数
+
 const props = defineProps<{
   fetchData: (data: any) => Promise<any>; // 数据获取函数
   columnsToShow: // 表格列配置
   | {
         key: string;
-        label: string;
+        label: theLabel;
         render?: (row: any) => VueElement | string | undefined; // 自定义渲染函数
       }[]
     | 'all'; // 特殊值'all'表示显示所有列
   searchConfigs: SearchConfig[]; // 搜索配置数组
   tableActions: Array<{
     // 表格行操作
-    label: string; // 按钮文本
+    theKey?: string; // 操作键
+    label: theLabel; // 按钮文本
     callback: any; // 点击回调
   }>;
   topActions: { element: () => JSX.Element }[]; // 顶部操作组件列表
@@ -50,13 +58,13 @@ const props = defineProps<{
 }>();
 const { loading, startLoading, endLoading } = useLoading();
 // 解构props以简化访问
-const { fetchData, columnsToShow, tableActions, searchConfigs } = props;
+const { fetchData, columnsToShow, tableActions, searchConfigs }: any = props;
 const isTableView = ref(true); // 默认显示表格视图
 const dataList = ref([]); // 表格数据列表
 const total = ref(0); // 数据总数
 const currentPage = ref(1); // 当前页码
 const pageSize = ref(10); // 每页显示数量
-const searchCriteria = ref({}); // 每页显示数量
+const searchCriteria: any = ref({}); // 每页显示数量
 
 // 获取数据的函数，结合搜索条件、分页等
 const getData = async () => {
@@ -73,6 +81,7 @@ const getData = async () => {
     })
   );
   // 调用提供的fetchData函数获取数据
+
   const response = await fetchData({
     page: currentPage.value,
     page_size: pageSize.value,
@@ -97,52 +106,62 @@ const generatedColumns = computed(() => {
     columns = (columnsToShow === 'all' ? Object.keys(dataList.value[0]) : columnsToShow).map(item => {
       if (item.render) {
         // 使用自定义的render函数渲染列
-        return {
-          title: item.label,
-          key: item.key,
-          render: () => item.render()
-        };
+        return { ...item, title: item.label, key: item.key, render: row => item.render(row) };
       }
       return {
+        ...item,
         title: item.label,
         key: item.key,
-        render: row => <>{row[item.key]}</>
+        render: row => {
+          if (item.key === 'ts' && row[item.key]) {
+            return formatDateTime(row[item.key]);
+          }
+          return <>{row[item.key]}</>;
+        }
       };
     });
     // 添加操作列
     columns.push({
-      title: '操作',
+      title: $t('custom.groupPage.actions'),
       key: 'actions',
+      width: 150,
       render: row => (
-        <NSpace>
-          {tableActions.map(action => {
-            if (action.label === '删除') {
+        <div
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
+          <NSpace>
+            {tableActions.map(action => {
+              if (action.theKey === $t('custom.devicePage.delete')) {
+                return (
+                  <NPopconfirm
+                    onPositiveClick={async e => {
+                      e.stopPropagation();
+                      await action.callback(row);
+                      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                      handleReset();
+                    }}
+                  >
+                    {{
+                      trigger: () => (
+                        <NButton type="error" size="small">
+                          {typeof action.label === 'function' ? action.label() : action.label || ''}
+                        </NButton>
+                      ),
+                      default: () => $t('common.confirmDelete')
+                    }}
+                  </NPopconfirm>
+                );
+              }
               return (
-                <NPopconfirm
-                  onPositiveClick={async () => {
-                    await action.callback(row);
-                    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-                    handleReset();
-                  }}
-                >
-                  {{
-                    trigger: () => (
-                      <NButton text size="small">
-                        {action.label}
-                      </NButton>
-                    ),
-                    default: () => '确认删除'
-                  }}
-                </NPopconfirm>
+                <NButton type="primary" size="small" onClick={() => action.callback(row)}>
+                  {typeof action.label === 'function' ? action.label() : action.label || ''}
+                </NButton>
               );
-            }
-            return (
-              <NButton text size="small" onClick={() => action.callback(row)}>
-                {action.label}
-              </NButton>
-            );
-          })}
-        </NSpace>
+            })}
+          </NSpace>
+        </div>
       )
     });
   }
@@ -161,7 +180,22 @@ const onUpdatePageSize = newPageSize => {
   getData(); // 更新数据
 };
 // 观察分页和搜索条件的变化，自动重新获取数据
-watchEffect(getData);
+watchEffect(() => {
+  searchConfigs.map((item: any) => {
+    const vals = searchCriteria.value[item.key];
+    if (item?.extendParams && vals) {
+      item?.options.map(oitem => {
+        if (oitem.dict_value + oitem.device_type === vals) {
+          item?.extendParams.map(eitem => {
+            searchCriteria.value[eitem.label] = oitem[eitem.value];
+          });
+        }
+      });
+    }
+  });
+  console.log(searchCriteria.value);
+  getData();
+});
 
 // 搜索和重置按钮的逻辑
 const handleSearch = () => {
@@ -174,6 +208,7 @@ const handleReset = () => {
   Object.keys(searchCriteria.value).forEach(key => {
     searchCriteria.value[key] = ''; // 或者对应字段的默认值
   });
+
   handleSearch(); // 重置后重新获取数据
 };
 defineExpose({
@@ -181,6 +216,7 @@ defineExpose({
 });
 // 更新树形选择器的选项
 const handleTreeSelectUpdate = (value, key) => {
+  currentPage.value = 1;
   searchCriteria.value[key] = value;
 };
 
@@ -214,8 +250,14 @@ const loadOptionsOnMount2 = async () => {
     }
   }
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 使用throttle减少动态加载选项时的请求频率
 const throttledLoadOptionsOnMount = throttle(loadOptionsOnMount, 300);
+
 // 在组件挂载时加载选项
 loadOptionsOnMount('');
 loadOptionsOnMount2();
@@ -223,12 +265,17 @@ loadOptionsOnMount2();
 
 <template>
   <n-card>
-    <div class="flex flex-col gap-6 rounded-lg">
+    <div class="flex flex-col gap-15px rounded-lg">
       <!-- 搜索区域与操作按钮 -->
       <div class="row flex items-end justify-between gap-4">
         <!-- 搜索输入和选择器 -->
         <div class="flex flex-1 flex-wrap items-end gap-4">
-          <div v-for="config in searchConfigs" :key="config.key" class="flex flex-col gap-2">
+          <div
+            v-for="config in searchConfigs"
+            :key="config.key"
+            class="flex flex-col gap-2"
+            :class="getPlatform ? 'min-w-100%' : ''"
+          >
             <template v-if="config.type === 'input'">
               <NInput
                 v-model:value="searchCriteria[config.key]"
@@ -252,8 +299,11 @@ loadOptionsOnMount2();
                 size="small"
                 filterable
                 :options="config.options"
+                :render-label="config.renderLabel"
+                :render-tag="config.renderTag"
                 :placeholder="config.label"
                 class="input-style"
+                @update:value="currentPage = 1"
                 @search="
                   value => {
                     throttledLoadOptionsOnMount(value);
@@ -282,11 +332,14 @@ loadOptionsOnMount2();
               />
             </template>
           </div>
-          <NButton class="btn-style" size="small" @click="handleSearch">搜索</NButton>
-          <NButton class="btn-style" size="small" @click="handleReset">重置</NButton>
+          <div>
+            <NButton v-if="0" class="btn-style" size="small" @click="handleSearch">{{ $t('common.search') }}</NButton>
+            <NButton class="btn-style" size="small" @click="handleReset">{{ $t('common.reset') }}</NButton>
+          </div>
         </div>
         <!-- 新建与返回按钮 -->
       </div>
+
       <div class="h-2px w-full bg-[#f6f9f8]"></div>
       <div class="flex items-center justify-between">
         <div class="flex gap-2">
@@ -337,7 +390,7 @@ loadOptionsOnMount2();
         v-model:page-size="pageSize"
         class="justify-end"
         :item-count="total"
-        :page-size-options="[10, 20, 30, 40]"
+        :page-sizes="[10, 20, 30, 40, 50]"
         show-size-picker
         @update:page="onUpdatePage"
         @update:page-size="onUpdatePageSize"
@@ -346,7 +399,7 @@ loadOptionsOnMount2();
   </n-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .input-style {
   min-width: 140px;
 }

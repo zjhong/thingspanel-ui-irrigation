@@ -1,7 +1,9 @@
 <script setup lang="ts">
+/* ————————————————————————————————————————————— 预注册新增弹窗 ——————————————————————————————————————————————— */
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { STATIC_BASE_URL } from '@/constants/common';
 import UploadCard from '../../update-package/components/upload-card.vue';
 import { $t } from '~/src/locales';
 import { addDevice, editProduct } from '~/src/service/product/list';
@@ -46,7 +48,7 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.addProduct'),
+    add: $t('page.product.list.batchAdd'),
     edit: $t('page.product.list.editProduct')
   };
   return titles[props.type];
@@ -73,12 +75,16 @@ const rules = computed(() => {
   return rulesData;
 });
 
+const downloadTemplate = () => {
+  window.open(`${STATIC_BASE_URL}/files/batch_template/batch_template.xlsx`);
+};
+
 function createDefaultFormModel(): deviceAddType {
   const data: deviceAddType = {
     batch_file: '',
-    batch_number: '',
     create_type: '1',
-    current_version: ''
+    current_version: '',
+    batch_number: ''
   };
   return data;
 }
@@ -107,12 +113,15 @@ async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addDevice({ ...formModel, product_id: props.pid, device_count: Number(formModel.device_count) });
+    data = await addDevice({
+      ...formModel,
+      product_id: props.pid,
+      device_count: Number(formModel.device_count)
+    });
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -132,7 +141,7 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" :label="$t('page.product.list.deviceNumber')" path="batch_number">
+        <NFormItemGridItem :span="24" :label="$t('page.product.list.batchNumber')" path="batch_number">
           <NInput v-model:value="formModel.batch_number" />
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" :label="$t('page.product.list.firmwareVersion')" path="current_version">
@@ -147,19 +156,20 @@ watch(
         <NFormItemGridItem
           v-if="formModel.create_type === '2'"
           :span="24"
-          label="$t('page.product.list.file')"
+          :label="$t('page.product.list.file')"
           path="batch_file"
         >
           <UploadCard
             v-model:value="formModel.batch_file"
-            text="$t('page.product.list.file')"
-            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-"
+            :text="$t('page.product.list.filePlaceholder')"
+            accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             source-type="importBatch"
             class="mt-10px"
             :file-type="['xls', 'xlsx']"
           ></UploadCard>
-          <NButton quaternary type="primary">{{ $t('page.product.list.downloadTemplate') }}</NButton>
+          <NButton quaternary type="primary" @click="downloadTemplate">
+            {{ $t('page.product.list.downloadTemplate') }}
+          </NButton>
         </NFormItemGridItem>
         <NFormItemGridItem v-else :span="24" :label="$t('page.product.list.deviceCount')" path="device_count">
           <NInput v-model:value="formModel.device_count" />

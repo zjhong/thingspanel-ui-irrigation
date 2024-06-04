@@ -6,9 +6,9 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { serviceManagementDeviceTypeLabels } from '@/constants/business';
 import { delProtocolPlugin, fetchProtocolPluginList } from '@/service/api';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
-import { $t } from '~/src/locales';
 
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
@@ -56,12 +56,14 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '服务名称',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.serviceName'),
     align: 'left'
   },
   {
     key: 'device_type',
-    title: '设备类型',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.deviceType'),
     align: 'left',
     render: row => {
       if (row.device_type) {
@@ -72,34 +74,39 @@ const columns: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   },
   {
     key: 'protocol_type',
-    title: '协议类型',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.protocolType'),
     align: 'left'
   },
   {
     key: 'access_address',
-    title: '接入地址',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.accessAddress'),
     align: 'left'
   },
   {
     key: 'http_address',
-    title: 'HTTP服务地址',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.httpAddress'),
     align: 'left'
   },
   {
     key: 'sub_topic_prefix',
-    title: '插件订阅主题前缀',
+    minWidth: '140px',
+    title: () => $t('page.apply.service.form.subTopicPrefix'),
     align: 'left'
   },
   {
     key: 'description',
-    title: '描述',
+    minWidth: '140px',
+    title: () => $t('common.description'),
     align: 'left'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: () => $t('common.action'),
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
@@ -157,7 +164,7 @@ function handleEditTable(rowId: string) {
 async function handleDeleteTable(rowId: string) {
   const data = await delProtocolPlugin(rowId);
   if (!data.error) {
-    window.$message?.success($t('common.deleteSuccess'));
+    // window.$message?.success($t('common.deleteSuccess'));
     await getTableData();
   }
 }
@@ -171,7 +178,7 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
+  <div>
     <NCard :title="$t('route.apply_service')" :bordered="false" class="h-full rounded-8px shadow-sm">
       <template #header-extra>
         <NButton type="primary" @click="handleAddTable">
@@ -185,7 +192,6 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           class="flex-1-hidden"
         />
         <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />

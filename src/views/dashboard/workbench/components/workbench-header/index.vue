@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/modules/auth';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'DashboardWorkbenchHeader' });
 
@@ -36,8 +37,13 @@ const statisticData: StatisticData[] = [
       <div class="flex-y-center">
         <IconLocalAvatar class="text-70px" />
         <div class="pl-12px">
-          <h3 class="text-18px font-semibold">早安，{{ auth.userInfo.userName }}, 今天又是充满活力的一天！</h3>
-          <p class="text-#999 leading-30px">今日多云转晴，20℃ - 25℃！</p>
+          <h3 class="text-18px font-semibold">
+            <span>早安</span>
+            ，{{ auth.userInfo.userName }},
+            <span>今天又是充满活力的一天</span>
+            ！
+          </h3>
+          <p class="text-#999 leading-30px">{{ $t('generate.weather-forecast') }}</p>
         </div>
       </div>
       <NSpace :size="24" :wrap="false">

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { Ref } from 'vue';
-import { onMounted, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref } from 'vue';
 import type { DataTableColumns, FormInst } from 'naive-ui';
-import { NButton, NPagination, useMessage } from 'naive-ui';
+import { NButton, NPagination } from 'naive-ui';
 import moment from 'moment/moment';
 import { deviceConfigBatch, deviceList } from '@/service/api/device';
+import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
 
-const message = useMessage();
+// const message = useMessage();
 
 interface Props {
   deviceConfigId?: string;
@@ -18,6 +20,26 @@ const props = withDefaults(defineProps<Props>(), {
 const visible = ref(false);
 const associatedFormRef = ref<HTMLElement & FormInst>();
 const associatedForm = ref(defaultAssociatedForm());
+const deviceOptions = ref([] as any[]);
+
+const queryDevice = ref<{
+  page: number;
+  page_size: number;
+  total: number;
+}>({
+  page: 1,
+  page_size: 20,
+  total: 0
+});
+
+function initQueryDevice() {
+  queryDevice.value = {
+    page: 1,
+    page_size: 20,
+    total: 0
+  };
+  deviceOptions.value = [];
+}
 
 function defaultAssociatedForm() {
   return {
@@ -25,6 +47,12 @@ function defaultAssociatedForm() {
     device_config_id: ''
   };
 }
+
+const queryData = ref({
+  device_config_id: props.deviceConfigId,
+  page: 1,
+  page_size: 10
+});
 
 const associatedFormRules = ref({
   // device_ids: {
@@ -39,13 +67,15 @@ const addDevice = () => {
   getDeviceOptions();
   visible.value = true;
 };
-const modalClose = () => {};
+const modalClose = () => {
+  initQueryDevice();
+};
 const handleSubmit = async () => {
   await associatedFormRef?.value?.validate();
   associatedForm.value.device_config_id = props.deviceConfigId;
   const res = await deviceConfigBatch(associatedForm.value);
   if (!res.error) {
-    message.success('新增成功');
+    // message.success('新增成功');
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     handleClose();
   }
@@ -54,17 +84,15 @@ const handleClose = () => {
   associatedFormRef.value?.restoreValidation();
   associatedForm.value = defaultAssociatedForm();
   visible.value = false;
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   queryData.value.page = 1;
+  initQueryDevice();
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
   getDeviceList();
 };
 const handleScroll = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
   if (currentTarget.scrollTop + currentTarget.offsetHeight >= currentTarget.scrollHeight) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     if (deviceOptions.value.length <= queryDevice.value.total) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       queryDevice.value.page += 1;
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       getDeviceOptions();
@@ -72,12 +100,6 @@ const handleScroll = (e: Event) => {
   }
 };
 
-const deviceOptions = ref([] as any[]);
-const queryDevice = ref({
-  page: 1,
-  page_size: 20,
-  total: 0
-});
 const getDeviceOptions = async () => {
   const res = await deviceList(queryDevice.value);
   deviceOptions.value = deviceOptions.value.concat(res.data.list);
@@ -87,23 +109,23 @@ const getDeviceOptions = async () => {
 const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
   {
     key: 'name',
-    title: '设备名称',
-    align: 'center'
+    minWidth: '140px',
+    title: $t('custom.devicePage.deviceName')
   },
   {
     key: 'device_number',
-    title: '设备编码',
-    align: 'center'
+    minWidth: '140px',
+    title: $t('page.irrigation.group.deviceCode')
   },
   {
     key: 'activate_flag',
-    title: '在线状态',
-    align: 'center'
+    minWidth: '140px',
+    title: $t('custom.devicePage.onlineStatus')
   },
   {
     key: 'ts',
-    title: '推送时间',
-    align: 'center',
+    minWidth: '140px',
+    title: $t('custom.devicePage.pushTime'),
     render: row => {
       if (row.ts) {
         return moment(row.ts).format('YYYY-MM-DD hh:mm:ss');
@@ -112,20 +134,37 @@ const columnsData: Ref<DataTableColumns<ServiceManagement.Service>> = ref([
     }
   }
 ]);
-const queryData = ref({
-  device_config_id: props.deviceConfigId,
-  page: 1,
-  page_size: 10
-});
+
 const configDevice = ref([]);
 const configDeviceTotal = ref(0);
 const getDeviceList = async () => {
-  console.log(props.deviceConfigId, '432432432434');
   queryData.value.device_config_id = props.deviceConfigId;
   const res = await deviceList(queryData.value);
+  res.data.list.map(sitem => {
+    sitem.activate_flag = sitem.is_online === 0 ? $t('custom.devicePage.offline') : $t('custom.devicePage.online');
+    return sitem;
+  });
   configDevice.value = res.data.list || [];
   configDeviceTotal.value = res.data.total;
 };
+const { routerPushByKey } = useRouterPush();
+const rowProps = (row: any) => {
+  return {
+    style: 'cursor: pointer;',
+    onClick: () => {
+      console.log(row);
+      routerPushByKey('device_details', {
+        query: {
+          d_id: row.id
+        }
+      });
+    }
+  };
+};
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(async () => {
   await getDeviceList();
 });
@@ -133,14 +172,16 @@ onMounted(async () => {
 
 <template>
   <div class="associated-box">
-    <NButton type="primary" @click="addDevice()">+添加设备</NButton>
-    <NDataTable
+    <NButton type="primary" @click="addDevice()">{{ $t('generate.+add-device') }}</NButton>
+    <n-data-table
       :columns="columnsData"
       :data="configDevice"
       size="small"
       :row-key="item => item.id"
       class="table-class"
+      :row-props="rowProps"
     />
+
     <div class="pagination-box">
       <NPagination
         v-model:page="queryData.page"
@@ -152,8 +193,8 @@ onMounted(async () => {
     <NModal
       v-model:show="visible"
       :mask-closable="false"
-      title="添加设备"
-      class="w-600px"
+      :title="$t('generate.add-device')"
+      :class="getPlatform ? 'w-90%' : 'w-600px'"
       preset="card"
       @after-leave="modalClose"
     >
@@ -164,7 +205,7 @@ onMounted(async () => {
         label-placement="left"
         label-width="auto"
       >
-        <NFormItem label="选择设备" path="device_ids">
+        <NFormItem :label="$t('page.irrigation.rotation.chooseDevice')" path="device_ids">
           <NSelect
             v-model:value="associatedForm.device_ids"
             :options="deviceOptions"
@@ -176,8 +217,8 @@ onMounted(async () => {
           ></NSelect>
         </NFormItem>
         <NFlex justify="flex-end">
-          <NButton @click="handleClose">取消</NButton>
-          <NButton type="primary" @click="handleSubmit">添加</NButton>
+          <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('generate.add') }}</NButton>
         </NFlex>
       </NForm>
     </NModal>

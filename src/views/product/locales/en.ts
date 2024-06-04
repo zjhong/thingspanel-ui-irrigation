@@ -18,6 +18,8 @@ export const productLocaleEn: ProductLocal = {
     productNumberPlaceholder: 'Please enter the product code',
     productDescPlaceholder: 'Please enter the product description',
     deviceConfigPlaceholder: 'Please enter the device configuration',
+    query: 'query',
+    Reset: 'query',
     productKey: 'ProductKey',
     productImage: 'Image',
     preRegister: 'Pre-registration Management',
@@ -38,12 +40,15 @@ export const productLocaleEn: ProductLocal = {
     deviceNumberPlaceholder: 'Please enter the device count',
     addType: 'Add Method',
     batchUpload: 'Batch Upload',
-    autoGenerate: 'Auto Generate'
+    autoGenerate: 'Auto Generate', // 自动生成
+    active: 'Active', // 已激活
+    noActive: 'Inactive' // 未激活
   },
   'update-package': {
     packageList: 'Upgrade Package List',
     packageName: 'Upgrade Package Name',
     version: 'Target Version for Upgrade',
+    versionText: 'Version Code',
     versionCode: 'Upgrade Package Version Code',
     deviceConfig: 'Device Configuration',
     type: 'Upgrade Package Type',
@@ -66,6 +71,7 @@ export const productLocaleEn: ProductLocal = {
     packagePlaceholder: 'Please select the upgrade package'
   },
   'update-ota': {
+    updateDate: 'modification date',
     lookTask: 'View Task',
     otaTitle: 'OTA Upgrade List',
     taskName: 'Task Name',

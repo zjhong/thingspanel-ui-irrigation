@@ -56,6 +56,7 @@ export default defineConfig(
   },
   {
     rules: {
+      'array-callback-return': 'off',
       'import/order': [
         'error',
         {

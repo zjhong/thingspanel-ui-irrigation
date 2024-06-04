@@ -17,8 +17,7 @@ export default {
       marker: null,
       // 默认维度
       dimension: [121.50861, 31.25141],
-      // 新维度
-      newdimension: [],
+
       lnglatArr: [], // 多边形需要的数据
 
       spaceForm: {
@@ -26,7 +25,7 @@ export default {
         spaces_id: '',
         sort: 1,
         location: '', // 经度
-        dimensionality: '', // 维度
+        dimensionality: '',
         scope: '',
         description: ''
       },
@@ -34,7 +33,7 @@ export default {
         name: {
           required: true,
           trigger: ['blur', 'input'],
-          message: '请输入空间名称'
+          message: $t('common.addSuccess')
         }
       },
       locationData: false, // 设置位置判断
@@ -46,7 +45,7 @@ export default {
     const { formRef } = useNaiveForm();
     const methods = {
       /** 取消保存 */
-      closeModal() {
+      cancelAdd() {
         state.spaceForm.name = '';
         state.spaceForm.location = '';
         state.spaceForm.dimensionality = '';
@@ -58,6 +57,7 @@ export default {
         state.rangeSetting = false;
         state.buttonData = 'primary';
         methods.mapInit();
+        context.emit('cancelAdd', false);
       },
       /** 新增接口 */
       add() {
@@ -70,7 +70,7 @@ export default {
         };
         addSpace(data).then(e => {
           if (e) {
-            message.success('添加成功');
+            message.success($t('common.addSuccess'));
             state.spaceForm.name = '';
             state.spaceForm.location = '';
             state.spaceForm.dimensionality = '';
@@ -81,13 +81,14 @@ export default {
             state.locationData = false;
             state.rangeSetting = false;
             methods.mapInit();
+            context.emit('saveAddSpace', false);
           } else {
-            message.error('添加失败');
+            message.error($t('common.addFail'));
           }
         });
       },
       /** 保存 */
-      handleReset(e) {
+      saveAddSpace(e) {
         console.log('保存', props);
 
         e.preventDefault();
@@ -101,7 +102,7 @@ export default {
             }
           } else {
             state.buttonData = 'error';
-            message.error('请设置空间位置');
+            message.error($t('generate.spaceLocation'));
           }
         });
       },
@@ -148,19 +149,16 @@ export default {
             /** 设置位置获取坐标 */
             function locationDataClick(e) {
               if (state.locationData) {
-                state.positionCoordinates.push(e.lnglat);
-
-                if (state.positionCoordinates.length > 1) {
-                  message.error('只能添加一个位置信息');
-                } else {
-                  state.spaceForm.location = String(e.lnglat.lng);
-                  state.spaceForm.dimensionality = String(e.lnglat.lat);
-                  state.buttonData = 'primary';
-                  const marker = new AMap.Marker({
-                    position: new AMap.LngLat(e.lnglat.lng, e.lnglat.lat) // 经纬度对象
-                  });
-                  state.map.add(marker);
+                state.spaceForm.location = String(e.lnglat.lng);
+                state.spaceForm.dimensionality = String(e.lnglat.lat);
+                state.buttonData = 'primary';
+                if (state.marker) {
+                  state.map.remove(state.marker);
                 }
+                state.marker = new AMap.Marker({
+                  position: new AMap.LngLat(e.lnglat.lng, e.lnglat.lat), // 经纬度对象
+                  map: state.map
+                });
               }
             }
 
@@ -186,11 +184,11 @@ export default {
                   imageOffset: new AMap.Pixel(0, 0),
                   image: new URL('../../../assets/svg-icon/AdjustRound.svg', import.meta.url).href
                 });
-                const marker = new AMap.Marker({
+                state.marker = new AMap.Marker({
                   position: new AMap.LngLat(e.lnglat.lng, e.lnglat.lat), // 经纬度对象
                   icon
                 });
-                state.map.add(marker);
+                state.map.add(state.marker);
                 if (state.lnglatArr.length > 1) {
                   state.map.remove(polygon);
                 }
@@ -235,41 +233,49 @@ export default {
 <template>
   <div class="mapContainer">
     <div class="searchInfo">
-      <input id="tipinput" v-model="newKeyAddress" placeholder="请输入关键字..." class="input-with-select" />
+      <input
+        id="tipinput"
+        v-model="newKeyAddress"
+        :placeholder="$t('generate.enter-keyword')"
+        class="input-with-select"
+      />
 
       <div class="add-box">
         <NCard>
-          <NForm ref="formRef" label-placement="left" :label-width="80" :model="spaceForm" :rules="rules">
+          <NForm ref="formRef" label-placement="left" :model="spaceForm" :rules="rules">
             <NGrid :cols="1" :x-gap="18">
-              <NFormItemGridItem :span="16" label="空间名称" path="name">
+              <NFormItemGridItem :span="16" :label="$t('generate.space-name')" path="name">
                 <NInput v-model:value="spaceForm.name" />
               </NFormItemGridItem>
 
-              <NFormItemGridItem :span="18" label="空间位置" class="whitespace-nowrap">
-                <n-button :type="buttonData" @click="locationSetting">设置位置</n-button>
+              <NFormItemGridItem :span="18" :label="$t('generate.space-location')" class="whitespace-nowrap">
+                <n-button :type="buttonData" @click="locationSetting">{{ $t('generate.set-location') }}</n-button>
                 <span class="required-span">*</span>
               </NFormItemGridItem>
-              <NFormItemGridItem label="位置信息" class="whitespace-nowrap" :span="18">
+              <NFormItemGridItem :label="$t('generate.location-information')" class="whitespace-nowrap" :span="18">
                 <!--
  <div>
                   <span>经度:</span><span>{{ spaceForm.location }}</span>
                 </div>
 -->
-                经度:
+
+                <span>{{ $t('generate.longitude') }}</span>
+                :
                 <NInput v-model:value="spaceForm.location" disabled />
-                纬度:
+                <span>{{ $t('generate.latitude') }}</span>
+                :
                 <NInput v-model:value="spaceForm.dimensionality" disabled />
               </NFormItemGridItem>
-              <NFormItemGridItem :span="16" label="地图范围" path="scope">
-                <n-button @click="rangeSettingClick">设置范围</n-button>
+              <NFormItemGridItem :span="16" :label="$t('generate.map-range')" path="scope">
+                <n-button @click="rangeSettingClick">{{ $t('generate.set-range') }}</n-button>
               </NFormItemGridItem>
-              <NFormItemGridItem :span="16" label="位置详情" path="description">
+              <NFormItemGridItem :span="16" :label="$t('generate.location-details')" path="description">
                 <NInput v-model:value="spaceForm.description" type="textarea" placeholder="" />
               </NFormItemGridItem>
             </NGrid>
             <NSpace class="w-full pt-16px" :size="24" justify="center">
-              <NButton class="w-72px" @click="closeModal">取消</NButton>
-              <NButton class="w-72px" type="primary" @click="handleReset">保存</NButton>
+              <NButton class="w-72px" @click="cancelAdd">{{ $t('generate.cancel') }}</NButton>
+              <NButton class="w-72px" type="primary" @click="saveAddSpace">{{ $t('common.save') }}</NButton>
             </NSpace>
           </NForm>
         </NCard>

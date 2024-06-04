@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 // import {useRouter} from 'vue-router';
 import { NButton, NCard, NForm, NFormItem, NGrid, NGridItem, NInput, NModal, useMessage } from 'naive-ui';
 import type { LastLevelRouteKey } from '@elegant-router/types'; // 假设您已经定义好了这些API
 import { DelBoard, PostBoard, PutBoard, getBoardList } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
+import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
 
 const { routerPushByKey } = useRouterPush();
 const message = useMessage();
@@ -49,7 +51,7 @@ const fetchBoards = async () => {
 // 提交表单
 const submitForm = async () => {
   if (!formData.name) {
-    message.error('大屏名称不能为空');
+    message.error($t('common.screenNameNull'));
     return;
   }
 
@@ -59,7 +61,7 @@ const submitForm = async () => {
     await PostBoard(formData); // 新建大屏
   }
 
-  message.success(isEditMode.value ? '大屏更新成功' : '大屏创建成功');
+  message.success(isEditMode.value ? $t('common.modifySuccess') : $t('common.addSuccess'));
   showModal.value = false;
   clearFormData();
   await fetchBoards();
@@ -74,33 +76,57 @@ const editBoard = board => {
 // 删除大屏
 const deleteBoard = async (id: string) => {
   await DelBoard(id); // 假设DelBoard接收大屏的id
-  message.success('大屏删除成功');
+  message.success($t('common.deleteSuccess'));
   await fetchBoards(); // 刷新大屏列表
+};
+
+// Edit big screen with Visual Editor
+const editWithVEditor = board => {
+  const id = board.id;
+  const token = localStg.get('token');
+  const expiresTime = localStg.get('token_expires_in');
+  sessionStorage.setItem('thingspanel_token', token || '');
+  const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
+  const url = `${visualUrl}/editor?id=${id}&token=${token}&expiresTime=${expiresTime}`;
+  window.open(url, '_blank');
+};
+
+// View big screen in Visual Editor
+const viewWithVEditor = board => {
+  const id = board.id;
+  const token = localStg.get('token');
+  const expiresTime = localStg.get('token_expires_in');
+  const visualUrl = import.meta.env.PROD ? '/visual' : 'http://localhost:5173';
+  const url = `${visualUrl}/display?id=${id}&token=${token}&expiresTime=${expiresTime}`;
+  window.open(url, '_blank');
 };
 
 // 页面跳转
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
 };
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 onMounted(fetchBoards);
 </script>
 
 <template>
   <div class="h-full w-full">
-    <NFlex class="h-full bg-#fff p-4" justify="justify-between">
+    <NCard>
       <div class="flex-1-hidden">
-        <div class="mb-4 flex items-center justify-between">
+        <div class="m-b-20px flex flex-wrap items-center gap-15px">
           <!-- 新建按钮 -->
-          <div>
-            <NButton @click="showModal = true">新建大屏</NButton>
+          <div class="flex-1">
+            <NButton type="primary" @click="showModal = true">+{{ $t('generate.create-large-screen') }}</NButton>
           </div>
           <!-- 搜索部分 -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-20px">
             <NInput
               v-model:value="nameSearch"
               clearable
-              placeholder="按名称搜索"
+              :placeholder="$t('generate.search-by-name')"
               @clear="
                 () => {
                   nameSearch = '';
@@ -109,18 +135,17 @@ onMounted(fetchBoards);
               "
             />
 
-            <NButton type="primary" @click="fetchBoards">搜索</NButton>
+            <NButton type="primary" @click="fetchBoards">{{ $t('common.search') }}</NButton>
           </div>
         </div>
         <!-- 大屏列表 -->
-        <NGrid x-gap="24" y-gap="16" :cols="24">
+        <NGrid x-gap="24" y-gap="16" cols="1 s:2 m:3 l:4" responsive="screen">
           <NGridItem
             v-for="board in boards"
             :key="board.id"
-            :span="6"
-            @click="goRouter('visualization_panel-details', board.id as string)"
+            @click="goRouter('visualization_kanban-details', board.id as string)"
           >
-            <NCard hoverable>
+            <NCard hoverable style="height: 160px" @click.stop="viewWithVEditor(board)">
               <div class="mb-8px text-16px font-600">{{ board.name }}</div>
               <!-- 使用NTooltip组件 -->
               <NTooltip trigger="hover" placement="top-start" :style="{ maxWidth: '200px' }">
@@ -130,42 +155,65 @@ onMounted(fetchBoards);
                 {{ board.description }}
               </NTooltip>
               <div class="mt-4 flex justify-end gap-2">
-                <NButton strong circle secondary @click.stop="editBoard(board)">
-                  <template #icon>
-                    <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton circle strong secondary @click.stop="editWithVEditor(board)">
+                      <template #icon>
+                        <icon-material-symbols:edit-square class="text-24px text-blue" />
+                      </template>
+                    </NButton>
                   </template>
-                </NButton>
-                <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
-                  <template #icon>
-                    <icon-material-symbols:delete-outline class="text-24px text-red" />
+                  {{ $t('common.visualEditing') }}
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="editBoard(board)">
+                      <template #icon>
+                        <icon-material-symbols:contract-edit-outline class="text-24px text-blue" />
+                      </template>
+                    </NButton>
                   </template>
-                </NButton>
+                  {{ $t('common.editNameAndDesc') }}
+                </n-tooltip>
+
+                <n-tooltip trigger="hover" placement="top">
+                  <template #trigger>
+                    <NButton strong secondary circle @click.stop="deleteBoard(board.id as string)">
+                      <template #icon>
+                        <icon-material-symbols:delete-outline class="text-24px text-red" />
+                      </template>
+                    </NButton>
+                  </template>
+                  {{ $t('common.delete') }}
+                </n-tooltip>
               </div>
             </NCard>
           </NGridItem>
         </NGrid>
       </div>
       <!-- 大屏列表后面添加分页器 -->
-      <div class="mt-4 h-60px w-full">
-        <NFlex justify="end">
-          <NPagination
-            v-model:page="currentPage"
-            :page-size="pageSize"
-            :item-count="total"
-            @update:page="fetchBoards"
-          />
-        </NFlex>
-      </div>
-    </NFlex>
+      <NFlex justify="end">
+        <NPagination v-model:page="currentPage" :page-size="pageSize" :item-count="total" @update:page="fetchBoards" />
+      </NFlex>
+    </NCard>
     <!-- 新建和编辑大屏的模态框 -->
-    <NModal v-model:show="showModal" :title="isEditMode ? '编辑大屏' : '新建大屏'" class="w-600px">
+    <NModal
+      v-model:show="showModal"
+      :title="isEditMode ? $t('common.editScreen') : $t('common.addScreen')"
+      :class="getPlatform ? 'w-90%' : 'w-500px'"
+    >
       <NCard bordered>
         <NForm :model="formData" class="flex-1">
-          <NFormItem label="大屏名称" path="name">
-            <NInput v-model:value="formData.name" placeholder="请输入大屏名称" />
+          <NFormItem :label="$t('generate.large-screen-name')" path="name">
+            <NInput v-model:value="formData.name" :placeholder="$t('generate.enter-large-screen-name')" />
           </NFormItem>
-          <NFormItem label="描述">
-            <NInput v-model:value="formData.description" type="textarea" placeholder="请输入描述" />
+          <NFormItem :label="$t('device_template.table_header.description')">
+            <NInput
+              v-model:value="formData.description"
+              type="textarea"
+              :placeholder="$t('generate.enter-description')"
+            />
           </NFormItem>
         </NForm>
         <template #footer>
@@ -177,9 +225,9 @@ onMounted(fetchBoards);
                 clearFormData();
               "
             >
-              取消
+              {{ $t('generate.cancel') }}
             </NButton>
-            <NButton type="primary" @click="submitForm">保存</NButton>
+            <NButton type="primary" @click="submitForm">{{ $t('common.save') }}</NButton>
           </div>
         </template>
       </NCard>
@@ -192,7 +240,8 @@ onMounted(fetchBoards);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block; /* 确保这是一个块级元素 */
+  display: block;
+  /* 确保这是一个块级元素 */
   max-width: 100%;
   color: #666;
   margin-bottom: 12px;

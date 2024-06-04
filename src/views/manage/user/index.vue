@@ -9,6 +9,7 @@ import { $t } from '@/locales';
 import { enableStatusRecord, userGenderRecord } from '@/constants/business';
 import UserOperateDrawer, { type OperateType } from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
+
 const appStore = useAppStore();
 const { bool: drawerVisible, setTrue: openDrawer } = useBoolean();
 
@@ -44,14 +45,14 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      minWidth: '140px'
     },
     {
       key: 'index',
       title: $t('common.index'),
       render: (_, index): string => getIndex(index),
       align: 'center',
-      width: 64
+      minWidth: '140px'
     },
     {
       key: 'userName',
@@ -63,7 +64,7 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'userGender',
       title: $t('page.manage.user.userGender'),
       align: 'center',
-      width: 100,
+      minWidth: '140px',
       render: row => {
         if (row.userGender === null) {
           return null;
@@ -89,7 +90,7 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'userPhone',
       title: $t('page.manage.user.userPhone'),
       align: 'center',
-      width: 120
+      minWidth: '140px'
     },
     {
       key: 'userEmail',
@@ -101,7 +102,7 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'status',
       title: $t('page.manage.user.userStatus'),
       align: 'center',
-      width: 100,
+      minWidth: '140px',
       render: row => {
         if (row.status === null) {
           return null;
@@ -119,9 +120,9 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
     },
     {
       key: 'operate',
-      title: $t('common.operate'),
+      title: $t('common.action'),
       align: 'center',
-      width: 130,
+      minWidth: '140px',
       render: row => (
         <div class="flex-center gap-8px">
           <NButton type="primary" ghost size="small" onClick={() => handleEdit(row.id)}>
@@ -155,7 +156,7 @@ const checkedRowKeys = ref<string[]>([]);
 async function handleBatchDelete() {
   // requestTs
   console.log(checkedRowKeys.value);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -175,7 +176,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

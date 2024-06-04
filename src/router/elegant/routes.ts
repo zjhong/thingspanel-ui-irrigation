@@ -124,6 +124,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'automation_scene-edit',
+        path: '/automation/scene-edit',
+        component: 'view.automation_scene-edit',
+        meta: {
+          title: 'automation_scene-edit',
+          i18nKey: 'route.automation_scene-edit'
+        }
+      },
+      {
         name: 'automation_scene-linkage',
         path: '/automation/scene-linkage',
         component: 'view.automation_scene-linkage',
@@ -291,6 +300,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'device_details',
           i18nKey: 'route.device_details'
+        }
+      },
+      {
+        name: 'device_details-child',
+        path: '/device/details-child',
+        component: 'view.device_details-child',
+        meta: {
+          title: 'device_details-child',
+          i18nKey: 'route.device_details-child'
         }
       },
       {
@@ -571,6 +589,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'management_notification',
           i18nKey: 'route.management_notification'
+        }
+      },
+      {
+        name: 'management_ordinary-user',
+        path: '/management/ordinary-user',
+        component: 'view.management_ordinary-user',
+        meta: {
+          title: 'management_ordinary-user',
+          i18nKey: 'route.management_ordinary-user'
         }
       },
       {
@@ -900,11 +927,31 @@ export const generatedRoutes: GeneratedRoute[] = [
   {
     name: 'test',
     path: '/test',
-    component: 'layout.base$view.test',
+    component: 'layout.base',
     meta: {
       title: 'test',
       i18nKey: 'route.test'
-    }
+    },
+    children: [
+      {
+        name: 'test_kan-ban-details-test',
+        path: '/test/kan-ban-details-test',
+        component: 'view.test_kan-ban-details-test',
+        meta: {
+          title: 'test_kan-ban-details-test',
+          i18nKey: 'route.test_kan-ban-details-test'
+        }
+      },
+      {
+        name: 'test_kan-ban-test',
+        path: '/test/kan-ban-test',
+        component: 'view.test_kan-ban-test',
+        meta: {
+          title: 'test_kan-ban-test',
+          i18nKey: 'route.test_kan-ban-test'
+        }
+      }
+    ]
   },
   {
     name: 'user-center',
@@ -935,21 +982,21 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'visualization_panel',
-        path: '/visualization/panel',
-        component: 'view.visualization_panel',
+        name: 'visualization_kanban',
+        path: '/visualization/kanban',
+        component: 'view.visualization_kanban',
         meta: {
-          title: 'visualization_panel',
-          i18nKey: 'route.visualization_panel'
+          title: 'visualization_kanban',
+          i18nKey: 'route.visualization_kanban'
         }
       },
       {
-        name: 'visualization_panel-details',
-        path: '/visualization/panel-details',
-        component: 'view.visualization_panel-details',
+        name: 'visualization_kanban-details',
+        path: '/visualization/kanban-details',
+        component: 'view.visualization_kanban-details',
         meta: {
-          title: 'visualization_panel-details',
-          i18nKey: 'route.visualization_panel-details'
+          title: 'visualization_kanban-details',
+          i18nKey: 'route.visualization_kanban-details'
         }
       },
       {

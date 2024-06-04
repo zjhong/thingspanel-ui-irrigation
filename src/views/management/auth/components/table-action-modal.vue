@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { routeComponentTypeOptions, routeSysFlagOptions, routeTypeOptions } from '@/constants/business';
-import { addElement, editElement } from '@/service/api/route';
+import { routeSysFlagOptions, routeTypeOptions } from '@/constants/business';
+import { addElement, editElement, fetchElementList } from '@/service/api/route';
 import { deepClone } from '@/utils/common/tool';
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { icons } from '@/plugins/icon/icons';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   (e: 'success'): void;
 }
 
@@ -56,12 +57,29 @@ const title = computed(() => {
   };
   return titles[props.type];
 });
-/* eslint-disable logical-assignment-operators */
-const parentOptions = computed(() => {
-  return props.tableList.map((item: CustomRoute.Route) => {
-    return JSON.parse(JSON.stringify(item));
+
+const parentOptions = ref<CustomRoute.Route[]>([]);
+
+async function getTableData() {
+  const { data } = await fetchElementList({
+    page: 1,
+    page_size: 99
   });
-});
+  if (data) {
+    const list: Api.Route.MenuRoute[] = data.list;
+    parentOptions.value = list;
+  }
+}
+
+getTableData();
+
+/* eslint-disable logical-assignment-operators */
+// const parentOptions = computed(() => {
+//   return props.tableList.map((item: CustomRoute.Route) => {
+//     return JSON.parse(JSON.stringify(item));
+//   });
+// });
+
 /* eslint-disable logical-assignment-operators */
 const formRef = ref<HTMLElement & FormInst>();
 
@@ -70,13 +88,13 @@ type FormModel = Pick<
   | 'parent_id'
   | 'element_code'
   | 'param1'
-  | 'param3'
   | 'element_type'
   | 'authority'
   | 'route_path'
   | 'remark'
   | 'multilingual'
   | 'param2'
+  | 'param3'
   | 'orders'
   | 'description'
 >;
@@ -94,9 +112,9 @@ function createDefaultFormModel(): FormModel {
     parent_id: '0',
     element_code: '',
     param1: '',
-    param3: 'basic',
     multilingual: 'default',
     param2: '',
+    param3: '0',
     orders: 1,
     description: '',
     element_type: 1,
@@ -166,6 +184,7 @@ watch(
             key-field="id"
           />
         </NFormItemGridItem>
+
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.title')" path="description">
           <NInput v-model:value="formModel.description" />
         </NFormItemGridItem>
@@ -178,12 +197,11 @@ watch(
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.path')" path="param1">
           <NInput v-model:value="formModel.param1" />
         </NFormItemGridItem>
+        <!--
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.route_path')">
           <NInput v-model:value="formModel.route_path" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.componentType')" path="param3">
-          <NSelect v-model:value="formModel.param3" :options="routeComponentTypeOptions" />
-        </NFormItemGridItem>
+        -->
         <NFormItemGridItem :span="12" :label="$t('page.manage.menu.form.icon')" path="param2">
           <IconSelect v-model:value="formModel.param2" :icons="icons" />
         </NFormItemGridItem>
@@ -206,13 +224,20 @@ watch(
             </NSpace>
           </NCheckboxGroup>
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('common.remark')">
+        <NFormItemGridItem :span="12" :label="$t('page.manage.menu.hideInMenu')" path="param3">
+          <n-switch v-model:value="formModel.param3" checked-value="1" unchecked-value="0" />
+        </NFormItemGridItem>
+        <NFormItemGridItem :span="24" :label="$t('common.description')">
           <NInput v-model:value="formModel.remark" type="textarea" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">{{ common_cancel }}</NButton>
-        <NButton class="w-72px" type="primary" @click="handleSubmit">{{ common_confirm }}</NButton>
+        <NButton class="w-72px" @click="closeModal">
+          {{ common_cancel }}
+        </NButton>
+        <NButton class="w-72px" type="primary" @click="handleSubmit">
+          {{ common_confirm }}
+        </NButton>
       </NSpace>
     </NForm>
   </NModal>

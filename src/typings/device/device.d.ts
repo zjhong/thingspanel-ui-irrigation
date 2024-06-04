@@ -49,7 +49,7 @@ declare namespace DeviceManagement {
     device_type: number;
     group_id: string;
     is_enabled: string;
-    lable: string;
+    label: string;
     name: string;
     product_id: string;
     protocol: string;
@@ -72,12 +72,13 @@ declare namespace DeviceManagement {
     device_number: string; // 设备编号
     product_id: string; // 产品id
     parent_id: string; // 网关id
-    lable: string; // 标签 单标签，英文逗号隔开
+    label: string; // 标签 单标签，英文逗号隔开
     location: string; // 地理位置
     sub_device_addr: string; // 子设备地址
     current_version: string; // 固件版本
     additional_info: string; // 附件信息 json字符串
     protocol_config: string; // 协议插件设备配置 协议插件相关的设备配置
+    device_config_name: string;
     remark1: string;
     remark2: string;
     remark3: string;
@@ -94,6 +95,7 @@ declare namespace DeviceManagement {
     ts: string;
     value: number;
     unit: string;
+    label: string;
     name: string;
   }
 

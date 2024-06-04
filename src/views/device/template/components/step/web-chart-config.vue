@@ -49,7 +49,9 @@ const next = async () => {
   });
 
   if (web_chart_config.value.length < 1 || flag) {
-    window.NMessage.error(flag ? `第${theIndex + 1}个图表没有配任何指标` : '至少选择一个图表');
+    window.NMessage.error(
+      flag ? `${$t('common.section')}${theIndex + 1}${$t('common.accompaniedIndicators')}` : $t('common.leastOneChart')
+    );
   } else {
     const res = await getTemplat(props.deviceTemplateId);
     await putTemplat({ ...res.data, web_chart_config: JSON.stringify(web_chart_config.value) });
@@ -62,8 +64,8 @@ const next = async () => {
   <div>
     <templatePanel :template-id="props.deviceTemplateId" :is-app="false" />
     <div class="box1 m-t2">
-      <NButton @click="next">{{ $t('device_template.nextStep') }}</NButton>
-      <NButton class="m-r3" @click="back">{{ $t('device_template.back') }}</NButton>
+      <NButton type="primary" @click="next">{{ $t('device_template.nextStep') }}</NButton>
+      <NButton class="m-r3" ghost type="primary" @click="back">{{ $t('device_template.back') }}</NButton>
       <NButton class="m-r3" @click="cancellation">{{ $t('device_template.cancellation') }}</NButton>
     </div>
   </div>

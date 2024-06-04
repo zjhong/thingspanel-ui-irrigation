@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace, NSwitch } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
@@ -10,6 +10,7 @@ import {
   putNotificationGroup
 } from '@/service/api/notification';
 import { notificationOptions } from '@/constants/business';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks';
@@ -60,7 +61,9 @@ const handleSwitchChange = async (row, value) => {
 };
 const handleDeleteTable = async (rowId: string) => {
   await deleteNotificationGroup({ id: rowId });
-  window.$message?.info('已删除当前通知组');
+
+  window.$message?.info($t('generate.notificationGroup'));
+  getTableData();
 };
 const editData = ref<Api.Alarm.NotificationGroupList | null>(null);
 const handleEditTable = async (rowId: string) => {
@@ -74,13 +77,15 @@ const handleEditTable = async (rowId: string) => {
 const columns = ref([
   {
     key: 'name',
-    title: '通知组名称',
+    title: $t('generate.notification-group-name'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
-    title: '通知类型',
+    title: $t('generate.notification-type'),
     align: 'left',
+    minWidth: '140px',
     render: (row: any) => {
       const notificationType = notificationOptions.find(option => option.value === row.notification_type)?.label || '';
       return notificationType;
@@ -88,29 +93,30 @@ const columns = ref([
   },
   {
     key: 'status',
-    title: '状态',
+    title: $t('generate.status'),
     align: 'left',
+    minWidth: '140px',
     render: (row: any) => {
       return <NSwitch value={row.status === 'OPEN'} onChange={value => handleSwitchChange(row, value)} />;
     }
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -132,22 +138,27 @@ function handleAddTable() {
   setModalType('add');
 }
 
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="通知组" :bordered="false" class="h-full rounded-8px shadow-sm">
+  <div>
+    <NCard :title="$t('generate.notification-group')">
       <template #header-extra>
-        <NButton type="primary" @click="handleAddTable">新增</NButton>
+        <NButton type="primary" @click="handleAddTable">+{{ $t('device_template.add') }}</NButton>
       </template>
       <div class="h-full flex-col">
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
+        <NDataTable :columns="columns" :data="tableData" :loading="loading" />
         <div class="pagination-box">
           <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
         </div>
         <TableActionModal
           v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
           :type="modalType"
           :edit-data="editData"
           @get-table-data="getTableData"

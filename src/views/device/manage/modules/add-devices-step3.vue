@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { $t } from '@/locales';
+
 const props = defineProps<{
   isSuccess: boolean;
   closeCallback: () => void;
@@ -8,15 +10,25 @@ console.log(props);
 </script>
 
 <template>
-  <n-result v-if="isSuccess" status="success" title="成功" description="设备配成功">
+  <n-result
+    v-if="isSuccess"
+    status="success"
+    :title="$t('custom.devicePage.success')"
+    :description="$t('custom.devicePage.deviceConfigSuccess')"
+  >
     <template #footer>
-      <n-button @click="closeCallback">关闭</n-button>
+      <n-button @click="closeCallback">{{ $t('custom.devicePage.close') }}</n-button>
     </template>
   </n-result>
-  <n-result v-if="!isSuccess" status="error" title="失败" description="设备配遇到问题，请返回重试">
+  <n-result
+    v-if="!isSuccess"
+    status="error"
+    :title="$t('custom.devicePage.fail')"
+    :description="$t('custom.devicePage.deviceConfigFail')"
+  >
     <template #footer>
-      <n-button @click="backCallback">返回</n-button>
-      <n-button @click="closeCallback">关闭</n-button>
+      <n-button @click="backCallback">{{ $t('custom.devicePage.back') }}</n-button>
+      <n-button @click="closeCallback">{{ $t('custom.devicePage.close') }}</n-button>
     </template>
   </n-result>
 </template>

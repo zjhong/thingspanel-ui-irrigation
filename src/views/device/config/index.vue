@@ -5,6 +5,8 @@ import { IosSearch } from '@vicons/ionicons4';
 import type { LastLevelRouteKey } from '@elegant-router/types';
 import { deviceConfig } from '@/service/api/device';
 import { useRouterPush } from '@/hooks/common/router';
+import { $t } from '@/locales';
+
 const { routerPushByKey } = useRouterPush();
 
 const showModal = () => {
@@ -29,6 +31,13 @@ const handleQuery = async () => {
   deviceConfigList.value = [];
   await getData();
 };
+
+const handleClearQuery = async () => {
+  queryData.value.page = 1;
+  queryData.value.name = '';
+  deviceConfigList.value = [];
+  await getData();
+};
 // 页面跳转
 const goRouter = (name: LastLevelRouteKey, id: string) => {
   routerPushByKey(name, { query: { id } });
@@ -40,17 +49,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full w-full">
-    <NCard :bordered="false">
+  <div>
+    <NCard>
       <NFlex justify="space-between" class="mb-4">
-        <NButton type="primary" @click="showModal()">+创建设备配置</NButton>
+        <NButton type="primary" @click="showModal()">{{ $t('generate.createDeviceConfig') }}</NButton>
         <NFlex align="center" justify="flex-end" :wrap="false">
           <NInput
             v-model:value="queryData.name"
-            placeholder="请输入配置名称"
+            :placeholder="$t('generate.enter-config-name')"
             type="text"
             clearable
-            @clear="handleQuery"
+            @clear="handleClearQuery"
             @keydown.enter="handleQuery"
           >
             <template #prefix>
@@ -59,33 +68,32 @@ onMounted(() => {
               </NIcon>
             </template>
           </NInput>
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </NFlex>
       </NFlex>
       <n-empty
         v-if="deviceConfigList.length === 0"
         size="huge"
-        description="暂无数据"
+        :description="$t('common.nodata')"
         class="min-h-60 justify-center"
       ></n-empty>
       <template v-else>
-        <NGrid x-gap="24" y-gap="16" :cols="24">
-          <NGridItem
-            v-for="item in deviceConfigList"
-            :key="item.id"
-            :span="6"
-            @click="goRouter('device_config-detail', item.id)"
-          >
-            <NCard hoverable>
-              <div class="text-16px font-600">
+        <NGrid x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+          <NGridItem v-for="item in deviceConfigList" :key="item.id" @click="goRouter('device_config-detail', item.id)">
+            <NCard hoverable style="height: 160px">
+              <div class="title text-16px font-600">
                 {{ item.name }}
               </div>
               <NFlex justify="space-between" align="center" class="mt-4">
-                <div>{{ item.device_count }}个设备</div>
                 <div>
-                  <template v-if="item.device_type === '1'">直连设备</template>
-                  <template v-if="item.device_type === '2'">网关</template>
-                  <template v-if="item.device_type === '3'">网关子设备</template>
+                  {{ item.device_count }}
+                  <span>{{ $t('generate.individual') }}</span>
+                  <span>{{ $t('generate.device') }}</span>
+                </div>
+                <div>
+                  <template v-if="item.device_type === '1'">{{ $t('generate.direct-connected-device') }}</template>
+                  <template v-if="item.device_type === '2'">{{ $t('generate.gateway') }}</template>
+                  <template v-if="item.device_type === '3'">{{ $t('generate.gateway-sub-device') }}</template>
                 </div>
               </NFlex>
             </NCard>
@@ -112,6 +120,7 @@ onMounted(() => {
   align-items: center;
   flex-wrap: wrap;
   padding: 10px 0;
+
   .config-item {
     //height: 120px;
     //width: 25%;
@@ -125,5 +134,12 @@ onMounted(() => {
     cursor: pointer;
     border-radius: 12px;
   }
+}
+
+.title {
+  height: 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

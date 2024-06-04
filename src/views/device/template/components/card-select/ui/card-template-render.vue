@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ICardData, ICardView } from '@/components/panel/card';
 import './gird.css';
+import { $t } from '@/locales';
 import CardTemplateItem from './card-template-item.vue';
 
 const props = defineProps<{
@@ -43,7 +44,7 @@ const removeLayout = (i: any) => {
 </script>
 
 <template>
-  <div :class="props.isApp ? 'screena overflow-auto h-[600px]' : ''">
+  <div :class="props.isApp ? 'screena overflow-auto h-[600px]' : 'window-screen'">
     <div :class="props.isApp ? 'm-auto w-480px smartphone overflow-auto' : 'w-full relative'">
       <n-grid :cols="props.isApp ? 1 : 2" x-gap="12" y-gap="12" class="screena relative w-full overflow-auto">
         <n-gi v-for="item in layout" :key="item?.data?.cardId">
@@ -67,7 +68,7 @@ const removeLayout = (i: any) => {
                   <SvgIcon icon="material-symbols:delete-outline" class="text-base" />
                 </NIcon>
               </template>
-              <span>确认删除看板。</span>
+              <span>{{ $t('generate.confirm-delete-dashboard') }}</span>
             </NPopconfirm>
             <CardTemplateItem :data="item.data!" />
           </div>

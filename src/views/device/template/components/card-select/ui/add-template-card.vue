@@ -41,11 +41,14 @@ const message = useMessage();
 const save = () => {
   if (!state?.curCardData?.cardId) {
     message.destroyAll();
-    message.warning('请先选一个卡片');
+    message.warning($t('common.selectCardFirst'));
     return;
   }
 
   emit('update:open', false);
+  const deviceSource = state.curCardData.dataSource.deviceSource[0];
+  const cardId = state.curCardData.cardId;
+  state.curCardData.cardId = `${cardId}-${deviceSource.metricsId}`;
   emit('save', JSON.parse(JSON.stringify(state.curCardData)));
 };
 watch(props, pr => {
@@ -73,16 +76,20 @@ watch(props, pr => {
   <NModal
     :show="open"
     preset="dialog"
-    title="配置"
+    :title="$t('generate.configuration')"
     size="huge"
-    :style="{ width: 'calc(100vw - 180px)', height: 'calc(100vh - 50px)', minWidth: '882px' }"
+    :style="{
+      width: 'calc(100vw - 180px)',
+      height: 'calc(100vh - 50px)',
+      minWidth: '882px'
+    }"
     @close="emit('update:open', false)"
     @mask-click="emit('update:open', false)"
   >
     <div class="h-[calc(100vh_-_170px)] w-full flex">
       <div class="relative h-full flex flex-col flex-[44] overflow-hidden p-4">
         <NTabs type="line" default-value="chart" animated class="h-full">
-          <NTabPane class="h-full" name="chart" value="chart" tab="图表">
+          <NTabPane class="h-full" name="chart" value="chart" :tab="$t('common.chart')">
             <n-scrollbar style="height: 100%; padding: 4px">
               <n-grid :x-gap="10" :y-gap="10" cols="1 240:1 480:2 720:3">
                 <n-gi v-for="item in PanelCards.chart" :key="item.id" class="min-w-240px">
@@ -91,7 +98,9 @@ watch(props, pr => {
                     :style="item.id === state?.curCardData?.cardId ? 'border-color: #2d3d88' : 'border-color: #f6f9f8'"
                     @click="selectCard(item)"
                   >
-                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">{{ $t(item.title) }}</div>
+                    <div class="text-center font-medium leading-8 dark:bg-zinc-900">
+                      {{ $t(item.title) }}
+                    </div>
                     <div class="h-148px w-full">
                       <img :src="item.poster" alt="" style="width: 100%; height: 100%; object-fit: contain" />
                     </div>
@@ -110,8 +119,8 @@ watch(props, pr => {
     </div>
     <div class="h-60px flex flex-center border-t">
       <div>
-        <NButton class="mr-4" @click="emit('update:open', false)">取消</NButton>
-        <NButton class="mr-4" type="primary" @click="save">确认</NButton>
+        <NButton class="mr-4" @click="emit('update:open', false)">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="mr-4" type="primary" @click="save">{{ $t('generate.confirm') }}</NButton>
       </div>
     </div>
   </NModal>

@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { $t } from '@/locales';
+</script>
 
 <template>
-  <div>three</div>
+  <div>{{ $t('generate.thirdElement') }}</div>
 </template>
 
 <style scoped></style>

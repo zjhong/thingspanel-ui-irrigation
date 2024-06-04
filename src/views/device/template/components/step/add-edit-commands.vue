@@ -125,7 +125,7 @@ const col: Ref<DataTableColumns<AddDeviceModel.Device>> = ref([
   }
 ]);
 
-console.log(props.objItem, '测试');
+console.log(props.objItem, $t('common.test'));
 
 // 提交表单
 const formRef: any = ref(null);
@@ -274,7 +274,7 @@ const parameterSubmit: () => void = async () => {
       </n-grid>
     </n-form-item>
     <div class="box">
-      <NButton class="box-btn" @click="addParams">
+      <NButton class="box-btn" type="primary" @click="addParams">
         <template #icon>
           <SvgIcon local-icon="add" class="more" />
         </template>
@@ -292,7 +292,7 @@ const parameterSubmit: () => void = async () => {
   </n-form>
   <div class="box2">
     <NButton class="m-r3" @click="clear">{{ $t('device_template.cancellation') }}</NButton>
-    <NButton @click="submit">{{ $t('device_template.confirm') }}</NButton>
+    <NButton type="primary" @click="submit">{{ $t('device_template.confirm') }}</NButton>
   </div>
   <NModal
     v-model:show="addParameter"
@@ -339,7 +339,7 @@ const parameterSubmit: () => void = async () => {
     </n-form>
     <div class="box2">
       <NButton class="m-r3" @click="addParameter = false">{{ $t('device_template.cancellation') }}</NButton>
-      <NButton @click="parameterSubmit">{{ $t('device_template.confirm') }}</NButton>
+      <NButton type="primary" @click="parameterSubmit">{{ $t('device_template.confirm') }}</NButton>
     </div>
   </NModal>
 </template>

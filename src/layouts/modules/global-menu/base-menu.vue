@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, h, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { NTooltip } from 'naive-ui';
 import type { MentionOption, MenuProps } from 'naive-ui';
 import { SimpleScrollbar } from '@sa/materials';
 import type { RouteKey } from '@elegant-router/types';
@@ -61,6 +62,19 @@ function handleClickMenu(key: RouteKey) {
   routerPushByKey(key);
 }
 
+const renderMenuLabel = op => {
+  if (op.remark) {
+    return h(
+      NTooltip,
+      { trigger: 'hover' },
+      {
+        default: op.remark,
+        trigger: op.label
+      }
+    );
+  }
+  return op.label as string;
+};
 watch(
   () => route.name,
   () => {
@@ -80,6 +94,7 @@ watch(
       :collapsed-width="themeStore.sider.collapsedWidth"
       :collapsed-icon-size="22"
       :options="naiveMenus"
+      :render-label="renderMenuLabel"
       :inverted="darkTheme"
       :indent="18"
       responsive

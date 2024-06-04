@@ -4,6 +4,7 @@ import type { DataTableColumns, DataTableRowKey, PaginationProps } from 'naive-u
 import { NDataTable } from 'naive-ui';
 import { deviceGroupRelation, deviceList } from '@/service/api/device';
 import { createDeviceColumns } from '@/views/device/modules/all-columns';
+import { $t } from '@/locales';
 
 // eslint-disable-next-line vue/define-emits-declaration
 const emit = defineEmits(['closed_modal', 'refresh_data']);
@@ -95,12 +96,12 @@ onMounted(getDeviceList);
   <NFlex justify="end" class="mt-5" align="center">
     <NFlex align="center">
       <div class="text-16px">
-        已选择
+        {{ $t('generate.selected') }}
         <span class="text-blue-4">{{ checkedRowKeysRef.length }}</span>
-        个设备。
+        {{ $t('generate.number-of-devices') }}
       </div>
-      <NButton type="info" @click="closeModal">取消</NButton>
-      <NButton type="primary" @click="submit_data">确定</NButton>
+      <NButton type="info" @click="closeModal">{{ $t('custom.grouping_details.cancel') }}</NButton>
+      <NButton type="primary" @click="submit_data">{{ $t('custom.grouping_details.confirm') }}</NButton>
     </NFlex>
   </NFlex>
 </template>

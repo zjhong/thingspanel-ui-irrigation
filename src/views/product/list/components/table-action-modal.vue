@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+/* ————————————————————————————————————————————— 产品编辑与新增弹窗 ——————————————————————————————————————————————— */
+import { computed, getCurrentInstance, reactive, ref, watch } from 'vue';
 import type { FormInst, FormItemRule } from 'naive-ui';
 import { createRequiredFormRule } from '@/utils/form/rule';
+import { getDeviceConfigList } from '@/service/api/device';
+import { dictQuery } from '@/service/api/setting';
 import UploadCard from './upload-card.vue';
 import { $t } from '~/src/locales';
-import { addProduct, editProduct, getDeviceList } from '~/src/service/product/list';
+import { addProduct, editProduct } from '~/src/service/product/list';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -26,6 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
+
   /** 点击协议 */
   (e: 'success'): void;
 }
@@ -46,8 +50,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: $t('page.product.list.addProduct'),
-    edit: $t('page.product.list.editProduct')
+    add: $t('page.product.list.addProduct'), // 新增产品
+    edit: $t('page.product.list.editProduct') // 编辑产品
   };
   return titles[props.type];
 });
@@ -55,20 +59,23 @@ const title = computed(() => {
 const formRef = ref<HTMLElement & FormInst>();
 const deviceOptions = ref();
 
-const getList = () => {
-  getDeviceList({
+const getList = async (name?: string) => {
+  const { data, error } = await getDeviceConfigList({
     page: 1,
-    page_size: 99
-  }).then(({ data }) => {
-    const list = data.list || [];
-    deviceOptions.value = list.map((item: any) => ({ label: item.name, value: item.id })) || [];
+    page_size: 99,
+    name
   });
+  if (!error && data) {
+    deviceOptions.value = data?.list?.map(item => {
+      return { label: item.name, value: item.id };
+    });
+  }
 };
 const formModel = reactive<productAdd>(createDefaultFormModel() as productAdd);
 
-const rules: Record<'name' | 'device_type', FormItemRule | FormItemRule[]> = {
+const rules: Record<'name' | 'product_type', FormItemRule | FormItemRule[]> = {
   name: createRequiredFormRule($t('page.product.list.productNamePlaceholder')),
-  device_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
+  product_type: createRequiredFormRule($t('page.product.list.productTypePlaceholder'))
 };
 
 function createDefaultFormModel() {
@@ -106,16 +113,27 @@ function handleUpdateFormModelByModalType() {
   handlers[props.type]();
 }
 
+const productOptions = ref([]);
+const getProductList = async (name?: string) => {
+  const res: any = await dictQuery({
+    page: 1,
+    page_size: 10,
+    dict_code: 'PRODUCT_TYPE',
+    name
+  });
+  productOptions.value = res.data || [];
+};
+
 async function handleSubmit() {
   await formRef.value?.validate();
   let data: any;
   if (props.type === 'add') {
-    data = await addProduct({ ...formModel, device_type: Number(formModel.device_type as string) });
+    data = await addProduct(formModel);
   } else if (props.type === 'edit') {
     data = await editProduct(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
+    // window.$message?.success(data.msg || data.message || $t('page.product.list.success'));
     emit('success');
   }
   closeModal();
@@ -129,39 +147,84 @@ watch(
     }
   }
 );
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" :on-after-enter="getList" :title="title" class="w-700px">
-    <NForm ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
-      <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.productName')" path="name">
-          <NInput v-model:value="formModel.name" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceType')" path="device_type">
-          <NInput v-model:value="formModel.device_type" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.productNumber')" path="product_model">
-          <NInput v-model:value="formModel.product_model" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.deviceConfig')" path="device_config_id">
-          <NSelect v-model:value="formModel.device_config_id" :options="deviceOptions" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="12" :label="$t('page.product.list.productKey')" path="product_key">
-          <NInput v-model:value="formModel.product_key" />
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.product.list.productImage')" path="image_url">
-          <UploadCard
-            v-model:value="formModel.image_url"
-            accept="image/png, image/jpeg, image/jpg"
-            class="mt-10px"
-            :file-type="['jpg', 'png', 'jpeg']"
-          ></UploadCard>
-        </NFormItemGridItem>
-        <NFormItemGridItem :span="24" :label="$t('page.product.list.productDesc')" path="description">
-          <NInput v-model:value="formModel.description" />
-        </NFormItemGridItem>
-      </NGrid>
+  <NModal
+    v-model:show="modalVisible"
+    preset="card"
+    :on-after-enter="
+      () => {
+        getList(), getProductList();
+      }
+    "
+    :title="title"
+  >
+    <NForm
+      ref="formRef"
+      class="flex-wrap"
+      :class="getPlatform ? 'flex-col' : 'flex'"
+      label-placement="left"
+      :label-width="100"
+      :model="formModel"
+      :rules="rules"
+    >
+      <NFormItem :class="getPlatform ? '100%' : 'w-50%'" :label="$t('page.product.list.productName')" path="name">
+        <NInput v-model:value="formModel.name" />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.list.deviceType')"
+        path="product_type"
+      >
+        <NSelect
+          v-model:value="formModel.product_type"
+          filterable
+          :options="productOptions"
+          label-field="translation"
+          value-field="dict_value"
+          @search="getProductList"
+        />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.list.productNumber')"
+        path="product_model"
+      >
+        <NInput v-model:value="formModel.product_model" />
+      </NFormItem>
+      <NFormItem
+        :class="getPlatform ? '100%' : 'w-50%'"
+        :label="$t('page.product.list.deviceConfig')"
+        path="device_config_id"
+      >
+        <NSelect
+          v-model:value="formModel.device_config_id"
+          filterable
+          :disabled="props.type === 'edit'"
+          :options="deviceOptions"
+          @search="getList"
+        />
+      </NFormItem>
+      <NFormItem :class="getPlatform ? '100%' : 'w-50%'" :label="$t('page.product.list.productKey')" path="product_key">
+        <NInput v-model:value="formModel.product_key" :disabled="props.type === 'edit'" />
+      </NFormItem>
+      <NFormItem class="w-100%" :label="$t('page.product.list.productImage')" path="image_url">
+        <UploadCard
+          v-model:value="formModel.image_url"
+          accept="image/png, image/jpeg, image/jpg"
+          class="mt-10px"
+          :file-type="['jpg', 'png', 'jpeg']"
+        ></UploadCard>
+      </NFormItem>
+      <NFormItem class="w-100%" :label="$t('page.product.list.productDesc')" path="description">
+        <NInput v-model:value="formModel.description" />
+      </NFormItem>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
         <NButton class="w-72px" @click="closeModal">{{ $t('common.cancel') }}</NButton>
         <NButton class="w-72px" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>

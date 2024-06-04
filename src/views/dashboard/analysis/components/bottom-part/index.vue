@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h } from 'vue';
 import { NTag } from 'naive-ui';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'DashboardAnalysisBottomPart' });
 
@@ -23,7 +24,7 @@ const timelines: TimelineData[] = [
   { type: 'default', title: '啊', content: '', time: '2021-10-10 20:46' },
   {
     type: 'success',
-    title: '成功',
+    title: $t('custom.devicePage.success'),
     content: '哪里成功',
     time: '2021-10-10 20:46'
   },
@@ -134,14 +135,14 @@ const tableData: TableData[] = [
 <template>
   <NGrid :x-gap="16" :y-gap="16" :item-responsive="true">
     <NGridItem span="0:24 640:24 1024:8">
-      <NCard title="时间线" :bordered="false" class="h-full rounded-8px shadow-sm">
+      <NCard :title="$t('generate.timeline')" :bordered="false" class="h-full rounded-8px shadow-sm">
         <NTimeline>
           <NTimelineItem v-for="item in timelines" :key="item.type" v-bind="item" />
         </NTimeline>
       </NCard>
     </NGridItem>
     <NGridItem span="0:24 640:24 1024:16">
-      <NCard title="表格" :bordered="false" class="h-full rounded-8px shadow-sm">
+      <NCard :title="$t('generate.table')" :bordered="false" class="h-full rounded-8px shadow-sm">
         <NDataTable size="small" :columns="columns" :data="tableData" />
       </NCard>
     </NGridItem>

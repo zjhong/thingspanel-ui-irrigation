@@ -36,10 +36,11 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
     {
       type: 'selection',
       align: 'center',
-      width: 48
+      minWidth: '140px'
     },
     {
       key: 'id',
+      minWidth: '140px',
       title: $t('page.manage.menu.id'),
       align: 'center'
     },
@@ -47,7 +48,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'menuType',
       title: $t('page.manage.menu.menuType'),
       align: 'center',
-      width: 80,
+      minWidth: '140px',
       render: row => {
         const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
           1: 'default',
@@ -63,7 +64,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'menuName',
       title: $t('page.manage.menu.menuName'),
       align: 'center',
-      minWidth: 120,
+      minWidth: '140px',
       render: row => {
         const { i18nKey, menuName } = row;
 
@@ -76,7 +77,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'icon',
       title: $t('page.manage.menu.icon'),
       align: 'center',
-      width: 60,
+      minWidth: '140px',
       render: row => {
         const icon = row.iconType === '1' ? row.icon : undefined;
 
@@ -93,7 +94,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'routeName',
       title: $t('page.manage.menu.routeName'),
       align: 'center',
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'routePath',
@@ -105,7 +106,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'status',
       title: $t('page.manage.menu.menuStatus'),
       align: 'center',
-      width: 80,
+      minWidth: '140px',
       render: row => {
         if (row.status === null) {
           return null;
@@ -125,7 +126,7 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
       key: 'hideInMenu',
       title: $t('page.manage.menu.hideInMenu'),
       align: 'center',
-      width: 80,
+      minWidth: '140px',
       render: row => {
         const hide: CommonType.YesOrNo = row.hideInMenu ? 'Y' : 'N';
 
@@ -142,20 +143,20 @@ const { columns, filteredColumns, data, loading, pagination, getData } = useTabl
     {
       key: 'parentId',
       title: $t('page.manage.menu.parentId'),
-      width: 90,
+      minWidth: '140px',
       align: 'center'
     },
     {
       key: 'order',
       title: $t('page.manage.menu.order'),
       align: 'center',
-      width: 60
+      minWidth: '140px'
     },
     {
       key: 'operate',
-      title: $t('common.operate'),
+      title: $t('common.action'),
       align: 'center',
-      width: 230,
+      minWidth: '140px',
       render: row => (
         <div class="flex-center justify-end gap-8px">
           {row.menuType === '1' && (
@@ -193,7 +194,7 @@ const checkedRowKeys = ref<string[]>([]);
 
 async function handleBatchDelete() {
   // requestTs
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -219,7 +220,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

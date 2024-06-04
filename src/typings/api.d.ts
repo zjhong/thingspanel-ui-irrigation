@@ -70,6 +70,7 @@ declare namespace Api {
     interface LoginToken {
       token: string;
       refreshToken: string;
+      expires_in: number;
     }
 
     /** 用户信息 */
@@ -108,12 +109,13 @@ declare namespace Api {
       element_code: string;
       /** 组件路径 */
       param1: string;
-      /** 组件类型 */
-      param3: 'basic' | 'blank' | 'multi' | 'self' | 'base';
+      /** 是否隐藏 0 1 */
+      param3: string;
       /** 排序 */
       orders: number;
       /** 类型 */
-      element_type: 1 | 2 | 3 | 4 | 5;
+      // element_type: 1 | 2 | 3 | 4 | 5;
+      element_type: 1 | 3;
       /** 访问标识 */
       authority: any;
       /** 描述 */
@@ -412,7 +414,9 @@ declare namespace Api {
       /** 备注 */
       remark: string | null;
       /** 创建时间 */
-      createTime: string | null;
+      created_at: string | null;
+      /** 更新時間 */
+      updated_at: string | null;
     }
 
     interface Data {
@@ -560,6 +564,23 @@ declare namespace Api {
       send_target?: string;
       send_time_start?: string;
       send_time_stop?: string;
+    }
+  }
+  /** 灌溉计划 */
+  namespace Irrigation {
+    interface AddTimeIrrigation {
+      name: string | null;
+      space_id: string | null;
+      district_id: string | null;
+      device_id: string | null;
+      irrigation_time: string | null;
+      schedule: string | null;
+      control_type: string | null;
+      irrigation_duration: number | null;
+      valve_opening: number | null;
+      status?: string | null;
+      remark: string | null;
+      [key: string]: any;
     }
   }
 }

@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { getCurrentInstance, ref, watch } from 'vue';
 // eslint-disable-next-line import/order
-import { createServiceConfig } from '~/env.config';
 import type { UploadFileInfo } from 'naive-ui';
+import { getDemoServerUrl, getFileName } from '@/utils/common/tool';
 import { localStg } from '@/utils/storage';
-import { getFileName } from '@/utils/common/tool';
-
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-const url = ref(new URL(otherBaseURL.demo));
+import { $t } from '@/locales';
+const url = ref(new URL(getDemoServerUrl()));
 defineOptions({ name: 'UploadFile' });
 
 const { proxy } = getCurrentInstance() as any;
@@ -70,7 +68,7 @@ async function beforeUpload(data: { file: UploadFileInfo }) {
     isImg = true;
   }
   if (!isImg) {
-    window.$message?.error(`文件格式不正确, 请上传${props.fileType.join('/')}图片格式文件!`);
+    window.$message?.error(`${$t('common.pleaseUploadit')}${props.fileType.join('/')}${$t('common.formatFile')}`);
     return false;
   }
   return true;

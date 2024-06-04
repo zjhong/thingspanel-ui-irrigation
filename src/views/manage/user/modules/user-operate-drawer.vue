@@ -4,6 +4,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { fetchGetAllRoles } from '@/service/api';
 import { $t } from '@/locales';
 import { enableStatusOptions, userGenderOptions } from '@/constants/business';
+
 defineOptions({
   name: 'UserOperateDrawer'
 });
@@ -76,7 +77,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 const roleOptions = ref<CommonType.Option<string>[]>([]);
 
 async function getRoleOptions() {
-  const { error, data } = await fetchGetAllRoles();
+  const { error, data } = await fetchGetAllRoles({ page: 1, page_size: 10 });
 
   if (!error) {
     const options = data.map(item => ({
@@ -114,7 +115,7 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   // requestTs
-  window.$message?.success($t('common.updateSuccess'));
+  // window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

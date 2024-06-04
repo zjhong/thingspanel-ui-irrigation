@@ -1,6 +1,7 @@
 <script lang="tsx" setup>
 import type { Ref } from 'vue';
 import { inject, onMounted, onUpdated, reactive, ref, watch } from 'vue';
+import { $t } from '@/locales';
 import { usePanelStore } from '@/store/modules/panel';
 import type { ICardData, ICardDefine } from '@/components/panel/card';
 import { deviceModelSourceForPanel } from '@/service/api';
@@ -73,14 +74,17 @@ const transformForTransfer = data => {
   return transformed;
 };
 const getPanelList = async () => {
-  const res = await deviceModelSourceForPanel({ id: deviceTemplateId?.value || '' });
+  const res = await deviceModelSourceForPanel({
+    id: deviceTemplateId?.value || ''
+  });
   indicateOption.value = transformForTransfer(res?.data || []);
 };
 
 const changeIndicate = value => {
   // eslint-disable-next-line no-param-reassign
+  value = value.filter(item => item !== undefined);
   if (value.length > state.data.dataSource.sourceNum) {
-    window.NMessage.error(`最多选择${state.data.dataSource.sourceNum}个数据源`);
+    window.NMessage.error($t('common.maxSelect') + state.data.dataSource.sourceNum + $t('common.dataSources'));
   }
   if (state.data.dataSource.sourceNum === 1) {
     indicateValue.value = [value[value.length - 1]];
@@ -89,6 +93,7 @@ const changeIndicate = value => {
   }
   state.data.dataSource.deviceCount = indicateValue.value.length;
   state.data.dataSource.deviceSource = [];
+  // const cardId: any = state.data.cardId;
   indicateValue.value.forEach(item => {
     const arr = item?.split('-') || [];
     if (arr.length > 0) {
@@ -97,7 +102,7 @@ const changeIndicate = value => {
         metricsName: arr[1],
         metricsType: arr[0]
       };
-
+      // state.data.cardId = cardId + "-" + arr[2];
       state.data.dataSource.deviceSource.push(obj);
     }
   });
@@ -148,6 +153,7 @@ onMounted(() => {
 
 <style scoped>
 .custom-select-container .v-binder-follower-container {
-  width: 300px !important; /* 只会影响该组件内的 NSelect 下拉宽度 */
+  width: 300px !important;
+  /* 只会影响该组件内的 NSelect 下拉宽度 */
 }
 </style>

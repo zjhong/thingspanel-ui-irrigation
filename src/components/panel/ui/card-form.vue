@@ -5,6 +5,7 @@ import { usePanelStore } from '@/store/modules/panel';
 import ConfigCtx from '@/components/panel/ui/config-ctx.vue';
 import type { ICardData, ICardDefine } from '@/components/panel/card';
 import { deviceListForPanel, deviceMetricsList } from '@/service/api';
+import { $t } from '@/locales';
 
 const copy = (obj: object) => JSON.parse(JSON.stringify(obj));
 
@@ -12,11 +13,6 @@ const props = defineProps<{
   mobile?: boolean;
   deviceWebChartConfig: any;
 }>();
-const systemNorm = [
-  { label: '设备总数', value: 1 },
-  { label: '在线设备数量', value: 2 },
-  { label: '离线设备数量', value: 3 }
-];
 const store = usePanelStore();
 const defData = {
   cardId: '',
@@ -35,6 +31,11 @@ const state = reactive({
   selectCard: null as null | ICardDefine,
   data: copy(defData)
 });
+const findCard = (id: string) => {
+  const cIds = id.split('-');
+  const cId = `${cIds[0]}-${cIds[1]}`;
+  return store.$state.cardMap.get(cId) || null;
+};
 
 const emit = defineEmits<{
   (e: 'update', data: ICardData): void;
@@ -48,20 +49,12 @@ watch(
   { deep: true }
 );
 
-const removeSource = (i: number) => {
-  if (state.data.dataSource.origin === 'system') {
-    state.data.dataSource.systemSource.splice(i, 1);
-  } else {
-    state.data.dataSource.deviceSource.splice(i, 1);
-  }
-};
-
 defineExpose({
   setCard: (data?: ICardData) => {
     state.selectCard = null;
     state.data = copy(data || defData);
     setTimeout(() => {
-      state.selectCard = store.$state.cardMap.get(state.data.cardId) || null;
+      state.selectCard = findCard(state.data.cardId);
       if (state.data.type === 'chart') state.tab = 'dataSource';
       else if (state.selectCard?.configForm) state.tab = 'config';
       else state.tab = 'basic';
@@ -93,37 +86,42 @@ const getDeviceList = async () => {
 };
 
 const deviceSelectChange = async (v, item) => {
-  console.log(v);
   const res = await deviceMetricsList(v);
-  console.log(res.data);
   item.metricsOptions = res?.data || [];
 };
 const metricsOptionRender = (info, item) => {
   return (
-    <n-card
-      class="border-b border-#d9d9d9"
-      title={<span style="font-size: 16px;color:#999">{info?.option?.data_source_type}</span>}
-      bordered={false}
-    >
+    <div class="border-b border-#d9d9d9 p-x-10px p-y-15px">
+      <div class="m-b-5px">{<span style="font-size: 16px;color:#999">{info?.option?.data_source_type}</span>}</div>
       {info?.option?.options?.map(it => {
         return (
           <div
+            class="m-b-2px"
+            v-if="it.label"
             onClick={() => {
-              console.log(it);
               item.metricsId = it.key;
               item.metricsName = it.label || '';
-
               updateDropdownShow(false, item);
             }}
           >
-            <span class={it.key === item.metricsId ? 'mr-6 color-primary-700' : 'mr-2 color-#333'}>
-              {it.key}({it.label || '--'})
-            </span>
-            <span class="text-#999">{it.data_type} </span>
+            {it.label ? (
+              <div class="flex items-center gap-5px">
+                <div class="flex flex-1 items-center gap-5px">
+                  <span>{it.label}</span>
+                  <span class="color-#cccc">({it.key})</span>
+                </div>
+                <span class="text-#999">{it.data_type}</span>
+              </div>
+            ) : (
+              <div class="flex items-center gap-5px">
+                <span class="flex-1">{it.key}</span>
+                <span class="text-#999">{it.data_type}</span>
+              </div>
+            )}
           </div>
         );
       })}
-    </n-card>
+    </div>
   );
 };
 
@@ -160,54 +158,26 @@ watch(
       <NTabPane v-if="state.selectCard.type === 'chart'" name="dataSource" tab="数据源">
         <div :class="`${mobile ? '' : 'h-[calc(100vh_-_270px)] '} overflow-y-auto py-5`">
           <NForm>
-            <NFormItem label="数据源类型">
-              <NRadioGroup v-model:value="state.data.dataSource.origin" name="radiogroup">
-                <NSpace>
-                  <NRadioButton value="system">系统</NRadioButton>
-                  <NRadioButton value="device">设备</NRadioButton>
-                </NSpace>
-              </NRadioGroup>
-            </NFormItem>
-            <div v-if="state.data.dataSource?.origin === 'system'">
-              <div v-for="(item, i) in state.data.dataSource.systemSource" :key="i" class="mb-4 flex space-x-2">
-                <NSelect v-model:value="item.type" class="w-36" :options="systemNorm" />
-                <NInput v-model:value="item.name" placeholder="数据源名称" style="width: 200px" />
-                <NButton
-                  v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
-                  ghost
-                  tertiary
-                  type="warning"
-                  @click="removeSource(i)"
-                >
-                  <template #icon>
-                    <SvgIcon icon="material-symbols:delete-outline" />
-                  </template>
-                </NButton>
-              </div>
-              <NButton
-                v-if="typeof state.data.dataSource?.sourceNum !== 'number'"
-                block
-                @click="state.data.dataSource?.systemSource?.push({})"
-              >
-                添加
-              </NButton>
-            </div>
-            <div v-if="state.data.dataSource?.origin === 'device'">
+            <div v-if="state.data.dataSource?.origin === 'device' || state.data.dataSource?.origin === 'system'">
               <n-input-number
                 v-model:value="deviceCount"
                 :disabled="props?.deviceWebChartConfig?.length !== 0"
                 :min="1"
+                :hidden="true"
                 :max="state.data.dataSource.sourceNum || 9"
                 class="m-b-2 w-360px"
                 @update:value="deviceCountUpdate"
               >
-                <template #prefix><span class="text-#999">设备数量:</span></template>
+                <template #prefix>
+                  <span class="text-#999">{{ $t('generate.device-count') }}</span>
+                </template>
               </n-input-number>
 
               <div v-for="(item, i) in state.data.dataSource.deviceSource" :key="i" class="mb-4 flex space-x-2">
                 <NSelect
                   v-if="i <= deviceCount - 1"
                   v-model:value="item.deviceId"
+                  clearable
                   :disabled="props?.deviceWebChartConfig?.length !== 0"
                   class="w-120px"
                   :options="deviceOption"
@@ -215,12 +185,13 @@ watch(
                   value-field="id"
                   @update:value="value => deviceSelectChange(value, item)"
                 >
-                  <template #header>设备</template>
+                  <template #header>{{ $t('generate.device') }}</template>
                 </NSelect>
 
                 <NSelect
                   v-if="i <= deviceCount - 1"
                   v-model:value="item.metricsId"
+                  clearable
                   :disabled="props?.deviceWebChartConfig?.length !== 0"
                   class="w-225px"
                   :show="item.metricsShow"
@@ -235,20 +206,23 @@ watch(
         </div>
       </NTabPane>
       <NTabPane v-if="!!state.selectCard?.configForm" name="config" tab="组件设置">
-        <div :class="`${mobile ? '' : 'max-h-[calc(100vh_-_500px)] overflow-y-auto'} py-5`">
+        <div :class="`${mobile ? '' : 'overflow-y-auto'} py-5`">
           <div class="max-w-[600px]">
             <ConfigCtx v-model:config="state.data.config" mode="insert">
-              <component :is="state.selectCard?.configForm" />
+              <component :is="state.selectCard?.configForm" :data="state.data" />
+              <!-- v-model:data="state" -->
             </ConfigCtx>
           </div>
         </div>
       </NTabPane>
       <NTabPane name="basic" tab="基础设置">
         <NForm>
-          <NFormItem label="标题">
+          <NFormItem :label="$t('page.manage.menu.form.title')">
             <div class="flex items-center">
               <div class="w-36">
-                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">显示标题</NCheckbox>
+                <NCheckbox v-model:checked="state.data.basicSettings.showTitle">
+                  {{ $t('generate.display-title') }}
+                </NCheckbox>
               </div>
               <NInput
                 v-if="state.data.basicSettings.showTitle"
@@ -265,6 +239,7 @@ watch(
 
 <style scoped>
 .custom-select-container .v-binder-follower-container {
-  width: 300px !important; /* 只会影响该组件内的 NSelect 下拉宽度 */
+  width: 300px !important;
+  /* 只会影响该组件内的 NSelect 下拉宽度 */
 }
 </style>

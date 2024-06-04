@@ -9,6 +9,7 @@ import { $t } from '@/locales';
 import { enableStatusRecord } from '@/constants/business';
 import RoleOperateDrawer, { type OperateType } from './modules/role-operate-drawer.vue';
 import RoleSearch from './modules/role-search.vue';
+
 const appStore = useAppStore();
 const { bool: drawerVisible, setTrue: openDrawer } = useBoolean();
 
@@ -54,24 +55,24 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
       key: 'roleName',
       title: $t('page.manage.role.roleName'),
       align: 'center',
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'roleCode',
       title: $t('page.manage.role.roleCode'),
       align: 'center',
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'roleDesc',
       title: $t('page.manage.role.roleDesc'),
-      minWidth: 120
+      minWidth: '140px'
     },
     {
       key: 'status',
       title: $t('page.manage.role.roleStatus'),
       align: 'center',
-      width: 100,
+      minWidth: '140px',
       render: row => {
         if (row.status === null) {
           return null;
@@ -89,9 +90,9 @@ const { columns, filteredColumns, data, loading, pagination, getData, searchPara
     },
     {
       key: 'operate',
-      title: $t('common.operate'),
+      title: $t('common.action'),
       align: 'center',
-      width: 130,
+      minWidth: '180px',
       render: row => (
         <div class="flex-center gap-8px">
           <NButton type="primary" ghost size="small" onClick={() => handleEdit(row.id)}>
@@ -124,7 +125,7 @@ const checkedRowKeys = ref<string[]>([]);
 
 async function handleBatchDelete() {
   // requestTs
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   checkedRowKeys.value = [];
 
@@ -144,7 +145,7 @@ function handleEdit(id: number) {
 async function handleDelete(id: number) {
   // requestTs
   console.log(id);
-  window.$message?.success($t('common.deleteSuccess'));
+  // window.$message?.success($t('common.deleteSuccess'));
 
   getData();
 }

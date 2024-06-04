@@ -1,10 +1,11 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { getStaticUrl } from '@/utils/common/tool';
 import { getOtaTaskList } from '@/service/product/update-ota';
 import TableDeviceModal from './table-device-modal.vue';
@@ -14,14 +15,13 @@ import ColumnSetting from './column-setting.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: visibleTable, setTrue: openTable } = useBoolean();
-const props = defineProps({
+const props: any = defineProps({
   mid: {
     type: Number,
     required: true
   },
   record: {
     type: Object,
-    default: () => {},
     required: true
   }
 });
@@ -77,28 +77,36 @@ const columns: Ref<DataTableColumns<productDeviceRecord>> = ref([
   // 任务名称
   {
     key: 'name',
+    minWidth: '140px',
     title: $t('page.product.update-ota.taskName')
   },
   // 设备数量
   {
     key: 'device_count',
+    minWidth: '140px',
     title: $t('page.product.update-ota.deviceNum')
   },
   // 描述
   {
     key: 'description',
+    minWidth: '140px',
     title: $t('page.product.update-ota.desc')
   },
   // 创建日期
   {
     key: 'created_at',
-    title: $t('page.product.update-ota.createTime')
+    minWidth: '140px',
+    title: $t('page.product.update-ota.createTime'),
+    render: (row: any) => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'actions',
+    minWidth: '140px',
     title: $t('common.action'),
     align: 'center',
-    render: row => {
+    render: (row: any) => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row)}>
@@ -116,10 +124,9 @@ function setModalType(type: ModalType) {
   modalType.value = type;
 }
 
-const editData = ref<productDeviceRecord | null>(null);
-
+/** 添加升级任务 */
 function handleAddTable() {
-  editData.value = null;
+  // editData.value = null;
   openModal();
   setModalType('add');
 }
@@ -151,6 +158,11 @@ const downloadPackage = () => {
     window.open(url);
   }
 };
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
@@ -178,11 +190,11 @@ const downloadPackage = () => {
         </NSpace>
         <NDataTable
           v-if="activeTab === 'mission'"
-          remote
           :columns="columns"
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
+          remote
           flex-height
           class="flex-1-hidden"
         />
@@ -218,8 +230,19 @@ const downloadPackage = () => {
             </NGrid>
           </NForm>
         </div>
-        <TableDeviceModal v-model:visible="visible" :type="modalType" :pid="props.record.id" @success="getTableData" />
-        <TableDetailModal v-model:visible="visibleTable" :type="modalType" :edit-data="rowData" />
+        <TableDeviceModal
+          v-model:visible="visible"
+          :edit-data="props.record"
+          :type="modalType"
+          :pid="props.record.id"
+          @success="getTableData"
+        />
+        <TableDetailModal
+          v-model:visible="visibleTable"
+          :class="getPlatform ? 'w-90%' : ' w-1200px'"
+          :type="modalType"
+          :edit-data="rowData"
+        />
       </div>
     </NCard>
   </div>

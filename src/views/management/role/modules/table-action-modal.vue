@@ -6,6 +6,7 @@ import type { FormInst, FormItemRule } from 'naive-ui';
 // import { genderOptions } from '@/constants'
 import { createRequiredFormRule } from '@/utils/form/rule';
 import { addrles, editrles } from '@/service/api';
+import { $t } from '@/locales';
 
 // dom树形结构数据
 
@@ -50,8 +51,8 @@ const closeModal = () => {
 
 const title = computed(() => {
   const titles: Record<ModalType, string> = {
-    add: '新增角色',
-    edit: '编辑角色'
+    add: $t('page.manage.role.title'),
+    edit: $t('page.manage.role.editRole')
   };
   return titles[props.type];
 });
@@ -98,6 +99,8 @@ function handleUpdateFormModelByModalType() {
 
 async function handleSubmit() {
   await formRef.value?.validate();
+
+  closeModal();
   let data: any;
   if (props.type === 'add') {
     data = await addrles(formModel);
@@ -105,10 +108,8 @@ async function handleSubmit() {
     data = await editrles(formModel);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
     emit('success');
   }
-  closeModal();
 }
 
 watch(
@@ -122,23 +123,17 @@ watch(
 </script>
 
 <template>
-  <n-modal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
+  <n-modal v-model:show="modalVisible" preset="card" :title="title">
     <n-form ref="formRef" label-placement="left" :label-width="80" :model="formModel" :rules="rules">
-      <n-grid :cols="24" :x-gap="18">
-        <n-form-item-grid-item :span="24" label="角色名称" path="name">
-          <n-input v-model:value="formModel.name" />
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="选择权限" path="email">
-          <n-tree-select multiple :options="[]" />
-          <!-- @update:value="handleUpdateValue" -->
-        </n-form-item-grid-item>
-        <n-form-item-grid-item :span="24" label="角色描述">
-          <n-input v-model:value="formModel.description" type="textarea" />
-        </n-form-item-grid-item>
-      </n-grid>
+      <n-form-item :label="$t('page.manage.role.roleName')" path="name">
+        <n-input v-model:value="formModel.name" />
+      </n-form-item>
+      <n-form-item :label="$t('generate.role-description')">
+        <n-input v-model:value="formModel.description" type="textarea" />
+      </n-form-item>
       <n-space class="w-full pt-16px" :size="24" justify="end">
-        <n-button class="w-72px" @click="closeModal">取消</n-button>
-        <n-button class="w-72px" type="primary" @click="handleSubmit">确定</n-button>
+        <n-button class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</n-button>
+        <n-button class="w-72px" type="primary" @click="handleSubmit">{{ $t('page.login.common.confirm') }}</n-button>
       </n-space>
     </n-form>
   </n-modal>

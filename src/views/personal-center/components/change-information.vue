@@ -10,12 +10,14 @@
 import { computed, ref } from 'vue';
 import { useMessage } from 'naive-ui';
 import { changeInformation, passwordModification } from '@/service/api/personal-center';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
   visible: boolean;
   type?: 'amend' | 'changePassword';
 }
+
 export type ModalType = NonNullable<Props['type']>;
 
 defineOptions({ name: 'TableActionModal' });
@@ -91,6 +93,7 @@ const password = async () => {
     emit('modification');
   }
 };
+
 function submit() {
   if (estimate.value === 'amend') {
     editName();
@@ -106,14 +109,19 @@ function submit() {
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-500px">
     <NForm ref="formRef" label-placement="left" :model="formData">
       <NGrid :cols="2" :x-gap="18">
-        <NFormItemGridItem v-if="estimate === 'amend'" :span="24" label="姓名" path="description">
+        <NFormItemGridItem
+          v-if="estimate === 'amend'"
+          :span="24"
+          :label="$t('page.manage.user.userName')"
+          path="description"
+        >
           <NInput v-model:value="formData.name" />
         </NFormItemGridItem>
         <NFormItemGridItem
           v-if="estimate === 'changePassword'"
           :span="24"
           label-width="100"
-          label=" 原 密 码 "
+          :label="$t('generate.old-password')"
           path="description"
         >
           <NInput v-model:value="formData.old_password" />
@@ -122,7 +130,7 @@ function submit() {
           v-if="estimate === 'changePassword'"
           label-width="100"
           :span="24"
-          label=" 新 密 码 "
+          :label="$t('generate.new-password')"
           path="description"
         >
           <NInput v-model:value="formData.password" />
@@ -131,15 +139,15 @@ function submit() {
           v-if="estimate === 'changePassword'"
           :span="24"
           label-width="100"
-          label="重复新密码"
+          :label="$t('generate.repeat-new-password')"
           path="description"
         >
           <NInput v-model:value="formData.passwords" />
         </NFormItemGridItem>
       </NGrid>
       <NSpace class="w-full pt-16px" :size="24" justify="end">
-        <NButton class="w-72px" @click="closeModal">取消</NButton>
-        <NButton class="w-72px" type="primary" @click="submit">保存</NButton>
+        <NButton class="w-72px" @click="closeModal">{{ $t('generate.cancel') }}</NButton>
+        <NButton class="w-72px" type="primary" @click="submit">{{ $t('common.save') }}</NButton>
       </NSpace>
     </NForm>
   </NModal>

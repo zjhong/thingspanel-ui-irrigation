@@ -8,9 +8,7 @@ import { SetupStoreId } from '@/enum';
  * @param context
  */
 export function resetSetupStore(context: PiniaPluginContext) {
-  console.log(55);
   const setupSyntaxIds = Object.values(SetupStoreId) as string[];
-
   if (setupSyntaxIds.includes(context.store.$id)) {
     const { $state } = context.store;
 

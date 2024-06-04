@@ -7,6 +7,7 @@ import { IosSearch } from '@vicons/ionicons4';
 import { debounce } from 'lodash';
 import { deleteDeviceGroup, getDeviceGroup } from '@/service/api/device';
 import { group_columns } from '@/views/device/modules/all-columns';
+import { $t } from '@/locales';
 import { AddOrEditDevices } from './components';
 
 const the_modal = ref();
@@ -27,7 +28,6 @@ const getDevice = async () => {
   totalPages.value = Math.ceil(res.data.total / 10);
   loading.value = false;
 };
-
 // 使用 lodash 的 debounce 函数来延迟搜索请求的发送
 const debouncedSearch = debounce(async () => {
   if (isRequestPending.value) {
@@ -39,6 +39,7 @@ const debouncedSearch = debounce(async () => {
   const res = await getDeviceGroup({
     page: currentPage.value,
     page_size: 10,
+    parent_id: 0,
     name: searchValue.value.trim() || undefined
   });
   data.value = res.data.list;
@@ -53,7 +54,6 @@ const handleInput = () => {
   debouncedSearch();
 };
 // Async function to fetch device groups from the backend
-
 // Function to delete a device group
 const deleteItem = async (rid: string) => {
   await deleteDeviceGroup({ id: rid });
@@ -63,7 +63,6 @@ const router = useRouter();
 const viewDetails = (rid: string) => {
   router.push({ name: 'device_grouping-details', query: { id: rid } });
 };
-
 // Define columns for the data table
 const columns = group_columns(viewDetails, deleteItem);
 // Function to show the modal for adding or editing device groups
@@ -72,7 +71,6 @@ const showModal = () => {
     the_modal.value.showModal = true;
   }
 };
-
 onMounted(getDevice); // Fetch device groups on component mount
 </script>
 
@@ -83,13 +81,13 @@ onMounted(getDevice); // Fetch device groups on component mount
     <NCard>
       <NFlex justify="start">
         <!-- Button to trigger modal for creating a new device group -->
-        <NButton type="primary" @click="showModal">+创建分组</NButton>
+        <NButton type="primary" @click="showModal">{{ $t('custom.groupPage.createGroupButton') }}</NButton>
         <!-- Input for search functionality -->
         <NInput
           v-model:value="searchValue"
           :disabled="isRequestPending"
           autosize
-          placeholder="请输入设备分组名称"
+          :placeholder="$t('custom.groupPage.deviceGroupPlaceholder')"
           class="min-w-240px"
           type="text"
           @input="handleInput"
@@ -114,12 +112,15 @@ onMounted(getDevice); // Fetch device groups on component mount
               };
             }
           "
+          scroll-x="100%"
           :columns="columns"
           :data="data"
           :loading="loading"
         ></NDataTable>
         <!-- Pagination component -->
-        <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
+        <div class="flex flex-justify-end">
+          <NPagination v-model:page="currentPage" :page-count="totalPages" class="mt-20px" @update:page="getDevice" />
+        </div>
       </div>
     </NCard>
   </div>

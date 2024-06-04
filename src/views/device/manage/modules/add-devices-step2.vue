@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { defineProps, onMounted, reactive, ref, watchEffect } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui';
 import { NButton, NForm, NFormItem, NInput, NSelect } from 'naive-ui';
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 import { getDeviceConnectInfo, updateDeviceVoucher } from '@/service/api/device';
+import { $t } from '@/locales';
 
+const formRef = ref<FormInst | null>(null);
+
+const formRules = ref<FormRules>({});
 // 定义支持的表单元素类型
 type FormElementType = 'input' | 'table' | 'select';
 
@@ -15,7 +20,7 @@ interface Option {
 
 // 定义验证规则接口
 interface Validate {
-  message: string; // 验证失败时显示的错误消息
+  message?: string; // 验证失败时显示的错误消息
   required?: boolean; // 指定字段是否必填
   rules?: string; // 用于验证字段值的正则表达式规则
   type?: 'number' | 'string' | 'array' | 'boolean' | 'object'; // 验证的类型
@@ -36,9 +41,11 @@ const props = defineProps<{
   formElements: FormElement[];
   nextCallback: () => void;
   device_id: string;
+  formData: object;
   setIsSuccess: (flag: boolean) => void;
 }>();
 
+// eslint-disable-next-line vue/no-dupe-keys
 const formData = reactive({});
 const connectInfo = ref<object>({});
 const feachConnectInfo = async () => {
@@ -47,27 +54,35 @@ const feachConnectInfo = async () => {
   console.log(res);
 };
 
-onMounted(feachConnectInfo);
+onMounted(() => {
+  feachConnectInfo();
+});
 watchEffect(() => {
   if (props.formElements && Array.isArray(props.formElements)) {
     props.formElements.forEach(element => {
       if (element.type === 'table' && Array.isArray(element.array)) {
         element.array.forEach(subElement => {
-          formData[subElement.dataKey] ??= '';
+          formRules.value[element.dataKey] = subElement.validate || {};
+          formData[subElement.dataKey] ??= props.formData[subElement.dataKey] || '';
         });
       } else {
-        formData[element.dataKey] ??= '';
+        console.log();
+        formRules.value[element.dataKey] = element.validate || {};
+        formData[element.dataKey] ??= props.formData[element.dataKey] || '';
       }
     });
   }
 });
 
 const handleSubmit = async () => {
+  // eslint-disable-next-line consistent-return
+  await formRef.value?.validate();
+
   const res = await updateDeviceVoucher({
     device_id: props.device_id,
     voucher: JSON.stringify(formData)
   });
-  console.log('Form Data:', formData, res);
+
   if (!res.error) {
     props.setIsSuccess(true);
     props.nextCallback();
@@ -76,19 +91,30 @@ const handleSubmit = async () => {
     props.nextCallback();
   }
 };
+const copy = event => {
+  const input = event.target;
+  input.select();
+  document.execCommand('copy');
+  window.$message?.success($t('theme.configOperation.copySuccess'));
+};
 </script>
 
 <template>
-  <NForm>
+  <NForm ref="formRef" :rules="formRules" :model="formData">
     <n-scrollbar style="max-height: 360px">
       <template v-for="element in formElements" :key="element.dataKey">
         <div v-if="element.type === 'input'" class="form-item">
-          <NFormItem :label="element.label">
-            <NInput v-model:value="formData[element.dataKey]" :placeholder="element.placeholder" />
+          <NFormItem :label="element.label" :path="element.dataKey">
+            <NInput
+              id="input"
+              v-model:value="formData[element.dataKey]"
+              :placeholder="element.placeholder"
+              @click="copy"
+            />
           </NFormItem>
         </div>
         <div v-if="element.type === 'select'" class="form-item">
-          <NFormItem :label="element.label">
+          <NFormItem :label="element.label" :path="element.dataKey">
             <NSelect v-model:value="formData[element.dataKey]" :options="element.options as SelectMixedOption[]" />
           </NFormItem>
         </div>
@@ -97,12 +123,12 @@ const handleSubmit = async () => {
           <div class="table-content">
             <template v-for="subElement in element.array" :key="subElement.dataKey">
               <div v-if="subElement.type === 'input'" class="table-item">
-                <NFormItem :label="subElement.label">
+                <NFormItem :label="subElement.label" :path="subElement.dataKey">
                   <NInput v-model:value="formData[subElement.dataKey]" :placeholder="subElement.placeholder" />
                 </NFormItem>
               </div>
               <div v-if="subElement.type === 'select'" class="table-item">
-                <NFormItem :label="subElement.label">
+                <NFormItem :label="subElement.label" :path="subElement.dataKey">
                   <NSelect
                     v-model:value="formData[subElement.dataKey]"
                     :options="subElement.options as SelectMixedOption[]"
@@ -114,7 +140,7 @@ const handleSubmit = async () => {
         </div>
       </template>
 
-      <NCard title="连接信息">
+      <NCard style="margin-top: -15px" :title="$t('custom.devicePage.connectInfo')">
         <NDescriptions :column="1">
           <NDescriptionsItem v-for="(value, key) in connectInfo" :key="key" :label="key">
             <span class="font-600">{{ value }}</span>
@@ -123,7 +149,7 @@ const handleSubmit = async () => {
       </NCard>
     </n-scrollbar>
     <div class="mt-4 w-full flex-center">
-      <NButton type="primary" @click="handleSubmit">提交</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('custom.devicePage.saveAndNext') }}</NButton>
     </div>
   </NForm>
 </template>

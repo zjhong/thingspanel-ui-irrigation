@@ -4,19 +4,19 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 09:35:32
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-04-01 12:02:53
+ * @LastEditTime: 2024-04-10 05:47:07
 -->
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { NButton, useMessage } from 'naive-ui';
 import * as echarts from 'echarts';
 import screenfull from 'screenfull';
 import { spacesData, sumData } from '@/service/api/equipment-map';
 import { $t } from '@/locales';
+import addArea from '../../new-area/index.vue';
+import editArea from '../../edit-area/index.vue';
 import gaoDe from './components/map/gaode-map.vue';
 
-const router = useRouter();
 const queryParams = reactive({
   name: '',
   status: null
@@ -35,7 +35,6 @@ const warningChecked = ref(true);
 const normalChecked = ref(true);
 const overviewShow = ref(false);
 const getChildList = ref();
-const loading = ref(false);
 const former = ref({
   mapLocal: '',
   mapAddress: '',
@@ -53,7 +52,7 @@ function screen() {
 
 /** 刷新地图 */
 function refresh() {
-  former.value.dimension = [];
+  former.value.dimension = [121.50861, 31.25141];
   former.value.scope = [];
   getChildList.value.mapInit(former.value.dimension, former.value.scope);
 }
@@ -64,21 +63,30 @@ function handleReset() {
   spacesDataList();
 }
 
-/** 添加空间/区域 */
-function neaAreaClick() {
-  router.push('/new-area');
+/** 取消添加空间 */
+function cancelAdd(data) {
+  console.log('编辑孙', data);
+  if (!data) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    addShow.value = false;
+  }
 }
 
-/** 编辑空间 */
+/** 保存空间 */
+function saveAddSpace(data) {
+  if (!data) {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    addShow.value = false;
+    spacesDataList();
+  }
+}
 
 function editClick() {
   if (sumId.value.id.length === 0) {
-    message.warning('请选择一个空间或者区域');
+    message.warning($t('generate.spaceOrArea'));
   } else {
-    router.push({
-      path: '/edit-area',
-      query: { id: sumId.value.id, type: typeData.value }
-    });
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    editShow.value = true;
   }
 }
 
@@ -90,23 +98,35 @@ const listData = ref([
     districts: [{ district_id: '', district_name: '' }]
   }
 ]);
+const spinShow = ref(false);
 
 /** 下拉列表 */
 async function spacesDataList() {
-  loading.value = true;
+  spinShow.value = true;
+
   const name = { name: queryParams.name };
   const { data } = await spacesData(name);
   console.log('列表111', data);
   if (data) {
     console.log('列表', data);
     listData.value = data.list;
-    loading.value = false;
+
+    spinShow.value = false;
   }
 }
 
 /** 区域点击事件 */
+const parameter = {
+  id: '',
+  typeData: '',
+  buttonDisabled: true
+};
 
 function areaClick(e, w) {
+  console.log(8888, e);
+  parameter.id = e.space_id;
+  parameter.typeData = w;
+  console.log('parameter', parameter);
   typeData.value = w;
   former.value.districts = [];
   former.value.scope = '';
@@ -114,6 +134,11 @@ function areaClick(e, w) {
   e.districts.map(item => {
     return former.value.districts.push(item);
   });
+  if (e.districts.length > 0) {
+    parameter.buttonDisabled = true;
+  } else {
+    parameter.buttonDisabled = false;
+  }
   let data = [];
   data = e.location.split(',');
   const datas: any = [];
@@ -129,6 +154,8 @@ function areaClick(e, w) {
 }
 
 function selectClick(e, w) {
+  parameter.id = e.district_id;
+  parameter.typeData = w;
   former.value.scope = '';
   typeData.value = w;
   sumId.value.id = e.district_id;
@@ -239,7 +266,29 @@ const init: () => void = () => {
 };
 
 function overviewShowClick() {
-  overviewShow.value = true;
+  overviewShow.value = !overviewShow.value;
+}
+
+/** 添加空间/区域 */
+const addShow = ref(false);
+
+function neaAreaClick() {
+  // router.push("/new-area");
+  addShow.value = true;
+}
+
+/** 取消添加区域 */
+function cancelAddApace(data) {
+  if (!data) {
+    addShow.value = false;
+  }
+}
+
+function saveAddAres(data) {
+  if (!data) {
+    addShow.value = false;
+    spacesDataList();
+  }
 }
 
 onMounted(() => {
@@ -251,6 +300,36 @@ function subcomponent(e) {
   overviewShow.value = true;
   sumId.value.id = e.district_id;
   sums();
+}
+
+/** 编辑空间 */
+const editShow = ref(false);
+
+/** 取消编辑 */
+function editAdd(data) {
+  if (!data) {
+    editShow.value = false;
+  }
+}
+
+function saveSpace(data) {
+  console.log('来着编辑', data);
+  if (!data) {
+    editShow.value = false;
+    spacesDataList();
+  }
+}
+
+function cancelEditArea(data) {
+  if (!data) {
+    editShow.value = false;
+  }
+}
+
+function saveEditArea(data) {
+  if (!data) {
+    editShow.value = false;
+  }
 }
 </script>
 
@@ -270,10 +349,14 @@ function subcomponent(e) {
     <div class="search-box">
       <div class="option">
         <n-space item-style="display: flex;">
-          <n-checkbox v-model:checked="checkeds" value="onLine" label="在线" />
-          <n-checkbox v-model:checked="offLineChecked" value="offLine" label="离线" />
-          <n-checkbox v-model:checked="warningChecked" value="warning" label="告警" />
-          <n-checkbox v-model:checked="normalChecked" value="normal" label="正常" />
+          <n-checkbox v-model:checked="checkeds" value="onLine" :label="$t('dashboard_panel.cardName.onLine')" />
+          <n-checkbox
+            v-model:checked="offLineChecked"
+            value="offLine"
+            :label="$t('dashboard_panel.cardName.offline')"
+          />
+          <n-checkbox v-model:checked="warningChecked" value="warning" :label="$t('generate.alarm')" />
+          <n-checkbox v-model:checked="normalChecked" value="normal" :label="$t('page.manage.user.status.normal')" />
         </n-space>
       </div>
       <div class="drop-down">
@@ -282,43 +365,49 @@ function subcomponent(e) {
             <div class="search">
               <NInput
                 v-model:value="queryParams.name"
-                placeholder="搜索空间或区域"
+                :placeholder="$t('generate.search-space-or-area')"
                 class="search-input"
                 @change="nameInput"
               />
-              <NButton class="w-72px" type="primary" @click="handleReset">重置</NButton>
+              <NButton class="w-72px" type="primary" @click="handleReset">{{ $t('common.reset') }}</NButton>
             </div>
           </NForm>
           <div class="collapse">
-            <n-scrollbar style="max-height: 220px">
-              <n-collapse :loading="loading">
-                <n-collapse-item title="全部">
+            <n-space vertical>
+              <n-spin :show="spinShow">
+                <n-scrollbar style="max-height: 220px">
                   <n-collapse>
-                    <n-collapse-item
-                      v-for="(item, index) in listData"
-                      :key="index"
-                      :title="item.space_name"
-                      :name="item.space_id"
-                      class="area-css"
-                      @click="areaClick(item, 'space')"
-                    >
-                      <div
-                        v-for="(items, index) in item.districts"
-                        :key="index"
-                        class="test-box"
-                        @click.stop="selectClick(items, 'area')"
-                      >
-                        {{ items.district_name }}
-                      </div>
+                    <n-collapse-item :title="$t('generate.all')">
+                      <n-collapse>
+                        <n-collapse-item
+                          v-for="(item, index) in listData"
+                          :key="index"
+                          :title="item.space_name"
+                          :name="item.space_id"
+                          class="area-css"
+                          @click="areaClick(item, 'space')"
+                        >
+                          <div
+                            v-for="(items, index) in item.districts"
+                            :key="index"
+                            class="test-box"
+                            @click.stop="selectClick(items, 'area')"
+                          >
+                            {{ items.district_name }}
+                          </div>
+                        </n-collapse-item>
+                      </n-collapse>
                     </n-collapse-item>
                   </n-collapse>
-                </n-collapse-item>
-              </n-collapse>
-            </n-scrollbar>
+                </n-scrollbar>
+              </n-spin>
+            </n-space>
 
             <div class="add-but">
-              <NButton class="edit-but" type="primary" @click="editClick">编辑当前空间/区域</NButton>
-              <NButton type="primary" @click="neaAreaClick">添加空间/区域</NButton>
+              <NButton class="edit-but" type="primary" @click="editClick">
+                {{ $t('generate.edit-current-space-area') }}
+              </NButton>
+              <NButton type="primary" @click="neaAreaClick">{{ $t('route.new-area') }}</NButton>
             </div>
           </div>
         </div>
@@ -326,10 +415,10 @@ function subcomponent(e) {
     </div>
     <div class="add-space">
       <div class="button-box">
-        <NButton strong secondary type="info" @click="screen">
+        <NButton class="but-css" strong secondary type="info" @click="screen">
           <SvgIcon class="full-screen" local-icon="ArrowExpand20Regular" />
         </NButton>
-        <NButton strong secondary type="info" @click="refresh">
+        <NButton class="but-css" strong secondary type="info" @click="refresh">
           <SvgIcon class="full-screen" local-icon="ArrowSync20Filled" />
         </NButton>
         <NButton strong secondary type="info" @click="overviewShowClick">
@@ -339,12 +428,12 @@ function subcomponent(e) {
       <div v-if="overviewShow" class="overview">
         <div class="text-head">
           <SvgIcon class="overview-icon" local-icon="Box24Filled" />
-          <span class="text">设备总览</span>
+          <span class="text">{{ $t('generate.device-overview') }}</span>
         </div>
         <div class="on-line">
-          <div>终端数量</div>
+          <div>{{ $t('generate.terminal-count') }}</div>
           <div class="sum-box">
-            <div class="sum-title">设备总数</div>
+            <div class="sum-title">{{ $t('generate.total-devices') }}</div>
             <div>
               <div class="sum-head">
                 <SvgIcon class="sum-icon" local-icon="BezierCurveSquare12Filled" />
@@ -352,14 +441,20 @@ function subcomponent(e) {
               </div>
             </div>
             <div class="sum-particulars">
-              <div>在线:{{ sumsdata.device_activity }}</div>
-              <div>离线:{{ sumsdata.device_on }}</div>
-              <div>在线率100%</div>
+              <div>
+                <span>{{ $t('dashboard_panel.cardName.onLine') }}</span>
+                :{{ sumsdata.device_activity }}
+              </div>
+              <div>
+                <span>{{ $t('dashboard_panel.cardName.offline') }}</span>
+                :{{ sumsdata.device_on }}
+              </div>
+              <div>{{ $t('generate.online-rate') }}</div>
             </div>
           </div>
         </div>
         <div class="condition">
-          <div>在线情况</div>
+          <div>{{ $t('generate.online-status') }}</div>
           <div class="line">
             <div id="foldLine" ref="foldLine" class="h-full w-full"></div>
           </div>
@@ -367,14 +462,35 @@ function subcomponent(e) {
       </div>
     </div>
   </div>
+  <NModal v-model:show="addShow" preset="card" class="add-show">
+    <addArea
+      @cancel-add="cancelAdd"
+      @save-add-space="saveAddSpace"
+      @cancel-add-apace="cancelAddApace"
+      @save-add-ares="saveAddAres"
+    />
+  </NModal>
+  <NModal v-model:show="editShow" preset="card" class="add-show">
+    <editArea
+      :type-data="parameter"
+      @edit-add="editAdd"
+      @save-space="saveSpace"
+      @cancel-edit-area="cancelEditArea"
+      @save-edit-area="saveEditArea"
+    />
+  </NModal>
 </template>
 
 <style scoped lang="scss">
 .equipment {
   display: flex;
   justify-content: space-between;
+  height: 100vh;
+  border: 1px solid yellow;
+  flex-grow: 1;
 
   .add-space {
+    position: relative;
     width: 400px;
     height: 700px;
     opacity: 0.9;
@@ -386,6 +502,7 @@ function subcomponent(e) {
   height: 500px;
   border-radius: 10px;
   opacity: 0.9;
+  margin-top: 50px;
 
   .text-head {
     margin-top: 20px;
@@ -522,7 +639,7 @@ function subcomponent(e) {
 }
 
 .test-box {
-  padding: 10px;
+  padding: 5px 0 5px 50px;
 }
 
 .test-box:hover {
@@ -538,8 +655,13 @@ function subcomponent(e) {
 }
 
 .button-box {
+  position: absolute;
+  right: 0;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
+  .but-css {
+    margin-right: 15px;
+  }
 }
 
 .line {
@@ -579,5 +701,9 @@ function subcomponent(e) {
 
 .edit-but {
   margin-bottom: 15px;
+}
+
+.add-show {
+  width: 100%;
 }
 </style>

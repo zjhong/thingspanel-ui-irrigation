@@ -52,10 +52,10 @@ export const routeComponentTypeOptions = transformObjectToOption(routeComponentT
 /** 路由管理 - 路由类型 */
 export const routerTypeLabels: Record<CustomRoute.routerTypeKey, string> = {
   1: '菜单',
-  2: '目录',
-  3: '路由',
-  4: '按钮',
-  5: '隐藏'
+  // 2: '目录',
+  3: '路由'
+  // 4: '按钮',
+  // 5: '隐藏'
 };
 export const routeTypeOptions = transformObjectToOption(routerTypeLabels);
 /** 路由管理 - 访问标识 */
@@ -68,8 +68,8 @@ export const routeSysFlagOptions = transformObjectToOption(routerSysFlagLabels);
 
 /** 应用管理 - 服务管理 - 服务管理 - 设备类型 */
 export const serviceManagementDeviceTypeLabels: Record<ServiceManagement.DeviceTypeKey, string> = {
-  1: '直连设备',
-  2: '网关设备'
+  1: $t('generate.direct-connected-device'),
+  2: $t('generate.gatewayDevice')
 };
 
 export const serviceManagementDeviceTypeOptions = transformObjectToOption(serviceManagementDeviceTypeLabels);
@@ -111,15 +111,15 @@ export const dataServiceStatusOptions = transformObjectToOption(dataServiceStatu
 
 /** 用户状态 */
 export const userStatusLabels: Record<UserManagement.UserStatusKey, string> = {
-  F: '冻结',
-  N: '正常'
+  F: 'freeze',
+  N: 'normal'
 };
 export const userStatusOptions = transformObjectToOption(userStatusLabels);
 
 /** 系统管理 - 常规设置 - 数据清理 清理类型 */
 export const dataClearSettingEnabledTypeLabels: Record<GeneralSetting.EnabledTypeKey, string> = {
-  1: '启用',
-  2: '停用'
+  1: $t('page.manage.common.status.enable'),
+  2: $t('page.manage.common.status.disable')
 };
 export const dataClearSettingEnabledTypeOptions = transformObjectToOption(dataClearSettingEnabledTypeLabels);
 
@@ -175,3 +175,33 @@ export const notificationOptions = [
     value: 'WEBHOOK'
   }
 ];
+
+/** 灌溉计划-计划状态 */
+export const irrigationPlanStatus: Record<DataService.FlagKey, string> = {
+  ISS: '已下发',
+  PND: '待下发 ',
+  CNL: '已取消'
+};
+export const irrigationPlanStatusOption = transformObjectToOption(irrigationPlanStatus);
+
+/** 灌溉计划-控制类型 */
+export const irrigationControlType: Record<DataService.FlagKey, string> = {
+  A: $t('page.irrigation.duration'),
+  B: '容量 '
+};
+export const irrigationControlTypeOption = transformObjectToOption(irrigationControlType);
+
+/** 灌溉计划-控制模式 */
+export const irrigationScheduleType: Record<DataService.FlagKey, string> = {
+  A: '单次控制',
+  B: '循环控制 '
+};
+export const irrigationScheduleTypeOption = transformObjectToOption(irrigationScheduleType);
+
+export const enumDataType: Record<'Number' | 'String' | 'Boolean', string> = {
+  Number: 'Number',
+  String: 'String',
+  Boolean: 'Boolean'
+};
+
+export const enumDataTypeOption = transformObjectToOption(enumDataType);

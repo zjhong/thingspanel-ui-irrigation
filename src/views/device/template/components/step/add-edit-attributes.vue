@@ -2,6 +2,8 @@
 import { reactive, ref, watch } from 'vue';
 import { addAttributes, putAttributes } from '@/service/api/system-data';
 import { $t } from '@/locales';
+import { getAdditionalInfo } from '../../utils';
+import EnumInfo from './enum-info.vue';
 
 const emit = defineEmits(['update:addAndEditModalVisible', 'update:objItem', 'determine']);
 
@@ -36,6 +38,7 @@ type Rules = {
   data_name: Rule;
   data_identifier: Rule;
   read_write_flag: Rule;
+  data_type: Rule;
 };
 
 const fromRules: Rules = {
@@ -49,10 +52,15 @@ const fromRules: Rules = {
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheAttributeIdentifier')
   },
-  read_write_flag: {
+  data_type: {
     required: true,
     trigger: ['blur', 'input'],
     message: $t('device_template.table_header.pleaseEnterTheAttributeType')
+  },
+  read_write_flag: {
+    required: true,
+    trigger: ['blur', 'input'],
+    message: $t('generate.enter-read-write')
   }
 };
 
@@ -66,16 +74,18 @@ watch(
     if (objItem.id) {
       addFrom = reactive({
         device_template_id: deviceTemplateId,
-        ...newVal
+        ...newVal,
+        additional_info: getAdditionalInfo(newVal.additional_info)
       });
     } else {
       addFrom = reactive({
         device_template_id: deviceTemplateId,
         data_name: '',
         data_identifier: '',
-        read_write_flag: 'String',
+
         unit: '',
-        description: ''
+        description: '',
+        additional_info: []
       });
     }
   },
@@ -83,7 +93,14 @@ watch(
 );
 
 const generalOptions: any = reactive(
-  ['String', 'Number', 'Boolean'].map(v => ({
+  ['String', 'Number', 'Boolean', 'Enum'].map(v => ({
+    label: v,
+    value: v
+  }))
+);
+
+const readAndWriteOptions: any = reactive(
+  ['R-只读', 'RW-读/写'].map(v => ({
     label: v,
     value: v
   }))
@@ -92,8 +109,14 @@ const generalOptions: any = reactive(
 // 确定按钮
 const submit: () => void = async () => {
   await formRef.value?.validate();
+  const updateForm = { ...addFrom };
+  if (updateForm.data_type === 'Enum') {
+    updateForm.additional_info = JSON.stringify(updateForm.additional_info);
+  } else {
+    updateForm.additional_info = '[]';
+  }
   if (props.objItem.id) {
-    const response: any = await putAttributes(addFrom);
+    const response: any = await putAttributes(updateForm);
     if (response.data) {
       emit('update:objItem', {});
       emit('update:addAndEditModalVisible', false);
@@ -101,11 +124,11 @@ const submit: () => void = async () => {
       emit('update:objItem', {});
       emit('update:addAndEditModalVisible', false);
       emit('determine');
-      window.$message?.success('编辑成功');
+      window.$message?.success($t('common.editSuccess'));
     }
     console.log(response, '提交');
   } else {
-    const response: any = await addAttributes(addFrom);
+    const response: any = await addAttributes(updateForm);
     if (response.data) {
       emit('update:addAndEditModalVisible', false);
       emit('determine');
@@ -121,7 +144,11 @@ const submit: () => void = async () => {
 const clear: () => void = () => {
   emit('update:objItem', {});
   emit('update:addAndEditModalVisible', false);
-  console.log(props.objItem, '取消');
+  console.log(props.objItem, $t('common.cancel'));
+};
+
+const updateAdditionalInfo: (newVal) => void = newVal => {
+  addFrom.additional_info = newVal;
 };
 </script>
 
@@ -147,11 +174,21 @@ const clear: () => void = () => {
         :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeIdentifier')"
       />
     </n-form-item>
-    <n-form-item :label="$t('device_template.table_header.attributeType')" path="read_write_flag">
+    <n-form-item :label="$t('device_template.table_header.attributeType')" path="data_type">
       <n-select
-        v-model:value="addFrom.read_write_flag"
+        v-model:value="addFrom.data_type"
         :options="generalOptions"
         :placeholder="$t('device_template.table_header.pleaseEnterTheAttributeType')"
+      />
+    </n-form-item>
+    <template v-if="addFrom.data_type === 'Enum'">
+      <EnumInfo :additional-info="addFrom.additional_info" @update-additional-info="updateAdditionalInfo" />
+    </template>
+    <n-form-item :label="$t('device_template.table_header.readAndWriteSign')" path="read_write_flag">
+      <n-select
+        v-model:value="addFrom.read_write_flag"
+        :options="readAndWriteOptions"
+        :placeholder="$t('generate.enterReadWriteFlag')"
       />
     </n-form-item>
     <n-form-item :label="$t('device_template.table_header.unit')">
@@ -167,7 +204,7 @@ const clear: () => void = () => {
   </n-form>
   <div class="box1">
     <n-button class="m-r3" @click="clear">{{ $t('device_template.cancellation') }}</n-button>
-    <n-button @click="submit">{{ $t('device_template.confirm') }}</n-button>
+    <n-button type="primary" @click="submit">{{ $t('device_template.confirm') }}</n-button>
   </div>
 </template>
 

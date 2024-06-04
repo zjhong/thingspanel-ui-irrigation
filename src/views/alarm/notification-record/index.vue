@@ -1,11 +1,13 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import dayjs from 'dayjs';
 import { getNotificationHistoryList } from '@/service/api/notification';
 import { notificationOptions } from '@/constants/business';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -66,29 +68,37 @@ const getTableData = async () => {
 
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
-    key: 'send_time_start',
-    title: '发送时间',
-    align: 'left'
+    key: 'send_time',
+    title: $t('custom.device_details.sendTime'),
+    align: 'left',
+    minWidth: '180px',
+    render: (row: any) => {
+      return formatDateTime(row.send_time);
+    }
   },
   {
     key: 'send_content',
-    title: '发送标题和内容',
+    minWidth: '180px',
+    title: $t('custom.device_details.titleOrContent'),
     align: 'left'
   },
   {
     key: 'send_target',
-    title: '接收人',
+    minWidth: '100px',
+    title: $t('generate.recipient'),
     align: 'left',
     width: '200'
   },
   {
     key: 'send_result',
-    title: '发送结果',
+    title: $t('custom.device_details.sendResults'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'notification_type',
-    title: '通知类型',
+    title: $t('common.addSuccess'),
+    minWidth: '140px',
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;
@@ -96,19 +106,23 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 function handleQuery() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="通知记录" :bordered="false" class="h-full rounded-8px shadow-sm">
+  <div>
+    <NCard :title="$t('generate.notification-record')">
       <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem path="name" label="通知类型:">
-            <NSelect
+        <NForm label-placement="left" :inline="!getPlatform" :model="queryParams">
+          <NFormItem path="name" :label="$t('generate.notification-type')">
+            <n-select
               v-model:value="queryParams.notification_type"
               :options="notificationOptions"
+              :placeholder="$t('generate.notification-type')"
               class="input-style min-w-160px"
             />
           </NFormItem>
@@ -116,11 +130,11 @@ getTableData();
             <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
           </NFormItem>
           <NFormItem path="send_target">
-            <NInput v-model:value="queryParams.send_target" placeholder="接收人" />
+            <NInput v-model:value="queryParams.send_target" :placeholder="$t('generate.recipient')" />
           </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+          <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
         </NForm>
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
+        <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
         <div class="pagination-box">
           <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
         </div>

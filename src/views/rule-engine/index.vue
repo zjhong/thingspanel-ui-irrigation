@@ -6,6 +6,7 @@ import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { ruleEngineStatusLabels } from '@/constants/business';
 import { fetchRuleEngineList } from '@/service/api_demo/management';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import TableActionModal from './components/table-action-modal.vue';
 
@@ -13,6 +14,7 @@ const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 
 const tableData = ref<RuleEngine.Rule[]>([]);
+
 function setTableData(data: RuleEngine.Rule[]) {
   tableData.value = data;
 }
@@ -31,18 +33,20 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
   {
     key: 'index',
-    title: '序号',
+    title: $t('common.index'),
     align: 'center',
-    width: '120px'
+    minWidth: '140px'
   },
   {
     key: 'name',
-    title: '规则名称',
+    title: $t('generate.rule-name'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'status',
-    title: '接口状态',
+    title: $t('generate.rule-name'),
+    minWidth: '140px',
     align: 'left',
     render: row => {
       if (row.status) {
@@ -57,27 +61,27 @@ const columns: Ref<DataTableColumns<RuleEngine.Rule>> = ref([
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
-    width: '300px',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} ghost type="primary" onClick={() => handleActivate(row.id)}>
-            启动
+            {$t('generate.startup')}
           </NButton>
           <NButton size={'small'} type="warning" onClick={() => handlePause(row.id)}>
-            暂停
+            {$t('generate.suspend')}
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -123,7 +127,7 @@ function handleEditTable(rowId: string) {
 }
 
 function handleDeleteTable(rowId: string) {
-  window.$message?.info(`点击了删除，rowId为${rowId}`);
+  window.$message?.info(`${$t('generate.clickDelete')}，rowId${$t('generate.by')}${rowId}`);
 }
 
 const pagination: PaginationProps = reactive({
@@ -149,12 +153,11 @@ init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="规则引擎" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <template #header-extra>
-        <NButton @click="handleAddTable">创建接入规则</NButton>
-        <NButton class="ml-10px">发布</NButton>
-        <!--
+  <NCard :title="$t('generate.rule-engine')" :bordered="false" class="h-full rounded-8px shadow-sm">
+    <template #header-extra>
+      <NButton @click="handleAddTable">{{ $t('generate.create-access-rule') }}</NButton>
+      <NButton class="ml-10px">{{ $t('device_template.release') }}</NButton>
+      <!--
  <n-button type="error">
           <icon-ic-round-delete class="mr-4px text-20px" />
           删除
@@ -164,26 +167,24 @@ init();
           导出Excel
         </n-button>
 -->
-      </template>
-      <div class="h-full flex-col">
-        <NDataTable
-          :scroll-x="1088"
-          :columns="columns"
-          :data="tableData"
-          :loading="loading"
-          :pagination="pagination"
-          flex-height
-          class="flex-1-hidden"
-        />
-        <TableActionModal
-          v-model:visible="visible"
-          :type="modalType"
-          :edit-data="editData"
-          @get-table-data="getTableData"
-        />
-      </div>
-    </NCard>
-  </div>
+    </template>
+    <div class="h-full flex-col">
+      <NDataTable
+        :scroll-x="1088"
+        :columns="columns"
+        :data="tableData"
+        :loading="loading"
+        :pagination="pagination"
+        class="flex-1-hidden"
+      />
+      <TableActionModal
+        v-model:visible="visible"
+        :type="modalType"
+        :edit-data="editData"
+        @get-table-data="getTableData"
+      />
+    </div>
+  </NCard>
 </template>
 
 <style scoped></style>

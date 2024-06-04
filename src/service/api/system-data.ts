@@ -6,13 +6,18 @@ export const totalNumber = async () => {
   return data;
 };
 
+/** 获取租户设备总数 */
+export const sumData = async (): Promise<any> => {
+  return await request.get<any>('/board/tenant/device/info');
+};
+
 /** 获取租户总数、昨日新增、本月新增以及月历史数据 */
 export const tenant = async () => {
   const data = await request.get<Api.BaseApi.Data | null>('/board/tenant');
   return data;
 };
 
-/** 新增设备模板信息 */
+/** 新增设备功能模板信息 */
 export const addTemplat = async (params: any): Promise<any> => {
   const data = await request.post('/device/template', params);
   return data;
@@ -32,6 +37,11 @@ export const getTemplat = async (id: any) => {
 /** 获取遥测数据 */
 export const telemetryApi = async (params: any) => {
   const data = await request.get<Api.BaseApi.Data | null>('/device/model/telemetry', { params });
+  return data;
+};
+/** 获取遥测数据 */
+export const telemetryLatestApi = async (id: any) => {
+  const data = await request.get<Api.BaseApi.Data | null>(`/telemetry/datas/current/${id}`);
   return data;
 };
 
@@ -122,5 +132,29 @@ export const addCommands = async (params: any): Promise<any> => {
 /** 编辑命令数据 */
 export const putCommands = async (params: any): Promise<any> => {
   const data = await request.put('/device/model/commands', params);
+  return data;
+};
+
+/** 编辑命令数据 */
+export const deviceCustomCommandsList = async (params: any): Promise<any> => {
+  const data = await request.get('/device/model/custom/commands', { params });
+  return data;
+};
+
+/** 删除自定义命令 */
+export const deviceCustomCommandsDel = async (paramsId: any): Promise<any> => {
+  const data = await request.delete(`/device/model/custom/commands/${paramsId}`);
+  return data;
+};
+
+/** 新建自定义命令 */
+export const deviceCustomCommandsAdd = async (params: any): Promise<any> => {
+  const data = await request.post('/device/model/custom/commands', params);
+  return data;
+};
+
+/** 编辑自定义命令 */
+export const deviceCustomCommandsPut = async (params: any): Promise<any> => {
+  const data = await request.put('/device/model/custom/commands', params);
   return data;
 };

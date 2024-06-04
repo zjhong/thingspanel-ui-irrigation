@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import type { FormInst } from 'naive-ui';
-import { serviceManagementDeviceTypeOptions } from '@/constants/business';
 import { deepClone } from '@/utils/common/tool';
 import { addProtocolPlugin, editProtocolPlugin } from '@/service/api';
 import { createRequiredFormRule } from '@/utils/form/rule';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -27,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-
   (e: 'success'): void;
 }
 
@@ -54,6 +52,11 @@ const title = computed(() => {
 });
 
 const formRef = ref<HTMLElement & FormInst>();
+
+const deviceOptions = ref<any[]>([
+  { label: $t('generate.direct-connected-device'), value: 1 },
+  { label: $t('generate.gatewayDevice'), value: 2 }
+]);
 
 type FormModel = Pick<
   ServiceManagement.Service,
@@ -119,6 +122,7 @@ function handleUpdateFormModelByModalType() {
       if (props.editData) {
         handleUpdateFormModel(props.editData);
       }
+      console.log(props.editData);
     }
   };
 
@@ -129,6 +133,7 @@ async function handleSubmit() {
   await formRef.value?.validate();
   const formData = deepClone(formModel);
   formData.device_type = Number(formData.device_type);
+
   const additional_info = {};
   formData.additional_info_list.map((item: any) => {
     if (item.key && item.value) {
@@ -145,7 +150,7 @@ async function handleSubmit() {
     data = await editProtocolPlugin(formData);
   }
   if (!data.error) {
-    window.$message?.success(data.msg);
+    // window.$message?.success(data.msg);
     emit('success');
   }
   closeModal();
@@ -172,38 +177,38 @@ watch(
   <NModal v-model:show="modalVisible" preset="card" :title="title" class="w-700px">
     <NForm ref="formRef" label-placement="left" :label-width="120" :model="formModel" :rules="rules">
       <NGrid :cols="24" :x-gap="18">
-        <NFormItemGridItem :span="24" label="名称" path="name">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.serviceName')" path="name">
           <NInput v-model:value="formModel.name" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="设备类型" path="device_type">
-          <NSelect v-model:value="formModel.device_type" :options="serviceManagementDeviceTypeOptions" />
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.deviceType')" path="device_type">
+          <NSelect v-model:value="formModel.device_type" :options="deviceOptions" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="协议类型" path="protocol_type">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.protocolType')" path="protocol_type">
           <NInput v-model:value="formModel.protocol_type" />
           <!-- <NSelect v-model:value="formModel.protocol_type" :options="serviceManagementProtocolTypeOptions" /> -->
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="接入地址" path="access_address">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.accessAddress')" path="access_address">
           <NInput v-model:value="formModel.access_address" placeholder="" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="HTTP服务地址" path="http_address">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.httpAddress')" path="http_address">
           <NInput v-model:value="formModel.http_address" placeholder="" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="插件订阅主题前缀" path="sub_topic_prefix">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.subTopicPrefix')" path="sub_topic_prefix">
           <NInput v-model:value="formModel.sub_topic_prefix" placeholder="" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="描述">
+        <NFormItemGridItem :span="24" :label="$t('common.description')">
           <NInput v-model:value="formModel.description" type="textarea" placeholder="" />
         </NFormItemGridItem>
-        <NFormItemGridItem :span="24" label="链接参数">
+        <NFormItemGridItem :span="24" :label="$t('page.apply.service.form.additionalInfo')">
           <NButton class="w-72px" type="primary" @click="handleAddAdditionalInfo">
             {{ $t('common.add') }}
           </NButton>
         </NFormItemGridItem>
         <NFormItemGridItem :span="24" label=" ">
           <div>
-            <div v-for="item in formModel.additional_info_list" :key="item.key" class="mt-10px flex">
-              <NInput v-model:value="item.key" placeholder="key" />
-              <NInput v-model:value="item.value" class="ml-20px" placeholder="value" />
+            <div v-for="(item, index) in formModel.additional_info_list" :key="index" class="mt-10px flex">
+              <NInput v-model:value="item.key" :placeholder="$t('generate.fieldKey')" />
+              <NInput v-model:value="item.value" class="ml-20px" placeholder="$t('generate.fieldValue')" />
             </div>
           </div>
         </NFormItemGridItem>

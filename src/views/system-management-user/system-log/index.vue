@@ -1,9 +1,11 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 import { getSystemLogList } from '@/service/api/system-management-user';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import { useLoading } from '~/packages/hooks';
 
 const { loading, startLoading, endLoading } = useLoading(false);
@@ -64,34 +66,41 @@ const getTableData = async () => {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'created_at',
-    title: '时间',
+    title: $t('common.time'),
+    minWidth: '140px',
     align: 'left',
-    width: '280'
+    render: (row: any) => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'ip',
+    minWidth: '140px',
     title: 'IP',
     align: 'left'
   },
   {
     key: 'path',
-    title: '请求路径',
-    align: 'left',
-    width: '200'
+    title: $t('common.requestPath'),
+    minWidth: '140px',
+    align: 'left'
   },
   {
-    key: 'ip',
-    title: '请求方法',
+    key: 'name',
+    minWidth: '140px',
+    title: $t('common.requestMethod'),
     align: 'left'
   },
   {
     key: 'latency',
-    title: '请求耗时',
+    title: $t('common.requestTime'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'username',
-    title: '用户名',
+    title: $t('generate.username'),
+    minWidth: '140px',
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;
@@ -99,27 +108,28 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 function handleQuery() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 getTableData();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard title="系统日志" :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="用户名" path="name">
-            <NInput v-model:value="queryParams.username" />
-          </NFormItem>
-          <NFormItem path="selected_time">
-            <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
-          </NFormItem>
-          <NButton class="w-72px" type="primary" @click="handleQuery">查询</NButton>
-        </NForm>
-        <NDataTable :columns="columns" :data="tableData" :loading="loading" flex-height class="flex-1-hidden" />
-        <div class="pagination-box">
-          <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
-        </div>
+  <div>
+    <NCard :title="$t('generate.system-log')">
+      <NForm class="m-b-20px" :inline="!getPlatform" label-placement="left" :model="queryParams">
+        <NFormItem class="max-w-200px" :label="$t('generate.username')" path="name">
+          <NInput v-model:value="queryParams.username" />
+        </NFormItem>
+        <NFormItem path="selected_time">
+          <NDatePicker v-model:value="queryParams.selected_time" type="datetimerange" clearable separator="-" />
+        </NFormItem>
+        <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('generate.query') }}</NButton>
+      </NForm>
+      <NDataTable :columns="columns" :data="tableData" :loading="loading" class="flex-1-hidden" />
+      <div class="pagination-box">
+        <NPagination v-model:page="pagination.page" :item-count="total" @update:page="getTableData" />
       </div>
     </NCard>
   </div>

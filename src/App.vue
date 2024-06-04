@@ -2,17 +2,20 @@
 import { computed, onBeforeUnmount, onMounted } from 'vue';
 import { NConfigProvider, darkTheme } from 'naive-ui';
 import { useFullscreen } from '@vueuse/core';
+import json from 'highlight.js/lib/languages/json';
+import hljs from 'highlight.js/lib/core';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
 import Content from './components/content/index.vue';
 
+hljs.registerLanguage('json', json);
 defineOptions({
   name: 'App'
 });
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { toggle } = useFullscreen();
+const { isFullscreen, toggle } = useFullscreen();
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
 
 const naiveLocale = computed(() => {
@@ -24,9 +27,9 @@ const naiveDateLocale = computed(() => {
 });
 const handleFullScreenChange = () => {
   if (!document.fullscreenElement) {
-    appStore.toggleFullContent();
-
-    toggle();
+    if (isFullscreen) {
+      toggle();
+    }
   }
 };
 
@@ -46,6 +49,7 @@ onBeforeUnmount(() => {
     <Content />
   </NMessageProvider>
   <NConfigProvider
+    :hljs="hljs"
     :theme="naiveDarkTheme"
     :theme-overrides="themeStore.naiveTheme"
     :locale="naiveLocale"
@@ -57,5 +61,3 @@ onBeforeUnmount(() => {
     </AppProvider>
   </NConfigProvider>
 </template>
-
-<style scoped></style>

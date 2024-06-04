@@ -7,6 +7,7 @@ import { router } from '@/router';
 import { dataServiceFlagLabels, dataServiceSignModeLabels, dataServiceStatusOptions } from '@/constants/business';
 import { fetchDataServiceList } from '@/service/api_demo/management';
 import { areasList, deleteArea, spacesList } from '@/service/api/equipment-map';
+import { $t } from '@/locales';
 import type { ModalType } from './components/table-action-modal.vue';
 import { useBoolean, useLoading } from '~/packages/hooks';
 
@@ -86,24 +87,27 @@ function RouterPush(url: string) {
 const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'image_url',
-    title: '图片',
+    title: $t('page.product.list.productImage'),
     align: 'center',
-    width: '120px'
+    minWidth: '140px'
   },
   {
     key: 'name',
-    title: '区域名称',
+    title: $t('generate.area-name'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'irrigation_type',
-    title: '灌溉类型',
+    title: $t('generate.irrigation-type'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
-    title: '土壤类型',
+    title: $t('generate.soil-type'),
     align: 'left',
+    minWidth: '140px',
     render: row => {
       if (row.signMode) {
         return <span>{dataServiceSignModeLabels[row.signMode]}</span>;
@@ -113,13 +117,15 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'crop_type',
-    title: '种植作物',
+    title: $t('generate.planting-crops'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'water_requirement',
-    title: '作物需水量',
+    title: $t('generate.cropWaterDemand'),
     align: 'left',
+    minWidth: '140px',
     render: row => {
       if (row.flag) {
         return <span>{dataServiceFlagLabels[row.flag]}</span>;
@@ -129,34 +135,36 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'area',
-    title: '区域面积',
+    title: $t('generate.area-size'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'area',
-    title: '土壤参数',
+    title: $t('generate.soilParam'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
-    width: 350,
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton size={'small'} type="primary" onClick={() => handleViewKey()}>
-            管理设备
+            {$t('common.manageDevices')}
           </NButton>
           <NButton size={'small'} type="primary" onClick={() => RouterPush('/system-management-user/equipment-map')}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteArea(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
@@ -170,17 +178,20 @@ const columns: Ref<DataTableColumns<DataService.Data>> = ref([
 const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   {
     key: 'name',
-    title: '设备名称',
+    title: $t('custom.devicePage.deviceName'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'irrigation_type',
-    title: '设备编码',
+    title: $t('page.irrigation.group.deviceCode'),
+    minWidth: '140px',
     align: 'left'
   },
   {
     key: 'soil_type',
-    title: '空间/区域',
+    title: $t('page.irrigation.areaOrSpace'),
+    minWidth: '140px',
     align: 'left',
     render: row => {
       if (row.signMode) {
@@ -191,7 +202,8 @@ const facilityColumns: Ref<DataTableColumns<DataService.Data>> = ref([
   },
   {
     key: 'crop_type',
-    title: '设备类型',
+    minWidth: '140px',
+    title: $t('generate.device-type'),
     align: 'left'
   }
 ]) as Ref<DataTableColumns<DataService.Data>>;
@@ -202,7 +214,7 @@ const editData = ref<DataService.Data | null>(null);
 
 function handleDeleteArea(rowId: string) {
   deleteArea(rowId);
-  window.$message?.success('删除成功');
+  window.$message?.success($t('common.deleteSuccess'));
   init();
 }
 
@@ -239,10 +251,10 @@ init();
 
 <template>
   <div>
-    <NCard title="空间管理" :bordered="false">
+    <NCard :title="$t('generate.space-management')" :bordered="false">
       <div class="flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="空间名称" path="name">
+          <NFormItem :label="$t('generate.space-name')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
           <!--
@@ -250,11 +262,11 @@ init();
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
 -->
-          <NFormItem label="作物" path="status">
+          <NFormItem :label="$t('generate.crop')" path="status">
             <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
           </NFormItem>
           <NFormItem>
-            <NButton class="w-72px" type="primary" @click="handleQuery">搜索</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
           </NFormItem>
         </NForm>
       </div>
@@ -262,7 +274,10 @@ init();
     <div>
       <n-scrollbar style="max-height: 500px">
         <NCard v-for="(item, index) in spaces" :key="index">
-          <div class="space-name">空间名称: {{ item.name }}</div>
+          <div class="space-name">
+            <span>{{ $t('generate.space-name') }}</span>
+            : {{ item.name }}
+          </div>
           <NDataTable :columns="columns" :data="item.rows" :loading="loading" :pagination="pagination" />
 
           <!--
@@ -277,21 +292,21 @@ init();
       </n-scrollbar>
     </div>
 
-    <NModal v-model:show="equipmentShow" preset="card" title="设备管理" class="w-1200px">
+    <NModal v-model:show="equipmentShow" preset="card" :title="$t('generate.device-management')" class="w-1200px">
       <div class="flex-col">
         <NForm inline label-placement="left" :model="queryParams">
-          <NFormItem label="设备名称" path="name">
+          <NFormItem :label="$t('page.irrigation.group.deviceName')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="设备编码" path="name">
+          <NFormItem :label="$t('page.irrigation.group.deviceCode')" path="name">
             <NInput v-model:value="queryParams.name" />
           </NFormItem>
-          <NFormItem label="设备类型" path="status">
+          <NFormItem :label="$t('page.irrigation.group.deviceType')" path="status">
             <NSelect v-model:value="queryParams.status" clearable class="w-200px" :options="dataServiceStatusOptions" />
           </NFormItem>
           <NFormItem>
-            <NButton class="mr-5 w-72px" type="primary" @click="handleQuery">搜索</NButton>
-            <NButton class="w-72px" type="primary" @click="handleQuery">重置</NButton>
+            <NButton class="mr-5 w-72px" type="primary" @click="handleQuery">{{ $t('common.search') }}</NButton>
+            <NButton class="w-72px" type="primary" @click="handleQuery">{{ $t('common.reset') }}</NButton>
           </NFormItem>
         </NForm>
         <NDataTable

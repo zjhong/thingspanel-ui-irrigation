@@ -4,7 +4,7 @@
  * @Author: zhaoqi
  * @Date: 2024-03-23 09:35:32
  * @LastEditors: zhaoqi
- * @LastEditTime: 2024-03-31 10:02:04
+ * @LastEditTime: 2024-04-08 11:31:40
  */
 import { request } from '../request';
 
@@ -26,10 +26,19 @@ export const areaDetail = async (id: any): Promise<any> => {
 export const apaceDetail = async (id: any): Promise<any> => {
   return await request.get<Api.BaseApi.Data>(`http://47.251.45.205:9999/api/v1/irrigation/spaces/${id}`);
 };
+/** 获取区域详情 */
+export const areaData = async (id: any): Promise<any> => {
+  return await request.get<Api.BaseApi.Data>(`http://47.251.45.205:9999/api/v1/irrigation/districts/${id}`);
+};
 /** 修改空间 */
-export const editSpaces = async (id: any) => {
-  const data = await request.put<any>(`http://47.251.45.205:9999/api/v1/irrigation/spaces/${id}`);
-  return data;
+// export const editSpaces = async (id: any) => {
+//   const data = await request.put<any>(
+//     `http://47.251.45.205:9999/api/v1/irrigation/spaces/${id}`,
+//   );
+//   return data;
+// };
+export const editSpaces = async (params: any) => {
+  return await request.put<Api.BaseApi.Data>(`http://47.251.45.205:9999/api/v1/irrigation/spaces/${params.id}`, params);
 };
 /** 添加空间 */
 export const addSpace = async (data: any): Promise<any> => {
@@ -57,7 +66,19 @@ export const spacesData = async (params: any): Promise<any> => {
 export const sumData = async (params: any): Promise<any> => {
   return await request.get('http://47.251.45.205:9999/api/v1/board/tenant/device/info', { params });
 };
-/** 获取区域详情 */
-export const areaData = async (id: any): Promise<any> => {
-  return await request.get<Api.BaseApi.Data>(`http://47.251.45.205:9999/api/v1/irrigation/districts/${id}`);
+
+/** 修改区域 */
+// export const editArea = async (id: any) => {
+//   const data = await request.put<any>(
+//     `http://47.251.45.205:9999/api/v1/irrigation/districts/${id}`,
+//   );
+//   return data;
+// };
+/** 修改区域 */
+
+export const editArea = async (params: any) => {
+  const data = await request.put<Api.BaseApi.Data>(
+    `http://47.251.45.205:9999/api/v1/irrigation/districts/${params.spaces_id}`
+  );
+  return data;
 };

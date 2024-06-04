@@ -7,12 +7,13 @@
  * @LastEditTime: 2024-03-20 19:48:13
 -->
 <script setup lang="tsx">
-import { h, reactive, ref } from 'vue';
+import { computed, getCurrentInstance, h, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
-import { NButton, NPopconfirm, NSpace, useMessage } from 'naive-ui';
+import { NButton, NPopconfirm, useMessage } from 'naive-ui';
 import { getNotificationGroupList } from '@/service/api/notification';
 import { delInfo, editInfo, warningMessageList } from '@/service/api/alarm';
+import { $t } from '@/locales';
 import type { ModalType } from './pop-up.vue';
 import popUp from './pop-up.vue';
 import { useBoolean } from '~/packages/hooks';
@@ -99,25 +100,25 @@ async function list() {
       tableData.value = data.list;
       const operatorBtn: { btnName: string; type: string; color: string }[] = [
         {
-          btnName: '编辑',
+          btnName: $t('common.edit'),
           type: 'edit',
           color: 'info'
         },
         {
-          btnName: '停用',
+          btnName: $t('page.manage.common.status.disable'),
           type: 'enable',
           color: 'warning'
         },
         {
-          btnName: '删除',
+          btnName: $t('common.delete'),
           type: 'delete',
           color: 'error'
         }
       ];
       const operatorBtns: { btnName: string; type: string; color: string }[] = [
-        { btnName: '编辑', type: 'edit', color: 'info' },
-        { btnName: '启用', type: 'enable', color: 'success' },
-        { btnName: '删除', type: 'delete', color: 'error' }
+        { btnName: $t('common.edit'), type: 'edit', color: 'info' },
+        { btnName: $t('page.manage.common.status.enable'), type: 'enable', color: 'success' },
+        { btnName: $t('common.delete'), type: 'delete', color: 'error' }
       ];
       // eslint-disable-next-line array-callback-return
       tableData.value.map(item => {
@@ -145,58 +146,63 @@ getTableData();
 const columns: Ref<DataTableColumns<ColumnsData>> = ref([
   {
     key: 'name',
-    title: '告警名称',
+    title: $t('generate.alarm-name'),
     align: 'center',
+    minWidth: '140px',
     ellipsis: {
       tooltip: true
     }
   },
   {
     key: 'description',
-    title: '告警描述',
+    title: $t('generate.alarm-description'),
     align: 'center',
+    minWidth: '180px',
     ellipsis: {
       tooltip: true
     }
   },
   {
     key: 'alarm_level',
-    title: '级别',
+    title: $t('common.alarm_level'),
     align: 'center',
+    minWidth: '100px',
     render(row) {
       if (row.alarm_level === 'H') {
-        return '高';
+        return $t('common.high');
       } else if (row.alarm_level === 'M') {
-        return '中';
+        return $t('common.middle');
       }
-      return '低';
+      return $t('common.low');
     }
   },
 
   {
     key: 'notification_group_name',
-    title: '通知组',
+    title: $t('generate.notification-group'),
     align: 'center',
+    minWidth: '140px',
     ellipsis: {
       tooltip: true
     }
   },
   {
     key: 'enabled',
-    title: '运行状态',
+    title: $t('generate.runstate'),
     align: 'center',
+    minWidth: '100px',
     render(row) {
       if (row.enabled === 'Y') {
-        return '启用';
+        return $t('page.manage.common.status.enable');
       }
-      return '停用';
+      return $t('page.manage.common.status.disable');
     }
   },
 
   {
     key: 'actions',
-    width: 350,
-    title: '操作',
+    minWidth: '140px',
+    title: $t('common.action'),
     align: 'center',
     render: (row: any) => {
       const operatorBtn = row.operatorBtn.map(item => {
@@ -204,7 +210,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           return h(
             <NPopconfirm onPositiveClick={() => handleDeleteTable(row)}>
               {{
-                default: () => '确认删除',
+                default: () => $t('common.confirmDelete'),
                 trigger: () => (
                   <NButton type={item.color} size={'small'}>
                     {item.btnName}
@@ -221,7 +227,7 @@ const columns: Ref<DataTableColumns<ColumnsData>> = ref([
           { onClick: () => handleEditPwd(row, item.type) }
         );
       });
-      return operatorBtn;
+      return <div class="flex">{operatorBtn}</div>;
     }
   }
 ]) as Ref<DataTableColumns<ColumnsData>>;
@@ -239,11 +245,11 @@ function handleDeleteTable(rowId) {
 async function editInfos() {
   const { data } = await editInfo(params);
   if (data) {
-    params.enabled === 'Y' ? message.success('启用成功') : message.success('停用成功');
+    params.enabled === 'Y' ? message.success($t('common.startSuccess')) : message.success($t('common.stopSuccess'));
 
     list();
   } else {
-    params.enabled === 'Y' ? message.error('启用失败') : message.error('停用失败');
+    params.enabled === 'Y' ? message.error($t('common.startFail')) : message.error($t('common.stopFail'));
   }
 }
 
@@ -253,42 +259,45 @@ async function deleteInfo() {
   const { data } = await delInfo(deleteId.value);
   console.log('删除', data);
   if (!data) {
-    message.success('删除成功');
+    message.success($t('common.deleteSuccess'));
   } else {
-    message.error('删除失败');
+    message.error($t('common.deleteFail'));
   }
   list();
 }
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <NCard NCard :bordered="false" class="h-full rounded-8px shadow-sm">
-      <NSpace class="pb-12px" justify="space-between">
-        <NSpace>
-          <NButton type="primary" @click="addWarningMessageBut">
-            <IconIcRoundPlus class="mr-4px text-20px" />
-            新增告警
-          </NButton>
-        </NSpace>
-      </NSpace>
-      <div class="h-full flex-col">
-        <NDataTable
-          remote
-          :loading="loading"
-          :row-key="rowKey"
-          :columns="columns"
-          :data="tableData"
-          :pagination="pagination"
-          virtual-scroll
-          :max-height="250"
-          class="flex-1-hidden"
-        />
-      </div>
-
-      <popUp v-model:visible="visible" :type="modalType" :edit-data="editData" @new-edit="newEdit" />
-    </NCard>
+  <div class="p-y-12px">
+    <NButton type="primary" @click="addWarningMessageBut">
+      <IconIcRoundPlus class="mr-4px text-20px" />
+      {{ $t('generate.addAlarm') }}
+    </NButton>
   </div>
+  <div class="h-full flex-col">
+    <NDataTable
+      remote
+      :loading="loading"
+      :row-key="rowKey"
+      :columns="columns"
+      :data="tableData"
+      :pagination="pagination"
+      class="w-full"
+    />
+  </div>
+
+  <popUp
+    v-model:visible="visible"
+    :class="getPlatform ? 'w-90%' : 'w-600px'"
+    :type="modalType"
+    :edit-data="editData"
+    @new-edit="newEdit"
+  />
 </template>
 
 <style scoped>

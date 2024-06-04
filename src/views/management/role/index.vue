@@ -1,12 +1,15 @@
 <script setup lang="tsx">
-import { reactive, ref } from 'vue';
+import { computed, getCurrentInstance, reactive, ref } from 'vue';
 import type { Ref } from 'vue';
 import { NButton, NPopconfirm, NSpace } from 'naive-ui';
 import type { DataTableColumns, PaginationProps } from 'naive-ui';
 // import { userStatusLabels, userStatusOptions } from '@/constants'
 import { useBoolean, useLoading } from '@sa/hooks';
 import { delrles, rlesList } from '@/service/api';
+import { $t } from '@/locales';
+import { formatDateTime } from '@/utils/common/datetime';
 import TableActionModal from './modules/table-action-modal.vue';
+import EditPermissionModal from './modules/edit-permission-modal.vue';
 import EditPasswordModal from './modules/edit-password-modal.vue';
 import type { ModalType } from './modules/table-action-modal.vue';
 // import ColumnSetting from './components/column-setting.vue'
@@ -14,6 +17,7 @@ import type { ModalType } from './modules/table-action-modal.vue';
 const { loading, startLoading, endLoading } = useLoading(false);
 const { bool: visible, setTrue: openModal } = useBoolean();
 const { bool: editPwdVisible } = useBoolean();
+const { bool: editPermissionVisible, setTrue: openEditPermissionModal } = useBoolean();
 
 type QueryFormModel = Pick<UserManagement.User, 'email' | 'name' | 'status'> & {
   page: number;
@@ -47,44 +51,58 @@ async function getTableData() {
 const columns: Ref<DataTableColumns<UserManagement.User>> = ref([
   {
     key: 'name',
-    title: '角色名称',
+    minWidth: '100px',
+    title: $t('page.manage.role.roleName'),
     align: 'center'
   },
   {
     key: 'description',
-    title: '角色描述',
+    minWidth: '100px',
+    title: $t('page.manage.role.roleDesc'),
     align: 'center'
   },
   {
     key: 'created_at',
-    title: '创建日期',
-    align: 'center'
+    title: $t('page.product.update-ota.createTime'),
+    minWidth: '180px',
+    align: 'center',
+    render: row => {
+      return formatDateTime(row.created_at);
+    }
   },
   {
     key: 'updated_at',
-    title: '修改日期',
-    align: 'center'
+    title: $t('page.product.update-ota.updateDate'),
+    minWidth: '180px',
+    align: 'center',
+    render: row => {
+      return formatDateTime(row.updated_at);
+    }
   },
   {
     key: 'actions',
-    title: '操作',
+    title: $t('common.action'),
     align: 'center',
+    minWidth: '140px',
     render: row => {
       return (
         <NSpace justify={'center'}>
           <NButton type="primary" size={'small'} onClick={() => handleEditTable(row.id)}>
-            编辑
+            {$t('common.edit')}
           </NButton>
           <NPopconfirm onPositiveClick={() => handleDeleteTable(row.id)}>
             {{
-              default: () => '确认删除',
+              default: () => $t('common.confirmDelete'),
               trigger: () => (
                 <NButton type="error" size={'small'}>
-                  删除
+                  {$t('common.delete')}
                 </NButton>
               )
             }}
           </NPopconfirm>
+          <NButton type="primary" size={'small'} onClick={() => handleEditPermission(row.id)}>
+            {$t('page.manage.role.editPermission')}
+          </NButton>
         </NSpace>
       );
     }
@@ -125,10 +143,18 @@ function handleEditTable(rowId: string) {
   openModal();
 }
 
+function handleEditPermission(rowId: string) {
+  const findItem = tableData.value.find(item => item.id === rowId);
+  if (findItem) {
+    setEditData(findItem);
+  }
+  openEditPermissionModal();
+}
+
 async function handleDeleteTable(rowId: string) {
   const data = await delrles(rowId);
   if (!data.error) {
-    window.$message?.success('删除成功');
+    window.$message?.success($t('common.deleteSuccess'));
     getTableData();
   }
 }
@@ -169,22 +195,23 @@ const pagination: PaginationProps = reactive({
 function init() {
   getTableData();
 }
-
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
+});
 // 初始化
 init();
 </script>
 
 <template>
-  <div class="overflow-hidden">
-    <n-card :bordered="false" class="h-full rounded-8px shadow-sm">
-      <div class="h-full flex-col">
-        <NSpace class="pb-12px" justify="space-between">
-          <NSpace>
-            <NButton type="primary" @click="handleAddTable">
-              <icon-ic-round-plus class="mr-4px text-20px" />
-              新增
-            </NButton>
-          </NSpace>
+  <div>
+    <n-card>
+      <div class="h-full flex-col gap-15px">
+        <NSpace>
+          <NButton type="primary" @click="handleAddTable">
+            <icon-ic-round-plus class="mr-4px text-20px" />
+            {{ $t('page.manage.role.addRole') }}
+          </NButton>
         </NSpace>
 
         <n-data-table
@@ -192,12 +219,23 @@ init();
           :data="tableData"
           :loading="loading"
           :pagination="pagination"
-          flex-height
           class="flex-1-hidden"
         />
-        <TableActionModal v-model:visible="visible" :type="modalType" :edit-data="editData" @success="getTableData" />
+        <TableActionModal
+          v-model:visible="visible"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
+          :type="modalType"
+          :edit-data="editData"
+          @success="getTableData"
+        />
+        <EditPermissionModal
+          v-model:visible="editPermissionVisible"
+          :class="getPlatform ? 'w-90%' : 'w-600px'"
+          :edit-data="editData"
+        />
         <EditPasswordModal
           v-model:visible="editPwdVisible"
+          :class="getPlatform ? 'w-90%' : 'w-500px'"
           :edit-data="editData"
           @success="getTableData"
         ></EditPasswordModal>

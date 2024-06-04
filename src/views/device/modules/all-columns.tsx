@@ -1,10 +1,12 @@
 import { type DataTableColumns, NButton, NFlex, NPopconfirm } from 'naive-ui';
 import dayjs from 'dayjs';
+import { $t } from '@/locales';
 
 export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (rid: string) => void) => [
   {
-    title: '分组名称',
+    title: () => $t('custom.groupPage.groupName'),
     key: 'name',
+    minWidth:'140px',
     ellipsis: {
       tooltip: {
         width: 320
@@ -12,8 +14,8 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
     }
   },
   {
-    title: '描述',
-    key: 'description',
+    title: () => $t('custom.groupPage.description'),
+    key: 'description',minWidth:'140px',
     ellipsis: {
       tooltip: {
         width: 320
@@ -21,38 +23,50 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
     }
   },
   {
-    title: '创建时间',
-    key: 'created_at',
+    title: () => $t('custom.groupPage.createdAt'),
+    key: 'created_at',minWidth:'180px',
     render(row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) {
       return dayjs(row.created_at).format('YYYY-MM-DD HH:mm:ss');
     }
   },
   {
-    title: '操作',
-    key: 'actions',
-    width: 150,
+    title: () => $t('custom.groupPage.actions'),
+    key: 'actions',minWidth:'140px',
     render: (row: { id: string; name: string; description: string; created_at: string; [key: string]: any }) => {
       return (
-        <NFlex justify={'start'}>
-          <NButton
-            size={'small'}
-            onClick={() => {
-              viewDetails(row.id);
-            }}
-          >
-            查看
-          </NButton>
-          <NPopconfirm
-            onPositiveClick={() => {
-              deleteItem(row.id);
-            }}
-          >
-            {{
-              default: () => '确认删除',
-              trigger: () => <NButton size={'small'}>删除</NButton>
-            }}
-          </NPopconfirm>
-        </NFlex>
+        <div
+          onClick={e => {
+            e.stopPropagation();
+          }}
+        >
+          <NFlex justify={'start'}>
+            <NButton
+              quaternary
+              type="primary"
+              size={'small'}
+              onClick={() => {
+                viewDetails(row.id);
+              }}
+            >
+              {$t('custom.groupPage.view')}
+            </NButton>
+            <NPopconfirm
+              onPositiveClick={e => {
+                e.stopPropagation();
+                deleteItem(row.id);
+              }}
+            >
+              {{
+                default: () => $t('common.confirmDelete'),
+                trigger: () => (
+                  <NButton quaternary type="primary" size={'small'}>
+                    {$t('common.delete')}
+                  </NButton>
+                )
+              }}
+            </NPopconfirm>
+          </NFlex>
+        </div>
       );
     }
   }
@@ -60,22 +74,21 @@ export const group_columns = (viewDetails: (rid: string) => void, deleteItem: (r
 
 export const createDeviceColumns = (): DataTableColumns<DeviceManagement.DeviceData> => [
   {
-    type: 'selection'
+    type: 'selection', minWidth:'140px',
   },
   {
-    title: '设备名称',
-    key: 'name',
+    title: () => $t('custom.devicePage.deviceName'),
+    key: 'name', minWidth:'140px',
     render: row => row.name || '-'
   },
   {
-    title: '设备编码',
-    key: 'device_number',
+    title: () => $t('custom.devicePage.deviceNumber'),
+    key: 'device_number', minWidth:'140px',
     render: row => row.device_number || '-'
   },
   {
-    title: '设备配置',
-    key: 'device_config_id',
-    render: row => row.device_config_id || '-'
+    title: () => $t('custom.devicePage.deviceConfig'), minWidth:'140px',
+    key: 'device_config_name'
   }
 ];
 
@@ -85,34 +98,34 @@ export const createNoSelectDeviceColumns = (
 ): DataTableColumns<DeviceManagement.DeviceData> => {
   return [
     {
-      title: '设备名称',
-      key: 'name',
+      title: () => $t('custom.devicePage.deviceName'),
+      key: 'name', minWidth:'140px',
       render: row => row.name || '-'
     },
     {
-      title: '设备编码',
-      key: 'device_number',
+      title: () => $t('custom.devicePage.deviceNumber'),
+      key: 'device_number', minWidth:'140px',
       render: row => row.device_number || '-'
     },
     {
-      title: '设备配置',
-      key: 'device_config_id',
-      render: row => row.device_config_id || '-'
+      title: () => $t('custom.devicePage.deviceConfig'), minWidth:'140px',
+      key: 'device_config_name'
     },
     {
-      title: '操作',
-      key: 'actions',
-      width: 150,
+      title: () => $t('custom.groupPage.actions'),
+      key: 'actions', minWidth:'140px',
       render: row => {
         return (
           <NFlex justify={'start'}>
             <NButton
+              quaternary
+              type="primary"
               size={'small'}
               onClick={() => {
                 viewDevicsseDetails(row.id);
               }}
             >
-              查看
+              {$t('custom.groupPage.view')}
             </NButton>
             <NPopconfirm
               onPositiveClick={() => {
@@ -120,8 +133,12 @@ export const createNoSelectDeviceColumns = (
               }}
             >
               {{
-                default: () => '确认删除',
-                trigger: () => <NButton size={'small'}>从分组中移除</NButton>
+                default: () => $t('common.confirmDelete'),
+                trigger: () => (
+                  <NButton quaternary type="primary" size={'small'}>
+                    {$t('custom.groupPage.removeFromGroup')}
+                  </NButton>
+                )
               }}
             </NPopconfirm>
           </NFlex>

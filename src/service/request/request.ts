@@ -1,15 +1,15 @@
 import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
 import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
 import { createProxyPattern, createServiceConfig } from '~/env.config';
 
 const { otherBaseURL } = createServiceConfig(import.meta.env);
-console.log(import.meta.env);
-
 const isHttpProxy = import.meta.env.VITE_HTTP_PROXY === 'Y';
+const demoUrl = otherBaseURL.demo ? otherBaseURL.demo : `${window.location.origin}/api/v1`;
 
 export const request = createFlatRequest<App.Service.DEVResponse>(
   {
-    baseURL: isHttpProxy ? createProxyPattern() : otherBaseURL.demo,
+    baseURL: isHttpProxy ? createProxyPattern() : demoUrl,
     headers: {
       apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
     }
@@ -22,7 +22,6 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // const Authorization = token ? `Bearer ${token}` : null;
       const headersWithToken = token ? { 'x-token': token } : {};
       Object.assign(headers, headersWithToken);
-      console.log(params);
       if (params && typeof params === 'object' && !Array.isArray(params)) {
         Object.keys(params).forEach(key => {
           if (params[key] === '') {
@@ -43,10 +42,33 @@ export const request = createFlatRequest<App.Service.DEVResponse>(
       // for example: the token is expired, prefetch token and retry requestTs
     },
     transformBackendResponse(response) {
+      if (response.config.method !== 'get') {
+        window.$message?.destroyAll();
+        if (response?.request?.responseURL?.indexOf('login') === -1) {
+          window.$message?.success($t('custom.grouping_details.operationSuccess'));
+        }
+      }
+      if ((response as any).config?.needMessage) {
+        return response.data;
+      }
       return response.data.data;
     },
     onError(error) {
       // when the requestTs is fail, you can show error message
+
+      if (error?.response?.status === 401) {
+        window.$message?.error('非法授权，请重新登录');
+
+        setTimeout(() => {
+          localStg.remove('token');
+          localStg.remove('refreshToken');
+          localStg.remove('userInfo');
+
+          window.location.reload();
+        }, 200);
+
+        return;
+      }
 
       let message = error.message;
 

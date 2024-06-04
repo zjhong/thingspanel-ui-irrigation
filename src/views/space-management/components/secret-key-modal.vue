@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useClipboard } from '@vueuse/core';
+import { $t } from '@/locales';
 
 export interface Props {
   /** 弹窗可见性 */
@@ -34,20 +35,20 @@ const { copy, isSupported } = useClipboard();
 
 function handleCopy() {
   if (!isSupported) {
-    window.$message?.error('您的浏览器不支持Clipboard API');
+    window.$message?.error(`${$t('common.browserNotSupport')}Clipboard API`);
     return;
   }
   if (!props.secretKey) {
-    window.$message?.error('请输入要复制的内容');
+    window.$message?.error($t('common.contentToCopied'));
     return;
   }
   copy(props.secretKey);
-  window.$message?.success(`复制成功：${props.secretKey}`);
+  window.$message?.success(`${$t('theme.configOperation.copySuccess')}：${props.secretKey}`);
 }
 </script>
 
 <template>
-  <NModal v-model:show="modalVisible" preset="card" title="查看密钥" class="w-700px">
+  <NModal v-model:show="modalVisible" preset="card" :title="$t('generate.view-key')" class="w-700px">
     <NSpace vertical>
       <NInput :default-value="secretKey" type="text" readonly @focus="handleCopy" />
     </NSpace>

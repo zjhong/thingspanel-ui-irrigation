@@ -5,7 +5,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalIcons } from '@/utils/icon';
-import { $t } from '~/src/locales';
+import { $t } from '@/locales';
 defineOptions({
   name: 'MenuOperateDrawer'
 });
@@ -105,7 +105,7 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   // requestTs
-  window.$message?.success($t('common.updateSuccess'));
+  // window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }
@@ -164,9 +164,11 @@ watch(visible, () => {
         <NFormItem :label="$t('page.manage.menu.routeName')" path="routeName">
           <NInput v-model:value="model.routeName" :placeholder="$t('page.manage.menu.form.routeName')" />
         </NFormItem>
+
         <NFormItem :label="$t('page.manage.menu.routePath')" path="routePath">
           <NInput v-model:value="model.routePath" :placeholder="$t('page.manage.menu.form.routePath')" />
         </NFormItem>
+
         <NFormItem :label="$t('page.manage.menu.menuStatus')" path="status">
           <NRadioGroup v-model:value="model.status">
             <NRadio

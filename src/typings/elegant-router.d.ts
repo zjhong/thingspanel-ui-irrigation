@@ -33,6 +33,7 @@ declare module "@elegant-router/types" {
     "apply_service": "/apply/service";
     "automation": "/automation";
     "automation_linkage-edit": "/automation/linkage-edit";
+    "automation_scene-edit": "/automation/scene-edit";
     "automation_scene-linkage": "/automation/scene-linkage";
     "automation_scene-manage": "/automation/scene-manage";
     "component": "/component";
@@ -51,6 +52,7 @@ declare module "@elegant-router/types" {
     "device_config-detail": "/device/config-detail";
     "device_config-edit": "/device/config-edit";
     "device_details": "/device/details";
+    "device_details-child": "/device/details-child";
     "device_grouping": "/device/grouping";
     "device_grouping-details": "/device/grouping-details";
     "device_manage": "/device/manage";
@@ -77,6 +79,7 @@ declare module "@elegant-router/types" {
     "management": "/management";
     "management_auth": "/management/auth";
     "management_notification": "/management/notification";
+    "management_ordinary-user": "/management/ordinary-user";
     "management_role": "/management/role";
     "management_route": "/management/route";
     "management_setting": "/management/setting";
@@ -112,11 +115,13 @@ declare module "@elegant-router/types" {
     "system-management-user_equipment-map": "/system-management-user/equipment-map";
     "system-management-user_system-log": "/system-management-user/system-log";
     "test": "/test";
+    "test_kan-ban-details-test": "/test/kan-ban-details-test";
+    "test_kan-ban-test": "/test/kan-ban-test";
     "user-center": "/user-center";
     "visualization": "/visualization";
     "visualization_big-screen": "/visualization/big-screen";
-    "visualization_panel": "/visualization/panel";
-    "visualization_panel-details": "/visualization/panel-details";
+    "visualization_kanban": "/visualization/kanban";
+    "visualization_kanban-details": "/visualization/kanban-details";
     "visualization_panel-preview": "/visualization/panel-preview";
   };
 
@@ -212,6 +217,7 @@ declare module "@elegant-router/types" {
     | "alarm_warning-message"
     | "apply_service"
     | "automation_linkage-edit"
+    | "automation_scene-edit"
     | "automation_scene-linkage"
     | "automation_scene-manage"
     | "component_button"
@@ -225,6 +231,7 @@ declare module "@elegant-router/types" {
     | "device_config-detail"
     | "device_config-edit"
     | "device_config"
+    | "device_details-child"
     | "device_details"
     | "device_grouping-details"
     | "device_grouping"
@@ -243,6 +250,7 @@ declare module "@elegant-router/types" {
     | "manage_user"
     | "management_auth"
     | "management_notification"
+    | "management_ordinary-user"
     | "management_role"
     | "management_route"
     | "management_setting"
@@ -268,12 +276,13 @@ declare module "@elegant-router/types" {
     | "space-management"
     | "system-management-user_equipment-map"
     | "system-management-user_system-log"
-    | "test"
+    | "test_kan-ban-details-test"
+    | "test_kan-ban-test"
     | "user-center"
     | "visualization_big-screen"
-    | "visualization_panel-details"
+    | "visualization_kanban-details"
+    | "visualization_kanban"
     | "visualization_panel-preview"
-    | "visualization_panel"
   >;
 
   /**

@@ -3,6 +3,7 @@ import type { Ref } from 'vue';
 import { inject, onMounted, provide, reactive, ref, watch } from 'vue';
 import type { ICardData, ICardRender, ICardView } from '@/components/panel/card';
 import { getTemplat } from '@/service/api';
+import { $t } from '@/locales';
 import AddTemplateCard from './ui/add-template-card.vue';
 import CardTemplateRender from './ui/card-template-render.vue';
 
@@ -87,12 +88,12 @@ onMounted(fetchBroad);
     <NSpace align="center">
       <NButton @click="add">
         <SvgIcon icon="material-symbols:add" class="mr-0.5 text-lg" />
-        添加图表
+        {{ $t('generate.add-chart') }}
       </NButton>
     </NSpace>
     <div class="mb-2 mt-2 h-2px bg-[#f6f9f8]" />
     <div v-if="!layout.length" class="mt-20 text-center text-gray-500 dark:text-gray-400">
-      <NEmpty description="暂未添加组件"></NEmpty>
+      <NEmpty :description="$t('common.componentsAddedYet')"></NEmpty>
     </div>
     <CardTemplateRender
       ref="cr"
@@ -103,7 +104,6 @@ onMounted(fetchBroad);
       :row-height="65"
       @edit="edit"
     />
-
     <AddTemplateCard v-model:open="state.openAddPanel" :data="state.cardData" @save="insertCard" />
   </div>
 </template>

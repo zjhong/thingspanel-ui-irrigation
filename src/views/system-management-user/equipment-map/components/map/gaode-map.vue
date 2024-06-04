@@ -31,6 +31,7 @@ export default {
         methods.mapInit();
       },
       mapInit(type, data) {
+        console.log(111111, data);
         state.newKeyAddress = '';
         AMapLoader.load({
           key: '5c842e97cdff04d92eb472cf4a4860b2',
@@ -79,7 +80,7 @@ export default {
                 });
               }
               /** 坐标 */
-              if (data.districts) {
+              if (data.districts.length > 0) {
                 const coordinates = [];
                 data.districts.map((item, index) => {
                   console.log(item);
@@ -96,7 +97,6 @@ export default {
 
                   return undefined;
                 });
-                console.log(5555, coordinates);
               } else {
                 const coordinates = data.location.split(',');
                 console.log('data', data);

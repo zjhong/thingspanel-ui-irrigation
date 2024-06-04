@@ -1,45 +1,69 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { type FormInst, NButton, useDialog, useMessage } from 'naive-ui';
+import { computed, getCurrentInstance, nextTick, onMounted, ref, watch } from 'vue';
+import { type FormInst, NButton, useDialog } from 'naive-ui';
 import { PencilOutline as editIcon, TrashOutline as trashIcon } from '@vicons/ionicons5';
 import Codemirror from 'codemirror-editor-vue3';
 import 'codemirror/mode/javascript/javascript.js';
-import { dataScriptAdd, dataScriptDel, dataScriptEdit, dataScriptQuiz, getDataScriptList } from '@/service/api/device';
-const message = useMessage();
+import {
+  dataScriptAdd,
+  dataScriptDel,
+  dataScriptEdit,
+  dataScriptQuiz,
+  getDataScriptList,
+  setDeviceScriptEnable
+} from '@/service/api/device';
+import { $t } from '@/locales';
+// const message = useMessage();
 const dialog = useDialog();
 
 interface Props {
   configInfo?: object | any;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   configInfo: null
 });
 const configFormRef = ref<HTMLElement & FormInst>();
 
-const modalTitle = ref('添加');
-const configForm = ref(defaultConfigForm());
+const modalTitle = ref($t('generate.add'));
+const configForm: any = ref({});
 const scripTypeOpt = ref([
   {
-    label: '遥测上报预处理',
+    label: $t('custom.devicePage.reportPreprocessing'),
     value: 'A'
   },
   {
-    label: '遥测下发预处理',
+    label: $t('custom.devicePage.transmissionPreprocessing'),
     value: 'B'
   },
   {
-    label: '属性上报预处理',
+    label: $t('custom.devicePage.attributeReporting'),
     value: 'C'
   },
   {
-    label: '属性下发预处理',
+    label: $t('custom.devicePage.attributeDistribution'),
     value: 'D'
   }
 ]);
+
 function defaultConfigForm() {
   return {
     id: null,
-    content: '',
+    content: `function encodeInp(msg,topic)
+-- 说明：该函数为编码函数，将输入的消息编码为平台可识别的消息格式或者设备可识别的消息格式，请根据实际需求编写编码逻辑
+-- 入参：输入的msg，可以是任意数据类型的字符串。
+-- 出参：返回值为编码后的消息,需要是json字符串形式
+-- 注意：string与jsonObj互转需导入json库：local json = require("json")
+-- 例，string转jsonObj：local jsonData = json.decode(msgString)
+-- 例，jsonObj转string：local jsonStr = json.encode(jsonTable)
+local json = require("json")
+local jsonData = json.decode(msg)
+-- 例 if jsonData.temp then
+-- 例 jsonData.temp = jsonData.temp * 10
+-- 例 end
+local newJsonString = json.encode(jsonData)
+return newJsonString
+end`,
     description: null,
     device_config_id: null,
     enable_flag: 'Y',
@@ -47,23 +71,30 @@ function defaultConfigForm() {
     last_analog_input: null,
     name: null,
     remark: null,
-    script_type: null
+    script_type: null,
+    resolt_analog_input: ''
   };
 }
+
 const configFormRules = ref({
   name: {
     required: true,
-    message: '请输入标题',
+    message: $t('generate.enter-title'),
+    trigger: 'blur'
+  },
+  content: {
+    required: true,
+    message: $t('generate.parse-script'),
     trigger: 'blur'
   },
   enable_flag: {
     required: true,
-    message: '请选择',
+    message: $t('common.select'),
     trigger: 'change'
   },
   script_type: {
     required: true,
-    message: '请选择处理类型',
+    message: $t('generate.select-processing-type'),
     trigger: 'change'
   }
 });
@@ -71,17 +102,24 @@ const showModal = ref(false);
 
 const openModal = (type: any, item: any) => {
   modalTitle.value = type;
-  if (modalTitle.value === '编辑') {
+  configForm.value = defaultConfigForm();
+  if (modalTitle.value === $t('common.edit')) {
     // 查询详情
     configForm.value = JSON.parse(JSON.stringify(item));
   }
   showModal.value = true;
 };
-const bodyStyle = ref({
-  width: '600px'
+
+const getPlatform = computed(() => {
+  const { proxy }: any = getCurrentInstance();
+  return proxy.getPlatform();
 });
-const queryData = ref({
+const bodyStyle = ref({
+  width: getPlatform.value ? '90%' : '600px'
+});
+const queryData: any = ref({
   device_config_id: '',
+  script_type: '',
   page: 1,
   page_size: 10
 });
@@ -115,9 +153,13 @@ const searchDataScript = () => {
   queryData.value.page = 1;
   queryDataScriptList();
 };
+
+const handleChange = async (item: object) => {
+  console.log(item);
+  await setDeviceScriptEnable(item);
+};
 const handleClose = () => {
   configFormRef.value?.restoreValidation();
-  configForm.value = defaultConfigForm();
   showModal.value = false;
 };
 // 提交表单
@@ -127,38 +169,43 @@ const handleSubmit = async () => {
   if (!configForm.value.id) {
     const res = await dataScriptAdd(configForm.value);
     if (!res.error) {
-      message.success('新增成功');
+      // message.success('新增成功');
+      handleClose();
       searchDataScript();
     }
   } else {
     const res = await dataScriptEdit(configForm.value);
     if (!res.error) {
-      message.success('修改成功');
+      handleClose();
+      // message.success('修改成功');
       searchDataScript();
     }
   }
-  handleClose();
 };
 const deleteData = async (item: any) => {
   dialog.warning({
-    title: '提示',
-    content: '请确认是否删除该数据处理？',
-    positiveText: '确定',
-    negativeText: '取消',
+    title: $t('common.tip'),
+    content: $t('common.deleteProcessing'),
+    positiveText: $t('device_template.confirm'),
+    negativeText: $t('common.cancel'),
     onPositiveClick: async () => {
       await dataScriptDel({ id: item.id });
-      message.success('操作成功');
+      // message.success($t('custom.grouping_details.operationSuccess'));
       searchDataScript();
     }
   });
 };
 const doQuiz = async () => {
-  const postData = {
-    content: '',
-    analog_input: '',
-    topic: ''
-  };
-  await dataScriptQuiz(postData);
+  await configFormRef?.value?.validate();
+
+  dataScriptQuiz(configForm.value).then(({ data }: any) => {
+    configForm.value.resolt_analog_input = data.message || '';
+  });
+  // const { data, error } = await dataScriptQuiz(configForm.value);
+  // if (!error) {
+  //   console.log(data);
+  //   // configForm.value.resolt_analog_input = data.message || '';
+  // }
 };
 
 const cmRef = ref();
@@ -166,6 +213,7 @@ const cmOptions = {
   mode: 'text/javascript',
   lineNumbers: false
 };
+
 const onChange = (val, cm) => {
   console.log(val);
   console.log(cm.getValue());
@@ -176,8 +224,22 @@ const onInput = val => {
 };
 
 const onReady = cm => {
-  console.log(cm.focus());
+  const lastLine = cm.lineCount() - 1;
+  const lastCh = cm.getLine(lastLine).length;
+  cm.focus();
+  cm.setCursor({ line: lastLine, ch: lastCh });
+  console.log(cm);
 };
+const setupEditor = () => {
+  nextTick(() => {
+    if (cmRef.value) {
+      console.log(cmRef.value);
+      cmRef.value.refresh(); // ensure the editor is correctly refreshed
+    }
+  });
+};
+
+watch(queryData.value, () => queryDataScriptList(), { deep: true });
 
 onMounted(() => {
   queryDataScriptList();
@@ -185,84 +247,121 @@ onMounted(() => {
 </script>
 
 <template>
-  <NFlex class="mb-6">
-    <n-select :options="scripTypeOpt" class="max-w-40" />
-    <NButton type="primary" @click="openModal('新增', null)">新增数据处理</NButton>
-  </NFlex>
-  <n-empty v-if="dataScriptList.length === 0" size="huge" description="暂无数据"></n-empty>
-  <div v-else class="alarm-box">
-    <div v-for="(item, index) in dataScriptList" :key="index" class="alarm-item">
-      <div class="item-name">
-        <div>
-          {{ item.name }}
-        </div>
-        <NSwitch v-model:value="item.enable_flag" checked-value="Y" unchecked-value="N" />
-      </div>
-      <div class="item-desc">{{ item.description }}</div>
-      <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
-      <NFlex justify="end">
-        <NButton circle tertiary type="info" @click="openModal('编辑', item)">
-          <template #icon>
-            <n-icon>
-              <editIcon />
-            </n-icon>
-          </template>
-        </NButton>
-        <NButton circle tertiary type="error" @click="deleteData(item)">
-          <template #icon>
-            <n-icon>
-              <trashIcon />
-            </n-icon>
-          </template>
-        </NButton>
-      </NFlex>
-    </div>
+  <div class="m-b-20px flex items-center gap-20px">
+    <n-select v-model:value="queryData.script_type" :options="scripTypeOpt" class="max-w-40" />
+    <NButton type="primary" @click="openModal($t('common.add'), null)">
+      {{ $t('generate.add-data-processing') }}
+    </NButton>
   </div>
+  <n-empty v-if="dataScriptList.length === 0" size="huge" :description="$t('common.nodata')"></n-empty>
+  <NGrid v-else x-gap="20" y-gap="20" cols="1 s:2 m:3 l:4" responsive="screen">
+    <NGridItem v-for="item in dataScriptList" :key="item.id">
+      <NCard hoverable style="height: 180px">
+        <div class="item-name item-center flex">
+          <div class="flex-1">
+            {{ item.name }}
+          </div>
+          <NSwitch
+            v-model:value="item.enable_flag"
+            checked-value="Y"
+            unchecked-value="N"
+            @update-value="handleChange(item)"
+          />
+        </div>
+        <div class="h-80px flex-1">
+          <div class="item-desc description">{{ item.description }}</div>
+          <div class="item-desc">{{ findScriptType(item.script_type) }}</div>
+        </div>
+        <NFlex justify="end">
+          <NButton tertiary circle type="info" @click="openModal($t('common.edit'), item)">
+            <template #icon>
+              <n-icon>
+                <editIcon />
+              </n-icon>
+            </template>
+          </NButton>
+          <NButton circle tertiary type="error" @click="deleteData(item)">
+            <template #icon>
+              <n-icon>
+                <trashIcon />
+              </n-icon>
+            </template>
+          </NButton>
+        </NFlex>
+      </NCard>
+    </NGridItem>
+  </NGrid>
+
   <n-modal
     v-model:show="showModal"
     preset="dialog"
-    :title="`${modalTitle}数据处理`"
+    :title="modalTitle + $t('common.dataProces')"
     :show-icon="false"
     :style="bodyStyle"
     :closable="false"
+    @after-enter="setupEditor"
   >
-    <NForm ref="configFormRef" :model="configForm" :rules="configFormRules" label-placement="left" label-width="auto">
-      <NFormItem label="标题" path="name">
-        <NInput v-model:value="configForm.name" placeholder="请输入标题" />
+    <NForm
+      ref="configFormRef"
+      class="flex-wrap"
+      :class="getPlatform ? 'flex-col' : 'flex'"
+      :model="configForm"
+      :rules="configFormRules"
+      label-placement="left"
+      label-width="auto"
+    >
+      <NFormItem :class="getPlatform ? 'w-100%' : 'w-50%'" :label="$t('page.manage.menu.form.title')" path="name">
+        <NInput v-model:value="configForm.name" :placeholder="$t('generate.enter-title')" />
       </NFormItem>
-      <NFormItem label="处理类型" path="script_type">
-        <NSelect v-model:value="configForm.script_type" :options="scripTypeOpt" placeholder="请选择处理类型"></NSelect>
+      <NFormItem :class="getPlatform ? 'w-100%' : 'w-50%'" :label="$t('generate.processing-type')" path="script_type">
+        <NSelect
+          v-model:value="configForm.script_type"
+          :options="scripTypeOpt"
+          :placeholder="$t('generate.select-processing-type')"
+        ></NSelect>
       </NFormItem>
-      <NFormItem label="描述" path="description">
-        <NInput v-model:value="configForm.description" type="textarea" placeholder="请输入描述" />
+      <NFormItem class="w-100%" :label="$t('device_template.table_header.description')" path="description">
+        <NInput
+          v-model:value="configForm.description"
+          type="textarea"
+          :placeholder="$t('generate.enter-description')"
+        />
       </NFormItem>
-      <NFormItem label="解析脚本" path="content">
+      <NFormItem class="w-100%" :label="$t('generate.parse-script')" :rules="configFormRules" path="content">
         <Codemirror
           ref="cmRef"
           v-model:value="configForm.content"
           :options="cmOptions"
-          border
           height="200"
+          keepcursorinend
+          border
           @change="onChange"
           @input="onInput"
           @ready="onReady"
         ></Codemirror>
         <!--        <NInput v-model:value="configForm.content" type="textarea" placeholder="请输入解析脚本" />-->
       </NFormItem>
-      <NFormItem label="是否启用" path="enable_flag">
+      <NFormItem
+        v-if="0"
+        class="w-100%"
+        :label="$t('page.manage.setting.dataClearSetting.form.enabled')"
+        path="enable_flag"
+      >
         <NSwitch v-model:value="configForm.enable_flag" checked-value="Y" unchecked-value="N" />
       </NFormItem>
-      <NFormItem label="模拟输入" path="analog_input">
-        <NInput v-model:value="configForm.analog_input" type="textarea" />
-      </NFormItem>
-      <NFormItem label="调试运行结果" path="last_analog_input">
+      <NFormItem class="w-100%" :label="$t('generate.simulate-input')" path="last_analog_input">
         <NInput v-model:value="configForm.last_analog_input" type="textarea" />
       </NFormItem>
-      <NButton type="primary" @click="doQuiz">调试</NButton>
+      <NFormItem class="w-100%" :label="$t('generate.debug-run-result')" path="resolt_analog_input">
+        <NInput v-model:value="configForm.resolt_analog_input" :disabled="true" type="textarea" />
+      </NFormItem>
+      <NFormItem>
+        <NButton type="primary" @click="doQuiz">{{ $t('common.debug') }}</NButton>
+      </NFormItem>
     </NForm>
     <NFlex justify="end">
-      <NButton @click="handleClose">取消</NButton>
-      <NButton type="primary" @click="handleSubmit">保存</NButton>
+      <NButton @click="handleClose">{{ $t('generate.cancel') }}</NButton>
+      <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
     </NFlex>
   </n-modal>
 </template>
@@ -302,5 +401,15 @@ onMounted(() => {
       align-items: center;
     }
   }
+}
+
+.description {
+  height: 40px;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 </style>

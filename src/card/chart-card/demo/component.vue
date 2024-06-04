@@ -3,9 +3,9 @@ import { onBeforeUnmount, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useWebSocket } from '@vueuse/core';
 import type { ICardData } from '@/components/panel/card';
 import { localStg } from '@/utils/storage';
+import { getWebsocketServerUrl } from '@/utils/common/tool';
 import { deviceDetail } from '../curve/modules/api';
 import { icons as iconOptions } from './icons';
-import { createServiceConfig } from '~/env.config';
 
 // 正式环境可根据api获取
 const value = ref(1);
@@ -19,8 +19,7 @@ const fontSize = ref('14px');
 const myCard = ref<any | null>(null); // 创建一个ref来引用NCard
 let resizeObserver: ResizeObserver | null = null;
 
-const { otherBaseURL } = createServiceConfig(import.meta.env);
-let wsUrl = otherBaseURL.demo.replace('http', 'ws').replace('http', 'ws');
+let wsUrl = getWebsocketServerUrl();
 wsUrl += `/telemetry/datas/current/keys/ws`;
 // eslint-disable-next-line no-constant-binary-expression
 const keys = [props?.card?.dataSource?.deviceSource?.[0]?.metricsId || 'externalVol'];
